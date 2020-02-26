@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>原料出库</title>
+		<script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			.mui-input-group,
+			.mui-card-content-inner {
+				border-bottom: 2px solid #007aff;
+			}
+			
+			.mui-card-content-inner:active {
+				background: gray;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">原料出库</h1>
+		</header>
+		<div class="mui-content">
+			<div class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<div class="mui-card">
+						<div class="mui-card-header">
+							<form class="mui-input-group" id="formID" style="background:#dcdcdc;">
+								<input id="outOrderUserId" type="hidden" class="mui-input-clear" placeholder="出库操作人">
+								<div class="mui-input-row">
+									<label>领料车间</label>
+									<select id="cunsumerName">
+										<option value="1">请选择车间</option>
+										<option value="编织一车间">编织一车间</option>
+										<option value="编织二车间">编织二车间</option>
+										<option value="编织三车间">编织三车间</option>
+									</select>
+								</div>
+
+							</form>
+						</div>
+
+						<div class="mui-card-content" id="list">
+
+						</div>
+					</div>
+					<div align="center">
+						<label id="count" style="font-size: 22px;"><strong></strong></label>
+					</div>
+					<div class="mui-button-row">
+						<button type="button" class="mui-btn mui-btn-primary" onclick="doSubmit()">确认</button>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</body>
+	<script type="text/javascript">
+		var mOut = App.getServerUrl() + "stock/material/out";
+		var mOutCheck = App.getServerUrl() + "stock/material/mOutCheck";
+		var codeInfoUrl = App.getServerUrl() + "stock/material/";
+		//生成出库单号
+		var serialUrl = App.getServerUrl() + "stock/material/getSerial";
+		var reading = false;
+		var count = 0;
+		var scanner;
+
+		/*$(document).ready(function(){
+			
+			var cal=new Calendar();
+			$("#outOrderCode").val(cal.format("yyyyMMdd"));
+		});*/
+		App.ready(function() {
+			scanner = new Scanner(parseCode);
+			scanner.scan();
+			//parseCode("011131810262099XXXXX");
+		});
+
+		function parseCode(data1) {
+
+			var data = data1.split(";");
+
+			if(data.length == 1) {
+				if(data[0].length > 15) {
+					waiting("正在加载原料信息");
+					App.ajaxGet(codeInfoUrl + data[0], function(ajaxData) {
+
+						closeWaiting();
+						if(ajaxData.error) {
+							tip(ajaxData.error);
+							return;
+						}
+
+						//判断物料是否在库
+						if(ajaxData.stockState == 1) {
+							tip("该原料不在库，请确认");
+							return;
+						}
+						//如果不是放行，那么校验其他项
+						if(ajaxData.isPass == 0) {
+							//冻结状态不能出库
+							if(ajaxData.isLocked == 1) {
+								tip("原料被冻结！");
+								return;
+							}
+							if(ajaxData.state == 0) {
+								tip("待检中！");
+								return;
+							}
+
+							if(ajaxData.state== 2) {
+								tip("原料不合格");
+								return;
+							}
+						}
+						
+						if($("#"+ajaxData.palletCode).length>0){
+							tip("重复扫码");
+							return;
+						}
+
+						var str = '<div class="mui-card-content-inner"  id="' + ajaxData.palletCode + '" mssId="'+ajaxData.id+'">';
+						str += '	<div class="mui-input-row">'; 
+						str += '<label>托盘编号</label>';
+						str += '<input id="barcode" type="text" required readonly="true" class="mui-input-clear" value=' + ajaxData.palletCode + '>';
+						str += '</div>';
+						str += '<div class="mui-input-row">';
+						str += '	<label>净重</label>';
+						str += '	<input id="inweight" type="text" readonly="true" required class="mui-input-clear" value=' + ajaxData.weight + 'KG>';
+						str += '</div>';
+						str += '<div class="mui-input-row">';
+						str += '	<label>规格型号</label>';
+						str += '	<input id="model" type="text" required readonly="true" class="mui-input-clear" value=' + ajaxData.materialModel + '>';
+						str += '</div>';
+						str += '<div class="mui-input-row">';
+						str += '	<label>上偏差</label>';
+						str += '	<input id="deviation" type="text" readonly="true" required class="mui-input-clear" value=' + ajaxData.upperDeviation + '>';
+						str += '</div>';
+						str += '<div class="mui-input-row">';
+						str += '	<label>下偏差</label>';
+						str += '	<input id="lowerdeviation" type="text" readonly="true" required class="mui-input-clear" value=' + ajaxData.lowerDeviation + '>';
+						str += '</div>';
+						str += '</div>';
+						$("#list").prepend(str);
+						
+						$("#count").html("共" + $(".mui-card-content-inner").length + "托");
+					}, function() {
+						closeWaiting();
+						beepAndVibrate();
+						toast("查询信息失败");
+						return;
+					});
+				} else {
+					tip("未知条码：" + data[0]);
+					return;
+				}
+			} else {
+				tip("该条码不存在");
+				return;
+			}
+
+		}
+
+		function doSubmit() {
+			if(!validForm('formID')) {
+				return;
+			}
+			var cunsumerName = $("#cunsumerName").val();
+			if($(".mui-card-content-inner").length == 0) {
+				toast("请扫描条码");
+				beepAndVibrate();
+				return;
+			}
+
+			if(isEmpty(cunsumerName)|| cunsumerName == "1") {
+				toast("请选择领料车间");
+				beepAndVibrate();
+				return;
+			}
+			var mssIds=[];
+			$("div[mssId]").each(function(i){
+				mssIds.push($(this).attr("mssId"));
+			});
+			
+			waiting("正在出库", true);
+			var form = {
+				outOrderCode: null,
+				cunsumerName: "",
+				outTime:new Calendar().getTimeLong(),
+				outOptUser:App.getLoginUserName(),
+				workShop: cunsumerName,
+				inBankSource:$("#cunsumerName").val(),
+				mssIds:mssIds.join(",")
+			};
+			App.ajaxPost(mOut, form, function(data) {
+				closeWaiting();
+				//当该原料的判级不是合格或者退货，则阻止出库
+				if(!isEmpty(data.error)) {
+					malert("提示", data.error, "确认", function() {});
+					//tip(data.error);
+					beep();
+					return;
+				} else {
+					toast("出库成功");
+					//$("#formID")[0].reset();清空form表单
+					$("#list").empty();
+					$("#count").html("");
+					plus.audio.createPlayer("notice.mp3").play();
+					code = [];
+				}
+			}, function() {
+				//失败
+				closeWaiting();
+			});
+
+		}
+
+		mui.init({
+			gestureConfig: {
+				longtap: true //默认为false
+			}
+		});
+		mui('.mui-scroll-wrapper').scroll({
+			deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+		});
+		mui('.mui-card-content').on('longtap', '.mui-card-content-inner', function() {
+			var id = this.getAttribute("id");
+			mconfirm("删除", "确认删除", function() {
+				$("#" + id).slideUp(500, function() {
+					$(this).remove();
+					$("#count").html("共" + $(".mui-card-content-inner").length + "托");
+				});
+
+			}, function() {});
+
+		}); 
+	</script>
+
+</html>

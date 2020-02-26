@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>冻结</title>
+		<script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">冻结</h1>
+		</header>
+		<div class="mui-content">
+			<div class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<div class="mui-card">
+						<div class="mui-card-content" >
+								<form class="mui-input-group" id="list">
+								</form>
+						</div>
+					</div>
+					<div class="mui-button-row">
+						<button type="button" class="mui-btn mui-btn-primary" onclick="doFreeze()" style="width: 50%;">冻结</button>
+						<div style="font-weight: bold;">
+							（请直接扫描条码）
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</body>
+
+	<script type="text/javascript">
+		var freezeUrl = App.getServerUrl() + "stock/product/lock";
+		var findInfoUrl = App.getServerUrl() + "common/infos";
+		var mfreezeUrl = App.getServerUrl() + "stock/material/freeze";
+		var mfindStateUrl = App.getServerUrl() + "common/findCodeState";
+		var data = "";
+		var code = [];
+		var findPostUrl;
+		var postUrl;
+		var scanner;
+		App.ready(function() {
+			scanner = new Scanner(parseCode);
+			scanner.scan();
+		});
+
+		mui('.mui-scroll-wrapper').scroll({
+			deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+		});
+		
+		//解析code
+		function parseCode(barCode) {
+			data = barCode.split(";");
+			if(data.length>5){
+				findPostUrl=mfindStateUrl;
+				postUrl=mfreezeUrl;
+			}else{
+				findPostUrl=findInfoUrl;
+				postUrl=freezeUrl;
+			}
+			for(var i = 0; i < code.length; i++) {
+				if(code[i] == data[0]) {
+					toast("扫描条码重复");
+					beepAndVibrate();
+					return;
+				}
+			}
+			var str = '';
+			if(data != "") {
+				//查询条码的状态信息
+				waiting("正在查询该条码的状态信息");
+				App.ajaxGet(findPostUrl+"?barCode="+data[0],function(ajaxData){
+					closeWaiting(); 
+					//判断条码是否产出登记
+					if(ajaxData.REGISTER){
+						//判断条码是否已被冻结
+						if(ajaxData.STATE==3){
+							beepAndVibrate();
+							toast("该条码已被冻结");
+							return;
+						}
+						code.push(data[0]);
+						str += '<div class="mui-input-row" id=' + data[0] + '>';
+						str += '<label>条码</label>';
+						str += '<input id="rollCode" type="text" required readonly class="mui-input-clear" value=' + data[0] + '>';
+						str += '</div>';
+						$("#list").append(str);
+					}else{
+						beepAndVibrate();
+						toast("该条码未登记");
+					}
+				},function(errorData,er,e){
+					beepAndVibrate();
+					toast("查询条码信息失败");
+					closeWaiting();
+				});
+			}
+		}
+
+		document.onkeydown = function(e) {
+			//键盘事件
+			if(e.keyCode == 37 || e.keyCode == 39) { }
+
+			if(e.keyCode == 13) { }
+		}
+
+		function doFreeze() {
+			if(code.length==0){
+				toast("请先扫条码!");
+				beepAndVibrate();
+				return;
+			}
+			mconfirm('警告', '确认冻结？', function() {
+				waiting("冻结中。。。", true);
+				
+				App.ajaxPost(postUrl,
+					{
+						"barcodes":code.join(","),
+						"puid": App.getLoginUserId(),
+						"pname": App.getLoginUserName()
+					},function(data) {
+					closeWaiting();
+					toast("冻结成功");
+					$("#list").empty();
+					code=[];
+				}, function() {
+					closeWaiting();
+					toast("冻结失败");
+					beepAndVibrate();
+				});
+			}, function() {
+				closeWaiting();
+			});
+		}
+		
+		//长按初始化
+		mui.init({
+			gestureConfig: {longtap: true}
+		});
+		
+		//长按删除事件
+		mui('#list').on('longtap', '.mui-input-row', function() {
+				var id = this.getAttribute("id");
+				mconfirm("删除", "确认删除", function() {
+					//删除托中code数组中的值
+					var del;
+					for(var j = 0; j < code.length; j++) {
+						if(code[j] == id) {
+							del = code[j];
+						}
+					}
+					code.splice(code.indexOf(del), 1);
+					$("#" + id).remove();
+				}, function() {});
+
+			});
+	</script>
+
+</html>
