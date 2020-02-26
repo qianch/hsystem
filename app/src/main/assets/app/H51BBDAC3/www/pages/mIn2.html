@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>车间退料</title>
+		<script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			.mui-input-group .mui-input-row {
+				height: 25px;
+			}
+			
+			.mui-input-row label~input,
+			.mui-input-row label~select,
+			.mui-input-row label~textarea {
+				float: right;
+				width: 60%;
+				margin-bottom: 0;
+				padding-left: 0;
+				border: 0;
+			}
+			
+			.mui-input-row label {
+				font-family: 'Helvetica Neue', Helvetica, sans-serif;
+				line-height: 1.1;
+				float: left;
+				width: 40%;
+				padding: 11px 15px;
+			}
+			
+			.mui-input-row label~input,
+			.mui-input-row label~select,
+			.mui-input-row label~textarea {
+				height: 25px;
+			}
+			
+			.mui-input-row .mui-input-clear~.mui-icon-clear,
+			.mui-input-row .mui-input-speech~.mui-icon-speech,
+			.mui-input-row .mui-input-password~.mui-icon-eye {
+				top: 2px;
+			}
+			
+			.mui-input-row label {
+				font-family: 'Helvetica Neue', Helvetica, sans-serif;
+				padding: 0px 10px 0px 15px;
+				line-height: 25px;
+			}
+			
+			.mui-scroll-wrapper {
+				margin-top: 45px;
+			}
+			
+			.mui-card-header,
+			.mui-card-content-inner {
+				border-bottom: 1px solid darkslategray;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">车间退料</h1>
+		</header>
+		<div class="mui-content">
+			<div class="mui-input-group" style="background:#dcdcdc;border-bottom: 2px solid #007aff;margin-bottom: 1px;">
+				<div class="mui-input-row">
+					<label>仓库</label>
+					<input value="" id="warehouseCode" type="text" readonly="true" required class="mui-input-clear" placeholder="仓库">
+				</div>
+				<div class="mui-input-row">
+					<label>库位</label>
+					<input value="" id="warehousePosCode" type="text" readonly="true" required class="mui-input-clear" placeholder="库位">
+				</div>
+			</div>
+			<form class="mui-input-group" id="formID">
+				<div class="mui-input-row">
+					<label>产品大类</label>
+					<input id="produceCategory" type="text" readonly="true" required class="mui-input-clear" placeholder="物料名称">
+				</div>
+				<div class="mui-input-row">
+					<label>规格型号</label>
+					<input id="model" type="text" required readonly="true" class="mui-input-clear" placeholder="规格型号">
+				</div>
+				<div class="mui-input-row">
+					<label>托盘编号</label>
+					<input id="barcode" type="text" required readonly="true" class="mui-input-clear" placeholder="托盘编号">
+				</div>
+				<div class="mui-input-row">
+					<label>生产日期</label>
+					<input id="productionDate" type="text" required readonly="true" class="mui-input-clear" placeholder="生产日期">
+				</div>
+				<div class="mui-input-row">
+					<label>号数上偏差</label>
+					<input id="upperDeviation" type="text" required readonly="true" class="mui-input-clear" placeholder="号数上偏差">
+				</div>
+				<div class="mui-input-row">
+					<label>号数下偏差</label>
+					<input id="lowerDeviation" type="text" required readonly="true" class="mui-input-clear" placeholder="号数下偏差">
+				</div>
+
+				<div class="mui-input-row">
+					<label>接头方式</label>
+					<input id="subWay" type="text" class="mui-input-clear" required readonly="true" placeholder="接头方式">
+				</div>
+				<div class="mui-input-row">
+					<label>重量</label>
+					<input id="weight" type="text" required readonly="true" class="mui-input-clear" placeholder="重量">
+				</div>
+				<div class="mui-input-row">
+					<label>退料车间</label>
+					<input id="ws" type="text" required readonly="true" class="mui-input-clear" placeholder="退料车间">
+				</div>
+			</form>
+			<div class="mui-button-row">
+				<!--<button type="button" id="gos" class="mui-btn mui-btn-primary mui-btn mui-btn-danger" disabled="disabled" onclick="doG()">放行</button>-->
+				<button type="button" id="go" class="mui-btn mui-btn-primary" style="font-size:36px; width:300px;height:80px;" onclick="ok()">确认</button>
+				<!--<button type="button" class="mui-btn mui-btn-primary" onclick="chancl()">取消</button>-->
+			</div>
+		</div>
+	</body>
+
+	<script type="text/javascript">
+		var mIn = App.getServerUrl() + "stock/material/in";
+		var mCheck = App.getServerUrl() + "stock/material/check";
+		var inOff = App.getServerUrl() + "stock/material/inOff";
+		var back = App.getServerUrl() + "stock/material/back";
+		var codeInfoUrl = App.getServerUrl() + "stock/material/";
+		var scanner;
+		var disable = false;
+		var flag = false;
+		var materialInfo;
+		var materialStock;
+		var str = "";
+		App.ready(function() {
+			scanner = new Scanner(parseCode);
+			scanner.scan();
+			//parseCode("49A42122702111056WX000892");
+		});
+
+		function parseCode(data1) {
+			var data = data1.split(";");
+			if(data.length == 2) {
+				$("#warehouseCode").val(data[0]);
+				$("#warehousePosCode").val(data[1]); 
+			} else if(data.length == 1) {
+				if(data[0].length > 15) {
+					waiting("正在加载原料信息"); 
+					App.ajaxGet(codeInfoUrl + data[0], function(ajaxData) {
+						closeWaiting();
+						if(ajaxData.error) {
+							tip(ajaxData.error);
+							return;
+						}
+
+						$("#produceCategory").val(ajaxData.produceCategory); //产品大类
+						$("#model").val(ajaxData.materialModel); //规格型号
+						$("#barcode").val(ajaxData.palletCode); //托盘编号
+						$("#productionDate").val(new Calendar(ajaxData.productionDate).format("yyyy-MM-dd HH:mm:ss")); //生产时间
+						$("#weight").val(ajaxData.weight); //重量
+						$("#upperDeviation").val(ajaxData.upperDeviation);
+						$("#lowerDeviation").val(ajaxData.lowerDeviation)
+						$("#ws").val(ajaxData.workshop);
+						$("#subWay").val(ajaxData.subWay); //接头方式
+
+					}, function(data) { 
+						closeWaiting();
+						tip("查询信息失败");
+						return;
+					});
+				} else {
+					tip("无效条码:" + data[0]);
+					return;
+				}
+			} else {
+				tip("未知条码");
+				return;
+			}
+		}
+
+		/*//放行
+		function doG() {
+			if(!validForm('formID')) {
+				return;
+			}
+			waiting("正在入库", true);
+			var form = {
+				warehousePosCode: $("#warehousePosCode").val(),
+				warehouseCode: $("#warehouseCode").val(),
+				deviation: $("#numberDeviation").val(),
+				numberDeviation: $("#numberDeviation").val(),
+				materialCode: $("#barcode").val(),
+				numberDeviation: $("#numberDeviation").val(),
+				inWeight: $("#weight").val(),
+				subWay: $("#subWay").val(),
+				produceCategory: $("#produceCategory").val(),
+				materialModel: $("#model").val(),
+				produceDate: $("#produceDate").val(),
+				inUserId:App.getLoginUserId(),
+				puid: App.getLoginUserId(),
+				puname: App.getLoginUserName(),
+			};
+			App.ajaxPost(inOff, form, function(data) {
+				closeWaiting();
+				toast("保存成功");
+				$("#formID")[0].reset();
+			}, function() {
+				closeWaiting();
+				//失败
+				toast("保存失败");
+				beepAndVibrate();
+				return;
+				
+			});
+
+		}*/
+
+		//入库
+		function ok() {
+			if(!validForm('formID')) {
+				return;
+			}
+			if($("#warehouseCode").val() == null || $("#warehouseCode").val() == "" || $("#warehouseCode").val() == undefined) {
+				toast("请扫描库位");
+				beepAndVibrate();
+				return;
+			}
+			if($("#warehousePosCode").val() == null || $("#warehousePosCode").val() == "" || $("#warehousePosCode").val() == undefined) {
+				toast("请扫描库位");
+				beepAndVibrate();
+				return;
+			}
+			save();
+		}
+
+		function save() {
+			waiting("正在入库", true);
+			var form = {
+				warehousePosCode: $("#warehousePosCode").val(),
+				warehouseCode: $("#warehouseCode").val(),
+				inTime: new Calendar().getTimeLong(),
+				optUser: App.getLoginUserName(),
+				syncState: 0,
+				inBankType:-1,
+				inBankSource:$("#ws").val(),
+				palletCode:$("#barcode").val()
+			};
+			App.ajaxPost(back, form, function(data) {
+				closeWaiting();
+				if(data.error){
+					tip(data.error);
+					return;
+				}
+				toast("保存成功");
+				var warehouseCode = $('#warehouseCode').val();
+				var warehousePosCode = $('#warehousePosCode').val();
+				$("#formID")[0].reset();
+				str = "";
+				$('#warehousePosCode').val(warehousePosCode);
+				$('#warehouseCode').val(warehouseCode);
+			}, function(data) {
+				//失败  
+				toast("保存失败");
+				closeWaiting();
+				str = "";
+				return;
+			});
+
+		}
+
+		//取消
+		function chancl() {
+			$("#formID")[0].reset();
+			str = "";
+		}
+	</script>
+
+</html>

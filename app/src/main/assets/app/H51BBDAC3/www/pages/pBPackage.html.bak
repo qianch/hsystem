@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>盒打包</title>
+		<script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			.mui-input-row:active {
+				background: gray;
+			}
+			
+			.mui-scroll-wrapper {
+				margin-top: 50px;
+			}
+			
+			.mui-popover {
+				margin-top: 50px;
+				margin-left: 20px;
+				height: 300px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">盒打包</h1>
+		</header>
+		<div class="mui-content">
+			<div class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<div id="box" class="mui-control-content mui-active">
+						<div class="mui-button-row">
+							<button type="button" class="mui-btn mui-btn-primary" id="num" style="width: 39%;margin-top:10px;color:red;">共:0卷</button>
+							<button type="button" class="mui-btn mui-btn-primary" id="bChangePrint" style="width: 39%;margin-top:10px;" onclick="doChangePrint()">换打印机</button>
+							<div id="printer_name">
+
+							</div>
+							<button type="button" class="mui-btn mui-btn-primary" onclick="doBPrint()" style="width: 80%;margin-top:5px;">点击打包（ENT键）</button>
+							<div style="font-weight: bold;">
+								（请先扫描卷/部件条码）
+							</div>
+						</div>
+						<form class="mui-input-group" id="boxForm" onsubmit="return false;">
+						</form>
+					</div>
+				</div>
+			</div>
+			<div id="popover" class="mui-popover">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<input id="printName" type="hidden">
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell">
+								<a href="#">请选择打印机</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+			//根据条码查询单号
+			var infos = App.getServerUrl() + "common/infos";
+			//保存托
+			var saveTray = App.getServerUrl() + "package/tray";
+			//保存盒
+			var saveBox = App.getServerUrl() + "package/box";
+			var findPrintListUrl = App.getServerUrl() + "package/getPrinterInfo";
+			var printUrl = App.getServerUrl() + "package/doPrintBarcode";
+			/*var printUrl = "http://192.168.1.113:8080/hsmes/mobile/package/doPrintBarcode";*/
+			var findPlanIdUrl = App.getServerUrl() + "package/findPlanId";
+			var isRepeatUrl = App.getServerUrl() + "package/isRepeat";
+			var stateUrl = App.getServerUrl() + "common/state";
+			//正在扫描的卷信息
+			var rolls = [];
+			var salesOrdercodes = undefined;
+			var productModels = undefined;
+			var planId = undefined;
+			var partName = undefined;
+			var printerList = undefined;
+			
+			var isTurnBagPack=false;
+			
+			//进入打印界面
+			LS.remove("print");
+
+			//盒子信息
+			mui('.mui-scroll-wrapper').scroll({
+				deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+			});
+
+			var scanner;
+			App.ready(function() {
+				scanner = new Scanner(parseCode);
+				scanner.scan();
+
+				Loading.show("正在加载打印机信息");
+				App.ajaxPost(findPrintListUrl, {
+					"puid": App.getLoginUserId()
+				}, function(data) {
+					printerList = data;
+					var str = '';
+					for(var i = 0; i < data.length; i++) {
+						str += '<li class="mui-table-view-cell"><a onclick=choose(this.text)>' + data[i].text + '</a></li>';
+					}
+					$('.mui-table-view').append(str);
+					Loading.hide();
+				}, function() {
+					Loading.hide();
+					toast("网络错误");
+				})
+			});
+
+			//选择打印机
+			function choose(text) {
+				var cpname = null;
+
+				for(var a = 0; a < printerList.length; a++) {
+
+					if(printerList[a].text == text) {
+						cpname = printerList[a].value;
+						break;
+					}
+				}
+				if(cpname == undefined) {
+					return;
+				}
+				$("#printName").val(cpname);
+				LS.set("print", cpname);
+				$("#printer_name").text(text);
+				mui('.mui-popover').popover('hide', document.getElementById("openPopover"));
+			}
+			var canParseCode=true;
+			/**
+			 * PDA扫描回调
+			 * @param {Object} code
+			 */
+			function parseCode(code) {
+				if(!canParseCode){
+					return;
+				}
+				if(code.indexOf("T") == 0 || code.indexOf("B") == 0) {
+					tip("不可扫描箱条码或者托条码");
+					return;
+				}
+
+				data = code.split(";");
+
+				for(var i = 0; i < rolls.length; i++) {
+					if(data[0] == rolls[i]) {
+						tip("重复扫码");
+						return;
+					}
+				}
+
+				waiting("正在查询条码信息")
+				//后台查询条码信息
+				App.ajaxGet(infos + "?barCode=" + data[0], function(ajaxData) {
+					if(ajaxData.ERROR) {
+						tip(ajaxData.MSG);
+						return;
+					}
+
+					//是否登记
+					if(!ajaxData.REGISTER) {
+						tip("产品尚未登记，无法打包");
+						return;
+					}
+
+					//是否已打包
+					if(ajaxData.PACKED) {
+						tip("该条码产品已打包过，无法再次打包");
+						return;
+					}
+					//是否已冻结
+					if(ajaxData.STATE == 3) {
+						tip("该条码产品已冻结，无法打包");
+						return;
+					}
+					//是否不合格
+					if(ajaxData.STATE == -1) {
+						tip("该条码产品不合格，无法打包");
+						return;
+					}
+
+					//是否不在库
+					if(ajaxData.ROLL.ROLLQUALITYGRADECODE != "A") {
+						tip("质量等级，要求必须为A级品")
+						return;
+					}
+					if(data[0].charAt(0) == 'R') {
+						if(isEmpty(planId)) {
+							if(!isEmpty(ajaxData.TBP)) {
+								planId = ajaxData.TBP.ID;
+								isTurnBagPack=true;
+							} else {
+								if(!isEmpty(ajaxData.WP.ID)) {
+									planId = ajaxData.WP.ID;
+									isTurnBagPack=false;
+								}
+							}
+						} else {
+							//不是同一计划产出的
+							if(!isEmpty(ajaxData.TBP)) {
+								if(planId != ajaxData.TBP.ID) {
+									tip("非同一计划产出的无法打包");
+									return;
+								}
+							} else {
+								if(planId != ajaxData.WP.ID) {
+									tip("非同一计划产出的无法打包");
+									return;
+								}
+							}
+						}
+					} else {
+						if(isEmpty(partName)) {
+							partName = ajaxData.CODE.PARTNAME;
+						} else {
+							if(partName != ajaxData.CODE.PARTNAME) {
+								tip("不是相同的部件");
+								return;
+							}
+						}
+
+						if(isEmpty(planId)) {
+							if(!isEmpty(ajaxData.TBP)) {
+								planId = ajaxData.TBP.ID;
+								isTurnBagPack=true;
+							} else {
+								if(!isEmpty(ajaxData.CP.ID)) {
+									planId = ajaxData.CP.ID;
+									isTurnBagPack=false;
+								}
+							}
+						} else {
+							//不是同一计划产出的
+							if(!isEmpty(ajaxData.TBP)) {
+								if(planId != ajaxData.TBP.ID) {
+									tip("非同一计划产出的无法打包");
+									return;
+								}
+							} else {
+								if(planId != ajaxData.CP.ID) {
+									tip("非同一计划产出的无法打包");
+									return;
+								}
+							}
+						}
+					}
+
+					for(var i = 0; i < rolls.length; i++) {
+						if(data[0] == rolls[i]) {
+							tip("重复扫码");
+							return;
+						}
+					}
+
+					rolls.push(data[0]);
+
+					$("#boxForm").prepend("<div class=\"mui-input-row barcode\"><label>卷条码</label> <input  type=\"text\" class=\"mui-input-clear\" value=\"" + data[0] + "\" readonly> </div>");
+					$("#num").html("共" + $(".barcode").length + "卷");
+				}, function(error) {
+					tip("系统异常，联系管理员");
+				});
+			}
+
+			//重置页面信息
+			function reset() {
+				$("#boxForm")[0].reset();
+				$(".barcode").remove();
+								productModels=undefined;
+				planId = undefined;
+				partName = undefined;
+				isTurnBagPack = false;
+				rolls = [];
+				boxes = [];
+				salesOrdercodes = undefined;
+				$("#num").html("0卷");
+			}
+
+			//长按卷条码，提示删除
+			mui("form").on("longtap", ".barcode", function(e) {
+				var _this = this;
+				mconfirm("删除提示", "确认删除？", function() {
+					for(var i = 0; i < rolls.length; i++) {
+						if($($(_this).children("input")[0]).val() == rolls[i]) {
+							rolls.splice(i, 1)
+							break;
+						}
+					}
+					$(_this).slideUp(500, function() {
+						$(this).remove();
+					});
+					if(rolls.length == 0) {
+						salesOrdercodes = undefined;
+						planId = undefined;
+						partName = undefined;
+					}
+					$("#num").empty();
+					$("#num").append("共:" + (--$(".barcode").length) + "卷");
+				});
+			});
+
+			//打印盒标签
+			function doBPrint() {
+				canParseCode=false;
+				if(rolls.length == 0) {
+					beepAndVibrate();
+					toast("请扫描卷条码");
+					canParseCode=true;
+					return;
+				}
+
+				mconfirm('警告', '确认打包？', function() {
+					waiting("正在打印并打包");
+					var stData;
+					var isRollPack = true;
+					if(rolls[0].charAt(0) != "R") {
+						isRollPack = false;
+					}
+
+					if(LS.get("print") == null) {
+						closeWaiting();
+						mui('.mui-popover').popover('show', document.getElementById("openPopover"));
+					} else {
+						if(isTurnBagPack){
+							param = {
+									pName: LS.get("print"),
+									count: 1,
+									turnBagPlanId: planId,
+									type: "box",
+									puid: App.getLoginUserId()
+							}
+						}else{
+							if(isEmpty(partName)) {
+								param = {
+									pName: LS.get("print"),
+									count: 1,
+									weavePlanId: planId,
+									type: "box",
+									puid: App.getLoginUserId()
+								}
+							} else {
+								param = {
+									pName: LS.get("print"),
+									count: 1,
+									cutPlanId: planId,
+									type: "box",
+									puid: App.getLoginUserId()
+								}
+							}
+						}
+						App.ajaxPost(printUrl, param,function(data1) {
+								if(!isEmpty(data1.barcode)) {
+									toast("打印成功");
+									doBPack(data1.barcode);
+									canParseCode=true;
+									return;
+								}
+								tip(data1);
+								//tip(data1.error);
+								closeWaiting();
+								canParseCode=true;
+							},
+							function(data1) {
+								canParseCode=true;
+								toast(data1.responseText);
+							}
+						);
+					}
+				});
+			}
+
+			//换打印机
+			function doChangePrint() {
+				mui('.mui-popover').popover('show', document.getElementById("openPopover"));
+			}
+
+			//打包
+			function doBPack(data) {
+				$("#boxBarcode").val(data);
+				waiting("正在打包");
+				App.ajaxPost(saveBox, {
+						"boxCode": data,
+						"packagingStaff": App.getLoginUserId(),
+						"puid": App.getLoginUserId(),
+						"puname": App.getLoginUserName(),
+						"rollCodes": rolls.join(","),
+						"planId": planId
+					},
+					function(data) {
+						closeWaiting();
+						if(data.ERROR) {
+							tip(data.MSG);
+							return;
+						}
+						toast("打包成功");
+						malert("打包成功", "盒条码：" + data.BOXBARCODE, "确定", function() {
+							reset();
+						});
+					},
+					function(data) {
+						closeWaiting();
+						beepAndVibrate();
+						toast(data.responseText);
+						return;
+					}
+				);
+
+			}
+
+			//键盘事件
+			document.onkeydown = function(e) {
+				//回车
+				if(e.keyCode == 13) {
+					//packaging();
+				}
+				//方向选择
+				if(e.keyCode == 37 || e.keyCode == 39) {
+					/*//判断方向键
+					var direction = e.keyCode == 39 ? 1 : -1;
+					//获取当前选中项的index
+					var itemIndex = parseInt($("a.mui-active").attr("index"));
+					//根据方向键，计算下一项item的index
+					var nextIndex = itemIndex + direction;
+					if(nextIndex > 3 || nextIndex < 1) return;
+					$("#segmentedControl a").removeClass("mui-active");
+					$("#segmentedControl a[index=" + nextIndex + "]").addClass("mui-active");
+					$(".mui-control-content").hide();
+					$($("#segmentedControl a[index=" + nextIndex + "]").attr("href")).show();
+					reset();*/
+				}
+			}
+		</script>
+	</body>
+
+</html>

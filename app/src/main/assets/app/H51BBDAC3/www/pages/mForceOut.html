@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			.mui-input-group,
+			.mui-card-content-inner {
+				border-bottom: 2px solid #007aff;
+			}
+			
+			.mui-card-content-inner:active {
+				background: gray;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">巨石原料退回</h1>
+		</header>
+		<div class="mui-content">
+			<div class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<div class="mui-card">
+						<div class="mui-card-header">
+							<form class="mui-input-group" id="formID" style="background:#dcdcdc;">
+								<input id="outOrderUserId" type="hidden" class="mui-input-clear" placeholder="出库操作人">
+								<div class="mui-input-row">
+									<label>退库地址</label>
+									<input type="text" id="outAddress" value="巨石" readonly="readonly">
+								</div>
+
+							</form>
+						</div>
+
+						<div class="mui-card-content" id="list">
+
+						</div>
+					</div>
+					<div class="mui-button-row">
+						<button type="button" class="mui-btn mui-btn-primary" onclick="doSubmit()">确认</button>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</body>
+	<script type="text/template" id="materialInfo">
+		<div mssId="{{v.ID}}" code="{{v.PALLETCODE}}">
+			<div class='mui-input-row'>
+				<label>托盘条码</label>
+				<input type='text' class='mui-input-clear' readonly value="{{v.PALLETCODE}}">
+			</div>
+			<div class='mui-input-row'>
+				<label>产品大类</label>
+				<input type='text' class='mui-input-clear' readonly value="{{v.PRODUCECATEGORY}}">
+			</div>
+			<div class='mui-input-row'>
+				<label>规格型号</label>
+				<input type='text' class='mui-input-clear' readonly value="{{v.MATERIALMODEL}}">
+			</div>
+			<div class='mui-input-row'>
+				<label>重量</label>
+				<input type='text' class='mui-input-clear' readonly value="{{v.WEIGHT}} KG">
+			</div>
+			<div class='mui-input-row'>
+				<label>上下偏差</label>
+				<input type='text' class='mui-input-clear' readonly value="{{v.REALLOWERDEVIATION}}~{{v.REALUPPERDEVIATION}}">
+			</div>
+			<div class='mui-input-row'>
+				<label>接头方式</label>
+				<input type='text' class='mui-input-clear' readonly value="{{v.REALSUBWAY}}">
+			</div>
+			<div class='mui-input-row'>
+				<label>编码</label>
+				<input type='text' class='mui-input-clear' readonly value="{{v.MATERIALCODE}}">
+			</div>
+			<div class='mui-input-row'>
+				<label>保质期</label>
+				<input type='text' class='mui-input-clear' readonly value="{{v.MATERIALSHELFLIFE}}天">
+			</div>
+			<div class='mui-input-row'>
+				<label>原料状态</label>
+				<input type='text' class='mui-input-clear' readonly value="{{state(v.STATE)}}">
+			</div>
+			<div class='mui-input-row'>
+				<label>库存状态</label>
+				<input type='text' class='mui-input-clear' readonly value="{{stockState(v.STOCKSTATE)}}">
+			</div>
+			<div class='mui-input-row'>
+				<label>库房</label>
+				<input type='text' id="m_ck_{{v.ID}}" class='mui-input-clear' readonly value="{{v.WAREHOUSECODE}}">
+			</div>
+			<div class='mui-input-row'>
+				<label>库位</label>
+				<input type='text' id="m_kw_{{v.ID}}" class='mui-input-clear' readonly value="{{v.WAREHOUSEPOSCODE}}">
+			</div>
+		</div>
+	</script>
+	<script type="text/javascript">
+		var mInfo = App.getServerUrl() + "stock/material/info/";
+		var mForceOut = App.getServerUrl() + "stock/material/backToJuShi";
+		var codeInfoUrl = App.getServerUrl() + "material/";
+		App.ready(function() {
+			scanner = new Scanner(parseCode);
+			scanner.scan();
+			//parseCode("AAAA1311607292042WXAAAAA"); 
+		});
+
+		template.helper("state", function(v) {
+			if(v == 0) {
+				return "待检";
+			}
+			if(v == 1) {
+				return "合格";
+			}
+			if(v == 2) {
+				return "不合格";
+			}
+			return "";
+		});
+
+		template.helper("stockState", function() {
+			return 0 ? "在库" : "出库";
+		});
+
+		function parseCode(code) {
+			waiting("正在加载原料信息");
+			App.ajaxGet(mInfo + code, function(ajaxData) {
+				$("#list").empty();
+				log(ajaxData)
+				if(ajaxData.error) {
+					tip(ajaxData.error);
+					return;
+				}
+				//判断物料是否在库
+				if(ajaxData.STOCKSTATE == 1) {
+					toast("该原料不在库，请确认");
+					beepAndVibrate();
+					return; 
+				}
+				//判断物料是否是合格并且未冻结产品
+				if(ajaxData.STATE != 2) {
+					toast("原料合格或待检中，请先为不合格品");
+					beepAndVibrate();
+					return;
+				}
+				var html = template('materialInfo', {
+					"v": ajaxData
+				});
+				$("#list").append(html);
+
+			}, function() {
+				closeWaiting();
+				beepAndVibrate();
+				toast("查询信息失败");
+				return;
+			});
+		}
+		var submitUrl = "";
+
+		function doSubmit() {
+
+			mconfirm("操作提示","确认退回巨石?",function(){
+				$("div[mssId]").each(function(i, e) {
+					var _this = this;
+					var mssId = $(this).attr("mssId")
+					App.ajaxGet(mForceOut + "?mssId=" + mssId + "&outTime=" + new Calendar().getTimeLong() + "&warehouseCode=" + $("#m_ck_" + mssId).val() + "&warehousePosCode=" + $("#m_kw_" + mssId).val() + "&outAddress=巨石&outUser=" + App.getLoginUserName() + "&syncState=0",
+						function(ajaxData) {
+							$(_this).remove();
+							sucTip($(_this).attr("code") + "退回成功")
+						},
+						function(xhr, a, b) {
+							return;
+						} 
+					);
+			});
+			},function(){});
+		}
+
+		mui.init({
+			gestureConfig: {
+				longtap: true //默认为false
+			}
+		});
+		mui('.mui-scroll-wrapper').scroll({
+			deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+		});
+		mui('.mui-card-content').on('longtap', '.mui-card-content-inner', function() {
+			var id = this.getAttribute("id");
+			mconfirm("删除", "确认删除", function() {
+				$("#" + id).slideUp(500, function() {
+					$(this).remove();
+				});
+			}, function() {});
+
+		});
+	</script>
+
+</html>

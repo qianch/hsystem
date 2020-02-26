@@ -1,0 +1,318 @@
+                                                                                                                                        <!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>胚布入库</title>
+		<script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			.mui-input-group .mui-input-row {
+				height: 30px;
+			}
+			
+			.mui-input-row label {
+				line-height: 30px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">胚布入库</h1>
+		</header>
+		<div class="mui-content">
+			<div class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<div class="mui-input-group" style="background:#dcdcdc;border-bottom: 2px solid #007aff;margin-bottom: 1px;">
+						<!--<div class="mui-input-row">
+							<label>仓库</label>
+							<input id="warehouseCode" type="text" readonly required placeholder="仓库">
+						</div>
+						<div class="mui-input-row">
+							<label>库位</label>
+							<input id="warehousePosCode" type="text" readonly required placeholder="库位">
+						</div>-->
+						<input id="warehouseCode" type="hidden" readonly required>
+						<input id="warehousePosCode" type="hidden" readonly required>
+
+						<!--<ul class="mui-table-view">
+							<li class="mui-table-view-cell">
+								<li class="mui-table-view-cell">
+									<a onclick=choose(this.text)>编织一车间</a>
+								</li>
+								<li class="mui-table-view-cell">
+									<a onclick=choose(this.text)>编织二车间</a>
+								</li>
+								<li class="mui-table-view-cell">
+									<a onclick=choose(this.text)>编织三车间</a>
+								</li>
+							</li>
+						</ul>-->
+					</div>
+					<form class="mui-input-group" id="rForm">
+						<div class="mui-input-row">
+							<label>选择车间</label>
+							<select id="depName" onchange="choose()">
+								<option value="选择胚布库">请选择胚布库</option>
+								<option value="编织一胚布库">编织一胚布库</option>
+								<option value="编织二胚布库">编织二胚布库</option>
+								<option value="编织三胚布库">编织三胚布库</option>
+							</select>
+						</div>
+						<input id="state" type="hidden">
+						<div class="mui-input-row">
+							<label>条码号</label>
+							<input id="barCode" type="text" readonly required placeholder="条码号">
+						</div>
+						<div class="mui-input-row">
+							<label>订单号</label>
+							<input id="orderCode" type="text" readonly class="mui-input-clear" required placeholder="订单号">
+						</div>
+						<div class="mui-input-row">
+							<label>产品名称</label>
+							<input id="consumerProductName" type="text" readonly class="mui-input-clear" required placeholder="客户产品名称">
+						</div>
+						<div class="mui-input-row">
+							<label>产品型号</label>
+							<input id="productModel" type="text" style="font-size: 15px" class="mui-input-clear" placeholder="产品型号">
+						</div>
+						<div class="mui-input-row">
+							<label>批次号</label>
+							<input id="batchCode" type="text" readonly class="mui-input-clear" required placeholder="批次号">
+						</div>
+						<div class="mui-input-row">
+							<label>部件</label>
+							<input id="partName" type="text" readonly class="mui-input-clear"  placeholder="部件">
+						</div>
+						<div class="mui-input-row">
+							<label>门幅</label>
+							<input id="productWidth" type="text" readonly class="mui-input-clear" required placeholder="门幅">
+						</div>
+						<div class="mui-input-row">
+							<label>客户</label>
+							<input id="consumer" type="text" readonly class="mui-input-clear" required placeholder="客户">
+						</div>
+						<!--<div class="mui-input-row">
+							<label>超期天数</label>
+							<input id="overTime" type="text" readonly class="mui-input-clear" placeholder="超期天数">
+						</div>-->
+						<div class="mui-input-row">
+							<label>重量</label>
+							<input id="weight" readonly type="text" class="mui-input-clear" placeholder="重量">
+						</div>
+						<div class="mui-button-row">
+							<button type="button" class="mui-btn mui-btn-primary" onclick="doRSubmit()" style="width: 50%;">保存</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</body>
+
+	<script type="text/javascript">
+		var submitUrl = App.getServerUrl() + "stock/product/in";
+		var ProductStockBackUrl = App.getServerUrl() + "stock/product/back";
+		var findInfoUrl = App.getServerUrl() + "common/infos";
+		var rdata = "";
+		var warehouseCode;
+		var warehousePosCode;
+		var department;
+
+		var scanner;
+		App.ready(function() {
+			scanner = new Scanner(parseCode);
+			scanner.scan();
+		});
+
+		function choose() {
+			var text = $("#depName").val();
+			//console.log(text);
+			department = text;
+			if(text == "编织一胚布库") {
+				warehouseCode = "bz1pbk";
+				warehousePosCode = "1";
+				$("#warehouseCode").val("bz1pbk");
+				$('#warehousePosCode').val("1");
+
+			} else if(text == "编织二胚布库") {
+				warehouseCode = "bz2pbk";
+				warehousePosCode = "1";
+				$("#warehouseCode").val("bz2pbk");
+				$('#warehousePosCode').val("1");
+			} else if(text == "编织三胚布库") {
+				warehouseCode = "bz3pbk";
+				warehousePosCode = "1";
+				$("#warehouseCode").val("bz3pbk");
+				$('#warehousePosCode').val("1");
+			}
+		}
+
+		function parseCode(code) {
+			var infoUrl = App.getServerUrl() + "common/infos";
+			data = code.split(";");
+			if(data.length == 5) {
+				//$("#rForm")[0].reset();
+				//条码扫的数据
+				if(data[0].indexOf("B") == 0) {
+					toast("盒不能直接入库");
+					return;
+				}
+				if(data[0].indexOf("R")==0||data[0].indexOf("P")==0){
+					toast("卷不能直接入库");
+				}
+				
+				if(data[0].indexOf("T") !=0) {
+					toast("无效条码");
+					return;
+				}
+
+				$("#barCode").val(data[0]);
+				waiting("正在查询该条码的状态信息");
+				App.ajaxGet(findInfoUrl + "?barCode=" + data[0], function(ajaxData) {
+					closeWaiting();
+					if(ajaxData.ERROR) {
+						tip(ajaxData.MSG);
+						return;
+					}
+					//判断条码是否产出登记
+					if(ajaxData.REGISTER) {
+						//判断条码是否已被冻结
+						if(ajaxData.STOCK == 1) {
+							beepAndVibrate();
+							toast("该条码已在库");
+							return;
+						}
+						if(ajaxData.ENDPACK != undefined) {
+							if(!ajaxData.ENDPACK) {
+								beepAndVibrate();
+								toast("打包未结束");
+								return;
+							}
+						}
+
+						//判断条码是否为胚布(裁剪车间产品)
+						if((ajaxData.CONSUMERSIMPLENAME).indexOf("裁剪车间") != 0) {
+							beepAndVibrate();
+							toast("该条码不是裁剪车间用胚布无法入胚布库");
+							return;
+						}
+						//判断是否投料
+						if(ajaxData.STOCK == 0) {
+							beepAndVibrate();
+							toast("已裁剪投料");
+							return;
+						}
+						$("#orderCode").val(ajaxData.WP.SALESORDERCODE);
+						$("#consumer").val(ajaxData.WP.CONSUMERNAME);
+						$("#consumerProductName").val(ajaxData.PRODUCT.CONSUMERPRODUCTNAME);
+						$("#batchCode").val(ajaxData.WP.BATCHCODE);
+						$("#partName").val(ajaxData.PARTNAME);
+						$("#productWidth").val(ajaxData.PRODUCT.PRODUCTWIDTH);
+
+						//var shelfLife = ajaxData.PRODUCT.PRODUCTSHELFLIFE;
+						var outTime;
+						if(data[0].indexOf("R") == 0) {
+
+							$("#weight").val(Number(ajaxData.ROLL.ROLLWEIGHT).toFixed(1));
+							$("#productModel").val(ajaxData.PRODUCT.PRODUCTMODEL);
+							outTime = new Calendar(new Date(ajaxData.ROLL.ROLLOUTPUTTIME.replace(/-/g, "/")));
+						} else if(data[0].indexOf("T") == 0) {
+							try {
+								$("#weight").val(Number(ajaxData.TRAY.WEIGHT).toFixed(1));
+							} catch(e) {
+								$("#weight").val(ajaxData.TRAY.WEIGHT);
+							}
+							$("#productModel").val(ajaxData.PRODUCT.PRODUCTMODEL);
+							outTime = new Calendar(new Date(ajaxData.TRAY.PACKAGINGTIME.replace(/-/g, "/")));
+						}
+						var now = new Calendar();
+						var overTime = Calendar.diff(outTime, now, Calendar.field.DAY);
+						if(overTime > 0)
+							$("#overTime").val(overTime);
+						else
+							$("#overTime").val(0);
+					} else {
+						beepAndVibrate();
+						toast("该条码未产出登记");
+					}
+				}, function() {
+					closeWaiting();
+					beepAndVibrate();
+					toast("查询条码信息失败");
+				});
+			} else {
+				//库房库位扫的数据
+				$("#warehouseCode").val(code.split(";")[0]);
+				$("#warehousePosCode").val(code.split(";")[1]);
+			}
+		}
+
+		mui('.mui-scroll-wrapper').scroll({
+			deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+		});
+
+		document.onkeydown = function(e) {
+
+			//键盘事件
+			if(e.keyCode == 37 || e.keyCode == 39) {}
+
+			if(e.keyCode == 13) {}
+		}
+
+		//卷数据提交
+		function doRSubmit() {
+			if(!validForm('rForm')) {
+				return;
+			}
+			if($("#warehouseCode").val() == "" || $("#warehouseCode").val() == null) {
+				toast("请选择库位！");
+				beepAndVibrate();
+				return;
+			}
+			waiting("正在入库", true);
+			var rStr = {
+				"barCode": $("#barCode").val(),
+				"weight": $("#weight").val(),
+				"overTime": 0,
+				"operateUserId": App.getLoginUserId(),
+				"puid": App.getLoginUserId(),
+				"puname": App.getLoginUserName(),
+				"warehouseCode": $("#warehouseCode").val(),
+				"warehousePosCode": $("#warehousePosCode").val(),
+				"inBankSource":App.getUserDepartment(),
+				"inTime":new Calendar().format("yyyy-MM-dd HH:mm:ss"),
+				"syncState":1
+			};
+
+			App.ajaxPost(submitUrl, rStr, function(data) {
+				closeWaiting();
+				if(data == "false") {
+					toast("该条码已存在！");
+					beepAndVibrate();
+				} else {
+					plus.audio.createPlayer("notice.mp3").play();
+					toast("保存成功");
+					clear();
+				}
+				//成功
+			}, function(data) {
+				//失败
+				closeWaiting();
+				toast("保存失败");
+				beepAndVibrate();
+			});
+			clear();
+		}
+
+		function clear() {
+			$("#rForm")[0].reset();
+			rdata = "";
+			$("#warehouseCode").val(warehouseCode);
+			$('#warehousePosCode').val(warehousePosCode);
+			$('#depName').val(department);
+
+		}
+	</script>
+
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>裁剪产出登记</title>
+		<script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
+		<link href="../resources/css/mui.picker.css" rel="stylesheet" />
+		<link href="../resources/css/mui.poppicker.css" rel="stylesheet" />
+		<script src="../resources/js/mui/mui.picker.js"></script>
+		<script src="../resources/js/mui/mui.poppicker.js"></script>
+		<style type="text/css">
+
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">裁剪产出登记</h1>
+		</header>
+		<div class="mui-content">
+
+			<form class="mui-input-group" id="formID">
+
+				<input type="hidden" id="rollUserId" readonly="true" required class="mui-input-clear" placeholder="操作人ID">
+				<div class="mui-input-row">
+					<label>设备代码</label>
+					<input value="" type="text" id="rollDeviceCode" readonly="true" required class="mui-input-clear" placeholder="设备代码">
+				</div>
+				<div class="mui-input-row">
+					<label>部件条码</label>
+					<input type="text" id="partBarcode" readonly="true" required class="mui-input-clear" placeholder="部件条码">
+				</div>
+				<div class="mui-input-row">
+					<label>部件名称</label>
+					<input value="" type="text" id="productName" readonly="true" required class="mui-input-clear" placeholder="部件名称">
+				</div>
+				<div class="mui-input-row">
+					<label>卷&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;重</label>
+					<input value="" type="number" id="rollWeight" required class="mui-input-clear" placeholder="卷重">
+				</div>
+				<div class="mui-input-row">
+					<label>质量等级</label>
+					<select id="rollQualityGradeCode" name="rollQualityGradeCode">
+					</select>
+				</div>
+				<div class="mui-button-row">
+					<button type="button" class="mui-btn mui-btn-primary" onclick="addProductRoll()">确认</button>
+				</div>
+			</form>
+		</div>
+	</body>
+	<script type="text/javascript">
+		var scanner;
+		var doc = document;
+		var addMaterialUrl = App.getServerUrl() + "produce/add";
+		var userPicker = new mui.PopPicker();
+		var getQualityGradeSelections = App.getServerUrl() + "produce/getQualityGradeSelections";
+		var addroll = App.getServerUrl() + "produce/addroll";
+		var findInfoUrl = App.getServerUrl() + "common/infos";
+		function parseCode(data) {
+			var deviceInfos = data.split(";");
+			if(deviceInfos.length == 1) {
+				$("#rollDeviceCode").val(deviceInfos[0]);
+			}else {
+				if(isEmpty($("#rollDeviceCode").val())) {
+					closeWaiting();
+					toast("请先扫描机台号");
+					return;
+				}
+				$("#partBarcode").val(parseRollCode(data, ROLL_CODE.barcode));
+				App.ajaxPost(findInfoUrl, {
+							"barCode": $("#partBarcode").val()
+						}, function(ajaxData) {
+							closeWaiting();
+							if(ajaxData.PRODUCT==null){
+								return;
+							}
+							var pWeight = ajaxData.PRODUCT.TCPROCBOMVERSIONPARTSWEIGHT;
+							var pName = ajaxData.PRODUCT.TCPROCBOMVERSIONPARTSNAME;
+							if(pWeight != null) {
+								$("#rollWeight").val(pWeight);
+							}
+							if(pName != null){
+								$("#productName").val(pName);
+							}
+	
+						}, function() {
+							closeWaiting();
+							toast("查询部件条码信息失败");
+							return;
+						});
+			}
+			}
+
+		function addProductRoll() {
+			if(App.getLoginUserId() == null || App.getLoginUserId() == "") {
+				beepAndVibrate();
+				toast("未登陆，请重新登陆");
+				return;
+			}
+			if($("#partBarcode").val() == null || $("#partBarcode").val() == "") {
+
+				beepAndVibrate();
+				toast("请扫描部件条码");
+				return;
+			} else {
+				if($("#partBarcode").val().indexOf("P") != 0) {
+					beepAndVibrate();
+					toast("请扫描部件条码");
+					return;
+				}
+			}
+
+			if(isEmpty($("#rollWeight").val())) {
+				beepAndVibrate();
+				toast("请输入卷重");
+				return;
+			}
+			var rStr = {
+				"rollDeviceCode": $("#rollDeviceCode").val(),
+				"rollUserId": App.getLoginUserId(),
+				"puid": App.getLoginUserId(),
+				"puname": App.getLoginUserName(),
+				"partBarcode": $("#partBarcode").val(),
+				"rollQualityGradeCode": $("#rollQualityGradeCode").val(),
+				"rollWeight": $("#rollWeight").val()
+			};
+			App.ajaxPost(addroll, rStr, function(data) {
+				closeWaiting();
+				if(data == "success") {
+					var deviceCode=$("#rollDeviceCode").val();
+					$("#formID")[0].reset();
+					$("#rollDeviceCode").val(deviceCode);
+					sucTip("产出登记成功");
+					return;
+				} else if(data == "exist") {
+					tip("重复登记产品");
+					return;
+				} else {
+					tip("产出登记失败");
+					return;
+				}
+			});
+		}
+		App.ready(function() {
+			scanner = new Scanner(parseCode);
+			scanner.scan();
+			$("#rollUserId").val(App.getLoginUserId());
+			var rStr = {};
+			App.ajaxPost(getQualityGradeSelections, rStr, function(data) {
+				Loading.hide();
+				if(data) {
+					for(var i = 0; i < data.length; i++) {
+						$("#rollQualityGradeCode").append("<option value='" + data[i].text + "'>" + data[i].text + "</option>")
+					}
+				} else {
+					toast("加载产品质量等级失败");
+				}
+
+			}, function(data) {
+				Loading.hide();
+				toast("加载产品质量等级失败");
+				return;
+			});
+		});
+	</script>
+
+</html>

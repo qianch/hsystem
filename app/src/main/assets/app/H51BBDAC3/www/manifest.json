@@ -1,0 +1,1763 @@
+{
+    "@platforms" : [ "android" ],
+    "id" : "H51BBDAC3", /*应用的标识，创建应用时自动生成，勿手动修改*/
+    "name" : "恒石MES", /*应用名称，程序桌面图标名称*/
+    "version" : {
+        "name" : "4.0.5", /*应用版本名称*/
+        "code" : "83"
+    },
+    "description" : "恒石MES系统 智能终端", /*应用描述信息*/
+    "icons" : {
+        "72" : "icon.png"
+    },
+    "launch_path" : "pages/index.html", /*应用的入口页面，默认为根目录下的index.html；支持网络地址，必须以http://或https://开头*/
+    "developer" : {
+        "name" : "高飞", /*开发者名称*/
+        "email" : "252878950@qq.com", /*开发者邮盒地址*/
+        "url" : "http://www.xdemo.org/"
+    },
+    "permissions" : {
+        "Audio" : {
+            "description" : "访问麦克风"
+        },
+        "Cache" : {
+            "description" : "管理应用缓存"
+        },
+        "Camera" : {
+            "description" : "访问摄像头"
+        },
+        "Console" : {
+            "description" : "跟踪调试输出日志"
+        },
+        "Device" : {
+            "description" : "访问设备信息"
+        },
+        "Downloader" : {
+            "description" : "文件下载管理"
+        },
+        "Events" : {
+            "description" : "应用扩展事件"
+        },
+        "File" : {
+            "description" : "访问本地文件系统"
+        },
+        "Gallery" : {
+            "description" : "访问系统相册"
+        },
+        "Invocation" : {
+            "description" : "使用Native.js能力"
+        },
+        "Storage" : {
+            "description" : "管理应用本地数据"
+        },
+        "Uploader" : {
+            "description" : "管理文件上传任务"
+        },
+        "Runtime" : {
+            "description" : "访问运行期环境"
+        },
+        "XMLHttpRequest" : {
+            "description" : "跨域网络访问"
+        },
+        "Zip" : {
+            "description" : "文件压缩与解压缩"
+        },
+        "Barcode" : {
+            "description" : "管理二维码扫描插件"
+        },
+        "Webview" : {
+            "description" : "窗口管理"
+        },
+        "NativeUI" : {
+            "description" : "原生UI控件"
+        },
+        "Navigator" : {
+            "description" : "浏览器信息"
+        },
+        "NativeObj" : {
+            "description" : "原生对象"
+        }
+    },
+    "plus" : {
+        "splashscreen" : {
+            "autoclose" : true, /*是否自动关闭程序启动界面，true表示应用加载应用入口页面后自动关闭；false则需调plus.navigator.closeSplashscreen()关闭*/
+            "waiting" : false,
+            "delay" : "2000"
+        },
+        "runmode" : "liberate", /*应用的首次启动运行模式，可取liberate或normal，liberate模式在第一次启动时将解压应用资源（Android平台File API才可正常访问_www目录）*/
+        "signature" : "Sk9JTiBVUyBtYWlsdG86aHIyMDEzQGRjbG91ZC5pbw==", /*可选，保留给应用签名，暂不使用*/
+        "distribute" : {
+            "plugins" : {
+                "push" : {}
+            },
+            "apple" : {
+                "appid" : "", /*iOS应用标识，苹果开发网站申请的appid，如io.dcloud.HelloH5*/
+                "mobileprovision" : "", /*iOS应用打包配置文件*/
+                "password" : "", /*iOS应用打包个人证书导入密码*/
+                "p12" : "", /*iOS应用打包个人证书，打包配置文件关联的个人证书*/
+                "devices" : "universal", /*iOS应用支持的设备类型，可取值iphone/ipad/universal*/
+                "frameworks" : []
+            },
+            "google" : {
+                "packagename" : "", /*Android应用包名，如io.dcloud.HelloH5*/
+                "keystore" : "", /*Android应用打包使用的密钥库文件*/
+                "password" : "", /*Android应用打包使用密钥库中证书的密码*/
+                "aliasname" : "", /*Android应用打包使用密钥库中证书的别名*/
+                "permissions" : [
+                    "<uses-feature android:name=\"android.hardware.camera\"/>",
+                    "<uses-feature android:name=\"android.hardware.camera.autofocus\"/>",
+                    "<uses-permission android:name=\"android.permission.CAMERA\"/>",
+                    "<uses-permission android:name=\"android.permission.FLASHLIGHT\"/>",
+                    "<uses-permission android:name=\"android.permission.GET_ACCOUNTS\"/>",
+                    "<uses-permission android:name=\"android.permission.MODIFY_AUDIO_SETTINGS\"/>",
+                    "<uses-permission android:name=\"android.permission.READ_CONTACTS\"/>",
+                    "<uses-permission android:name=\"android.permission.RECORD_AUDIO\"/>",
+                    "<uses-permission android:name=\"android.permission.VIBRATE\"/>",
+                    "<uses-permission android:name=\"android.permission.WRITE_CONTACTS\"/>",
+                    "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>",
+                    "<uses-permission android:name=\"android.permission.RECEIVE_USER_PRESENT\"/>"
+                ],
+                "targetSdkVersion" : 19,
+                "minSdkVersion" : 19
+            },
+            "orientation" : [ "portrait-primary", "portrait-secondary" ], /*应用支持的方向，portrait-primary：竖屏正方向；portrait-secondary：竖屏反方向；landscape-primary：横屏正方向；landscape-secondary：横屏反方向*/
+            "icons" : {
+                "ios" : {
+                    "prerendered" : true, /*应用图标是否已经高亮处理，在iOS6及以下设备上有效*/
+
+                    /*应用图标，分辨率：512x512，用于自动生成各种尺寸程序图标*/
+                    "iphone" : {
+                        "normal" : "unpackage/res/icons/57x57.png", /*iPhone普通屏幕程序图标，分辨率：57x57*/
+                        "retina" : "unpackage/res/icons/114x114.png", /*iPhone高分屏程序图标，分辨率：114x114*/
+
+                        /*iPhone iOS7高分屏程序图标，分辨率：120x120*/
+                        "spotlight-normal" : "unpackage/res/icons/29x29.png", /*iPhone Spotlight搜索程序图标，分辨率：29x29*/
+                        "spotlight-retina" : "unpackage/res/icons/58x58.png", /*iPhone高分屏Spotlight搜索程序图标，分辨率：58x58*/
+
+                        /*iPhone iOS7高分屏Spotlight搜索程序图标，分辨率：80x80*/
+                        "settings-normal" : "unpackage/res/icons/29x29.png", /*iPhone设置页面程序图标，分辨率：29x29*/
+                        "app@2x" : "unpackage/res/icons/120x120.png",
+                        "app@3x" : "unpackage/res/icons/180x180.png",
+                        "settings@3x" : "unpackage/res/icons/87x87.png",
+                        "settings@2x" : "unpackage/res/icons/58x58.png",
+                        "spotlight@2x" : "unpackage/res/icons/80x80.png",
+                        "spotlight@3x" : "unpackage/res/icons/120x120.png",
+                        "notification@3x" : "unpackage/res/icons/60x60.png",
+                        "notification@2x" : "unpackage/res/icons/40x40.png"
+                    },
+                    "ipad" : {
+                        "normal" : "unpackage/res/icons/72x72.png", /*iPad普通屏幕程序图标，分辨率：72x72*/
+                        "retina" : "unpackage/res/icons/144x144.png", /*iPad高分屏程序图标，分辨率：144x144*/
+
+                        /*iPad iOS7程序图标，分辨率：76x76*//*iPad iOS7高分屏程序图标，分辨率：152x152*/
+                        "spotlight-normal" : "unpackage/res/icons/50x50.png", /*iPad Spotlight搜索程序图标，分辨率：50x50*/
+                        "spotlight-retina" : "unpackage/res/icons/100x100.png", /*iPad高分屏Spotlight搜索程序图标，分辨率：100x100*/
+
+                        /*iPad iOS7 Spotlight搜索程序图标，分辨率：40x40*//*iPad iOS7高分屏Spotlight搜索程序图标，分辨率：80x80*//*iPad设置页面程序图标，分辨率：29x29*/
+                        "app" : "unpackage/res/icons/76x76.png",
+                        "app@2x" : "unpackage/res/icons/152x152.png",
+                        "settings" : "unpackage/res/icons/29x29.png",
+                        "proapp@2x" : "unpackage/res/icons/167x167.png",
+                        "spotlight" : "unpackage/res/icons/40x40.png",
+                        "settings@2x" : "unpackage/res/icons/58x58.png",
+                        "spotlight@2x" : "unpackage/res/icons/80x80.png",
+                        "notification" : "unpackage/res/icons/20x20.png",
+                        "notification@2x" : "unpackage/res/icons/40x40.png"
+                    },
+                    "appstore" : "unpackage/res/icons/1024x1024.png"
+                },
+                "android" : {
+                    "mdpi" : "unpackage/res/icons/48x48.png", /*普通屏程序图标，分辨率：48x48*/
+                    "ldpi" : "unpackage/res/icons/48x48.png", /*大屏程序图标，分辨率：48x48*/
+                    "hdpi" : "unpackage/res/icons/72x72.png", /*高分屏程序图标，分辨率：72x72*/
+                    "xhdpi" : "unpackage/res/icons/96x96.png", /*720P高分屏程序图标，分辨率：96x96*/
+                    "xxhdpi" : "unpackage/res/icons/144x144.png",
+                    "xxxhdpi" : "unpackage/res/icons/192x192.png"
+                }
+            },
+            "splashscreen" : {
+                "ios" : {
+                    "iphone" : {
+                        "default" : "", /*iPhone3启动图片选，分辨率：320x480*/
+                        "retina35" : "", /*3.5英寸设备(iPhone4)启动图片，分辨率：640x960*/
+                        "retina40" : ""
+                    },
+                    "ipad" : {
+                        "portrait" : "", /*iPad竖屏启动图片，分辨率：768x1004*/
+                        "portrait-retina" : "", /*iPad高分屏竖屏图片，分辨率：1536x2008*/
+                        "landscape" : "", /*iPad横屏启动图片，分辨率：1024x748*/
+                        "landscape-retina" : "", /*iPad高分屏横屏启动图片，分辨率：2048x1496*/
+                        "portrait7" : "", /*iPad iOS7竖屏启动图片，分辨率：768x1024*/
+                        "portrait-retina7" : "", /*iPad iOS7高分屏竖屏图片，分辨率：1536x2048*/
+                        "landscape7" : "", /*iPad iOS7横屏启动图片，分辨率：1024x768*/
+                        "landscape-retina7" : ""
+                    }
+                },
+                "android" : {
+                    "mdpi" : "resources/images/start/240-320.png", /*普通屏启动图片，分辨率：240x282*/
+                    "ldpi" : "resources/images/start/320-480.png", /*大屏启动图片，分辨率：320x442*/
+                    "hdpi" : "resources/images/start/480-800.png", /*高分屏启动图片，分辨率：480x762*/
+                    "xhdpi" : "resources/images/start/720-1280.png", /*720P高分屏启动图片，分辨率：720x1242*/
+                    "xxhdpi" : "resources/images/start/1080-1920.png"
+                }
+            }
+        },
+        "ads" : {
+            "rp" : false,
+            "splash" : false,
+            "push" : false,
+            "spot" : false
+        },
+        "adid" : "128796140607"
+    },
+    "dependencies" : {
+        "pages" : {
+            "pages/index.html" : {
+                "resources" : [
+                    "resources/css//mui/mui.css",
+                    "resources/css/themes/icon.css",
+                    "resources/js/fastclick.js",
+                    "resources/css/themes/bootstrap/easyui.css",
+                    "resources/js/app/config.js",
+                    "resources/css/themes/mobile.css",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/app.js",
+                    "resources/js/include.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/easyui/jquery.min.js",
+                    "resources/js/easyui/jquery.easyui.min.js",
+                    "resources/js/template.js",
+                    "resources/js/easyui/jquery.easyui.mobile.js",
+                    "resources/js/app/storage.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/images/logoC.png",
+                    "resources/images/logo.png",
+                    "resources/images/logo_z.png",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/config.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/Constant/CheckResult.js",
+                    "resources/js/app/barcode.js",
+                    "resources/js/app/scanner.js",
+                    "resources/images/out.png",
+                    "resources/js/app/menu.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/js/Constant/AppConstant.js",
+                    "resources/js/app/AppConstant.js",
+                    "resources/images/logo_mini.png",
+                    null,
+                    "resources/js/app/jquery.ui.touch-punch.js"
+                ],
+                "refer" : [
+                    "pages/1.html",
+                    "pages/demo/template.html",
+                    "pages/main.html",
+                    "pages/settings.html"
+                ],
+                "priority" : 0
+            },
+            "pages/1.html" : {
+                "resources" : [
+                    "resources/css//mui/mui.css",
+                    "resources/css/themes/icon.css",
+                    "resources/js/fastclick.js",
+                    "resources/css/themes/bootstrap/easyui.css",
+                    "resources/js/app/config.js",
+                    "resources/css/themes/mobile.css",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/app.js",
+                    "resources/js/include.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/easyui/jquery.min.js",
+                    "resources/js/easyui/jquery.easyui.min.js",
+                    "resources/js/template.js",
+                    "resources/js/easyui/jquery.easyui.mobile.js",
+                    "resources/js/app/storage.js",
+                    "resources/css//fonts/mui.ttf"
+                ],
+                "refer" : [],
+                "priority" : 0
+            },
+            "pages/demo/template.html" : {
+                "resources" : [
+                    "resources/js/include.js",
+                    "resources/css//mui/mui.css",
+                    "resources/css/themes/icon.css",
+                    "resources/css/themes/bootstrap/easyui.css",
+                    "resources/css/app.css",
+                    "resources/css/themes/mobile.css"
+                ],
+                "refer" : [],
+                "priority" : 0
+            },
+            "pages/main.html" : {
+                "resources" : [
+                    "resources/css//mui/mui.css",
+                    "resources/css/themes/icon.css",
+                    "resources/css/themes/bootstrap/easyui.css",
+                    "resources/css/themes/mobile.css",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/app.js",
+                    "resources/js/include.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/easyui/jquery.min.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/easyui/jquery.easyui.min.js",
+                    "resources/js/config.js",
+                    "resources/js/easyui/jquery.easyui.mobile.js",
+                    "resources/js/app/storage.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/images/stock.png",
+                    "resources/images/prouce.png",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/app/scanner.js",
+                    "resources/js/Constant/CheckResult.js",
+                    "resources/js/app/menu.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/js/app/barcode.js",
+                    "resources/js/app/AppConstant.js",
+                    "resources/images/info.png",
+                    "resources/images/logo_mini.png",
+                    "resources/images/package.png",
+                    "resources/js/app/jquery.ui.touch-punch.js",
+                    "resources/images/suit.png"
+                ],
+                "refer" : [
+                    "pages/stock.html",
+                    "pages/produce.html",
+                    "pages/codeInfo.html",
+                    "pages/settings.html",
+                    "pages/PackageAndTurnBag.html",
+                    "pages/suit.html",
+                    null
+                ],
+                "priority" : 0
+            },
+            "pages/produce.html" : {
+                "resources" : [
+                    "resources/css//fonts/mui.ttf",
+                    "resources/css//mui/mui.css",
+                    "resources/css/themes/icon.css",
+                    "resources/css/themes/bootstrap/easyui.css",
+                    "resources/css/themes/mobile.css",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/include.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/easyui/jquery.min.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/easyui/jquery.easyui.min.js",
+                    "resources/js/config.js",
+                    "resources/js/easyui/jquery.easyui.mobile.js",
+                    "resources/js/app/storage.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/scanner.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/menu.js",
+                    "resources/js/Constant/CheckResult.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/js/app/AppConstant.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/js/app/barcode.js"
+                ],
+                "refer" : [
+                    "pages/device.html",
+                    "pages/productOut.html",
+                    "pages/rolls.html",
+                    "pages/TcDepartOut.html",
+                    "pages/pBPackage.html",
+                    "pages/pTPackage.html",
+                    "pages/pPackageOnline.html",
+                    "pages/bzOut.html",
+                    "pages/bzIn.html",
+                    "pages/cjIn.html",
+                    "pages/cjOut.html"
+                ],
+                "priority" : 0
+            },
+            "pages/stock.html" : {
+                "resources" : [
+                    "resources/css//mui/mui.css",
+                    "resources/css/themes/icon.css",
+                    "resources/css/themes/bootstrap/easyui.css",
+                    "resources/css/themes/mobile.css",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/include.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/easyui/jquery.min.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/easyui/jquery.easyui.min.js",
+                    "resources/js/config.js",
+                    "resources/js/easyui/jquery.easyui.mobile.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/app/storage.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/scanner.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/Constant/CheckResult.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/js/app/barcode.js",
+                    "resources/js/app/AppConstant.js"
+                ],
+                "refer" : [
+                    "pages/mIn.html",
+                    "pages/mOut.html",
+                    "pages/pMove.html",
+                    "pages/pIn.html",
+                    "pages/mMove.html",
+                    "pages/pCheck.html",
+                    "pages/pPackage.html",
+                    "pages/mCheck.html",
+                    "pages/mFreeze.html",
+                    "pages/pFreeze.html",
+                    "pages/pOut.html",
+                    "pages/pbMove.html",
+                    "pages/pbIn.html",
+                    "pages/stockInfos.html",
+                    "pages/mIn2.html",
+                    "pages/mForceOut.html",
+                    "pages/pForceOut.html",
+                    "pages/stockInfos2.html"
+                ],
+                "priority" : 0
+            },
+            "pages/mIn.html" : {
+                "resources" : [
+                    "resources/css//mui/mui.css",
+                    "resources/css/themes/icon.css",
+                    "resources/css/themes/bootstrap/easyui.css",
+                    "resources/css/themes/mobile.css",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/include.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/easyui/jquery.min.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/easyui/jquery.easyui.min.js",
+                    "resources/js/config.js",
+                    "resources/js/easyui/jquery.easyui.mobile.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/app/storage.js",
+                    null,
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/js/app/scanner.js",
+                    "resources/js/Constant/CheckResult.js",
+                    "resources/js/app/AppConstant.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/js/app/barcode.js",
+                    "resources/images/scan.png",
+                    "resources/js/app/jquery.ui.touch-punch.js"
+                ],
+                "refer" : [ "pages/barcode_scan.html" ],
+                "priority" : 0
+            },
+            "pages/test.html" : {
+                "resources" : [
+                    "resources/js/app/Calendar.js",
+                    "resources/css//mui/mui.css",
+                    "resources/css/themes/icon.css",
+                    "resources/css/themes/bootstrap/easyui.css",
+                    "resources/css/themes/mobile.css",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/include.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/easyui/jquery.min.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/easyui/jquery.easyui.min.js",
+                    "resources/js/config.js",
+                    "resources/js/easyui/jquery.easyui.mobile.js",
+                    "resources/js/Constant/CheckResult.js",
+                    "resources/js/app/storage.js"
+                ],
+                "refer" : [],
+                "priority" : 0
+            },
+            "pages/pMove.html" : {
+                "resources" : [
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/include.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/js/app/barcode.js",
+                    "resources/js/Constant/CheckResult.js",
+                    "resources/js/app/storage.js",
+                    "resources/js/app/AppConstant.js"
+                ],
+                "refer" : [],
+                "priority" : 0
+            },
+            "pages/mOut.html" : {
+                "resources" : [
+                    "resources/js/app/Calendar.js",
+                    "resources/css//mui/mui.css",
+                    "resources/css/themes/icon.css",
+                    "resources/js/app/scanner.js",
+                    "resources/css/themes/bootstrap/easyui.css",
+                    "resources/css/themes/mobile.css",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/include.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/easyui/jquery.min.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/easyui/jquery.easyui.min.js",
+                    "resources/js/config.js",
+                    "resources/js/easyui/jquery.easyui.mobile.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/Constant/CheckResult.js",
+                    "resources/js/app/storage.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/js/app/barcode.js",
+                    "resources/js/app/AppConstant.js"
+                ],
+                "refer" : [],
+                "priority" : 0
+            },
+            "pages/mMove.html" : {
+                "href" : "pages/mMove.html",
+                "resources" : [
+                    "resources/js/include.js",
+                    "resources/js/app/AppConstant.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/app/barcode.js",
+                    "resources/js/app/storage.js"
+                ],
+                "priority" : 2,
+                "refer" : []
+            },
+            "pages/pIn.html" : {
+                "href" : "pages/pIn.html",
+                "resources" : [
+                    "resources/js/include.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/app/barcode.js",
+                    "resources/js/Constant/CheckResult.js",
+                    "resources/js/app/storage.js",
+                    "resources/js/app/AppConstant.js",
+                    "resources/js/app/jquery.ui.touch-punch.js"
+                ],
+                "priority" : 3,
+                "refer" : []
+            },
+            "pages/pCheck.html" : {
+                "href" : "pages/pCheck.html",
+                "resources" : [
+                    "resources/js/include.js",
+                    "resources/js/app/AppConstant.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/app/barcode.js",
+                    "resources/js/app/storage.js"
+                ],
+                "priority" : 5,
+                "refer" : []
+            },
+            "pages/device.html" : {
+                "resources" : [
+                    "resources/css/mui.picker.css",
+                    "resources/css/mui.poppicker.css",
+                    "resources/js/mui/mui.picker.js",
+                    "resources/js/mui/mui.poppicker.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/include.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/Constant/CheckResult.js",
+                    "resources/js/app/storage.js",
+                    "resources/js/app/barcode.js",
+                    "resources/js/app/AppConstant.js"
+                ],
+                "refer" : [],
+                "priority" : 0
+            },
+            "pages/productOut.html" : {
+                "resources" : [
+                    "resources/css/mui.picker.css",
+                    "resources/css/mui.poppicker.css",
+                    "resources/js/mui/mui.picker.js",
+                    "resources/js/mui/mui.poppicker.js",
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/AppHelper.js",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/template.js",
+                    "resources/js/include.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/js/app/storage.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/Constant/CheckResult.js",
+                    "resources/js/app/barcode.js",
+                    "resources/js/app/AppConstant.js"
+                ],
+                "refer" : [],
+                "priority" : 0
+            },
+            "pages/rolls.html" : {
+                "resources" : [
+                    "resources/css/mui.picker.css",
+                    "resources/css/mui.poppicker.css",
+                    "resources/js/mui/mui.picker.js",
+                    "resources/js/mui/mui.poppicker.js",
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/AppHelper.js",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/template.js",
+                    "resources/js/include.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/js/app/storage.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/Constant/CheckResult.js",
+                    "resources/js/app/barcode.js",
+                    "resources/js/app/AppConstant.js"
+                ],
+                "refer" : [],
+                "priority" : 0
+            },
+            "pages/pPackage.html" : {
+                "resources" : [
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/include.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/app/barcode.js",
+                    "resources/js/Constant/CheckResult.js",
+                    "resources/js/app/storage.js",
+                    "pages/pPackage.html",
+                    "resources/js/app/AppConstant.js"
+                ],
+                "refer" : [],
+                "priority" : 0
+            },
+            "pages/codeInfo.html" : {
+                "resources" : [
+                    "resources/js/app/AppConstant.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/include.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/app/barcode.js",
+                    "resources/js/app/storage.js"
+                ],
+                "refer" : [
+                    "pages/mInfo.html",
+                    "pages/pInfo.html",
+                    "pages/pFreeze.html",
+                    "pages/mForceOut.html",
+                    "pages/mForceIn.html"
+                ],
+                "priority" : 0
+            },
+            "pages/mInfo.html" : {
+                "resources" : [
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/include.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/app/barcode.js",
+                    "resources/js/Constant/CheckResult.js",
+                    "resources/js/app/storage.js",
+                    "resources/js/app/AppConstant.js",
+                    "resources/js/app/jquery.ui.touch-punch.js"
+                ],
+                "refer" : [],
+                "priority" : 0
+            },
+            "pages/pInfo.html" : {
+                "resources" : [
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/include.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/app/barcode.js",
+                    "resources/js/Constant/CheckResult.js",
+                    "resources/js/app/storage.js",
+                    "resources/js/app/AppConstant.js",
+                    "resources/images/scan.png",
+                    "resources/js/app/jquery.ui.touch-punch.js"
+                ],
+                "refer" : [ "pages/barcode_scan.html" ],
+                "priority" : 0
+            },
+            "pages/settings.html" : {
+                "resources" : [
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/include.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/js/app/barcode.js",
+                    "resources/js/Constant/CheckResult.js",
+                    "resources/js/app/storage.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/Constant/AppConstant.js",
+                    "resources/js/app/AppConstant.js"
+                ],
+                "refer" : [],
+                "priority" : 0
+            },
+            "pages/mFreeze.html" : {
+                "resources" : [
+                    "resources/js/app/AppConstant.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/include.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/app/barcode.js",
+                    "resources/js/app/storage.js"
+                ],
+                "refer" : [ "pages/settings.html" ],
+                "priority" : 0
+            },
+            "pages/pFreeze.html" : {
+                "resources" : [
+                    "resources/js/app/AppConstant.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/include.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/app/barcode.js",
+                    "resources/js/app/storage.js"
+                ],
+                "refer" : [],
+                "priority" : 0
+            },
+            "pages/pOut.html" : {
+                "resources" : [
+                    "resources/js/app/AppConstant.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/include.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/js/app/barcode.js",
+                    "resources/js/app/storage.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/app/jquery.ui.touch-punch.js"
+                ],
+                "refer" : [ "pages/pInfoForDelivery.html", "pages/pOutDetail.html" ],
+                "priority" : 0
+            },
+            "pages/mCheck.html" : {
+                "resources" : [
+                    "resources/js/app/AppConstant.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/include.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/app/barcode.js",
+                    "resources/js/app/storage.js"
+                ],
+                "refer" : [],
+                "priority" : 0
+            },
+            "pages/TcDepartOut.html" : {
+                "resources" : [
+                    "resources/js/app/AppConstant.js",
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/AppHelper.js",
+                    "resources/css/mui.poppicker.css",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/template.js",
+                    "resources/js/include.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/js/app/storage.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/mui/mui.poppicker.js",
+                    "resources/css/mui.picker.css",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/mui/mui.picker.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/app/barcode.js"
+                ],
+                "refer" : [],
+                "priority" : 0
+            },
+            "pages/pBPackage.html" : {
+                "resources" : [
+                    "resources/js/app/AppConstant.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/include.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/app/barcode.js",
+                    "resources/js/app/storage.js",
+                    "resources/js/app/Calc.js"
+                ],
+                "refer" : [ "pages/pInfo.html" ],
+                "priority" : 0
+            },
+            "pages/pTPackage.html" : {
+                "resources" : [
+                    "resources/js/app/AppConstant.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/include.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/app/barcode.js",
+                    "resources/js/app/storage.js",
+                    "resources/js/app/Calc.js",
+                    "resources/images/scan.png",
+                    "resources/js/app/jquery.ui.touch-punch.js"
+                ],
+                "refer" : [ "pages/pInfo.html", "pages/barcode_scan.html" ],
+                "priority" : 0
+            },
+            "pages/pPackageOnline.html" : {
+                "resources" : [
+                    "resources/js/app/AppConstant.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/include.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/app/barcode.js",
+                    "resources/js/app/storage.js",
+                    "resources/js/app/Calc.js"
+                ],
+                "refer" : [],
+                "priority" : 0
+            },
+            "pages/PackageAndTurnBag.html" : {
+                "resources" : [
+                    "resources/js/app/AppConstant.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/include.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/app/barcode.js",
+                    "resources/js/app/storage.js",
+                    "resources/js/app/jquery.ui.touch-punch.js"
+                ],
+                "refer" : [
+                    "pages/pBPackage.html",
+                    "pages/rolls.html",
+                    "pages/TcDepartOut.html",
+                    "pages/tTurnBag.html",
+                    "pages/pTPackage.html",
+                    "pages/pPackageOnline.html",
+                    "pages/pPackageCheck.html",
+                    "pages/pOpenPack.html",
+                    "pages/pTPackage_DXB.html",
+                    "pages/ tTakeOut.html",
+                    "pages/tTakeOut.html",
+                    "pages/tTurnBagPerTray.html",
+                    "pages/tTurnBagPack.html",
+                    "pages/tTurnBagPackBox.html",
+                    "pages/tTurnBagPackTray.html"
+                ],
+                "priority" : 0
+            },
+            "pages/tTurnBag.html" : {
+                "resources" : [
+                    "resources/js/app/AppConstant.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/include.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/app/barcode.js",
+                    "resources/js/app/storage.js",
+                    "resources/images/scan.png",
+                    "resources/js/app/jquery.ui.touch-punch.js"
+                ],
+                "refer" : [ "pages/pInfo.html", "pages/barcode_scan.html" ],
+                "priority" : 0
+            },
+            "pages/pbIn.html" : {
+                "resources" : [
+                    "resources/js/app/AppConstant.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/include.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/app/barcode.js",
+                    "resources/js/app/storage.js",
+                    "resources/js/app/jquery.ui.touch-punch.js"
+                ],
+                "refer" : [],
+                "priority" : 0
+            },
+            "pages/mForceOut.html" : {
+                "resources" : [
+                    "resources/js/app/AppConstant.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/include.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/app/barcode.js",
+                    "resources/js/app/storage.js"
+                ],
+                "refer" : [],
+                "priority" : 0
+            },
+            "pages/pPackageCheck.html" : {
+                "resources" : [
+                    "resources/js/app/AppConstant.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/include.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/app/barcode.js",
+                    "resources/js/app/storage.js"
+                ],
+                "refer" : [ "pages/pInfo.html", "pages/barcode_scan.html" ],
+                "priority" : 0
+            },
+            "pages/pOpenPack.html" : {
+                "resources" : [
+                    "resources/js/app/AppConstant.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/include.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/app/barcode.js",
+                    "resources/js/app/Calc.js",
+                    "resources/js/app/storage.js",
+                    "resources/js/app/jquery.ui.touch-punch.js",
+                    "resources/images/scan.png"
+                ],
+                "refer" : [ "pages/pInfo.html", "pages/barcode_scan.html" ],
+                "priority" : 0
+            },
+            "pages/bzIn.html" : {
+                "resources" : [
+                    "resources/js/app/AppConstant.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/include.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/app/barcode.js",
+                    "resources/js/app/storage.js",
+                    "resources/images/scan.png",
+                    "resources/js/app/Tdrag.js",
+                    "resources/js/app/jquery.ui.touch-punch.js",
+                    "resources/js/app/jquery-ui.min.js"
+                ],
+                "refer" : [ "pages/barcode_scan.html" ],
+                "priority" : 0
+            },
+            "pages/bzOut.html" : {
+                "resources" : [
+                    "resources/js/app/AppConstant.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/include.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/app/barcode.js",
+                    "resources/js/app/storage.js",
+                    "resources/js/app/jquery.ui.touch-punch.js"
+                ],
+                "refer" : [ "pages/barcode_scan.html" ],
+                "priority" : 0
+            },
+            "pages/pTPackage_DXB.html" : {
+                "resources" : [
+                    "resources/js/app/AppConstant.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/include.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/app/barcode.js",
+                    "resources/js/app/Calc.js",
+                    "resources/js/app/storage.js"
+                ],
+                "refer" : [],
+                "priority" : 0
+            },
+            "pages/cjIn.html" : {
+                "resources" : [
+                    "resources/js/app/AppConstant.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/include.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/app/barcode.js",
+                    "resources/js/app/storage.js",
+                    "resources/images/scan.png",
+                    "resources/js/app/jquery.ui.touch-punch.js"
+                ],
+                "refer" : [ "pages/barcode_scan.html" ],
+                "priority" : 0
+            },
+            "pages/mForceIn.html" : {
+                "resources" : [],
+                "refer" : [ "pages/barcode_scan.html" ],
+                "priority" : 0
+            },
+            "pages/barcode_scan.html" : {
+                "resources" : [
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/AppConstant.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/include.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/js/app/jquery.ui.touch-punch.js",
+                    "resources/js/app/barcode.js",
+                    "resources/js/app/storage.js"
+                ],
+                "refer" : [],
+                "priority" : 0
+            },
+            "pages/ tTakeOut.html" : {
+                "resources" : [ "resources/images/scan.png" ],
+                "refer" : [],
+                "priority" : 0
+            },
+            "pages/tTakeOut.html" : {
+                "resources" : [
+                    "resources/js/app/AppConstant.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/include.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/js/app/jquery.ui.touch-punch.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/app/barcode.js",
+                    "resources/js/app/storage.js",
+                    "resources/images/scan.png"
+                ],
+                "refer" : [ "pages/pInfo.html", "pages/barcode_scan.html" ],
+                "priority" : 0
+            },
+            "pages/tTurnBagPerTray.html" : {
+                "resources" : [
+                    "resources/js/app/AppConstant.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/include.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/js/app/jquery.ui.touch-punch.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/app/barcode.js",
+                    "resources/js/app/storage.js",
+                    "resources/images/scan.png"
+                ],
+                "refer" : [ "pages/barcode_scan.html", "pages/pInfo.html" ],
+                "priority" : 0
+            },
+            "pages/tTurnBagPack.html" : {
+                "resources" : [
+                    "resources/js/app/AppConstant.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/include.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/js/app/jquery.ui.touch-punch.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/app/barcode.js",
+                    "resources/js/app/storage.js",
+                    "resources/js/app/Calc.js",
+                    "resources/images/scan.png"
+                ],
+                "refer" : [ "pages/pInfo.html", "pages/barcode_scan.html" ],
+                "priority" : 0
+            },
+            "pages/tTurnBagPackBox.html" : {
+                "resources" : [
+                    "resources/js/app/AppConstant.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/include.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/js/app/jquery.ui.touch-punch.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/app/barcode.js",
+                    "resources/js/app/Calc.js",
+                    "resources/js/app/storage.js",
+                    "resources/images/scan.png"
+                ],
+                "refer" : [ "pages/pInfo.html" ],
+                "priority" : 0
+            },
+            "pages/tTurnBagPackTray.html" : {
+                "resources" : [
+                    "resources/js/app/Calc.js",
+                    "resources/js/app/AppConstant.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/include.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/js/app/jquery.ui.touch-punch.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/app/barcode.js",
+                    "resources/js/app/storage.js"
+                ],
+                "refer" : [ "pages/pInfo.html" ],
+                "priority" : 0
+            },
+            "pages/suit.html" : {
+                "resources" : [
+                    "resources/js/app/AppConstant.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/include.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/js/app/jquery.ui.touch-punch.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/app/barcode.js",
+                    "resources/js/app/storage.js",
+                    "resources/images/scan.png",
+                    "resources/js/app/toast.js",
+                    "resources/css/toast.css"
+                ],
+                "refer" : [ "pages/barcode_scan.html", "pages/barcode_scan_suc.html" ],
+                "priority" : 0
+            },
+            "pages/pbMove.html" : {
+                "resources" : [
+                    "resources/js/app/AppConstant.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/include.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/js/app/jquery.ui.touch-punch.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/app/barcode.js",
+                    "resources/js/app/storage.js"
+                ],
+                "refer" : [],
+                "priority" : 0
+            },
+            "pages/stockInfos.html" : {
+                "resources" : [
+                    "resources/js/app/AppConstant.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/css//mui/mui.css",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/template.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/include.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/js/app/jquery.ui.touch-punch.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/app/barcode.js",
+                    "resources/js/app/storage.js"
+                ],
+                "refer" : [ "pages/pInfo.html" ],
+                "priority" : 0
+            },
+            "pages/cjOut.html" : {
+                "resources" : [
+                    "resources/js/app/AppConstant.js",
+                    "resources/js/app/AppHelper.js",
+                    "resources/css//mui/mui.css",
+                    "resources/css/mui.poppicker.css",
+                    "resources/js/app/scanner.js",
+                    "resources/css/app.css",
+                    "resources/js/mui/mui.min.js",
+                    "resources/js/app/template.js",
+                    "resources/js/include.js",
+                    "resources/js/app/simple.js",
+                    "resources/js/app/valids.js",
+                    "resources/js/app/app.js",
+                    "resources/js/app/jquery.base64.js",
+                    "resources/js/app/loading.js",
+                    "resources/js/config.js",
+                    "resources/js/app/jquery.min.js",
+                    "resources/js/app/storage.js",
+                    "resources/js/app/Calendar.js",
+                    "resources/js/app/tip.js",
+                    "resources/js/mui/mui.poppicker.js",
+                    "resources/css/mui.picker.css",
+                    "resources/js/app/fastclick.js",
+                    "resources/js/mui/mui.picker.js",
+                    "resources/js/app/jquery.ui.touch-punch.js",
+                    "resources/css//fonts/mui.ttf",
+                    "resources/js/app/barcode.js"
+                ],
+                "refer" : [],
+                "priority" : 0
+            },
+            "pages/pOutDetail.html" : {
+                "resources" : [],
+                "refer" : [ "pages/pInfoForDelivery.html" ],
+                "priority" : 0
+            }
+        },
+        "idle" : {
+            "resources" : [
+                "doc/doc.txt",
+                "resources/js/app/barcode.copy.js",
+                "resources/images/back.png",
+                "resources/css/fonts/mui.ttf",
+                "resources/images/iconfont-tianjia.png",
+                "pages/test/test.html",
+                "resources/images/exit.png",
+                "resources/css/mui/mui.min.css",
+                "resources/js/mui/mui.js",
+                "resources/css/mui/mui.css"
+            ]
+        }
+    },
+    "fullscreen" : false
+}

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>拆包</title>
+		<script type="text/javascript" src="../resources/js/include.js" ></script>
+		<style type="text/css">
+			.mui-input-group .mui-input-row {
+				height: 25px;
+			}
+			
+			.mui-input-row label~ input,
+			.mui-input-row label~ select,
+			.mui-input-row label~ textarea {
+				height: 25px;
+			}
+			.mui-bar {
+				-webkit-box-shadow: none;
+			}
+			
+			.mui-bar-nav {
+				box-shadow: none;
+			}
+			.mui-input-row .mui-input-clear~ .mui-icon-clear,
+			.mui-input-row .mui-input-speech~ .mui-icon-speech,
+			.mui-input-row .mui-input-password~ .mui-icon-eye {
+				top: 2px;
+			}
+			
+			.mui-input-row label {
+				font-family: 'Helvetica Neue', Helvetica, sans-serif;
+				line-height: 25px;
+			}
+			
+			.mui-btn-primary,
+			.mui-btn-blue {
+				font-size: 20px;
+				color: #fff;
+				font-weight: bold;
+				border: 1px solid #007aff;
+				background-color: #007aff;
+				margin-top: -3px;
+				line-height: 18px;
+			}
+			
+			.mui-popover {
+				margin-top: 50px;
+				margin-left: 20px;
+				height: 300px;
+			}
+			
+			.mui-scroll-wrapper .mui-input-row label {
+				height: 40px;
+			}
+			
+			.pop_bg{
+				display: none;
+				background: rgba(0, 0, 0, 0.54);
+				width:100%;
+				height:100%;
+				position: fixed;
+				top:0;
+			}
+			
+			.pop {
+				background: red;
+				height: 258px;
+				width: 200px;
+				position: fixed;
+				margin: 0;
+				top: 50%;
+				margin-top: -125px;
+				left: 50%;
+				margin-left: -100px;
+				padding: 0;
+			}
+			
+			.invalid{
+				color:red!important;
+			}
+			input{
+				font-size:25px;
+				font-weight: bold;
+				color:darkblue;
+				text-align: center;
+				height: 50px;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title">条码校验</h1>
+		</header>
+		<div class="mui-content">
+		    <div class="mui-control-content mui-active">
+				<div class="mui-input-row" style="line-height: 40px; color: white; background: #064f65;">
+					<label style="line-height: 40px;">条码一</label>
+					<input id="code1" type="text" readonly required placeholder="请扫条码" style="color:#fff900;float:right;width:100%;height: 40px;">
+				</div>
+				<div class="mui-input-row" style="line-height: 40px; color: white; background: #064f65;">
+					<label style="line-height: 40px;">条码二</label>
+					<input id="code2" type="text" readonly required placeholder="请扫条码" style="color:#fff900;float:right;width:100%;height: 40px;">
+				</div>
+				<div id='checkRs' style="text-align: center;font-size:40px;font-weight: bold;margin-top: 100px;color:green;">
+				</div>
+			</div>
+		</div> 
+	</body>
+	<script type="text/javascript">
+		var checkUrl = App.getServerUrl() + "package/check";
+		
+		App.ready(function() {
+			new Scanner(parseCode).scan();
+		});
+		
+		function parseCode(code){
+
+			var qrcode=code.split(";")[0];
+			
+			var code1=$("#code1").val();
+			var code2=$("#code2").val();
+			
+			if(isEmpty(code2)){
+				if(isEmpty(code1)){
+					$("#code1").val(qrcode);
+				}else{
+					$("#code2").val(qrcode);
+					doCheck();
+				}
+			}else{
+				$("#code1").val(qrcode);
+				$("#code2").val("");
+			}
+		}
+		
+		function doCheck(){
+			
+			waiting("正在校验");
+			
+			var code1=$("#code1").val();
+			var code2=$("#code2").val();
+			
+			App.ajaxPost(checkUrl,{code1:code1,code2:code2},function(data){
+				if(data.check==-1){
+					$("#checkRs").html("✘ 校验不通过");
+					$("#checkRs").addClass("invalid");
+					tip("✘ 校验不通过");
+				}else{
+					plus.device.setVolume(1);
+					plus.audio.createPlayer("notice.mp3").play();
+					$("#checkRs").removeClass("invalid");
+					$("#checkRs").html("✔ 校验通过");
+					toast("✔ 校验通过");
+					
+					var code1FirstChar=code1.charAt(0);
+					var code2FirstChar=code2.charAt(0);
+					
+					var firstChar=code1.charCodeAt(0)+code2.charCodeAt(0);
+					
+					//150,T+B;166,T+R
+					if(firstChar==150||firstChar==166){
+						if(code1FirstChar=="T"){
+							App.go("pInfo.html",{code:code1},true);
+						}else{
+							App.go("pInfo.html",{code:code2},true);
+						}
+					}else{//B+R,R+B
+						if(code1FirstChar=="B"){
+							App.go("pInfo.html",{code:code1},true);
+						}else{
+							App.go("pInfo.html",{code:code2},true);
+						}
+					}
+				}
+			},function(a,s,d){
+				tip("系统异常");
+			});
+		}
+		
+	</script>
+</html>
