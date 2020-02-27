@@ -19,7 +19,8 @@
         android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:debuggable="true">
+        android:debuggable="true"
+        tools:ignore="HardcodedDebugMode">
 
         <activity
             android:name="io.dcloud.PandoraEntry"
