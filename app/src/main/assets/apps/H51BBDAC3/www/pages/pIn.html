@@ -153,10 +153,10 @@
 					toast("卷不能直接入库");
 					return;
 				}
-				if(data[0].indexOf("P") == 0) {
+				/* if(data[0].indexOf("P") == 0) {
 					toast("部件不能直接入库");
 					return;
-				}
+				} */
 				$("#barCode").val(data[0]);
 				waiting("正在查询该条码的状态信息");
 				App.ajaxGet(findInfoUrl + "?barCode=" + data[0],
@@ -232,18 +232,18 @@
 							$("#orderCode").val(ajaxData.ORDER.SALESORDERSUBCODE);
 							$("#SALESORDERSUBCODEPRINT").val(ajaxData.ORDER.SALESORDERSUBCODEPRINT);
 							$("#consumer").val(ajaxData.CONSUMER.CONSUMERNAME);
-							$("#consumerProductName").val(ajaxData.PRODUCT.CONSUMERPRODUCTNAME);
+							$("#consumerProductName").val(ajaxData.PRODUCT.CONSUMERPRODUCTNAME || ajaxData.FINISHED.CONSUMERPRODUCTNAME);
 							$("#batchCode").val(ajaxData.CODE.BATCHCODE);
 							$("#partName").val(ajaxData.PARTNAME);
-							$("#productWidth").val(ajaxData.PRODUCT.PRODUCTWIDTH);
+							$("#productWidth").val(ajaxData.PRODUCT.PRODUCTWIDTH || ajaxData.FINISHED.PRODUCTWIDTH);
 							//var shelfLife = ajaxData.PRODUCT.PRODUCTSHELFLIFE;
 							var outTime;
 							if(data[0].indexOf("R") == 0) {
 								$("#weight").val(ajaxData.ROLL.ROLLWEIGHT);
-								$("#productModel").val(ajaxData.PRODUCT.PRODUCTMODEL);
+								$("#productModel").val(ajaxData.PRODUCT.PRODUCTMODEL || ajaxData.FINISHED.PRODUCTMODEL);
 								outTime = new Calendar(new Date(ajaxData.ROLL.ROLLOUTPUTTIME.replace(/-/g,
 									"/")));
-							} else if(data[0].indexOf("T") == 0) {
+							} else if(data[0].indexOf("T") == 0 || data[0].indexOf("P") == 0) {
 								try {
 									$("#weight").val(Number(ajaxData.TRAY.WEIGHT).toFixed(1));
 								} catch(e) {
