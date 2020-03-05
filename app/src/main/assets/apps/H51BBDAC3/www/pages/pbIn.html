@@ -158,11 +158,11 @@
 					toast("盒不能直接入库");
 					return;
 				}
-				if(data[0].indexOf("R")==0||data[0].indexOf("P")==0){
+				if(data[0].indexOf("R")==0){
 					toast("卷不能直接入库");
 				}
 				
-				if(data[0].indexOf("T") !=0) {
+				if(data[0].indexOf("T") !=0 && data[0].indexOf("P") !=0 ) {
 					toast("无效条码");
 					return;
 				}
@@ -217,7 +217,7 @@
 							$("#weight").val(Number(ajaxData.ROLL.ROLLWEIGHT).toFixed(1));
 							$("#productModel").val(ajaxData.PRODUCT.PRODUCTMODEL);
 							outTime = new Calendar(new Date(ajaxData.ROLL.ROLLOUTPUTTIME.replace(/-/g, "/")));
-						} else if(data[0].indexOf("T") == 0) {
+						} else if(data[0].indexOf("T") == 0 || data[0].indexOf("P") == 0) {
 							try {
 								$("#weight").val(Number(ajaxData.TRAY.WEIGHT).toFixed(1));
 							} catch(e) {

@@ -223,7 +223,7 @@
 				isAbandon = "正常";
 			}
 			//判断条码类型
-			if(barcode.indexOf("R") == 0 || barcode.indexOf("P") == 0) { //卷
+			if((barcode.indexOf("R") == 0 || barcode.indexOf("P") == 0) && data.ROLL != null) { //卷
 				deviceCode = data.ROLL.ROLLDEVICECODE;
 				if(deviceCode == null) {
 					deviceCode = "";
