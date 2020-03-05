@@ -346,7 +346,8 @@
 				"barCode": tdata
 			}, function(data) {
 				/*log(data.STOCK)*/
-				if(data.PRODUCT.PRODUCTMODEL != null) {
+				var model = data.PRODUCT.PRODUCTMODEL || data.FINISHED.PRODUCTMODEL;
+				if(model != null) {
 					tcode.push(tdata);
 					var trayCodeAndWeighthtml = template('trayCodeAndWeight', {
 						"data": data
