@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../resources/js/app/Calc.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			.mui-scroll-wrapper {
+				margin-top: 87px;
+			}
+			
+			.mui-input-row label {
+				float: none;
+			}
+			
+			.mui-input-row label~input,
+			.mui-input-row label~select,
+			.mui-input-row label~textarea {
+				float: none;
+			}
+			
+			.mui-popover {
+				margin-top: 50px;
+				margin-left: 20px;
+				height: 300px;
+			}
+			
+			.roll_row {}
+			
+			.roll_row label {
+				font-size: 18px;
+			}
+			
+			input {
+				font-size: 20px;
+			}
+			
+			.notray {
+				color: #504f4f;
+				font-size: 12px;
+				width: 250px;
+				margin: 0 auto;
+				text-align: center;
+			}
+			
+			.count {
+				text-align: center;
+				font-weight: bold;
+				color: red;
+				font-size: 20px;
+				padding-top: 10px;
+				/*display: none;*/
+			}
+			
+			#count {
+				font-size: 35px;
+				padding-left: 5px;
+				padding-right: 5px;
+			}
+			
+			.mui-bar {
+				-webkit-tray-shadow: none;
+			}
+			
+			.mui-bar-nav {
+				box-shadow: none;
+			}
+			
+			.mui-input-group input {
+				color: #20750b;
+				font-weight: bold;
+				width: 93%!important;
+			}
+			
+			.newBarcode {}
+			
+			.newBarcode label {
+				color: red;
+			}
+			
+			.newBarcode input {
+				color: red;
+			}
+			
+			.endpack {
+				background: #dd524d!important;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">托打包（胚布）</h1>
+		</header>
+		<div class="mui-content">
+			<div id="trayField" class="mui-input-row" style="color: #ffffff; background: #064f65;">
+				<label>托条码</label>
+				<input id="trayCode" type="text" value="" readonly required placeholder="请扫托条码">
+			</div>
+			<div class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<div class="mui-control-content mui-active" style="margin-top: 0px;">
+						<form class="mui-input-group" id="trayForm" onsubmit="return false;">
+						</form>
+						<div style="color:red;text-align: center;font-size: 23px;font-weight: bold;margin-top:10px;" id="count"></div>
+						<fieldset style="border: 1px solid lightgray;margin-top: 15px;">
+							<legend style="font-size: 14px;" align="center">打包方式</legend>
+							<ul id="packtask" style="font-size: 14px;text-align: center;list-style: none;margin: 0 auto;padding: 0;">
+							</ul>
+						</fieldset>
+
+						<div style="text-align: center;margin: 30px 0 20px 0;">
+							<label style="font-size: 14px;color: gray;">红色<font color='red'>*</font>号的卷条码可长按删除</label>
+							<br>
+							<button type="button" class="mui-btn mui-btn-primary" onclick="doPack()">点击打包</button>
+							<!--<button type="button" class="mui-btn mui-btn-primary mui-btn-danger " onclick="endPack()">结束打包</button>-->
+							<br>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		</div>
+		<script type="text/javascript">
+			//根据条码查询单号
+			var infos = App.getServerUrl() + "package/";
+			var trayInfo = App.getServerUrl() + "common/tray/info/";
+			var rollInfo = App.getServerUrl() + "common/roll/info/";
+			var boxInfo = App.getServerUrl() + "common/box/info/";
+			var packUrl = App.getServerUrl() + "package2/tray";
+			var endPackUrl = App.getServerUrl() + "package2/endpack/";
+			var deleteInnerUrl = App.getServerUrl() + "package2/deleteInner";
+			var max=0;
+			//计划ID
+			var planId = undefined;
+			//单向布,-1,非单向布，1，默认0
+			var dxb = 0;
+			//部件ID
+			var partId = undefined;
+			//部件名称
+			var partName = undefined;
+
+			//订单号
+			var salesOrder = undefined;
+			//批次号
+			var batchCode = undefined;
+			
+			var trayCode=null;
+
+			mui('.mui-scroll-wrapper').scroll({
+				deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+			});
+
+			App.ready(function() {
+				new Scanner(parseCode).scan();
+			});
+
+			function formatCode(code) {
+				try {
+					return code.split(";")[0];
+				} catch(e) {
+					tip("无效条码");
+					return undefined;
+				}
+			}
+
+			/**
+			 * PDA扫描回调
+			 * @param {Object} code
+			 */
+			function parseCode(code) {
+				code = formatCode(code);
+				if(!code) return;
+
+				if(code.indexOf("T") == 0 || code.indexOf("P") == 0) {
+					showTrayInfo(code);
+					return;
+				}
+
+				if(code.indexOf("B") == 0) {
+					if($("#trayForm input").length > 0 && ($("#trayForm input").val().indexOf("R") == 0 || $("#trayForm input").val().indexOf("P") == 0)) {
+						tip("只能扫卷条码");
+						return;
+					}
+					//加载托信息
+					showBoxInfo(code);
+					return;
+				}
+
+				if(code.indexOf("R") == 0) {
+					if($("#trayForm input").length > 0 && $("#trayForm input").val().indexOf("B") == 0) {
+						tip("只能扫盒条码");
+						return;
+					}
+					showRollInfo(code);
+				}
+			}
+
+			//TODO 加载托信息
+			function showTrayInfo(code) {
+				waiting("正在加载信息");
+				App.ajaxGet(trayInfo + code,
+					function(data) {
+						$("#trayCode").val("");
+						$("#trayForm").empty();
+						$("#count").empty();
+						partId = undefined;
+						dxb = 0;
+						planId = undefined;
+						partName = undefined;
+						salesOrder = undefined;
+						batchCode = undefined;
+						$("#packtask").empty();
+						max=0;
+
+						if(data.EMPTY) {
+							$("#trayCode").val(data.CODE);
+						} else {
+							if(data.ENDPACK) {
+								tip("该托条码已打包结束");
+								return;
+							}
+
+							if(data.GRADE != "A") {
+								tip("该条码质量等级不为A无法打包");
+								return;
+							}
+
+							if(data.FROZEN) {
+								tip("该条码已冻结无法打包");
+								return;
+							}
+
+							if(data.PACKED) {
+								tip("该条码已被打包");
+								return;
+							}
+
+							if(data.ISOPENED == 1) {
+								tip("该条码已拆包，无法打包");
+								return;
+							}
+
+							dxb = data.DXB;
+							partId = data.PARTID;
+							planId = data.PLANID;
+							salesOrder = data.ORDER;
+							batchCode = data.BATCH;
+
+							$("#trayCode").val(data.CODE);
+							var children = data.CHILDREN;
+							var qrcode;
+							for(var i = 0; i < children.length; i++) {
+								qrcode = children[i].ROLLBARCODE;
+								if(!qrcode)
+									qrcode = children[i].PARTBARCODE;
+								if(!qrcode)
+									qrcode = children[i].BOXBARCODE;
+								$("#trayForm").append("<div id='" + qrcode + "' class=\"mui-input-row oldBarcode\" > <input rid=\"" + children[i].ID + "\" type=\"text\" value=\"" + qrcode + "\" readonly required> </div>");
+							}
+							if($("#trayForm input").val().indexOf("R") == 0 || $("#trayForm input").val().indexOf("P") == 0) {
+								$("#count").html("共" + $("#trayForm input").length + "卷");
+							} else {
+								$("#count").html("共" + $("#trayForm input").length + "盒");
+							}
+							trayCode=qrcode;
+							loadPackTask();
+						}
+					}
+				);
+			}
+
+			function showBoxInfo(code) {
+				if(isEmpty($("#trayCode").val())) {
+					tip("请先扫描托条码");
+					return;
+				}
+				if($("#" + code).length > 0) {
+					tip("重复扫描");
+					return;
+				}
+				waiting("正在加载信息");
+				App.ajaxGet(boxInfo + code,
+					function(data) {
+						if(data.EMPTY) {
+							tip("该条码尚未使用");
+							return;
+						}
+						if(data.GRADE != "A") {
+							tip("该条码质量等级不为A无法打包");
+							return;
+						}
+
+						if(data.ISOPENED == 1) {
+							tip("该条码已拆包，无法打包");
+							return;
+						}
+
+						if(data.FROZEN) {
+							tip("该条码已冻结无法打包");
+							return;
+						}
+
+						if(data.PACKED) {
+							tip("该条码已被打包");
+							return;
+						}
+						//0，不确定是否单向布
+						if(dxb == 0) {
+							if(salesOrder == undefined) {
+								salesOrder == data.ORDER;
+							} else {
+								if(salesOrder != data.ORDER) {
+									tip("不同订单无法打包");
+									return;
+								}
+							}
+
+							if(batchCode == undefined) {
+								batchCode == data.BATCH;
+							} else {
+								if(batchCode != data.BATCH) {
+									tip("不同批次无法打包");
+									return;
+								}
+							}
+							//是单向布
+							if(data.DXB == -1) {
+								dxb = -1;
+								//是单向布，肯定是部件
+								if(partId == undefined) {
+									planId = data.PLANID;
+									partId = data.PARTID;
+									partName = data.PARTNAME;
+								} else {
+									if(partId != data.PARTID) {
+										tip("来自不同部件的条码无法打包");
+										return;
+									}
+								}
+								//不是单向布，那么要看是否是相同计划产出
+							} else {
+								dxb = 1;
+
+								//判断计划ID是否赋值
+								if(planId == undefined) {
+									planId = data.PLANID;bn
+									partName = data.PARTNAME;
+
+								} else {
+									if(planId != data.PLANID) {
+										tip("非同一计划产出，无法打包");
+										return;
+									}
+								}
+								//看是否是部件
+								if(data.PARTID) {
+									if(partId == undefined) {
+										partId = data.PARTID;
+										partName = data.PARTNAME;
+									} else {
+										if(partId != data.PARTID) {
+											tip("来自不同部件的条码无法打包");
+											return;
+										}
+									}
+								}
+							}
+						} else {
+							if(salesOrder != undefined && salesOrder != data.ORDER) {
+								tip("不同订单无法打包");
+								return;
+							}
+							if(batchCode != undefined && batchCode != data.BATCH) {
+								tip("不同批次无法打包");
+								return;
+							}
+
+							//单向布,-1,非单向布，1，默认0
+							//如果不是单向布，新条码是单向布，提示，并不再往下执行
+							if(dxb == 1 && data.DXB == -1) {
+								tip("不同的产品规格");
+								return;
+							}
+
+							//如果是单向布，新条码不是单向布，提示
+							if(dxb == -1 && !data.DXB == 1) {
+								tip("不同的产品规格");
+								return;
+							}
+
+							if(partId != data.PARTID) {
+								tip("不同的部件类型");
+								return;
+							}
+
+							if(dxb == 1) {
+								if(planId != data.PLANID) {
+									tip("非同一计划产出，无法打包");
+									return;
+								}
+							}
+						}
+
+						if($("#" + data.CODE).length > 0) {
+							tip("重复扫描");
+							return;
+						}
+						$("#trayForm").append("<div id=\"" + data.CODE + "\" class=\"mui-input-row newBarcode\" ><label>*</label><input type=\"text\" value=\"" + data.CODE + "\" readonly></div>");
+						$("#count").html("共" + $("#trayForm input").length + "盒");
+					}
+				);
+			}
+
+			function showRollInfo(code) {
+				if(isEmpty($("#trayCode").val())) {
+					tip("请先扫描托条码");
+					return;
+				}
+				if($("#" + code).length > 0) {
+					tip("重复扫描");
+					return;
+				}
+				waiting("正在加载信息");
+				App.ajaxGet(rollInfo + code,
+					function(data) {
+						if(!data.REG) {
+							tip("该条码尚未登记");
+							return;
+						}
+						if(data.GRADE != "A") {
+							tip("该条码质量等级不为A无法打包");
+							return;
+						}
+
+						if(data.FROZEN) {
+							tip("该条码已冻结无法打包");
+							return;
+						}
+
+						if(data.PACKED) {
+							tip("该条码已被打包");
+							return;
+						}
+						/*if(data.IN==1){
+							tip("该条码已经入库");
+							return;
+						}*/
+						//0，不确定是否单向布
+						if(dxb == 0) {
+							if(salesOrder == undefined) {
+								salesOrder == data.ORDER;
+							} else {
+								if(salesOrder != data.ORDER) {
+									tip("不同订单无法打包");
+									return;
+								}
+							}
+
+							if(batchCode == undefined) {
+								batchCode == data.BATCH;
+							} else {
+								if(batchCode != data.BATCH) {
+									tip("不同批次无法打包");
+									return;
+								}
+							}
+
+							//是单向布
+							if(data.DXB == -1) {
+								dxb = -1;
+								//是单向布，肯定是部件
+								if(partId == undefined) {
+									partId = data.PARTID;
+									partName = data.PARTNAME;
+									planId = data.PLANID;
+								} else {
+									if(partId != data.PARTID) {
+										tip("来自不同部件的条码无法打包");
+										return;
+									}
+								}
+								//不是单向布，那么要看是否是相同计划产出
+							} else {
+								dxb = 1;
+								//判断计划ID是否赋值
+								if(planId == undefined) {
+									planId = data.PLANID;
+									partName = data.PARTNAME;
+								} else {
+									if(planId != data.PLANID) {
+										tip("非同一计划产出，无法打包");
+										return;
+									}
+
+								}
+								//看是否是部件
+								if(data.PARTID) {
+									if(partId == undefined) {
+										partId = data.PARTID;
+										partName = data.PARTNAME;
+									} else {
+										if(partId != data.PARTID) {
+											tip("来自不同部件的条码无法打包");
+											return;
+										}
+									}
+								}
+							}
+						} else {
+
+							if(salesOrder != undefined && salesOrder != data.ORDER) {
+								tip("不同订单无法打包");
+								return;
+							}
+							if(batchCode != undefined && batchCode != data.BATCH) {
+								tip("不同批次无法打包");
+								return;
+							}
+
+							//单向布,-1,非单向布，1，默认0
+							//如果不是单向布，新条码不是单向布，提示，并不再往下执行
+							if(dxb == 1 && data.DXB == -1) {
+								tip("不同的产品规格");
+								return;
+							}
+
+							//如果是单向布，新条码不是单向布，提示
+							if(dxb == -1 && !data.DXB == 1) {
+								tip("不同的产品规格");
+								return;
+							}
+
+							if(partId != data.PARTID) {
+								tip("不同的部件类型");
+								return;
+							}
+							if(dxb == 1) {
+								if(planId != data.PLANID) {
+									tip("非同一计划产出，无法打包");
+									return;
+								}
+							}
+						}
+
+						if($("#" + data.CODE).length > 0) {
+							tip("重复扫描");
+							return;
+						}
+						$("#trayForm").append("<div id=\"" + data.CODE + "\" class=\"mui-input-row newBarcode\" ><label>*</label><input type=\"text\" value=\"" + data.CODE + "\" readonly></div>");
+						$("#count").html("共" + $("#trayForm input").length + "卷");
+						loadPackTask();
+					}
+				);
+			}
+
+			function doPack() {
+				var codes = [];
+				$("#trayForm div.newBarcode input").each(function(i, e) {
+					codes.push($(this).val());
+				});
+				if(codes.length == 0) {
+					tip("请扫条码");
+					return;
+				}
+				mconfirm("操作提示", "确认打包？", function() {
+					var boxCodes, rollCodes;
+					if(codes.join(",").indexOf("B") == 0) {
+						boxCodes = codes.join(",");
+						rollCodes = "";
+					} else {
+						boxCodes = "";
+						rollCodes = codes.join(",");
+					}
+					waiting("正在打包");
+					App.ajaxPost(packUrl, {
+						puname: App.getLoginUserName(),
+						trayCode: $("#trayCode").val(),
+						packagingStaff: App.getLoginUserId(),
+						rollCodes: rollCodes,
+						boxCodes: boxCodes,
+						planId: planId,
+						partName: partName == undefined ? "" : partName,
+						partId: partId == undefined ? "" : partId
+					}, function(data) {
+						sucTip("打包成功");
+						showTrayInfo($("#trayCode").val());
+					});
+				});
+
+			}
+
+			function endPack() {
+				if($("#trayForm div.newBarcode input").length > 0) {
+					mconfirm("操作提示", "尚有未打包进去的条码，点击确定将不会打包进去，是否继续？", function() {
+						mconfirm("操作提示", "结束后无法再扫新的条码，请确认是否打包结束?", function() {
+							App.ajaxPost(endPackUrl + $("#trayCode").val(), {}, function() {
+								sucTip("打包已结束");
+								$("#trayField").addClass("endpack");
+								setTimeout(function() {
+									$("#trayField").removeClass("endpack");
+									$("#count").html("");
+									showTrayInfo($("#trayCode").val());
+								}, 3000);
+							});
+						});
+					});
+				} else {
+					mconfirm("操作提示", "结束后无法再扫新的条码，请确认是否打包结束?", function() {
+						App.ajaxPost(endPackUrl + $("#trayCode").val(), {}, function() {
+							sucTip("打包已结束");
+							$("#trayField").addClass("endpack");
+							setTimeout(function() {
+								$("#count").html("");
+								$("#trayField").removeClass("endpack");
+								showTrayInfo($("#trayCode").val());
+							}, 1500);
+						});
+					});
+				}
+			}
+
+			mui("form").on("tap", "input", function(e) {
+				App.go("pInfo.html", {
+					code: $(this).val()
+				}, true);
+			});
+
+			mui("form").on("longtap", ".mui-input-row",
+				function(e) {
+					var _this = this;
+					mconfirm("删除提示", "确认删除？", function() {
+						if($(_this).hasClass("newBarcode")) {
+							$(_this).slideUp(500, function() {
+								$(this).remove();
+								if($("#trayForm input").length == 0) {
+									partId = undefined;
+									dxb = 0;
+									planId = undefined;
+									partName = undefined;
+									salesOrder = undefined;
+									batchCode = undefined;
+								}
+								if($("#trayForm input").val().indexOf("R") == 0 || $("#trayForm input").val().indexOf("P") == 0) {
+									$("#count").html("共" + $("#trayForm input").length + "卷");
+									loadPackTask();
+								} else {
+									$("#count").html("共" + $("#trayForm input").length + "盒");
+								}
+							});
+						} else {
+							if($(".oldBarcode").length <= 1) {
+								tip("最后一盒或卷无法删除");
+								return;
+							}
+							var rid = $(_this).find("input").attr("rid");
+							waiting("正在删除")
+							App.ajaxPost(deleteInnerUrl, {
+								type: 'TRAY',
+								id: rid
+							}, function(data) {
+								$(_this).slideUp(500, function() {
+									$(this).remove();
+									sucTip("删除成功");
+									if($("#trayForm input").val().indexOf("R") == 0 || $("#trayForm input").val().indexOf("P") == 0) {
+										$("#count").html("共" + $("#trayForm input").length + "卷");
+									} else {
+										$("#count").html("共" + $("#trayForm input").length + "盒");
+									}
+								});
+							});
+						}
+					});
+				});
+
+			function loadPackTask() {
+				if($("#trayForm input").length>max&&max!=0){
+					malert("打包提示","已超出最大数量","我已知晓",null);
+					return;
+				}
+				//if($("#packtask").children().length!=0)return;
+				if(trayCode==$("#trayCode").val())return;
+				App.ajaxGet(App.getServerUrl() + "package2/packtask/" + $("#trayForm input").val(), function(data) {
+					var lis="";
+					
+					for(var i=0;i<data.length;i++){
+						if(data[i].ROLLSPERTRAY>max){
+							max=data[i].ROLLSPERTRAY;
+						}
+						lis+="<li>"+data[i].CODE+"</li>";
+					}
+					$("#packtask").empty();
+					$("#packtask").append(lis);
+				});
+			}
+		</script>
+	</body>
+
+</html>
