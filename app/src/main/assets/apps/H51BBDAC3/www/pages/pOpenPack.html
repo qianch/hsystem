@@ -148,7 +148,7 @@
 				code = formatCode(code);
 				if(!code) return;
 
-				if(code.indexOf("T") == 0) { 
+				if(code.indexOf("T") == 0 || code.indexOf("P") == 0) {
 					showTrayInfo(code);
 					return;
 				}
