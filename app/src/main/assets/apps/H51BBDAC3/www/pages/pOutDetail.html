@@ -353,10 +353,10 @@
 						"data": data
 					});
 					log(trayCodeAndWeighthtml)
-					if(data.PARTID==null){
-						$("#out-" + data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g,"") + "-" + data.BATCHCODE + "-").append(trayCodeAndWeighthtml);
+					if(data.CODE.PARTID == null){
+						$("#out-" + data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g,"") + "-" + data.CODE.BATCHCODE + "-").append(trayCodeAndWeighthtml);
 					}else{
-						$("#out-" + data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g,"")+ "-" + data.BATCHCODE + "-" + data.PARTID).append(trayCodeAndWeighthtml);
+						$("#out-" + data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g,"")+ "-" + data.CODE.BATCHCODE + "-" + data.CODE.PARTID).append(trayCodeAndWeighthtml);
 					}
 					
 					if(color == "red") {
