@@ -389,7 +389,10 @@
 					beepAndVibrate();
 					return;
 				}
-			}, function() {})
+			}, function() {
+			   beepAndVibrate();
+			   toast("查询失败！");
+			})
 		}
 
 		App.ready(function() {
