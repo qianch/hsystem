@@ -567,7 +567,7 @@
 					tip("请扫条码");
 					return;
 				}
-				mconfirm("操作提示", "确认打包？", function() {
+				//mconfirm("操作提示", "确认打包？", function() {
 					var boxCodes, rollCodes;
 					if(codes.join(",").indexOf("B") == 0) {
 						boxCodes = codes.join(",");
@@ -589,8 +589,10 @@
 					}, function(data) {
 						sucTip("打包成功");
 						showTrayInfo($("#trayCode").val());
+					},function(data){
+					    tip("打包失败:"+ data);
 					});
-				});
+				//});
 
 			}
 
