@@ -19,6 +19,8 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <application
         android:name="io.dcloud.application.DCloudApplication"
@@ -55,16 +57,12 @@
             android:windowSoftInputMode="adjustResize">
 
             <intent-filter>
-
                 <category
                     android:name="android.intent.category.DEFAULT" />
-
                 <category
                     android:name="android.intent.category.BROWSABLE" />
-
                 <action
                     android:name="android.intent.action.VIEW" />
-
                 <data
                     android:scheme="h56131bcf" />
             </intent-filter>

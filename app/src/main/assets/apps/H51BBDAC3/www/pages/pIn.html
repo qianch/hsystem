@@ -173,7 +173,7 @@
 							return;
 						}
 						//判断条码是否为胚布(裁剪车间产品)
-						if((ajaxData.CONSUMERSIMPLENAME).indexOf("裁剪车间") != -1) {
+						if((ajaxData.CONSUMERSIMPLENAME || "").indexOf("裁剪车间") != -1) {
 							beepAndVibrate();
 							toast("该条码是裁剪车间用胚布无法入成品库");
 							return;
@@ -228,19 +228,32 @@
 								toast("该条码已出库");
 								return;
 							}
+							if(ajaxData.ORDER !=null){
+							  	$("#orderCode").val(ajaxData.ORDER.SALESORDERSUBCODE);
+							    $("#SALESORDERSUBCODEPRINT").val(ajaxData.ORDER.SALESORDERSUBCODEPRINT);
+							}
 
-							$("#orderCode").val(ajaxData.ORDER.SALESORDERSUBCODE);
-							$("#SALESORDERSUBCODEPRINT").val(ajaxData.ORDER.SALESORDERSUBCODEPRINT);
-							$("#consumer").val(ajaxData.CONSUMER.CONSUMERNAME);
-							$("#consumerProductName").val(ajaxData.PRODUCT.CONSUMERPRODUCTNAME || ajaxData.FINISHED.CONSUMERPRODUCTNAME);
+							if(ajaxData.CONSUMER != null){
+							    $("#consumer").val(ajaxData.CONSUMER.CONSUMERNAME);
+							}
+
+							if(ajaxData.PRODUCT != null){
+							    $("#consumerProductName").val(ajaxData.PRODUCT.CONSUMERPRODUCTNAME || "");
+							    $("#productWidth").val(ajaxData.PRODUCT.PRODUCTWIDTH ||  "");
+							}
+
+							if(ajaxData.FINISHED != null){
+							   $("#consumerProductName").val(ajaxData.FINISHED.CONSUMERPRODUCTNAME || "")
+							}
+
 							$("#batchCode").val(ajaxData.CODE.BATCHCODE);
 							$("#partName").val(ajaxData.PARTNAME);
-							$("#productWidth").val(ajaxData.PRODUCT.PRODUCTWIDTH || ajaxData.FINISHED.PRODUCTWIDTH);
+
 							//var shelfLife = ajaxData.PRODUCT.PRODUCTSHELFLIFE;
 							var outTime;
 							if(data[0].indexOf("R") == 0) {
 								$("#weight").val(ajaxData.ROLL.ROLLWEIGHT);
-								$("#productModel").val(ajaxData.PRODUCT.PRODUCTMODEL || ajaxData.FINISHED.PRODUCTMODEL);
+								$("#productModel").val(ajaxData.PRODUCT.PRODUCTMODEL || ajaxData.FINISHED.PRODUCTMODEL || "");
 								outTime = new Calendar(new Date(ajaxData.ROLL.ROLLOUTPUTTIME.replace(/-/g,
 									"/")));
 							} else if(data[0].indexOf("T") == 0 || data[0].indexOf("P") == 0) {
@@ -249,15 +262,18 @@
 								} catch(e) {
 									$("#weight").val(ajaxData.TRAY.WEIGHT);
 								}
-								$("#productModel").val(ajaxData.PRODUCT.PRODUCTMODEL);
+								$("#productModel").val(ajaxData.PRODUCT.PRODUCTMODEL || ajaxData.FINISHED.PRODUCTMODEL || "");
 								outTime = new Calendar(new Date(ajaxData.TRAY.PACKAGINGTIME.replace(/-/g,
 									"/")));
 							}
 
 							//加一个回调函数，查询同一批次的其他货物所在的位置
-							findWarhourse(ajaxData.ORDER.SALESORDERSUBCODE,
+							if(ajaxData.ORDER != null){
+							    findWarhourse(ajaxData.ORDER.SALESORDERSUBCODE,
 								ajaxData.CODE.BATCHCODE,
 								ajaxData.PRODUCT.PRODUCTMODEL);
+							}
+
 							var now = new Calendar();
 							var overTime = Calendar.diff(outTime,
 								now,
