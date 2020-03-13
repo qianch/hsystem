@@ -231,7 +231,7 @@
 		});
 
 		function parseCode(code) {
-			if(code.charAt(0) != "T") {
+			if(code.charAt(0) != "T" && code.charAt(0) != "P") {
 				tip("无效条码");
 				return;
 			}

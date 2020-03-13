@@ -67,6 +67,16 @@
                     android:scheme="h56131bcf" />
             </intent-filter>
         </activity>
-    </application>
 
+        <provider
+            android:name="io.dcloud.common.util.DCloud_FileProvider"
+            android:authorities="com.bluebird.hs.dc.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/dcloud_file_provider" />
+        </provider>
+
+    </application>
 </manifest>
