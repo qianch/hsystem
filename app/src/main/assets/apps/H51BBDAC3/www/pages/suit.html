@@ -662,42 +662,66 @@
 			);
 		}
 
+        var suitSucPlayer = null;
 		function suitSuc() {
 			notice("组套成功");
-			plus.audio.createPlayer("../resources/sounds/suitSuc.mp3").play();
+			if(suitSucPlayer == null){
+			   suitSucPlayer = plus.audio.createPlayer("../resources/sounds/suitSuc.mp3");
+			}
+			suitSucPlayer.play();
 		}
 
+        var suitFailPlayer = null;
 		function suitFail() {
 			notice("组套失败");
-			plus.audio.createPlayer("../resources/sounds/suitFail.mp3").play();
+			if(suitFailPlayer == null){
+			   suitFailPlayer = plus.audio.createPlayer("../resources/sounds/suitFail.mp3");
+			}
+			suitFailPlayer.play();
 		}
 
+        var suitOKPlayer = null;
 		function suitOK() {
 			notice("组套完成，请保存");
 			setTimeout(function() {
-				plus.audio.createPlayer("../resources/sounds/suitOK.mp3").play();
+			    if(suitOKPlayer == null){
+			       suitOKPlayer = plus.audio.createPlayer("../resources/sounds/suitOK.mp3");
+			    }
+			    suitOKPlayer.play();
 			}, 1000);
 		}
 
+        var suitSortPlayer = null;
 		function suitSort() {
 			tipShow("按序组套");
 			setTimeout(function() {
-				plus.audio.createPlayer("../resources/sounds/suitSort.mp3").play();
+			    if(suitSortPlayer == null){
+			       suitSortPlayer = plus.audio.createPlayer("../resources/sounds/suitSort.mp3");
+			    }
+			    suitSortPlayer.play();
 			}, 1000);
 		}
 
+        var suitNoSortPlayer = null;
 		function suitNoSort() {
 			tipShow("无需按序组套");
 			setTimeout(function() {
-				plus.audio.createPlayer("../resources/sounds/suitNoSort.mp3").play();
+			    if(suitNoSortPlayer == null){
+			       suitNoSortPlayer = plus.audio.createPlayer("../resources/sounds/suitNoSort.mp3");
+			    }
+			    suitNoSortPlayer.play();
 			}, 1000);
 
 		}
 
+        var errorSortPlayer = null;
 		function errorSort(code) {
 			notice("顺序错误");
 			logErrorInfo("顺序错误", code);
-			plus.audio.createPlayer("../resources/sounds/errorSort.mp3").play();
+			if(errorSortPlayer == null){
+			   errorSortPlayer = plus.audio.createPlayer("../resources/sounds/errorSort.mp3");
+			}
+			errorSortPlayer.play();
 		}
 
 		function tipShow(message) {
@@ -708,49 +732,81 @@
 			}, 2000);
 		}
 
+        var sucPlayer = null;
 		function suc() {
 			tipShow("扫描成功");
-			plus.audio.createPlayer("../resources/sounds/suc.mp3").play();
+			if(sucPlayer == null){
+			   sucPlayer = plus.audio.createPlayer("../resources/sounds/suc.mp3");
+			}
+			sucPlayer.play();
 		}
 
+        var errorModelPlayer = null;
 		function errorModel(code) {
 			notice("规格错误");
 			logErrorInfo("规格错误", code);
-			plus.audio.createPlayer("../resources/sounds/errorModel.mp3").play();
+			if(errorModelPlayer == null){
+			   errorModelPlayer = plus.audio.createPlayer("../resources/sounds/errorModel.mp3");
+			}
+			errorModelPlayer.play();
 		}
 
+        var errorCountPlayer = null;
 		function errorCount(code) {
 			notice("数量错误");
 			//logErrorInfo("数量错误",code);
-			plus.audio.createPlayer("../resources/sounds/errorCount.mp3").play();
+			if(errorCountPlayer == null){
+			   errorCountPlayer = plus.audio.createPlayer("../resources/sounds/errorCount.mp3");
+			}
+			errorCountPlayer.play()
 		}
 
+        var errorCount_morePlayer = null;
 		function errorCount_more(code) {
 			notice("数量超出");
 			logErrorInfo("数量超出", code);
-			plus.audio.createPlayer("../resources/sounds/errorCount_more.mp3").play();
+			if(errorCount_morePlayer == null){
+			   errorCount_morePlayer = plus.audio.createPlayer("../resources/sounds/errorCount_more.mp3");
+			}
+			errorCount_morePlayer.play()
 		}
 
+        var invalidCodePlayer = null;
 		function invalidCode() {
 			notice("无效条码");
-			plus.audio.createPlayer("../resources/sounds/invalidCode.mp3").play();
+			if(invalidCodePlayer == null){
+			   invalidCodePlayer = plus.audio.createPlayer("../resources/sounds/invalidCode.mp3")
+			}
+			invalidCodePlayer.play();
 		}
 
+        var scanDevicePlayer = null;
 		function scanDevice() {
 			notice("请扫机台条码");
-			plus.audio.createPlayer("../resources/sounds/scanDevice.mp3").play();
+			if(scanDevicePlayer == null ){
+			   scanDevicePlayer = plus.audio.createPlayer("../resources/sounds/scanDevice.mp3");
+			}
+			scanDevicePlayer.play()
 		}
 
+        var errorRepeatPlayer = null;
 		function errorRepeat(code) {
 			notice("重复扫描");
 			logErrorInfo("重复扫描", code);
-			plus.audio.createPlayer("../resources/sounds/errorRepeat.mp3").play();
+			if(errorRepeatPlayer == null ){
+			   errorRepeatPlayer = plus.audio.createPlayer("../resources/sounds/errorRepeat.mp3")
+			}
+			errorRepeatPlayer.play();
 		}
 
+        var errorCategoryPlayer = null;
 		function errorConsumerCategory(code) {
 			notice("国内国外产品不可混合");
 			logErrorInfo("国内国外产品不可混合", code);
-			plus.audio.createPlayer("../resources/sounds/errorCategory.mp3").play();
+			if(errorCategoryPlayer == null){
+			   errorCategoryPlayer = plus.audio.createPlayer("../resources/sounds/errorCategory.mp3");
+			}
+			errorCategoryPlayer.play()
 		}
 
 		function logErrorInfo(msg, code) {
@@ -769,14 +825,22 @@
 			);
 		}
 
+        var scanOderAndPartFirstPlayer = null;
 		function scanOderAndPartFirst() {
 			notice("请先扫描派工单和部件条码");
-			plus.audio.createPlayer("../resources/sounds/scanOderAndPartFirst.mp3").play();
+			if(scanOderAndPartFirstPlayer == null){
+			   scanOderAndPartFirstPlayer = plus.audio.createPlayer("../resources/sounds/scanOderAndPartFirst.mp3");
+			}
+			scanOderAndPartFirstPlayer.play();
 		}
 
+        var scanOrderFirstPlayer = null;
 		function scanOrderFirst() {
 			notice("请先扫描派工单号");
-			plus.audio.createPlayer("../resources/sounds/scanOrderFirst.mp3").play();
+			if(scanOrderFirstPlayer == null){
+			   scanOrderFirstPlayer = plus.audio.createPlayer("../resources/sounds/scanOrderFirst.mp3");
+			}
+			scanOrderFirstPlayer.play()
 		}
 	</script>
 
