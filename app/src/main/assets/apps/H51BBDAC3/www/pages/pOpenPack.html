@@ -279,13 +279,13 @@
 			}
 
 			function openPack() {
-				mconfirm("操作提示","确认拆包？",function(){
+				//mconfirm("操作提示","确认拆包？",function(){
 					App.ajaxPost(openPackUrl,{code:$("#barcode").val()},function(data){
 						sucTip("拆包成功,里面条码可继续打包");
 						$("#barcode").val("");
 						$("#form").empty();
 					});
-				});
+				//});
 			}
 			mui("form").on("tap","input",function(e){
 				App.go("pInfo.html",{code:$(this).val()},true);
