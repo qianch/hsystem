@@ -280,7 +280,7 @@
 					scanView.close();
 				}catch(e){}*/
 				if(scanView == undefined)
-					scanView = App.go("barcode_scan.html");
+					scanView = App.go("barcode_scan.html",{"scanCallback":parseCode.name});
 				else {
 					scanView.show("pop-in", 200);
 				}
