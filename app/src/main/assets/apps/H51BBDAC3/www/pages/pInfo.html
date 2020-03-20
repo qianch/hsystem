@@ -118,6 +118,7 @@
 		var time = ""; //产出时间
 		var stock = ""; //库存状态
 		var product = ""; //成品信息
+		var finished = "";
 		var barCode = "";
 		var productState = "";
 		var _productState;
@@ -252,7 +253,13 @@
 			}else{*/
 			//成品信息
 			product = data.PRODUCT;
-			productModel = product.PRODUCTMODEL;
+			if(product != null){
+			   productModel = product.PRODUCTMODEL;
+			}
+			finished = data.FINISHED;
+			if(finished != null){
+			   productModel = finished.PRODUCTMODEL;
+			}
 			//}
 
 			//if(barcode.indexOf("T")!=0){
@@ -331,7 +338,7 @@
 			stt += "<div class='mui-input-row'><label>质量等级</label>";
 			stt += "<input type='text' class='mui-input-clear' id='qualityGrade' readonly value='" + qualityGradeCode + "'></div>";
 
-			if(barcode.indexOf("T") == 0) {
+			if(barcode.indexOf("T") == 0 || barcode.indexOf("P") == 0) {
 				stt += "<div class='mui-input-row'><label>在库状态</label>";
 				stt += "<input type='text' class='mui-input-clear' readonly value='" + stock + "'></div>";
 			}

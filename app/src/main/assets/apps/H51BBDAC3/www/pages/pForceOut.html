@@ -146,15 +146,30 @@
 					return; 
 				}
 				$("#outAddress").val(ajaxData.DEPARTMENT)
-				if(ajaxData.PRODUCT.PRODUCTMODEL != null) {
+				var finished =  ajaxData.FINISHED;
+				var product = ajaxData.PRODUCT;
+				var model = null;
+				var factoryProducetName = null;
+
+				if(product !=null){
+				   model = product.PRODUCTMODEL;
+				   factoryProducetName = product.FACTORYPRODUCTNAME;
+				}
+
+				if(finished != null){
+				   model = finished.PRODUCTMODEL;
+				   factoryProducetName = finished.PRODUCTMODEL;
+				}
+
+				if(model != null) {
 					str = '<div class="mui-card-content-inner" type="code" id=' + code + '>';
 					str += '<div class="mui-input-row">';
 					str += '<label>条码</label>';
 					str += '<input type="text" required readonly class="mui-input-clear" id="trayCode" value=' + code + '>';
 					str += '<label>产品名称</label>';
-					str += '<input type="text" required readonly class="mui-input-clear" value=' + ajaxData.PRODUCT.FACTORYPRODUCTNAME + '>';
+					str += '<input type="text" required readonly class="mui-input-clear" value=' + factoryProducetName + '>';
 					str += '<label>规格</label>';
-					str += '<input type="text" required readonly class="mui-input-clear" value=' + ajaxData.PRODUCT.PRODUCTMODEL + '>';
+					str += '<input type="text" required readonly class="mui-input-clear" value=' + model + '>';
 					str += '</div>';
 					str += '</div>';
 					$("#list").append(str);
