@@ -436,7 +436,7 @@
 
 		//选择质量等级
 		function choose(text) {
-			mconfirm("确认判级？(" + text + ")", "条码号:" + barCode + "       产品规格:" + productModel, function() {
+			//mconfirm("确认判级？(" + text + ")", "条码号:" + barCode + "       产品规格:" + productModel, function() {
 				App.ajaxPost(qualiteUrl, {
 					"barcodes": barCode,
 					"puid": App.getLoginUserId(),
@@ -453,9 +453,9 @@
 					beepAndVibrate();
 					mui('#popover').popover('hide');
 				});
-			}, function() {
-				closeWaiting();
-			});
+			//}, function() {
+			//	closeWaiting();
+			//});
 		}
 
 		function searchInfo() {

@@ -19,7 +19,7 @@ var Config={
 		 * APP当前版本号
 		 */
 
-		version:"4.7.8"
+		version:"4.7.9"
 	},
 	/**
 	 * 动画定义
