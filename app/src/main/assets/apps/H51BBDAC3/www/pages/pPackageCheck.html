@@ -140,7 +140,6 @@
 			
 			var code1=$("#code1").val();
 			var code2=$("#code2").val();
-			
 			App.ajaxPost(checkUrl,{code1:code1,code2:code2},function(data){
 				if(data.check==-1){
 					$("#checkRs").html("✘ 校验不通过");
@@ -158,9 +157,15 @@
 					
 					var firstChar=code1.charCodeAt(0)+code2.charCodeAt(0);
 					
-					//150,T+B;166,T+R
+					//150,T+B;166,T+R;
 					if(firstChar==150||firstChar==166){
 						if(code1FirstChar=="T"){
+							App.go("pInfo.html",{code:code1},true);
+						}else{
+							App.go("pInfo.html",{code:code2},true);
+						}
+					}else if(firstChar==162||firstChar==146){//162,R+P;146,P+B
+						if(code1FirstChar=="P"){
 							App.go("pInfo.html",{code:code1},true);
 						}else{
 							App.go("pInfo.html",{code:code2},true);
