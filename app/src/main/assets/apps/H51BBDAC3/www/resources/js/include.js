@@ -1,6 +1,4 @@
 (function() {
-	
-	
 	var js_path="../resources/js/";
 	var css_path="../resources/css/";
 	

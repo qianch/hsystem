@@ -588,7 +588,6 @@
 							return;
 						}
 					}
-
 				}
 
 				//判断该托是否为超期产品
@@ -623,7 +622,6 @@
 								toast("请勿重复条码或单击'确定'、'取消'按钮后再扫码！");
 								barcode = barcode1;
 							}
-
 						} else { //未超期产品
 							if(barcode1 != barcode && barcode1 == "") {
 								App.go("pInfoForDelivery.html", {
@@ -635,13 +633,11 @@
 								toast("请勿重复条码或单击'确定'、'取消'按钮后再扫码！");
 								barcode = barcode1;
 							}
-
 						}
-					})
-
-			}, function() {
-				beepAndVibrate();
-				toast("查询失败！");
+					}, function(msg) {
+			           	beepAndVibrate();
+			           	toast("查询失败！");
+			        })
 			})
 		}
 
