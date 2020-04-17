@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>成品在途状态</title>
+		<script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+.mui-table-view-cell.mui-collapse.mui-active {
+	margin-top: -1px;
+	height: auto;
+}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">成品在途</h1>
+		</header>
+		
+		<div class="mui-content">
+			<div class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<div class="mui-card">
+						<div class="mui-card-header">
+							<form class="mui-input-group" id="rForm">
+								<div class="mui-input-row">
+									<label>终点仓库:</label>
+									<input id="warehouseCode" type="text" readonly required placeholder="终点仓库">
+								</div>
+								<div class="mui-input-row">
+									<label>货运:</label>
+									<input id="logisticsCompany" type="text" required placeholder="请输入货运">
+								</div>
+								
+								<div class="mui-input-row">
+									<label>车牌:</label>
+									<input id="plate" type="text" required placeholder="请输入车牌">
+								</div>
+							</form>
+							
+						</div>
+						<div class="mui-card-content" >
+								<ul class="mui-table-view" id="content">
+													
+								</ul>
+						</div>
+					</div>
+					<div class="mui-button-row">
+						<button type="button" class="mui-btn mui-btn-primary" onclick="doOnTheWay()" style="width: 50%;">在途更新</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+	
+	</body>
+	
+	<script id="memoTemplate" type="text/template">
+			
+			<li class="mui-table-view-cell mui-collapse" id={{data[0]}}>
+			   <a class="mui-navigate-right" href="#">
+					<div class="mui-table-cell mui-col-xs-3">
+						条码：{{data[0]}} 
+					</div>
+				</a>
+				<div class="mui-collapse-content">
+					<form class="mui-input-group">
+						<div class="mui-input-row">
+							<label>产品名称:</label>
+							<input type="text" value={{data[0]}} readonly="readonly">
+						</div>
+						<div class="mui-input-row">
+							<label>批次号:</label>
+							<input type="text" value={{data[0]}} readonly="readonly">
+						</div>
+						<div class="mui-input-row">
+							<label>订单号:</label>
+							<input type="text" value={{data[0]}} readonly="readonly">
+						</div>
+						<div class="mui-input-row">
+							<label>部件名称:</label>
+							<input type="text" value={{data[0]}} readonly="readonly">
+						</div>
+						
+						<div class="mui-input-row">
+							<label>产品重量:</label>
+							<input type="text" value={{data[0]}} readonly="readonly">
+						</div>
+						<div class="mui-input-row">
+							<label>客户名称:</label>
+							<input type="text" value={{data[0]}} readonly="readonly">
+						</div>
+					</form>
+					
+				</div>
+			
+			</li>
+			
+		</script>
+
+
+	<script type="text/javascript">
+		var ponthewayUrl = App.getServerUrl() + "stock/product/pontheway";
+		var findInfoUrl = App.getServerUrl() + "common/infos";
+		var rdata = "";
+		var code = [];
+		mui.init({
+			gestureConfig: {
+				longtap: true
+			}
+		});
+		mui('.mui-scroll-wrapper').scroll({
+			deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+		});
+
+		var scanner;
+		App.ready(function() {
+			scanner = new Scanner(parseCode);
+			scanner.scan();
+		});
+
+		function parseCode(data) {
+			rdata = data.split(";");
+			for(var i = 0; i < code.length; i++) {
+				if(code[i] == rdata[0]) {
+					toast("扫描条码重复");
+					beepAndVibrate();
+					return;
+				}
+			}
+			var str = '';
+			if(rdata != "") {
+				if(rdata.length == 5) {
+					waiting("正在查询该条码的状态信息");
+					App.ajaxGet(findInfoUrl+"?barCode="+rdata[0],function(ajaxData){
+						closeWaiting();
+						if(ajaxData.ERROR){
+							tip(ajaxData.MSG);
+							return;
+						}
+						//判断条码是否产出登记
+						if(ajaxData.REGISTER){
+							//动态拼条码扫的数据
+							code.push(rdata[0]);
+							
+							var html = template('memoTemplate', {
+								"data": rdata
+							});
+							$("#content").append(html);
+							
+							//str += '<div class="mui-input-row" id=' + rdata[0] + '>';
+							//str += '<label>条码</label>';
+							//str += '<input id="barcode" type="text" required readonly class="mui-input-clear" value=' + rdata[0] + '>';
+							//str += '</div>';
+							//$("#list").append(str);
+						}else{
+							beepAndVibrate();
+							toast("该条码未产出登记");
+						}
+					},function(){
+						closeWaiting();
+						beepAndVibrate();
+						toast("查询条码信息失败");
+					});
+				}
+				else if(rdata.length == 1) {
+					//库房库位扫的数据
+					$("#warehouseCode").val(rdata[0]);
+				}
+			}
+		}
+		
+
+		document.onkeydown = function(e) {
+			//键盘事件
+			if(e.keyCode == 37 || e.keyCode == 39) {}
+
+			if(e.keyCode == 13) {}
+		}
+
+		//卷数据提交
+		function doOnTheWay() {
+			var warehouseCode = $("#warehouseCode").val();//终点仓库
+			var logisticsCompany = $("#logisticsCompany").val();//货运
+			var plate = $("#plate").val();//车牌
+			var loginid= App.getLoginUserId();
+			
+			if(!validForm('rForm')) {
+				return;
+			}
+
+			if(code.length == 0) {
+				toast("请先扫描条码！");
+				beepAndVibrate();
+				return;
+			}
+			mconfirm('警告', '确认在途？', function() {
+				waiting("正在在途", true);
+				var rStr = {
+					"code": code.toString(),
+					"warehousecode": warehouseCode,
+					"logisticscompany": logisticsCompany,
+					"plate": plate,
+					"loginid":loginid
+				};
+				
+				App.ajaxPost(ponthewayUrl, rStr, function(data) {
+					closeWaiting();
+					toast("在途成功");
+					clearRoll();
+				}, function() {
+					//失败
+					closeWaiting();
+					toast("在途失败");
+					beepAndVibrate();
+				})
+			}, function() {
+				closeWaiting();
+			});
+		}
+		
+		//长按删除事件
+		mui('#content').on('longtap', '.mui-input-row', function() {
+			var id = this.getAttribute("id");
+			mconfirm("删除", "确认删除", function() {
+				//删除卷中code数组中的值
+				var del;
+				for(var j = 0; j < code.length; j++) {
+					if(code[j] == id) {
+						del = code[j];
+					}
+				}
+				code.splice(code.indexOf(del), 1);
+				$("#" + id).remove();
+			}, function() {});
+		
+		});
+
+		//长按删除事件
+		mui('#list').on('longtap', '.mui-input-row', function() {
+			var id = this.getAttribute("id");
+			mconfirm("删除", "确认删除", function() {
+				//删除卷中code数组中的值
+				var del;
+				for(var j = 0; j < code.length; j++) {
+					if(code[j] == id) {
+						del = code[j];
+					}
+				}
+				code.splice(code.indexOf(del), 1);
+				$("#" + id).remove();
+			}, function() {});
+
+		});
+
+		function clearRoll() {
+			$("#rForm")[0].reset();
+			$("#list").empty();
+			rdata = "";
+			code = [];
+		}
+	</script>
+
+</html>

@@ -20,7 +20,7 @@
 	<body>
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title">成品入库</h1>
+			<h1 class="mui-title">成品待入库</h1>
 		</header>
 		<div class="mui-content">
 			<div class="mui-scroll-wrapper">
@@ -122,7 +122,7 @@
 	</body>
 
 	<script type="text/javascript">
-		var submitUrl = App.getServerUrl() + "stock/product/in";
+		var submitUrl = App.getServerUrl() + "stock/product/stockPending";
 		var ProductStockBackUrl = App.getServerUrl() + "stock/product/back";
 		var findInfoUrl = App.getServerUrl() + "common/infos";
 		var trayInfo = App.getServerUrl() + "common/tray/info/";
@@ -214,12 +214,6 @@
 							if(ajaxData.STOCK == 1) {
 								beepAndVibrate();
 								toast("该条码已在库");
-								return;
-							}
-							//判断条码是否待入库状态
-							if(ajaxData.STOCK == 2) {
-								beepAndVibrate();
-								toast("该条码还不是待入库状态");
 								return;
 							}
 							//判断产品质量等级非A
@@ -361,8 +355,8 @@
 			var n1 = $("#num1").text();
 			var n2 = $("#num2").text();
 			if(parseInt(n1) > parseInt(n2)) {
-				mconfirm("操作提示", "是否确认入库?", function() {
-					waiting("正在入库",
+				mconfirm("操作提示", "是否确认入待入库?", function() {
+					waiting("正在入待入库",
 						true);
 					doPost();
 				}, function() {});
