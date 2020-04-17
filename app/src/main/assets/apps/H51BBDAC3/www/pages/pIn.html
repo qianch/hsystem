@@ -216,12 +216,12 @@
 								toast("该条码已在库");
 								return;
 							}
-							//判断条码是否待入库状态
-							if(ajaxData.STOCK == 2) {
-								beepAndVibrate();
-								toast("该条码还不是待入库状态");
-								return;
-							}
+							// //判断条码是否待入库状态
+							// if(ajaxData.STOCK != 2) {
+							// 	beepAndVibrate();
+							// 	toast("该条码还不是待入库状态");
+							// 	return;
+							// }
 							//判断产品质量等级非A
 							if(ajaxData.TRAY.ROLLQUALITYGRADECODE != "A") {
 								beepAndVibrate();

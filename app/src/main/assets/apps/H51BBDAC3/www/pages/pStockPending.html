@@ -216,10 +216,16 @@
 								toast("该条码已在库");
 								return;
 							}
+							//判断条码是否在库
+							if(ajaxData.STOCK == 2) {
+								beepAndVibrate();
+								toast("该条码已是待入库");
+								return;
+							}
 							//判断产品质量等级非A
 							if(ajaxData.TRAY.ROLLQUALITYGRADECODE != "A") {
 								beepAndVibrate();
-								toast("该条码质量等级不为A无法入库");
+								toast("该条码质量等级不为A无法入待入库");
 								return;
 							}
 							//判断条码是否出库
