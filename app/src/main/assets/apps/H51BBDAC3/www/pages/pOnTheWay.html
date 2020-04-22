@@ -102,17 +102,27 @@
 						}
 						//判断条码是否产出登记
 						if (ajaxData.REGISTER) {
-							//判断条码是否已被冻结
-							/*if(ajaxData.STATE==3){
-								beepAndVibrate();
-								toast("该条码已被冻结");
-								return;
-							}*/
+							
 							if (ajaxData.STOCK == -1) {
 								beepAndVibrate();
 								toast("该条码没有入库");
 								return;
 							}
+							
+							if (ajaxData.STOCK == 3) {
+								beepAndVibrate();
+								toast("该条码已经是在途状态");
+								return;
+							}
+							
+							for (var i = 0; i < code.length; i++) {
+								if (code[i] == rdata[0]) {
+									toast("扫描条码重复");
+									beepAndVibrate();
+									return;
+								}
+							}
+							
 							//动态拼条码扫的数据
 							code.push(rdata[0]);
 							str += '<div class="mui-input-row" weight=' + ajaxData.TRAY.WEIGHT + '  id=' + rdata[0] + '>';
@@ -133,16 +143,11 @@
 								"CONSUMERNAME": ajaxData.CONSUMERSIMPLENAME,
 								"partName": ajaxData.PARTNAME
 							};
-							if(!moveInfoList.contains(mStr))
-							{
-								moveInfoList.push(mStr);
-								total += mStr.productWeight;
-							}
-							
+							moveInfoList.push(mStr);
+							total += mStr.productWeight;
 							$("#count").html("总托数：" + $("#list input").length + '\xa0\xa0\xa0' + "总重量：" + total + "KG");
 							
-
-						} else {
+							} else {
 							beepAndVibrate();
 							toast("该条码未产出登记");
 						}

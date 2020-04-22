@@ -83,13 +83,11 @@
 				}
 			}
 			var str = '';
-			var tWeight = 0.0;
-
+	
 			if (rdata != "") {
 				if (rdata.length == 5) {
 					waiting("正在查询该条码的状态信息");
 					App.ajaxGet(findInfoUrl + "?barCode=" + rdata[0], function(ajaxData) {
-						$("#count").empty();
 						closeWaiting();
 						if (ajaxData.ERROR) {
 							tip(ajaxData.MSG);
@@ -97,17 +95,31 @@
 						}
 						//判断条码是否产出登记
 						if (ajaxData.REGISTER) {
+							for (var i = 0; i < code.length; i++) {
+									
+								if (code[i] == rdata[0]) {
+									toast("扫描条码重复");
+									beepAndVibrate();
+									return;
+								}
+							}	
 							//判断条码是否已被冻结
 							/*if(ajaxData.STATE==3){
 								beepAndVibrate();
 								toast("该条码已被冻结");
 								return;
 							}*/
-							if (ajaxData.STOCK == -1) {
+							// if (ajaxData.STOCK == -1) {	
+							// 	beepAndVibrate();
+							// 	toast("该条码没有入库");
+							// 	return;
+							// }
+							if (!(ajaxData.STOCK == 1|ajaxData.STOCK == 3)) {
 								beepAndVibrate();
-								toast("该条码没有入库");
+								toast("该条码不是在库（在途库）状态");
 								return;
 							}
+								$("#count").empty();
 							//动态拼条码扫的数据
 							code.push(rdata[0]);
 							str += '<div class="mui-input-row" weight=' + ajaxData.TRAY.WEIGHT + '  id=' + rdata[0] + '>';
@@ -116,25 +128,27 @@
 								' value=' + rdata[0] + '>';
 							str += '</div>';
 							$("#list").append(str);
+				
+							var mStr = {
+								"newWarehouseCode": $("#warehouseCode").val(),
+								"newWarehousePosCode": $("#warehousePosCode").val(),
+								"barCode": ajaxData.TRAY.TRAYBARCODE,
+								"productName": ajaxData.PRODUCT.FACTORYPRODUCTNAME,
+								"batchCode": ajaxData.BATCHCODE,
+								"salesOrderCode": ajaxData.CODE.SALESORDERCODE,
+								"productWeight": ajaxData.TRAY.WEIGHT,
+								"CONSUMERNAME": ajaxData.CONSUMERSIMPLENAME,
+								"partName": ajaxData.PARTNAME
+							};
+							moveInfoList.push(mStr);
+							total += mStr.productWeight;
+							$("#count").html("总托数：" + $("#list input").length + '\xa0\xa0\xa0' + "总重量：" + total + "KG");
 
 						} else {
 							beepAndVibrate();
 							toast("该条码未产出登记");
 						}
-						var mStr = {
-							"newWarehouseCode": $("#warehouseCode").val(),
-							"newWarehousePosCode": $("#warehousePosCode").val(),
-							"barCode": ajaxData.TRAY.TRAYBARCODE,
-							"productName": ajaxData.PRODUCT.FACTORYPRODUCTNAME,
-							"batchCode": ajaxData.BATCHCODE,
-							"salesOrderCode": ajaxData.CODE.SALESORDERCODE,
-							"productWeight": ajaxData.TRAY.WEIGHT,
-							"CONSUMERNAME": ajaxData.CONSUMERSIMPLENAME,
-							"partName": ajaxData.PARTNAME
-						};
-						moveInfoList.push(mStr);
-						total += mStr.productWeight;
-						$("#count").html("总托数：" + $("#list input").length + '\xa0\xa0\xa0' + "总重量：" + total + "KG");
+						
 
 
 					}, function() {
@@ -144,8 +158,8 @@
 					});
 				} else if (rdata.length == 2) {
 					//库房库位扫的数据
-					$("#warehouseCode").val(rdata[0]);
-					$("#warehousePosCode").val(rdata[1]);
+					$("#warehouseCode").val(rdata[0].trim());
+					$("#warehousePosCode").val(rdata[1].trim());
 				}
 			}
 		}
@@ -180,9 +194,20 @@
 				};
 
 				App.ajaxPost(moveUrl, rStr, function(data) {
-					closeWaiting();
-					toast("移库成功");
-					clearRoll();
+					
+					if(data=="")
+					{
+						closeWaiting();
+						toast("移库成功");
+						clearRoll();
+					}
+					else{
+						//失败
+						closeWaiting();
+						malert("移库提示", data, "我已知晓", null);
+						beepAndVibrate();
+					}
+					
 				}, function() {
 					//失败
 					closeWaiting();

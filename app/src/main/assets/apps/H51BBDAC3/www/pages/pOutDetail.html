@@ -567,8 +567,8 @@
 						var deliveryNum = $("#" + data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g, "") + "-" + data.ORDER.PRODUCTID + "-" + data.CODE.BATCHCODE + "-").parent().find("tr:eq(6)").find("td:eq(1)").text();
 						if((parseInt(scanNum) + 1) > deliveryNum) {
 							beep();
-							toast("多于计划数量，请确认发货数量!");
-							return;
+							//toast("多于计划数量，请确认发货数量!");
+							//return;
 						}
 					}
 				} else {
@@ -584,8 +584,8 @@
 
 						if((parseInt(scanNum) + 1) > deliveryNum) {
 							beep();
-							toast("多于计划数量，请确认发货数量!");
-							return;
+							//toast("多于计划数量，请确认发货数量!");
+							//return;
 						}
 					}
 				}
@@ -658,8 +658,8 @@
 					str = "少于计划数量，是否继续？";
 				} else if(parseInt(count) > parseInt($("#" + detailId)[0].rows[6].cells[1].innerText)) {
 					beep();
-					toast("多于计划数量，请确认发货数量!");
-					return;
+					//toast("多于计划数量，请确认发货数量!");
+					//return;
 				}
 
 			}

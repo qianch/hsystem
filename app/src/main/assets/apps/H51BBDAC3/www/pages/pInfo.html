@@ -208,15 +208,24 @@
 			}
 			log(data.STOCK);
 			//库存状态
-			if(data.STOCK == 1) {
-				stock = "在库";
-			} else if(data.STOCK == 5) {
-				stock = "退库";
-			} else if(data.STOCK == -1) {
-				stock = "出库";
-			} else {
-				stock = "不在库";
-			}
+		if(data.STOCK == -1) {
+			stock = "出库";
+		}
+		else if(data.STOCK == 1) {
+			stock = "在库";
+		} 
+		else if(data.STOCK == 2) {
+			stock = "待入库";
+		} 
+		else if(data.STOCK == 3) {
+			stock = "在途库";
+		} 
+		else if(data.STOCK == 5) {
+			stock = "退库";
+		} 
+		else {
+			stock = "不在库";
+		}
 			//作废状态
 			if(data.CODE.ISABANDON == 1) {
 				isAbandon = "作废";
