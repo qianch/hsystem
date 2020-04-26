@@ -132,12 +132,20 @@
 							str += '</div>';
 							$("#list").append(str);
 							
+							var productName="";
+							if(isEmpty(ajaxData.PRODUCT.FACTORYPRODUCTNAME)) {
+							productName=	ajaxData.PRODUCT.TCPROCBOMVERSIONPARTSNAME;
+							} else {
+								productName=ajaxData.PRODUCT.FACTORYPRODUCTNAME;
+						    }
+							
+							
 							var mStr = {
 								"newWarehouseCode": $("#warehouseCode").val(),
 								"newWarehousePosCode": $("#warehousePosCode").val(),
 								"barCode": ajaxData.TRAY.TRAYBARCODE,
-								"productName": ajaxData.PRODUCT.FACTORYPRODUCTNAME,
-								"batchCode": ajaxData.BATCHCODE,
+								"productName": productName,
+								"batchCode": ajaxData.CODE.BATCHCODE,
 								"salesOrderCode": ajaxData.CODE.SALESORDERCODE,
 								"productWeight": ajaxData.TRAY.WEIGHT,
 								"CONSUMERNAME": ajaxData.CONSUMERSIMPLENAME,

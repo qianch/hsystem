@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="UTF-8">
-		<title>成品移库</title>
+		<title>成品回库</title>
 		<script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
 		<style type="text/css">
 
@@ -13,9 +13,9 @@
 	<body>
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title">成品移库</h1>
+			<h1 class="mui-title">成品回库</h1>
 		</header>
-		<div class="mui-content" id="pMove">
+		<div class="mui-content" id="pBack">
 			<div class="mui-scroll-wrapper">
 				<div class="mui-scroll">
 					<div class="mui-card">
@@ -38,11 +38,11 @@
 						</div>
 					</div>
 					<div class="mui-button-row">
-						<button type="button" class="mui-btn mui-btn-primary" onclick="doRMoveInfo()" style="width: 50%;">移库详情</button>
+						<button type="button" class="mui-btn mui-btn-primary" onclick="doBackInfo()" style="width: 50%;">回库详情</button>
 					</div>
 
 					<div class="mui-button-row">
-						<button type="button" class="mui-btn mui-btn-primary" onclick="doRMove()" style="width: 50%;">移库</button>
+						<button type="button" class="mui-btn mui-btn-primary" onclick="doBack()" style="width: 50%;">回库</button>
 					</div>
 				</div>
 			</div>
@@ -51,13 +51,13 @@
 	</body>
 
 	<script type="text/javascript">
-		var moveUrl = App.getServerUrl() + "stock/product/move";
-		var moveInfoUrl = App.getServerUrl() + "stock/product/moveInfo";
+		var backUrl = App.getServerUrl() + "stock/product/pBack";
+		var backInfoUrl = App.getServerUrl() + "stock/product/moveInfo";
 		var findInfoUrl = App.getServerUrl() + "common/infos";
 		var rdata = "";
 		var code = [];
 		var total = 0.0;
-		var moveInfoList = [];
+		var backInfoList = [];
 		mui.init({
 			gestureConfig: {
 				longtap: true
@@ -103,57 +103,42 @@
 									return;
 								}
 							}	
-							//判断条码是否已被冻结
-							/*if(ajaxData.STATE==3){
+							
+							if (ajaxData.STOCK != -1) {
 								beepAndVibrate();
-								toast("该条码已被冻结");
+								toast("该条码不是出库状态");
 								return;
-							}*/
-							// if (ajaxData.STOCK == -1) {	
-							// 	beepAndVibrate();
-							// 	toast("该条码没有入库");
-							// 	return;
-							// }
-							if (!(ajaxData.STOCK == 1|ajaxData.STOCK == 3)) {
-								beepAndVibrate();
-								toast("该条码不是在库（在途）状态");
-								return;
-							}
-								$("#count").empty();
-							//动态拼条码扫的数据
-							code.push(rdata[0]);
-							str += '<div class="mui-input-row" weight=' + ajaxData.TRAY.WEIGHT + '  id=' + rdata[0] + '>';
-							str += '<label>条码</label>';
-							str += '<input id="barcode" type="text" required readonly class="mui-input-clear" weight = ' + ajaxData.TRAY.WEIGHT +
-								' value=' + rdata[0] + '>';
-							str += '</div>';
-							$("#list").append(str);
-							var productPartName = '';
-							if(isEmpty(ajaxData.PRODUCT.FACTORYPRODUCTNAME)) {
-								productPartName = ajaxData.PRODUCT.TCPROCBOMVERSIONPARTSNAME;
-							} else {
-								productPartName = ajaxData.PRODUCT.FACTORYPRODUCTNAME;
 							}
 							
-							var partBatchCode = '';
-							if(isEmpty(ajaxData.BATCHCODE)) {
-								partBatchCode = ajaxData.CODE.BATCHCODE;
+								$("#count").empty();
+								code.push(rdata[0]);
+							//动态拼条码扫的数据
+							
+							str += '<div class="mui-input-row" weight=' + ajaxData.TRAY.WEIGHT + '  id=' + rdata[0] + '>';
+							str += '<label>条码</label>';
+							str += '<input id="barcode" type="text" required readonly class="mui-input-clear" weight = ' + ajaxData.TRAY.WEIGHT +' value=' + rdata[0] + '>';
+							str += '</div>';
+							$("#list").append(str);
+							
+							var productName="";
+							if(isEmpty(ajaxData.PRODUCT.FACTORYPRODUCTNAME)) {
+							productName=	ajaxData.PRODUCT.TCPROCBOMVERSIONPARTSNAME;
 							} else {
-								partBatchCode = ajaxData.BATCHCODE;
+								productName=ajaxData.PRODUCT.FACTORYPRODUCTNAME;
 							}
 				
 							var mStr = {
 								"newWarehouseCode": $("#warehouseCode").val(),
 								"newWarehousePosCode": $("#warehousePosCode").val(),
 								"barCode": ajaxData.TRAY.TRAYBARCODE,
-								"productName": productPartName,
-								"batchCode": partBatchCode,
+								"productName": productName,
+								"batchCode": ajaxData.CODE.BATCHCODE,
 								"salesOrderCode": ajaxData.CODE.SALESORDERCODE,
 								"productWeight": ajaxData.TRAY.WEIGHT,
 								"CONSUMERNAME": ajaxData.CONSUMERSIMPLENAME,
 								"partName": ajaxData.PARTNAME
 							};
-							moveInfoList.push(mStr);
+							backInfoList.push(mStr);
 							total += mStr.productWeight;
 							$("#count").html("总托数：" + $("#list input").length + '\xa0\xa0\xa0' + "总重量：" + total + "KG");
 
@@ -162,9 +147,7 @@
 							toast("该条码未产出登记");
 						}
 						
-
-
-					}, function() {
+						}, function() {
 						closeWaiting();
 						beepAndVibrate();
 						toast("查询条码信息失败");
@@ -185,7 +168,7 @@
 		}
 
 		//卷数据提交
-		function doRMove() {
+		function doBack() {
 			if (!validForm('rForm')) {
 				return;
 			}
@@ -195,36 +178,36 @@
 				beepAndVibrate();
 				return;
 			}
-			mconfirm('警告', '确认移库？', function() {
-				waiting("正在移库", true);
+			mconfirm('警告', '确认回库？', function() {
+				waiting("正在回库", true);
 				var rStr = {
 					"newWarehouseCode": $("#warehouseCode").val(),
 					"newWarehousePosCode": $("#warehousePosCode").val(),
-					"moveUserId": App.getLoginUserId(),
+					"operateUserId": App.getLoginUserId(),
 					"puid": App.getLoginUserId(),
 					"puname": App.getLoginUserName(),
 					"code": code.toString()
 				};
 
-				App.ajaxPost(moveUrl, rStr, function(data) {
+				App.ajaxPost(backUrl, rStr, function(data) {
 					
 					if(data=="")
 					{
 						closeWaiting();
-						toast("移库成功");
+						toast("回库成功");
 						clearRoll();
 					}
 					else{
 						//失败
 						closeWaiting();
-						malert("移库提示", data, "我已知晓", null);
+						malert("回库提示", data, "我已知晓", null);
 						beepAndVibrate();
 					}
 					
 				}, function() {
 					//失败
 					closeWaiting();
-					toast("移库失败");
+					toast("回库失败");
 					beepAndVibrate();
 				})
 			}, function() {
@@ -232,7 +215,7 @@
 			});
 		}
 
-		function doRMoveInfo() {
+		function doBackInfo() {
 			if (!validForm('rForm')) {
 				return;
 			}
@@ -242,7 +225,7 @@
 				beepAndVibrate();
 				return;
 			}
-			window.localStorage.setItem('moveList', JSON.stringify(moveInfoList));
+			window.localStorage.setItem('moveList', JSON.stringify(backInfoList));
 			App.go("pMoveInfo.html");
 		}
 
@@ -268,9 +251,9 @@
 
 				code.splice(code.indexOf(del), 1);
 				$("#" + id).remove();
-				for (var i = 0; i < moveInfoList.length; i++) {
-					if (moveInfoList[i].barCode == id) {
-						moveInfoList.splice(i, 1);
+				for (var i = 0; i < backInfoList.length; i++) {
+					if (backInfoList[i].barCode == id) {
+						backInfoList.splice(i, 1);
 					}
 				}
 				total = toFixed((total - weight), 1);
@@ -287,6 +270,8 @@
 			$("#rForm")[0].reset();
 			$("#list").empty();
 			$("#count").empty();
+			moveInfoList = [];
+			window.localStorage.setItem('moveList', JSON.stringify(moveInfoList));
 			rdata = "";
 			code = [];
 		}
