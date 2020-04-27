@@ -114,7 +114,7 @@
 							// 	toast("该条码没有入库");
 							// 	return;
 							// }
-							if (!(ajaxData.STOCK == 1|ajaxData.STOCK == 3)) {
+							if (!(ajaxData.STOCK == 1 || ajaxData.STOCK == 3)) {
 								beepAndVibrate();
 								toast("该条码不是在库（在途）状态");
 								return;
