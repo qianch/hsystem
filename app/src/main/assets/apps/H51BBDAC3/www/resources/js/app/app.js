@@ -54,6 +54,9 @@ App = {
 	ajaxGet: function(url, successCB, errorCB) {
 		waiting("请稍后", true);
 		mui.ajax(url, {
+		    beforeSend:function(request){
+		       request.setRequestHeader("AppVersion",Config.project.version)
+		    },
 			type: "get",
 			dataType: "json",
 			timeout:30000,
@@ -70,8 +73,10 @@ App = {
 					tip(ret.error);
 				}catch(e){
 				}
-				if(errorCB)
-						errorCB(xhr, type, errorThrown);
+
+				if(errorCB){
+				   errorCB(xhr, type, errorThrown);
+				}
 			}
 		});
 	},
@@ -95,6 +100,9 @@ App = {
 	ajaxPost: function(url, data, successCB, errorCB) {
 		waiting("请稍后", true);
 		mui.ajax(url, {
+		    beforeSend:function(request){
+		       request.setRequestHeader("AppVersion",Config.project.version)
+		    },
 			data: data,
 			type: "post",
 			timeout:30000,
@@ -112,8 +120,10 @@ App = {
 					tip(ret.error);
 				}catch(e){
 				}
-				if(errorCB)
-						errorCB(xhr, type, errorThrown);
+
+				if(errorCB){
+				   errorCB(xhr, type, errorThrown);
+				}
 			}
 		});
 	},

@@ -156,12 +156,14 @@
 						$("#rollQualityGradeCode").append("<option value='" + data[i].text + "'>" + data[i].text + "</option>")
 					}
 				} else {
-					toast("加载产品质量等级失败");
+					$("#rollQualityGradeCode").append("<option value='" + 'A' + "'>" + 'A' + "</option>")
+					toast("加载产品质量等级失败,默认A");
 				}
 
 			}, function(data) {
 				Loading.hide();
-				toast("加载产品质量等级失败");
+					$("#rollQualityGradeCode").append("<option value='" + 'A' + "'>" + 'A' + "</option>")
+				toast("加载产品质量等级失败,默认A");
 				return;
 			});
 		});

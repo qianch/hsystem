@@ -1,6 +1,6 @@
 //var SERVER_IP="10.10.1.50/mes";//测试服务器
-var SERVER_IP="10.10.1.9/mes";//生产环境
-//var SERVER_IP="192.168.101.18:8080/mes";//个人测试
+//var SERVER_IP="10.10.1.9/mes";//生产环境
+var SERVER_IP="192.168.101.18/mes";//个人测试
 //var SERVER_IP="192.168.1.111/mes";//个人测试
 var Config={
 	/**
@@ -19,7 +19,7 @@ var Config={
 		 * APP当前版本号
 		 */
 
-		version:"4.7.9"
+		version:"4.8.1"
 	},
 	/**
 	 * 动画定义

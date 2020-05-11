@@ -27,8 +27,12 @@
 				<div class="mui-scroll">
 					<div class="mui-input-group" style="background:#dcdcdc;border-bottom: 2px solid #007aff;margin-bottom: 1px;">
 						<div class="mui-input-row">
-							<label>仓库</label>
-							<input id="warehouseCode" type="text" readonly required placeholder="仓库">
+							<label>仓库名称</label>
+							<input id="warehouseName" type="text" readonly required placeholder="仓库名称">
+						</div>
+						<div class="mui-input-row">
+							<label>仓库代码</label>
+							<input id="warehouseCode" type="text" readonly required placeholder="仓库代码">
 						</div>
 						<div class="mui-input-row">
 							<label>库位</label>
@@ -127,6 +131,7 @@
 		var findInfoUrl = App.getServerUrl() + "common/infos";
 		var trayInfo = App.getServerUrl() + "common/tray/info/";
 		var findWarhourseUrl = App.getServerUrl() + "stock/product/warhourse";
+		var findWarehouseNameUrl = App.getServerUrl() + "stock/product/warhourseName";
 		var rdata = "";
 		var scanner;
 		var peibu = 0;
@@ -222,18 +227,19 @@
 								toast("该条码已出库");
 								return;
 							}
-							//判断条码是否在途状态
-							if(ajaxData.STOCK == 3) {
-								beepAndVibrate();
-								toast("该条码是在途状态，不能入库");
-								return;
-							}
-							//判断条码是否待入库状态
+							// //判断条码是否在途状态
+							// if(ajaxData.STOCK == 3) {
+							// 	beepAndVibrate();
+							// 	toast("该条码是在途状态，不能入库");
+							// 	return;
+							// }
+							// //判断条码是否待入库状态
 							// if(ajaxData.STOCK != 2) {
 							// 	beepAndVibrate();
 							// 	toast("该条码不是待入库状态，不能入库");
 							// 	return;
 							// }
+
 							//判断产品质量等级非A
 							if(ajaxData.TRAY.ROLLQUALITYGRADECODE != "A") {
 								beepAndVibrate();
@@ -308,6 +314,14 @@
 				//库房库位扫的数据
 				$("#warehouseCode").val(code.split(";")[0]);
 				$("#warehousePosCode").val(code.split(";")[1]);
+				App.ajaxGet(findWarehouseNameUrl + "?warehouseCode=" + warehouseCode.value,
+					function(ajaxData) {
+						$("#warehouseName").val(ajaxData);
+					},
+					function() {
+						beepAndVibrate();
+						toast("查询库位信息失败");
+					});
 			}
 		}
 
