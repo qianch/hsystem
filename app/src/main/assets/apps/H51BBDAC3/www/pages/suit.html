@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>组套校验</title>
-		<script src="../resources/js/include.js"></script>
+		<script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
 		<style type="text/css">
 			.mui-scroll-wrapper {
 				margin-top: 270px;
@@ -270,22 +270,20 @@
 				"bottom": "400px",
 				"top": "400px"
 			});
-			//			new Scanner(parseCode).scan();
-//			parseCode("GD20170829003");
-			$("body").append("<div id=\"scan_qrcode\" style=\"z-index:999;position: fixed;bottom:100px;left: 10px;height: 100px;width:100px;border-radius:10px;background: url(../resources/images/scan.png);background-size: 100% 100%;\"></div>");
+
+			scanner = new Scanner(parseCode);
+			scanner.scan();
+
+			/* $("body").append("<div id=\"scan_qrcode\" style=\"z-index:999;position: fixed;bottom:100px;left: 10px;height: 100px;width:100px;border-radius:10px;background: url(../resources/images/scan.png);background-size: 100% 100%;\"></div>");
 			$("#scan_qrcode").draggable();
 			mui("body").on("tap", "#scan_qrcode", function() {
-				//每次打开之前，先调用关闭方法
-				/*try{
-					scanView.close();
-				}catch(e){}*/
 				if(scanView == undefined)
 					scanView = App.go("barcode_scan.html",{"scanCallback":parseCode.name});
 				else {
 					scanView.show("pop-in", 200);
 				}
-			});
-			
+			}); */
+
 			init();
 		});
 		
