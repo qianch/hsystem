@@ -252,9 +252,6 @@
 		function get(k) {
 			return localStorage.getItem(k);
 		}
-
-		var tipView = undefined;
-		var scanView = undefined;
 		
 		$("#scan").focus();
 		$("#scan").keydown(function(e){
@@ -265,25 +262,8 @@
 			});
 		
 		App.ready(function() {
-			tipView = App.preload("barcode_scan_suc.html", null, {
-				"background": "transparent",
-				"bottom": "400px",
-				"top": "400px"
-			});
-
 			scanner = new Scanner(parseCode);
 			scanner.scan();
-
-			/* $("body").append("<div id=\"scan_qrcode\" style=\"z-index:999;position: fixed;bottom:100px;left: 10px;height: 100px;width:100px;border-radius:10px;background: url(../resources/images/scan.png);background-size: 100% 100%;\"></div>");
-			$("#scan_qrcode").draggable();
-			mui("body").on("tap", "#scan_qrcode", function() {
-				if(scanView == undefined)
-					scanView = App.go("barcode_scan.html",{"scanCallback":parseCode.name});
-				else {
-					scanView.show("pop-in", 200);
-				}
-			}); */
-
 			init();
 		});
 		
@@ -355,10 +335,6 @@
 			/*mconfirm("操作提示", "确认返回？", function() {
 				mconfirm()
 				plus.webview.currentWebview().close();
-				if(tipView != undefined) {
-					tipView.close();
-					scanView.close();
-				}
 			});*/
 			plus.nativeUI.actionSheet({
 				title: "确认返回？",
@@ -383,20 +359,13 @@
 							reset();
 						}
 						plus.webview.currentWebview().close();
-						if(tipView != undefined) {
-							tipView.close();
-							scanView.close();
-						}
 					});
 				}
 			});
 		}
 		var notice = function(message) {
-			if(scanView != undefined)
-				scanView.hide("pop-out", 500);
 			tipShow(message);
 			plus.nativeUI.alert(message, null, null, "我已知晓");
-			//			tipView.evalJS("tip(\""+message+"\")");
 		}
 
 		mui('.mui-scroll-wrapper').scroll({
@@ -430,7 +399,6 @@
 					scanOderAndPartFirst();
 					return;
 				}
-				//scanView.hide("pop-out", 500);
 				$("#deviceCode").val(code);
 				return;
 			}
@@ -465,7 +433,6 @@
 				put(SUIT_ROWS, html);
 				put(SUIT_COMSUMER_CATEGORY, data.consumerCategory);
 				put(SUIT_NEED_SORT, data.sort);
-				//scanView.hide("pop-out", 500);
 				mui('.mui-scroll-wrapper').scroll().scrollTo(0, 0, 100);
 				getProcess();
 			});
@@ -488,7 +455,6 @@
 
 		function loadPartBarcode(code) {
 			App.ajaxGet(App.getServerUrl() + "siemens/suit/part/info?partBarcode=" + code + "&ctoCode=" + $("#ctoCode").val(), function(data) {
-				//scanView.hide("pop-out", 500);
 				$("#partBarcode").val(code);
 				$("#partName").val(data.partName);
 				suc();
@@ -729,11 +695,7 @@
 		}
 
 		function tipShow(message) {
-			tipView.evalJS("tip(\"" + message + "\")");
-			tipView.show("zoom-out", 200);
-			setTimeout(function() {
-				tipView.hide("zoom-in", 200);
-			}, 2000);
+			plus.nativeUI.toast(message);
 		}
 
         var sucPlayer = null;
