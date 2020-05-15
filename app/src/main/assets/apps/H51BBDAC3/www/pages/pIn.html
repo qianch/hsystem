@@ -230,18 +230,18 @@
 								toast("该条码已出库");
 								return;
 							}
-							// //判断条码是否在途状态
-							// if(ajaxData.STOCK == 3) {
-							// 	beepAndVibrate();
-							// 	toast("该条码是在途状态，不能入库");
-							// 	return;
-							// }
-							// //判断条码是否待入库状态
-							// if(ajaxData.STOCK != 2) {
-							// 	beepAndVibrate();
-							// 	toast("该条码不是待入库状态，不能入库");
-							// 	return;
-							// }
+							//判断条码是否在途状态
+							if(ajaxData.STOCK == 3) {
+								beepAndVibrate();
+								toast("该条码是在途状态，不能入库");
+								return;
+							}
+							//判断条码是否待入库状态
+							if(ajaxData.STOCK != 2) {
+								beepAndVibrate();
+								toast("该条码不是待入库状态，不能入库");
+								return;
+							}
 
 							//判断产品质量等级非A
 							if(ajaxData.TRAY.ROLLQUALITYGRADECODE != "A") {

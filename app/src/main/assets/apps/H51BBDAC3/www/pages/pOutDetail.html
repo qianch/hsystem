@@ -155,7 +155,8 @@
 					<div id="deliveryTrayBarcode">
 					</div>
 					<div class="mui-button-row">
-						<button type="button" class="mui-btn mui-btn-primary" onclick="doOut()" style="width: 50%;">出库</button>
+						<button type="button" class="mui-btn mui-btn-primary" onclick="doOut(0)" style="width: 50%;">分批出库</button> 
+						<button type="button" class="mui-btn mui-btn-primary" onclick="doOut(1)" style="width: 50%;">完成出库</button>
 					</div>
 				</div>
 			</div>
@@ -230,8 +231,10 @@
 	<script id="deliveryPlanOrders" type="text/template">
 		{{each data as value i}}
 		<table id="{{value.ID}}" class="deliveryPlanOrders" border="1" cellspacing="0" cellpadding="0" bordercolor="gray" style="BORDER-COLLAPSE: collapse;margin-top:35px;">
+			
+			
 			<tr id="{{value.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g,"")}}-{{value.PRODUCTID}}-{{value.BATCHCODE}}-{{value.PARTID}}">
-				<th class="title" height="10">订单号</th>
+			    <th class="title" height="10">订单号</th>
 				<th class="content" style="color:red;">{{value.SALESORDERSUBCODE}}</th>
 			</tr>
 			<tr>
@@ -641,8 +644,8 @@
 			})
 		}
 
-		function doOut() { //出库
-			var str = "确认出库？";
+		function doOut(isfinished) { //出库
+			
 			var counts = 0;
 			var isContinue = false;
 
@@ -663,11 +666,28 @@
 				}
 
 			}
+			
 			if(!isContinue) {
+				if(isfinished==0)
+				{
 				beep();
 				toast("实际发货托数为0，请扫描要发货的托!");
 				return;
+				}
+			else{
+				mconfirm("警告", "实际发货托数为0,是否完成出库", function() {
+					outProduct(counts,isfinished);
+				});
+				}
+				}
+			else{
+				outProduct(counts,isfinished);
 			}
+		}
+		
+		function  outProduct(counts,isfinished)
+		{
+			var str = "确认出库？";
 			/**
 			 * 加载发货计划信息
 			 */
@@ -675,7 +695,7 @@
 				function(data) {
 					data_ = JSON.parse(data);
 					data = JSON.parse(data);
-
+			
 					if(data.error != null) {
 						beep();
 						return;
@@ -707,8 +727,10 @@
 								"packingNum": packingNum,
 								"plate": $("#plate").val(),
 								"boxNumber": $("#boxNumber").val(),
-								"count": counts
+								"count": counts,
+								"isfinished":isfinished
 							};
+							
 							App.ajaxPost(outUrl, tStr, function(data) {
 								closeWaiting();
 								if(!isEmpty(data.error)) {
@@ -735,13 +757,13 @@
 								toast(data.responseText);
 								beepAndVibrate();
 							})
-
+			
 						}, function() {
 							//closeWaiting();
 						});
-
+			
 					}
-
+			
 				});
 		}
 

@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="UTF-8">
-		<title>胚布领料</title>
+		<title>胚布移库</title>
 		<script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
 		<style type="text/css">
 
@@ -13,40 +13,51 @@
 	<body>
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title">胚布领料</h1>
+			<h1 class="mui-title">胚布移库</h1>
 		</header>
-		<div class="mui-content">
+		<div class="mui-content" id="pMove">
 			<div class="mui-scroll-wrapper">
 				<div class="mui-scroll">
 					<div class="mui-card">
 						<div class="mui-card-header">
 							<form class="mui-input-group" id="rForm">
 								<div class="mui-input-row">
-									<label>裁剪胚布库</label>
-									<input id="warehouseCode" type="hidden" value="cjpbk" readonly required >
-									<input id="warehousePosCode" type="hidden" value="1" readonly required >
+									<label>新库房</label>
+									<input id="warehouseCode" type="text" readonly required placeholder="新仓库">
 								</div>
-									
+								<div class="mui-input-row">
+									<label>新库位</label>
+									<input id="warehousePosCode" type="text" readonly required placeholder="新库位">
+								</div>
 							</form>
 						</div>
-						<div class="mui-card-content" >
-								<form class="mui-input-group" id="list">
-								</form>
+						<div class="mui-card-content">
+							<form class="mui-input-group" id="list">
+							</form>
+							<div style="color:red;text-align: center;font-size: 25px;font-weight: bold;margin-top:10px;" id="count"></div>
 						</div>
 					</div>
 					<div class="mui-button-row">
-						<button type="button" class="mui-btn mui-btn-primary" onclick="doRMove()" style="width: 50%;">领料</button>
+						<button type="button" class="mui-btn mui-btn-primary" onclick="doRMoveInfo()" style="width: 50%;">移库详情</button>
+					</div>
+
+					<div class="mui-button-row">
+						<button type="button" class="mui-btn mui-btn-primary" onclick="doRMove()" style="width: 50%;">移库</button>
 					</div>
 				</div>
 			</div>
 		</div>
+
 	</body>
 
 	<script type="text/javascript">
-		var moveUrl = App.getServerUrl() + "stock/product/pbmove";
-		var findInfoUrl = App.getServerUrl() + "common/infos1";
+		var moveUrl = App.getServerUrl() + "stock/product/move";
+		var moveInfoUrl = App.getServerUrl() + "stock/product/moveInfo";
+		var findInfoUrl = App.getServerUrl() + "common/infos";
 		var rdata = "";
 		var code = [];
+		var total = 0.0;
+		var moveInfoList = [];
 		mui.init({
 			gestureConfig: {
 				longtap: true
@@ -64,32 +75,45 @@
 
 		function parseCode(data) {
 			rdata = data.split(";");
-			for(var i = 0; i < code.length; i++) {
-				console.log(rdata);
-				if(code[i] == rdata[0]) {
+			for (var i = 0; i < code.length; i++) {
+				if (code[i] == rdata[0]) {
 					toast("扫描条码重复");
 					beepAndVibrate();
 					return;
 				}
 			}
 			var str = '';
-			if(rdata != "") {
-				if(rdata.length == 5) {
+	
+			if (rdata != "") {
+				if (rdata.length == 5) {
 					waiting("正在查询该条码的状态信息");
-					App.ajaxGet(findInfoUrl+"?barCode="+rdata[0],function(ajaxData){
+					App.ajaxGet(findInfoUrl + "?barCode=" + rdata[0], function(ajaxData) {
 						closeWaiting();
-						if(ajaxData.ERROR){
+						if (ajaxData.ERROR) {
 							tip(ajaxData.MSG);
 							return;
 						}
 						//判断条码是否产出登记
-						if(ajaxData.REGISTER){
+						if (ajaxData.REGISTER) {
+							for (var i = 0; i < code.length; i++) {
+									
+								if (code[i] == rdata[0]) {
+									toast("扫描条码重复");
+									beepAndVibrate();
+									return;
+								}
+							}	
 							//判断条码是否已被冻结
 							if(ajaxData.STATE==3){
 								beepAndVibrate();
 								toast("该条码已被冻结");
 								return;
 							}
+							// if (ajaxData.STOCK == -1) {	
+							// 	beepAndVibrate();
+							// 	toast("该条码没有入库");
+							// 	return;
+							// }
 							if(ajaxData.STOCK==-1 || ajaxData.STOCK==0){
 								beepAndVibrate();
 								toast("该条码没有入库");
@@ -97,90 +121,113 @@
 							}
 							if(ajaxData.STOCK==3){
 								beepAndVibrate();
-								toast("已打托,不能单独领料");
+								toast("已打托,不能单独移库");
 								return;
 							}
+								$("#count").empty();
 							//动态拼条码扫的数据
 							code.push(rdata[0]);
-							str += '<div class="mui-input-row" id=' + rdata[0] + '>';
+							str += '<div class="mui-input-row" weight=' + ajaxData.TRAY.WEIGHT + '  id=' + rdata[0] + '>';
 							str += '<label>条码</label>';
-							str += '<input id="barcode" type="text" required readonly class="mui-input-clear" value=' + rdata[0] + '>';
+							str += '<input id="barcode" type="text" required readonly class="mui-input-clear" weight = ' + ajaxData.TRAY.WEIGHT +
+								' value=' + rdata[0] + '>';
 							str += '</div>';
 							$("#list").append(str);
-						}else{
+							var productPartName = '';
+							if(!isEmpty(ajaxData.ORDER.FACTORYPRODUCTNAME)) {
+								productPartName = ajaxData.ORDER.FACTORYPRODUCTNAME;
+							}
+							
+							var partBatchCode = '';
+							if(isEmpty(ajaxData.BATCHCODE)) {
+								partBatchCode = ajaxData.CODE.BATCHCODE;
+							} else {
+								partBatchCode = ajaxData.BATCHCODE;
+							}
+				
+							var mStr = {
+								"newWarehouseCode": $("#warehouseCode").val(),
+								"newWarehousePosCode": $("#warehousePosCode").val(),
+								"barCode": ajaxData.TRAY.TRAYBARCODE,
+								"productName": productPartName,
+								"batchCode": partBatchCode,
+								"salesOrderCode": ajaxData.CODE.SALESORDERCODE,
+								"productWeight": ajaxData.TRAY.WEIGHT,
+								"CONSUMERNAME": ajaxData.CONSUMERSIMPLENAME,
+								"partName": ajaxData.PARTNAME
+							};
+							moveInfoList.push(mStr);
+							total += mStr.productWeight;
+							$("#count").html("总托数：" + $("#list input").length + '\xa0\xa0\xa0' + "总重量：" + total + "KG");
+
+						} else {
 							beepAndVibrate();
 							toast("该条码未产出登记");
 						}
-					},function(){
+						
+
+
+					}, function() {
 						closeWaiting();
 						beepAndVibrate();
 						toast("查询条码信息失败");
 					});
-				} else if(rdata.length == 2) {
+				} else if (rdata.length == 2) {
 					//库房库位扫的数据
-					$("#warehouseCode").val(rdata[0]);
-					$("#warehousePosCode").val(rdata[1]);
+					$("#warehouseCode").val(rdata[0].trim());
+					$("#warehousePosCode").val(rdata[1].trim());
 				}
 			}
 		}
 
 		document.onkeydown = function(e) {
 			//键盘事件
-			if(e.keyCode == 37 || e.keyCode == 39) {}
+			if (e.keyCode == 37 || e.keyCode == 39) {}
 
-			if(e.keyCode == 13) {}
+			if (e.keyCode == 13) {}
 		}
 
 		//卷数据提交
 		function doRMove() {
-			if(!validForm('rForm')) {
+			if (!validForm('rForm')) {
 				return;
 			}
 
-			if(code.length == 0) {
+			if (code.length == 0) {
 				toast("请先扫描条码！");
 				beepAndVibrate();
 				return;
 			}
-			mconfirm('警告', '确认领料？', function(data) {
-				waiting("正在领料", true);
+			mconfirm('警告', '确认移库？', function() {
+				waiting("正在移库", true);
 				var rStr = {
 					"newWarehouseCode": $("#warehouseCode").val(),
 					"newWarehousePosCode": $("#warehousePosCode").val(),
 					"moveUserId": App.getLoginUserId(),
 					"puid": App.getLoginUserId(),
-					"puname": App.getLoginUserName(),					
+					"puname": App.getLoginUserName(),
 					"code": code.toString()
 				};
 
 				App.ajaxPost(moveUrl, rStr, function(data) {
 					
-					var data = JSON.stringify(data);
-					console.log(data);
-					if(data.indexOf("产品未入库") > 0 || data.indexOf("产品被冻结") >0){
-						if(data.indexOf("产品未入库") > 0){
-							closeWaiting();
-							beepAndVibrate();
-							toast("产品未入库");
-							
-						}else{
-							closeWaiting();
-							beepAndVibrate();
-							toast("产品被冻结");
-						}
-					}else{
+					if(data=="")
+					{
 						closeWaiting();
-						plus.audio.createPlayer("notice.mp3").play();
-						toast("领料成功");
+						toast("移库成功");
 						clearRoll();
 					}
+					else{
+						//失败
+						closeWaiting();
+						malert("移库提示", data, "我已知晓", null);
+						beepAndVibrate();
+					}
 					
-				
-				//console.log(str);
 				}, function() {
 					//失败
 					closeWaiting();
-					toast("领料失败");
+					toast("移库失败");
 					beepAndVibrate();
 				})
 			}, function() {
@@ -188,26 +235,61 @@
 			});
 		}
 
+		function doRMoveInfo() {
+			if (!validForm('rForm')) {
+				return;
+			}
+
+			if (code.length == 0) {
+				toast("请先扫描条码！");
+				beepAndVibrate();
+				return;
+			}
+			window.localStorage.setItem('moveList', JSON.stringify(moveInfoList));
+			App.go("pMoveInfo.html");
+		}
+
+		//重写toFixed方法
+		function toFixed(num, d) {
+			num *= Math.pow(10, d);
+			num = Math.round(num);
+			return num / (Math.pow(10, d));
+		}
 		//长按删除事件
 		mui('#list').on('longtap', '.mui-input-row', function() {
 			var id = this.getAttribute("id");
+			var weight = this.getAttribute("weight");
 			mconfirm("删除", "确认删除", function() {
 				//删除卷中code数组中的值
 				var del;
-				for(var j = 0; j < code.length; j++) {
-					if(code[j] == id) {
+				var mDel;
+				for (var j = 0; j < code.length; j++) {
+					if (code[j] == id) {
 						del = code[j];
 					}
 				}
+
 				code.splice(code.indexOf(del), 1);
 				$("#" + id).remove();
+				for (var i = 0; i < moveInfoList.length; i++) {
+					if (moveInfoList[i].barCode == id) {
+						moveInfoList.splice(i, 1);
+					}
+				}
+				total = toFixed((total - weight), 1);
+				if(0.0 != total || 0 !=total){
+					$("#count").html("总托数：" + $("#list input").length + '\xa0\xa0\xa0' + "总重量：" + total + "KG");
+				}else{
+					$("#count").empty();
+				}
+				
 			}, function() {});
-
 		});
 
 		function clearRoll() {
 			$("#rForm")[0].reset();
 			$("#list").empty();
+			$("#count").empty();
 			rdata = "";
 			code = [];
 		}
