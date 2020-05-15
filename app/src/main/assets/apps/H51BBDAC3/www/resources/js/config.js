@@ -18,7 +18,6 @@ var Config={
 		/**
 		 * APP当前版本号
 		 */
-
 		version:"4.8.1"
 	},
 	/**
@@ -32,10 +31,10 @@ var Config={
 		/**
 		 * 动画效果
 		 */
-		type:"zoom-out"//slide-in-right,slide-in-left,slide-in-top,slide-in-bottom,fade-in,zoom-out,pop-in
+		type:"zoom-out" //slide-in-right,slide-in-left,slide-in-top,slide-in-bottom,fade-in,zoom-out,pop-in
 	},
 	/**
 	 * 超时时间,单位秒
 	 */
-	EXPIRE_TIME:30*60//30分钟
+	EXPIRE_TIME:30 * 60 //30分钟
 }

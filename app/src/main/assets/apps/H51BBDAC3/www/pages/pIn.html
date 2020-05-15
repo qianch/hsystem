@@ -126,7 +126,7 @@
 	</body>
 
 	<script type="text/javascript">
-		var submitUrl = App.getServerUrl() + "stock/product/in";
+		var submitUrl = App.getServerUrl() + "stock2/product/pIn";
 		var ProductStockBackUrl = App.getServerUrl() + "stock/product/back";
 		var findInfoUrl = App.getServerUrl() + "common/infos";
 		var trayInfo = App.getServerUrl() + "common/tray/info/";
@@ -230,7 +230,7 @@
 								toast("该条码已出库");
 								return;
 							}
-							//判断条码是否在途状态
+							/* //判断条码是否在途状态
 							if(ajaxData.STOCK == 3) {
 								beepAndVibrate();
 								toast("该条码是在途状态，不能入库");
@@ -241,7 +241,7 @@
 								beepAndVibrate();
 								toast("该条码不是待入库状态，不能入库");
 								return;
-							}
+							} */
 
 							//判断产品质量等级非A
 							if(ajaxData.TRAY.ROLLQUALITYGRADECODE != "A") {
