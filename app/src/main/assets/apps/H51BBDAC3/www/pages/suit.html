@@ -32,12 +32,12 @@
 			}
 			
 			th {
-				font-size: 25px;
+				font-size: 20px;
 				text-align: center;
 			}
 			
 			td {
-				font-size: 25px;
+				font-size: 20px;
 				text-align: center;
 				vertical-align: middle;
 				font-weight: bold;
@@ -101,7 +101,7 @@
 			#info tr {}
 			
 			#info td {
-				font-size: 30px;
+				font-size: 20px;
 				color: white;
 				font-weight: bolder;
 				padding: 0;
@@ -177,7 +177,7 @@
 			<table border="1">
 				<tr class="header">
 					<th width="8%"></th>
-					<th width="28%">小部件编码</th>
+					<th width="30%">小部件编码</th>
 					<th width="30%">小部件名称</th>
 					<th>小部件条码</th>
 				</tr>
@@ -202,7 +202,7 @@
 		{{each data as value i}}
 		<tr id="{{replace(value.FRAGMENTCODE)}}_{{i}}" index="{{replace(value.FRAGMENTCODE)}}" class="{{if (i+1)%2==0}}even{{/if}}">
 			<td width="8%">{{i+1}}</td>
-			<td width="28%" style="font-size: 22px;">{{value.FRAGMENTCODE}}</td>
+			<td width="30%" style="font-size: 22px;">{{value.FRAGMENTCODE}}</td>
 			<td width="30%" style="color: darkred;font-size: 25px;">{{value.FRAGMENTNAME}}</td>
 			<td id="td-{{replace(value.FRAGMENTCODE)}}"></td>
 		</tr>
