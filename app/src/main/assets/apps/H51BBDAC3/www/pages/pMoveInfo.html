@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>移库详情</title>
+		<title>详情</title>
 		<meta name="viewport" content="target-densitydpi=320,width=640,user-scalable=no">
 		<script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
 		<style type="text/css">
@@ -41,7 +41,7 @@
 		</header>
 		<div class="mui-content">
 			<div class="mui-scroll-wrapper"
-				<div class="mui-scroll" style="overflow-x: auto" id="block">
+				<div class="mui-scroll" style="width: 100%; overflow-x: auto;" id="block">
 					<table class="plist" >
 						<thead>
 							<tr class="headline">
@@ -56,45 +56,47 @@
 						</thead>
 						<tbody id="tbMain"></tbody>
 					</table>
+					<div style="color:red;text-align: center;font-size: 25px;font-weight: bold;margin-top:10px;" id="count"></div>
 				</div>
 			</div>
 		</div>
 	</body>
 	
 	<script type="text/javascript">
-	// 获取节点
-	 var block = document.getElementById("block");
-	 var oW,oH;
-	 // 绑定touchstart事件
-	 block.addEventListener("touchstart", function(e) {
-	  console.log(e);
-	  var touches = e.touches[0];
-	  oW = touches.clientX - block.offsetLeft;
-	//   oH = touches.clientY - block.offsetTop;
-	  //阻止页面的滑动默认事件
-	  document.addEventListener("touchmove",defaultEvent,false);
-	 },false)
-	 
-	 block.addEventListener("touchmove", function(e) {
-	  var touches = e.touches[0];
-	  var oLeft = touches.clientX - oW;
-	//   var oTop = touches.clientY - oH;
-	  if(oLeft < 0) {
-	  oLeft = 0;
-	  }else if(oLeft > document.documentElement.clientWidth - block.offsetWidth) {
-	  oLeft = (document.documentElement.clientWidth - block.offsetWidth);
-	  }
-	  block.style.left = oLeft + "px";
-	//   block.style.top = oTop + "px";
-	 },false);
-	  
-	 block.addEventListener("touchend",function() {
-	  document.removeEventListener("touchmove",defaultEvent,false);
-	 },false);
-	 function defaultEvent(e) {
-	  e.preventDefault();
-	 }
+	// // 获取节点
+	//  var block = document.getElementById("block");
+	//  var oW,oH;
+	//  // 绑定touchstart事件
+	//  block.addEventListener("touchstart", function(e) {
+	//   console.log(e);
+	//   var touches = e.touches[0];
+	//   oW = touches.clientX - block.offsetLeft;
+	// //   oH = touches.clientY - block.offsetTop;
+	//   //阻止页面的滑动默认事件
+	//   document.addEventListener("touchmove",defaultEvent,false);
+	//  },false)
+	//  
+	//  block.addEventListener("touchmove", function(e) {
+	//   var touches = e.touches[0];
+	//   var oLeft = touches.clientX - oW;
+	// //   var oTop = touches.clientY - oH;
+	//   if(oLeft < 0) {
+	//   oLeft = 0;
+	//   }else if(oLeft > document.documentElement.clientWidth - block.offsetWidth) {
+	//   oLeft = (document.documentElement.clientWidth - block.offsetWidth);
+	//   }
+	//   block.style.left = oLeft + "px";
+	// //   block.style.top = oTop + "px";
+	//  },false);
+	//   
+	//  block.addEventListener("touchend",function() {
+	//   document.removeEventListener("touchmove",defaultEvent,false);
+	//  },false);
+	//  function defaultEvent(e) {
+	//   e.preventDefault();
+	//  }
 		var moveList = JSON.parse(window.localStorage.getItem('moveList'));
+		var countTotal = JSON.parse(window.localStorage.getItem('countTotal'));
 		window.onload = function() {
 			var tbody = document.getElementById('tbMain');
 			for (var i = 0; i < moveList.length; i++) { //遍历一下json数据 
@@ -137,7 +139,7 @@
 		
 			return row; //返回tr数据      
 		}
-	
+	$("#count").html("总托数：" + moveList.length + '\xa0\xa0\xa0' + "总重量：" + countTotal + "KG");
 		document.onkeydown = function(e) {
 			//键盘事件
 			if (e.keyCode == 37 || e.keyCode == 39) {}

@@ -545,6 +545,21 @@
 						toast("该条码未入库");
 						return;
 					}
+					if(ajaxData.STOCK == 2) {
+						beepAndVibrate();
+						toast("该条码是待入库状态");
+						return;
+					}
+					if(ajaxData.STOCK == 3) {
+						beepAndVibrate();
+						toast("该条码是在途状态");
+						return;
+					}
+					if(ajaxData.STOCK != 1) {
+						beepAndVibrate();
+						toast("该条码不是在库状态");
+						return;
+					}
 					log(data.TRAY.ROLLQUALITYGRADECODE)
 					if(data.TRAY.ROLLQUALITYGRADECODE!="A"){
 						beepAndVibrate();

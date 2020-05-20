@@ -129,24 +129,14 @@
 				}
 				//判断条码是否产出登记
 				if(ajaxData.REGISTER) {
-					if(ajaxData.STOCK == 0) {
-						beepAndVibrate();
-						toast("该条码未入库,请确认");
-						return;
-					}
 					if(ajaxData.STOCK == -1) {
 						beepAndVibrate();
-						toast("该条码不在库,请确认");
+						toast("该条码不在库");
 						return;
 					}
-					if(ajaxData.STOCK == 2) {
+					if(ajaxData.STOCK == 0) {
 						beepAndVibrate();
-						toast("该条码是待入库状态,请确认");
-						return;
-					}
-					if(ajaxData.STOCK == 3) {
-						beepAndVibrate();
-						toast("该条码是在途状态,请确认");
+						toast("该条码未入库");
 						return;
 					}
 					if(ajaxData.QUALITY == "A") {

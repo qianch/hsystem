@@ -4,7 +4,10 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>成品在途状态更新</title>
+		
+		
 		<script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../resources/js/app/control.js" type="text/javascript" charset="utf-8"></script>
 		<style type="text/css">
 
 		</style>
@@ -22,17 +25,13 @@
 						<div class="mui-card-header">
 							<form class="mui-input-group" id="rForm">
 								<div class="mui-input-row">
-									<label>终点仓库:</label>
-									<input id="warehouseCode" type="text" readonly required placeholder="终点仓库">
+									<label>终点仓库:</label> 
+									<select id="selwarehouse"    data-options="'valueField':'v','textField':'t','url':'warehouse/queryWarehousebyType?waretype=gswk'" >
+									</select>
 								</div>
-								<div class="mui-input-row">
-									<label>货运:</label>
-									<input id="logisticsCompany" type="text" required placeholder="请输入货运">
-								</div>
-								
 								<div class="mui-input-row">
 									<label>车牌:</label>
-									<input id="plate" type="text" required placeholder="请输入车牌">
+									<input id="plate" type="text"  placeholder="请输入车牌">
 								</div>
 							</form>
 						</div>
@@ -66,7 +65,8 @@
 		mui.init({
 			gestureConfig: {
 				longtap: true
-			}
+			},
+			
 		});
 		mui('.mui-scroll-wrapper').scroll({
 			deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
@@ -76,6 +76,7 @@
 		App.ready(function() {
 			scanner = new Scanner(parseCode);
 			scanner.scan();
+			initSelect();
 		});
 
 		function parseCode(data) {
@@ -141,8 +142,8 @@
 							
 							
 							var mStr = {
-								"newWarehouseCode": $("#warehouseCode").val(),
-								"newWarehousePosCode": $("#warehousePosCode").val(),
+								"newWarehouseCode": $("#selwarehouse").val(),
+								"newWarehousePosCode": "",
 								"barCode": ajaxData.TRAY.TRAYBARCODE,
 								"productName": productName,
 								"batchCode": ajaxData.CODE.BATCHCODE,
@@ -182,8 +183,8 @@
 
 		//卷数据提交
 		function doOnTheWay() {
-					var warehouseCode = $("#warehouseCode").val();//终点仓库
-					var logisticsCompany = $("#logisticsCompany").val();//货运
+					var warehouseCode = $("#selwarehouse").val();//终点仓库
+					var logisticsCompany ="";//货运
 					var plate = $("#plate").val();//车牌
 					var loginid= App.getLoginUserId();
 					
@@ -201,7 +202,6 @@
 						var rStr = {
 							"code": code.toString(),
 							"warehousecode": warehouseCode,
-							"logisticscompany": logisticsCompany,
 							"plate": plate,
 							"loginid":loginid
 						};
@@ -233,6 +233,7 @@
 				return;
 			}
 			window.localStorage.setItem('moveList', JSON.stringify(moveInfoList));
+			window.localStorage.setItem('countTotal', JSON.stringify(total));
 			App.go("pMoveInfo.html");
 		}
 

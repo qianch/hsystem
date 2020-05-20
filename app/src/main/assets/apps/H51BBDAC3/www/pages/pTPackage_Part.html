@@ -176,7 +176,7 @@
 				code = formatCode(code);
 				if(!code) return;
 
-				if(code.indexOf("T") == 0 || code.indexOf("P") == 0) {
+				if(code.indexOf("T") == 0 || code.indexOf("PHS") == 0) {
 					showTrayInfo(code);
 					return;
 				}
@@ -191,7 +191,7 @@
 					return;
 				}
 
-				if(code.indexOf("R") == 0) {
+				if(code.indexOf("R") == 0 || code.indexOf("PCJ") == 0) {
 					if($("#trayForm input").length > 0 && $("#trayForm input").val().indexOf("B") == 0) {
 						tip("只能扫盒条码");
 						return;
