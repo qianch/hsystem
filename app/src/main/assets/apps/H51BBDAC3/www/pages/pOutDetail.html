@@ -155,7 +155,7 @@
 					<div id="deliveryTrayBarcode">
 					</div>
 					<div class="mui-button-row">
-						<!-- <button type="button" class="mui-btn mui-btn-primary" onclick="doOut(0)" style="width: 50%;">分批出库</button> -->
+						<button type="button" class="mui-btn mui-btn-primary" onclick="doOut(0)" style="width: 50%;">分批出库</button> 
 						<button type="button" class="mui-btn mui-btn-primary" onclick="doOut(1)" style="width: 50%;">完成出库</button>
 					</div>
 				</div>
@@ -545,17 +545,17 @@
 						toast("该条码未入库");
 						return;
 					}
-					if(ajaxData.STOCK == 2) {
+					if(data.STOCK == 2) {
 						beepAndVibrate();
 						toast("该条码是待入库状态");
 						return;
 					}
-					if(ajaxData.STOCK == 3) {
+					if(data.STOCK == 3) {
 						beepAndVibrate();
 						toast("该条码是在途状态");
 						return;
 					}
-					if(ajaxData.STOCK != 1) {
+					if(data.STOCK != 1) {
 						beepAndVibrate();
 						toast("该条码不是在库状态");
 						return;
