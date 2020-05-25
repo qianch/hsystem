@@ -116,6 +116,12 @@
 								return;
 							}
 							
+							if (ajaxData.STOCK != 1) {
+								beepAndVibrate();
+								toast("该条码非在库状态");
+								return;
+							}
+							
 							for (var i = 0; i < code.length; i++) {
 								if (code[i] == rdata[0]) {
 									toast("扫描条码重复");
@@ -153,7 +159,7 @@
 								"partName": ajaxData.PARTNAME
 							};
 							moveInfoList.push(mStr);
-							total += mStr.productWeight;
+							total = accAdd(total,mStr.productWeight);
 							$("#count").html("总托数：" + $("#list input").length + '\xa0\xa0\xa0' + "总重量：" + total + "KG");
 							
 							} else {
