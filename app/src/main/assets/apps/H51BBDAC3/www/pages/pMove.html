@@ -5,9 +5,7 @@
 		<meta charset="UTF-8">
 		<title>移库入库</title>
 		<script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../resources/js/app/control.js" type="text/javascript" charset="utf-8"></script>
 		<style type="text/css">
-
 		</style>
 	</head>
 
@@ -160,7 +158,7 @@
 								"partName": ajaxData.PARTNAME
 							};
 							moveInfoList.push(mStr);
-							total = accAdd(total,mStr.productWeight);
+							total = total.add(mStr.productWeight);
 							$("#count").html("总托数：" + $("#list input").length + '\xa0\xa0\xa0' + "总重量：" + total + "KG");
 
 						} else {

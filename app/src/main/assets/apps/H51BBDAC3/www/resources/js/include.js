@@ -31,7 +31,8 @@
 		"<script type=\"text/javascript\" src=\"" + js_path + "app/AppConstant.js\"></script>"+
 		"<script type=\"text/javascript\" src=\"" + js_path + "app/app.js\"></script>"+
 		"<script type=\"text/javascript\" src=\"" + js_path + "app/barcode.js\"></script>"+
-		"<script type=\"text/javascript\" src=\"" + js_path + "app/AppHelper.js\"></script>" );
+		"<script type=\"text/javascript\" src=\"" + js_path + "app/AppHelper.js\"></script>"+
+		"<script type=\"text/javascript\" src=\"" + js_path + "app/control.js\"></script>");
 	//执行FastClick实例化，解决屏幕点击延迟
 	if('addEventListener' in document) {
 		document.addEventListener('DOMContentLoaded', function() {
