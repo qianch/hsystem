@@ -10,12 +10,6 @@
 		<script src="../resources/js/mui/mui.picker.js"></script>
 		<script src="../resources/js/mui/mui.poppicker.js"></script>
 		<style type="text/css">
-			.mui-input-row select {
-				font-size: 17px;
-				height: 37px;
-				padding: 27px;
-			}
-			
 			select {
 				background: white;
 			}
@@ -78,10 +72,21 @@
 			<h1 class="mui-title">成品仓库库位查询</h1>
 		</header>
 		<div class="mui-content">
-
+<!-- style='display:none' -->
 			<div class="mui-scroll-wrapper">
 				<div class="mui-scroll">
 					<form class="mui-input-group" id="formID" style="">
+						
+						<div class="mui-input-row">
+							<label>条码类型:</label> 
+							<select id="stockType" data-options="'valueField':'v','textField':'t','url':'/dict/queryDict?rootcode=stockType'" >
+							</select>
+						</div>
+						
+						<div class="mui-input-row" style="display: none;">
+							<label>库存状态:</label> 
+							<input id="stockState" type="display:none" required readonly="readonly">
+						</div>
 						<div class="mui-input-row">
 							<label>订单号</label>
 							<input id="salesCode" type="text" required placeholder="请输入订单号">
@@ -129,13 +134,20 @@
 
 	<script type="text/javascript">
 		var queryUrl = App.getServerUrl() + "stock/product/list";
-
+		App.ready(function() {
+			initSelect();
+		});
+		
+		// $("#stockType").val(1);
+		$("#stockState").val(1);
 		function query() {
+			var stockState = $("#stockState").val();
+			var stockType = $("#stockType").val();
 			var salesCode = $("#salesCode").val();
 			var batchCode = $("#batchCode").val();
 			var factoryProductName = $("#factoryProductName").val();
 			var consumerProductnNme = $("#consumerProductnNme").val();
-			App.ajaxGet(queryUrl + "?salesCode=" + salesCode + "&batchCode=" + batchCode + "&factoryProductName" + factoryProductName + "&consumerProductnNme" + consumerProductnNme, function(data) {
+			App.ajaxGet(queryUrl + "?stockState=" + stockState +"&stockType=" + stockType +"&salesCode=" + salesCode + "&batchCode=" + batchCode + "&factoryProductName" + factoryProductName + "&consumerProductnNme" + consumerProductnNme, function(data) {
 				addBarcode(data);
 			});
 		}
