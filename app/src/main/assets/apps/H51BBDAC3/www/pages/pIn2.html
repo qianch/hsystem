@@ -132,6 +132,8 @@
 		var trayInfo = App.getServerUrl() + "common/tray/info/";
 		var findWarhourseUrl = App.getServerUrl() + "stock/product/warhourse";
 		var findWarehouseNameUrl = App.getServerUrl() + "stock/product/warhourseName";
+		var queryWarhourseUrl = App.getServerUrl() + "stock2/product/queryWarhourse";
+		 
 		var rdata = "";
 		var scanner;
 		var peibu = 0;
@@ -315,11 +317,18 @@
 				);
 			} else {
 				//库房库位扫的数据
-				$("#warehouseCode").val(code.split(";")[0]);
-				$("#warehousePosCode").val(code.split(";")[1]);
-				App.ajaxGet(findWarehouseNameUrl + "?warehouseCode=" + warehouseCode.value,
+				App.ajaxGet(queryWarhourseUrl + "?warehouseCode=" + code.split(";")[0].trim(),
 					function(ajaxData) {
-						$("#warehouseName").val(ajaxData);
+						if(ajaxData.WARETYPE=="gsbdk")
+						{
+							$("#warehouseCode").val(code.split(";")[0].trim());
+							$("#warehousePosCode").val(code.split(";")[1].trim());
+							$("#warehouseName").val(ajaxData.WAREHOUSENAME);
+						}
+						else{
+							toast("扫描库位非本地库库位，不能入库");
+						}
+						
 					},
 					function() {
 						beepAndVibrate();
