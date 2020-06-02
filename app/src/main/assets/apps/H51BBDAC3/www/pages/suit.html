@@ -12,7 +12,7 @@
 			}
 			
 			input {
-				font-size: 30px!important;
+				font-size: 18px!important;
 				background: none!important;
 				border: none!important;
 				margin-bottom: auto!important;
@@ -32,12 +32,12 @@
 			}
 			
 			th {
-				font-size: 20px;
+				font-size: 12px;
 				text-align: center;
 			}
 			
 			td {
-				font-size: 20px;
+				font-size: 18px;
 				text-align: center;
 				vertical-align: middle;
 				font-weight: bold;
@@ -86,7 +86,7 @@
 				position: fixed;
 				bottom: 0px;
 				text-align: center;
-				font-size: 25px;
+				font-size: 18px;
 				color: white;
 				font-weight: bold;
 				line-height: 50px;
@@ -101,7 +101,7 @@
 			#info tr {}
 			
 			#info td {
-				font-size: 20px;
+				font-size: 18px;
 				color: white;
 				font-weight: bolder;
 				padding: 0;
@@ -112,7 +112,7 @@
 			.mui-btn {
 				width: 100px;
 				height: 50px;
-				font-size: 25px;
+				font-size: 18px;
 			}
 			
 			#info td:first-child {
@@ -153,7 +153,7 @@
 	<body>
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title">组套校验 <label id="needSort"></label></h1>
+			<h1 class="mui-title" style="font-size:18px;">组套校验 <label id="needSort"></label></h1>
 		</header>
 		<div class="mui-content">
 			<table id="info">
@@ -176,7 +176,7 @@
 			</table>
 			<table border="1">
 				<tr class="header">
-					<th width="8%"></th>
+					<th width="10%"></th>
 					<th width="30%">小部件编码</th>
 					<th width="30%">小部件名称</th>
 					<th>小部件条码</th>
@@ -201,9 +201,9 @@
 	<script type="text/template" id="suitList">
 		{{each data as value i}}
 		<tr id="{{replace(value.FRAGMENTCODE)}}_{{i}}" index="{{replace(value.FRAGMENTCODE)}}" class="{{if (i+1)%2==0}}even{{/if}}">
-			<td width="8%">{{i+1}}</td>
-			<td width="30%" style="font-size: 22px;">{{value.FRAGMENTCODE}}</td>
-			<td width="30%" style="color: darkred;font-size: 25px;">{{value.FRAGMENTNAME}}</td>
+			<td width="10%" style="font-size:12px;">{{i+1}}</td>
+			<td width="30%" style="font-size:12px;">{{value.FRAGMENTCODE}}</td>
+			<td width="30%" style="color: darkred;font-size:12px;">{{value.FRAGMENTNAME}}</td>
 			<td id="td-{{replace(value.FRAGMENTCODE)}}"></td>
 		</tr>
 		{{/each}}
