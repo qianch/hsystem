@@ -175,7 +175,11 @@
 
 						if(!ajaxData.ENDPACK) {
 							beepAndVibrate();
-							toast("打包未结束");
+							if(code.indexOf('PCJ') == 0){
+							  toast("请先裁剪产出登记");
+							}else{
+							   toast("打包未结束");
+							}
 							return;
 						}
 						//判断条码是否为胚布(裁剪车间产品)
