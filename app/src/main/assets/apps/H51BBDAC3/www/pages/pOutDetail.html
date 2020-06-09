@@ -615,7 +615,12 @@
 						var inTime = new Calendar(data[0].INTIME);
 						var productShelfLife = data[0].PRODUCTSHELFLIFE;
 						var now = new Calendar();
-						var diff = Calendar.diff(inTime, now, Calendar.field.DAY) //得出两个日期相差的天数
+						var diff;
+						try{
+						  diff = Calendar.diff(inTime, now, Calendar.field.DAY) //得出两个日期相差的天数
+						}catch(error){
+						   toast(error.message + ",请检查时间是否设置正确");
+						}
 						if(diff > productShelfLife) {
 							if(barcode1 != barcode && barcode1 == "") {
 								color = "red";

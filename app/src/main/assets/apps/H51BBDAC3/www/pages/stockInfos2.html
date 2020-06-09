@@ -116,16 +116,23 @@
 						<button type="button" class="mui-btn mui-btn-primary" onclick="query()">查询</button>
 					</div>
 				
-					<table class="table">
-						<thead>
-							<th>条码号</th>
-							<th>重量</th>
-							<th>库位</th>
-						</thead>
-						<tbody>
-
-						</tbody>
-					</table>
+					<div class="mui-card-content">
+						<div style="color:red;text-align: left;font-size: 15px;font-weight: bold;margin-top:10px;" id="count">
+							
+						</div>
+						<table id="table" class="table">
+							<thead>
+								<th>条码号</th>
+								<th>重量</th>
+								<th>库位</th>
+							</thead>
+							<tbody>
+						
+							</tbody>
+						</table>
+						
+						
+					</div>
 
 				</div>
 			</div>
@@ -137,8 +144,7 @@
 		App.ready(function() {
 			initSelect();
 		});
-		
-		// $("#stockType").val(1);
+		var total = 0.0;
 		$("#stockState").val(1);
 		function query() {
 			var stockState = $("#stockState").val();
@@ -148,47 +154,29 @@
 			var factoryProductName = $("#factoryProductName").val();
 			var consumerProductnNme = $("#consumerProductnNme").val();
 			App.ajaxGet(queryUrl + "?stockState=" + stockState +"&stockType=" + stockType +"&salesCode=" + salesCode + "&batchCode=" + batchCode + "&factoryProductName" + factoryProductName + "&consumerProductnNme" + consumerProductnNme, function(data) {
+				
 				addBarcode(data);
 			});
 		}
 			function addBarcode(data) {
+				$("table tr").remove();
+				total = 0.0;
 				var table = document.body.querySelector('tbody');
+				var trtotal = document.createElement('tr');
+				trtotal.innerHTML = "<td>条码号</td><td>重量</td><td>库位</td>"; 
+				table.appendChild(trtotal); 
 				for(var i = 0; i < data.rows.length; i++) {
 					var tr = document.createElement('tr');
 					tr.innerHTML = "<td>"+data.rows[i].BARCODE+"</td><td>"+data.rows[i].WEIGHT+"</td><td>"+data.rows[i].WAREHOUSEPOSCODE+"</td>";
 					table.appendChild(tr);
+					total = total.add(data.rows[i].WEIGHT);
 				}
+				$("#count").empty();
+				$("#count").html("总托数：" + data.rows.length + '\xa0\xa0\xa0' + "总重量：" + total + "KG");
+				
 			}
-		//		$("#startDateSelect")[0].addEventListener('tap', function() {
-		//			option = {
-		//				"type": "date",
-		//				"beginYear": "1980",
-		//				"endYear": "2030"
-		//			};
-		//			var picker = new mui.DtPicker(option);
-		//			picker.show(function(rs) {
-		//				console.log(rs.text)
-		//				document.getElementById('starttime').innerHTML = rs.text;
-		//			});
-		//		}, false);
-		//		$("#endDateSelect").click(function() {
-		//			var dtPicker = new mui.DtPicker({
-		//				type: 'date'
-		//			});
-		//			/*参数：'datetime'-完整日期视图(年月日时分)
-		//			        'date'--年视图(年月日)
-		//			        'time' --时间视图(时分)
-		//			        'month'--月视图(年月)
-		//			        'hour'--时视图(年月日时)
-		//			*/
-		//			dtPicker.show(function(selectItems) {
-		//				var y = selectItems.y.text; //获取选择的年
-		//				var m = selectItems.m.text; //获取选择的月
-		//				var d = selectItems.d.text; //获取选择的日
-		//				var date = y + "-" + m + "-" + d;
-		//				$("#dateSelect").val(date);
-		//			})
-		//		});
+			
+		
 	</script>
 
 </html>
