@@ -312,7 +312,7 @@
 				//库房库位扫的数据
 				App.ajaxGet(queryWarhourseUrl + "?warehouseCode=" + code.split(";")[0].trim(),
 					function(ajaxData) {
-						if(ajaxData.WARETYPE=="gsdrk")
+						if(ajaxData.WARETYPE=="cpdrk")
 						{
 							$("#warehouseCode").val(code.split(";")[0].trim());
 							$("#warehousePosCode").val(code.split(";")[1].trim());

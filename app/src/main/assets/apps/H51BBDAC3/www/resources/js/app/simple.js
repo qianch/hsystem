@@ -9,14 +9,8 @@ function toast(text) {
 /**
  * 改进Console.log()方法
  */
-function log() {
-	for(var i = 0; i < arguments.length; i++) {
-		try {
-			console.log(JSON.stringify(arguments[i]));
-		} catch(e) {
-			console.log(arguments[i]);
-		}
-	}
+function log(obj) {
+   console.log(obj);
 }
 
 /**

@@ -1260,7 +1260,7 @@ input[type='submit'].mui-active:enabled,
 	width: auto;
 	margin: 0;
 	text-overflow: ellipsis;
-	font-size: 25px;
+	font-size: 22px;
     font-weight: bold;
 }
 
@@ -1318,7 +1318,6 @@ input[type='submit'].mui-active:enabled,
 }
 
 .mui-title {
-	font-size: 17px;
 	font-weight: 500;
 	line-height: 44px;
 	position: absolute;

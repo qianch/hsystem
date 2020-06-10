@@ -179,7 +179,7 @@
 					//库房库位扫的数据
 					App.ajaxGet(queryWarhourseUrl + "?warehouseCode=" + rdata[0].trim(),
 							function(ajaxData) {
-								if(ajaxData.WARETYPE=="gsbdk"|ajaxData.WARETYPE=="gswk")
+								if(ajaxData.WARETYPE=="cpbdk"|ajaxData.WARETYPE=="cpwk")
 								{
 									$("#warehouseCode").val(rdata[0].trim());
 									$("#warehousePosCode").val(rdata[1].trim());
