@@ -13,7 +13,7 @@
 $(document).ready(function() {
 	if(!isEmpty(LS.get(KEY.USER_NAME))) {
 		if(!$("header").hasClass("nouser"))
-		    $(".mui-title").append("<font style='font-size:10px;'>" + Config.project.version + "</font>");
+		    $(".mui-title").append("<font style='font-size:10px;padding-left:2px;'>" + Config.project.version + "</font>");
 			$(".mui-title").append("<font color='red'>（" + LS.get(KEY.USER_NAME) + "）</font>");
 	}
 	if($("header").hasClass("nomenu"))
