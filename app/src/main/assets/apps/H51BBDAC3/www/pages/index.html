@@ -36,6 +36,12 @@
 				<div style="font-size: 12px;color:gray;">
 					<a id="serverIp"></a>
 				</div>
+				<div style="height:40px;margin-left:20px;">
+					<div style="float:left;height:30px;margin:5px;color:#007aff;">外库</div>
+					<div style="float:left;" id="external" class="mui-switch mui-switch-mini mui-switch-blue">
+						<div class="mui-switch-handle"></div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</body>
@@ -51,8 +57,7 @@
 			plus.navigator.closeSplashscreen();
 			appInit();
 			loadTasks();
-			$("#serverIp").text("服务器地址 http://"+SERVER_IP)
-			//setInterval(loadTasks, 60000);
+			$("#serverIp").text("服务器地址：http://"+SERVER_IP)
 		});
 
 		function loadTasks() {
@@ -65,7 +70,6 @@
 		}
 
 		var mainPage;
-
 		document.onkeydown = function(e) {
 			if(e.keyCode == 13) {
 				login();
@@ -87,24 +91,15 @@
 				return;
 			}
 			waiting("正在登陆");
-//			mainPage = App.preload("main.html");
-//			setTimeout(function() {
-//					closeWaiting();
-//					App.show(mainPage);
-//				}, 3000);
 			App.ajaxGet(App.getServerUrl() + "login?userName=" + user.val() + "&password=" + password.val(), function(data) {
-
 				//登陆成功后，清空用户信息
 				user.val("");
 				password.val("");
-
 				toast("登陆成功");
-
 				LS.set(KEY.USER_ID, data.ID);
 				LS.set(KEY.USER_NAME, data.USERNAME);
 				LS.set(KEY.USER_DEPT,data.T_1);
 				waiting("正在初始化");
-
 				//预加载页面
 				mainPage = App.preload("main.html");
 				setTimeout(function() {
@@ -131,6 +126,15 @@
 		mui("#tip").on("tap", "#checkForNewVersion", function() {
 			checkForUpdate();
 		});
-	</script>
 
+		document.getElementById("external").addEventListener("toggle",function(event){
+             if(event.detail.isActive){
+                Config.serverUrl = "http://" + EXTERNAL_IP + "/mobile/";
+                $("#serverIp").text("外库地址： http://"+EXTERNAL_IP);
+             }else{
+                Config.serverUrl = "http://" + SERVER_IP + "/mobile/";
+                $("#serverIp").text("服务器地址： http://"+SERVER_IP);
+          }
+        })
+	</script>
 </html>

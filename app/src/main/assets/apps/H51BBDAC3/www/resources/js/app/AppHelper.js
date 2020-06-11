@@ -247,7 +247,6 @@ mui.plusReady(function() {
  * APP初始化
  */
 function appInit() {
-
 	// 添加监听从系统消息中心点击某条消息启动应用事件
 	/*plus.push.addEventListener("click", function(msg) {
 		// 分析msg.payload处理业务逻辑 
@@ -314,7 +313,6 @@ function closeAllWebview() {
  * 检查更新，如果有新版本，则下载，并直接进入安装界面
  */
 function checkForUpdate() {
-	waiting("正在检查新版本")
 	App.ajaxGet(App.getServerUrl() + "update?version=" + Config.project.version,
 		function(data) {
 			closeWaiting();

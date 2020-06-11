@@ -8,11 +8,11 @@ App = {
 	 * @param {Object} fn
 	 */
 	ready: function(fn) {
-		
 		mui.init();
 		mui.plusReady(function() {
-			if(fn)
-				fn();
+			if(fn){
+			  fn();
+			}
 		});
 	},
 	preload: function(url, data,styles) {
