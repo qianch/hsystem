@@ -422,19 +422,18 @@
 						rStr,
 						function(data) {
 							closeWaiting();
-							if(data == "false") {
-								toast("该条码已存在！");
-								beepAndVibrate();
-							} else {
-								plus.audio.createPlayer("notice.mp3").play();
+							if(data == "") {
+							    plus.audio.createPlayer("notice.mp3").play();
 								toast("保存成功");
 								clear();
 								if(jsks != 'start'){
 									jsks = jsks + 1;
 									$("#lb1").text(jsks);
 								}
+							} else {
+								toast("保存失败！" + data);
+								beepAndVibrate();
 							}
-							//成功
 						},
 						function(data) {
 							//失败
