@@ -22,6 +22,13 @@
 						<div class="mui-card-header">
 							<form class="mui-input-group" id="rForm">
 								<div class="mui-input-row">
+									<label>选择仓库类型</label>
+									<select id="sWareType" onchange="choose()">
+										<option value="pbbdk" selected="true">胚布本地库</option>
+										<option value="pbdrk">胚布待入库</option>
+									</select>
+								</div>
+								<div class="mui-input-row">
 									<label>新仓库名称</label>
 									<input id="warehouseName" type="text" readonly required placeholder="仓库名称">
 								</div>
@@ -58,7 +65,7 @@
 		var moveUrl = App.getServerUrl() + "stock/product/move";
 		var moveInfoUrl = App.getServerUrl() + "stock/product/moveInfo";
 		var findInfoUrl = App.getServerUrl() + "common/infos";
-		var findWarehouseNameUrl = App.getServerUrl() + "stock/product/warhourseName";
+		var queryWarhourseUrl = App.getServerUrl() + "stock2/product/queryWarhourse";
 		var rdata = "";
 		var code = [];
 		var total = 0.0;
@@ -88,7 +95,7 @@
 				}
 			}
 			var str = '';
-	
+			var sWareType = $("#sWareType").val();
 			if (rdata != "") {
 				if (rdata.length == 5) {
 					waiting("正在查询该条码的状态信息");
@@ -101,15 +108,15 @@
 						//判断条码是否产出登记
 						if (ajaxData.REGISTER) {
 							for (var i = 0; i < code.length; i++) {
-									
+
 								if (code[i] == rdata[0]) {
 									toast("扫描条码重复");
 									beepAndVibrate();
 									return;
 								}
-							}	
+							}
 							//判断条码是否已被冻结
-							if(ajaxData.STATE==3){ 
+							if (ajaxData.STATE == 3) {
 								beepAndVibrate();
 								toast("该条码已被冻结");
 								return;
@@ -119,17 +126,37 @@
 							// 	toast("该条码没有入库");
 							// 	return;
 							// }
-							if(ajaxData.STOCK==-1 || ajaxData.STOCK==0){
+
+							if (sWareType == "pbbdk") {
+								if (!(ajaxData.STOCK == 1 || ajaxData.STOCK == 3)) {
+									beepAndVibrate();
+									toast("该条码不是在库状态");
+									return;
+								}
+							} else if (sWareType == "pbdrk") {
+								if (!ajaxData.STOCK == 2) {
+									beepAndVibrate();
+									toast("该条码不是待入库状态");
+									return;
+								}
+							} else {
 								beepAndVibrate();
-								toast("该条码没有入库");
+								toast("请选择仓库类型");
 								return;
 							}
-							if(ajaxData.STOCK==3){
+
+							// if(ajaxData.STOCK==-1 || ajaxData.STOCK==0){
+							// 	beepAndVibrate();
+							// 	toast("该条码没有入库");
+							// 	return;
+							// }
+
+							if (ajaxData.STOCK == 3) {
 								beepAndVibrate();
 								toast("已打托,不能单独移库");
 								return;
 							}
-								$("#count").empty();
+							$("#count").empty();
 							//动态拼条码扫的数据
 							code.push(rdata[0]);
 							str += '<div class="mui-input-row" weight=' + ajaxData.TRAY.WEIGHT + '  id=' + rdata[0] + '>';
@@ -139,17 +166,17 @@
 							str += '</div>';
 							$("#list").append(str);
 							var productPartName = '';
-							if(!isEmpty(ajaxData.ORDER.FACTORYPRODUCTNAME)) {
+							if (!isEmpty(ajaxData.ORDER.FACTORYPRODUCTNAME)) {
 								productPartName = ajaxData.ORDER.FACTORYPRODUCTNAME;
 							}
-							
+
 							var partBatchCode = '';
-							if(isEmpty(ajaxData.BATCHCODE)) {
+							if (isEmpty(ajaxData.BATCHCODE)) {
 								partBatchCode = ajaxData.CODE.BATCHCODE;
 							} else {
 								partBatchCode = ajaxData.BATCHCODE;
 							}
-				
+
 							var mStr = {
 								"newWarehouseCode": $("#warehouseCode").val(),
 								"newWarehousePosCode": $("#warehousePosCode").val(),
@@ -169,7 +196,7 @@
 							beepAndVibrate();
 							toast("该条码未产出登记");
 						}
-						
+
 
 
 					}, function() {
@@ -179,17 +206,40 @@
 					});
 				} else if (rdata.length == 2) {
 					//库房库位扫的数据
-					$("#warehouseCode").val(rdata[0].trim());
-					$("#warehousePosCode").val(rdata[1].trim());
-					App.ajaxGet(findWarehouseNameUrl + "?warehouseCode=" + warehouseCode.value,
+					App.ajaxGet(queryWarhourseUrl + "?warehouseCode=" + rdata[0].trim(),
 						function(ajaxData) {
-							$("#warehouseName").val(ajaxData);
+
+
+							if (sWareType == "pbbdk") {
+								if (ajaxData.WARETYPE == "pbbdk") {
+									$("#warehouseCode").val(rdata[0].trim());
+									$("#warehousePosCode").val(rdata[1].trim());
+									$("#warehouseName").val(ajaxData.WAREHOUSENAME);
+								} else {
+									toast("扫描库位非胚布本地库库位，不能移库");
+								}
+							} else if (sWareType == "pbdrk") {
+								if (ajaxData.WARETYPE == "pbdrk") {
+									$("#warehouseCode").val(rdata[0].trim());
+									$("#warehousePosCode").val(rdata[1].trim());
+									$("#warehouseName").val(ajaxData.WAREHOUSENAME);
+								} else {
+									toast("扫描库位非胚布待入库库位，不能移库");
+								}
+							} else {
+								beepAndVibrate();
+								toast("请选择仓库类型");
+								return;
+							}
+
+
+
 						},
 						function() {
 							beepAndVibrate();
 							toast("查询库位信息失败");
 						});
-						
+
 				}
 			}
 		}
@@ -199,6 +249,10 @@
 			if (e.keyCode == 37 || e.keyCode == 39) {}
 
 			if (e.keyCode == 13) {}
+		}
+
+		function choose() {
+			clearinformation();
 		}
 
 		//卷数据提交
@@ -224,20 +278,18 @@
 				};
 
 				App.ajaxPost(moveUrl, rStr, function(data) {
-					
-					if(data=="")
-					{
+
+					if (data == "") {
 						closeWaiting();
 						toast("移库成功");
 						clearRoll();
-					}
-					else{
+					} else {
 						//失败
 						closeWaiting();
 						malert("移库提示", data, "我已知晓", null);
 						beepAndVibrate();
 					}
-					
+
 				}, function() {
 					//失败
 					closeWaiting();
@@ -292,12 +344,12 @@
 					}
 				}
 				total = toFixed((total - weight), 1);
-				if(0.0 != total || 0 !=total){
+				if (0.0 != total || 0 != total) {
 					$("#count").html("总托数：" + $("#list input").length + '\xa0\xa0\xa0' + "总重量：" + total + "KG");
-				}else{
+				} else {
 					$("#count").empty();
 				}
-				
+
 			}, function() {});
 		});
 
@@ -305,8 +357,22 @@
 			$("#rForm")[0].reset();
 			$("#list").empty();
 			$("#count").empty();
+			moveInfoList = [];
+			window.localStorage.setItem('moveList', JSON.stringify(moveInfoList));
 			rdata = "";
 			code = [];
+		}
+
+		function clearinformation() {
+			$("#list").empty();
+			$("#count").empty();
+			rdata = "";
+			code = [];
+			moveInfoList = [];
+			window.localStorage.setItem('moveList', JSON.stringify(moveInfoList));
+			$("#warehouseCode").val("");
+			$("#warehousePosCode").val("");
+			$("#warehouseName").val("");
 		}
 	</script>
 
