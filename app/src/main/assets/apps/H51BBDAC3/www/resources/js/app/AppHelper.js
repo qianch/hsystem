@@ -63,7 +63,6 @@ $(document).ready(function() {
 				$("#subMenu2").hide();
 				$("#subMenu3").hide();
 				$("#subMenu4").hide();
-				
 			}
 		}
 		else if($(this).text() == "生产") {

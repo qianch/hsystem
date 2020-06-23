@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>成品批量入库</title>
+		<title>胚布批量入库</title>
 
 		<script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
 		<style type="text/css">
@@ -45,12 +45,12 @@
 		</style>
 	</head>
 
-	<body> 
+	<body>
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title">成品批量入库</h1>
+			<h1 class="mui-title">胚布批量入库</h1>
 		</header>
-		<div class="mui-content">  
+		<div class="mui-content">
 			<div class="mui-scroll-wrapper">
 				<div class="mui-input-group" style="background:#dcdcdc;border-bottom: 2px solid #007aff;margin-bottom: 1px;">
 					<div class="mui-input-row">
@@ -77,7 +77,7 @@
 								<th>部件名称</th>
 								<th>产品重量</th>
 								<th>客户名称</th>
-							</tr> 
+							</tr>
 						</thead>
 						<tbody id="tbMain"></tbody>
 					</table>
@@ -106,7 +106,7 @@
 
 		function addBarcode(h) {
 			var row = document.createElement('tr'); //创建行  
-			
+
 			var button = document.createElement('td'); //创建第一列barCode
 			button.innerHTML = "<input type=\"button\" onclick=\"delRow(this)\" value=\"删除\"/>"; //填充数据  
 			row.appendChild(button); //加入行  ，下面类似   
@@ -177,6 +177,20 @@
 			if (rdata != "") {
 				if (rdata.length == 5) {
 					waiting("正在查询该条码的状态信息");
+					
+					if(rdata[0].indexOf("B") == 0) {
+						toast("盒不能直接入库");
+						return;
+					}
+					if(rdata[0].indexOf("R")==0){
+						toast("卷不能直接入库");
+					}
+					
+					if(rdata[0].indexOf("T") !=0 && rdata[0].indexOf("P") !=0 ) {
+						toast("无效条码");
+						return;
+					}
+					
 					App.ajaxGet(findInfoUrl + "?barCode=" + rdata[0], function(ajaxData) {
 						closeWaiting();
 						if (ajaxData.ERROR) {
@@ -215,11 +229,11 @@
 							toast("该条码不是待入库状态");
 							return;
 						}
-						
+
 						//判断条码是否为胚布(裁剪车间产品)
-						if ((ajaxData.CONSUMERSIMPLENAME).indexOf("裁剪车间")== 0) {
+						if (!(ajaxData.CONSUMERSIMPLENAME).indexOf("裁剪车间") == 0) {
 							beepAndVibrate();
-							toast("该条码是裁剪车间用,胚布无法入成品库");
+							toast("该条码是非裁剪车间用,无法入胚布库");
 							return;
 						}
 
@@ -266,13 +280,13 @@
 					//库房库位扫的数据
 					App.ajaxGet(queryWarhourseUrl + "?warehouseCode=" + rdata[0].trim(),
 						function(ajaxData) {
-							if (ajaxData.WARETYPE == "cpbdk") {
+							if (ajaxData.WARETYPE == "pbbdk") {
 								$("#position").val("仓库:(" + rdata[0].trim() + "," + ajaxData.WAREHOUSENAME + ");库位：" + rdata[1].trim());
 								$("#warehouseCode").val(rdata[0].trim());
 								$("#warehousePosCode").val(rdata[1].trim());
 								$("#warehouseName").val(ajaxData.WAREHOUSENAME);
 							} else {
-								toast("扫描库位非成品本地库库位，不能入库");
+								toast("扫描库位非胚布本地库库位，不能入库");
 							}
 
 						},
@@ -282,31 +296,30 @@
 						});
 				}
 			}
-		} 
-       
+		}
+
 		function doSubmit() {
-			
+
 			if (code.length == 0) {
 				toast("请先扫描条码！");
 				beepAndVibrate();
 				return;
-			} 
-			
-			if($("#warehouseCode").val()=="")
-			{
+			}
+
+			if ($("#warehouseCode").val() == "") {
 				toast("请先扫描库位！");
 				beepAndVibrate();
 				return;
 			}
-			
+
 			mconfirm('警告', '确认批量入库？', function() {
 				waiting("正在批量入库", true);
-				
+
 				var productInRecordlist = [];
 				for (var i = 0; i < pInfoList.length; i++) {
-					
+
 					var rStr = {
-						"barCode":pInfoList[i].barCode,
+						"barCode": pInfoList[i].barCode,
 						"weight": pInfoList[i].productWeight,
 						"overTime": 0,
 						"operateUserId": App.getLoginUserId(),
@@ -319,12 +332,12 @@
 					};
 					productInRecordlist.push(rStr);
 				}
-				
-				var jsondata= JSON.stringify(productInRecordlist);  
-                var params = {};
-  	            params.productInRecordlist = JSON.stringify(productInRecordlist);
-	
-				App.ajaxPost(submitUrl, $.param( params ), function(data) {
+
+				var jsondata = JSON.stringify(productInRecordlist);
+				var params = {};
+				params.productInRecordlist = JSON.stringify(productInRecordlist);
+
+				App.ajaxPost(submitUrl, $.param(params), function(data) {
 
 					if (data == "") {
 						closeWaiting();
@@ -348,7 +361,7 @@
 				closeWaiting();
 			});
 		}
-		
+
 		function clearRoll() {
 			pInfoList.empty();
 			tbody.empty();
