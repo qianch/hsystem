@@ -3,7 +3,7 @@
 
 	<head>
 		<meta charset="UTF-8">
-		<title>胚布入库</title>
+		<title>胚布领料</title>
 		<script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
 		<style type="text/css">
 			.mui-input-group .mui-input-row {
@@ -19,7 +19,7 @@
 	<body>
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title">胚布入库</h1>
+			<h1 class="mui-title">胚布领料</h1>
 		</header>
 		<div class="mui-content">
 			<div class="mui-scroll-wrapper">
@@ -90,7 +90,7 @@
 	</body>
 
 	<script type="text/javascript">
-		var submitUrl = App.getServerUrl() + "stock2/product/pbIn";
+		var submitUrl = App.getServerUrl() + "stock2/product/pbPickIn";
 		var ProductStockBackUrl = App.getServerUrl() + "stock/product/back";
 		var findInfoUrl = App.getServerUrl() + "common/infos";
 		var queryWarhourseUrl = App.getServerUrl() + "stock2/product/queryWarhourse";
@@ -109,7 +109,8 @@
 			var infoUrl = App.getServerUrl() + "common/infos";
 			data = code.split(";");
 			if (data.length == 5) {
-				
+				//$("#rForm")[0].reset();
+				//条码扫的数据
 				if (data[0].indexOf("B") == 0) {
 					toast("盒不能直接入库");
 					return;
@@ -123,7 +124,7 @@
 					return;
 				}
 
-				$("#barCode").val(data[0]);
+
 				waiting("正在查询该条码的状态信息");
 				App.ajaxGet(findInfoUrl + "?barCode=" + data[0], function(ajaxData) {
 					closeWaiting();
@@ -135,27 +136,40 @@
 					//判断条码是否产出登记
 					if (!ajaxData.REGISTER) {
 						beepAndVibrate();
-						toast("该条码未产出登记");
+						toast(data[0]+"未产出登记");
 					}
-					
-					//判断条码是否在库
-					if(ajaxData.STOCK == 1) {
+					 
+					if (ajaxData.WARETYPE!= "pbbzk") {
 						beepAndVibrate();
-						toast("该条码已在库");
+						toast(data[0]+"非胚布编织库");
 						return;
 					}
 					
 					//判断条码是否出库
-					if(data.STOCK == -1) {
+					if (data.STOCK == -1) {
 						beepAndVibrate();
-						toast("该条码已出库");
+						toast(data[0]+"已出库");
 						return;
 					}
-					
+
+					//判断条码是否在库
+					if (ajaxData.STOCK != 1) {
+						beepAndVibrate();
+						toast(data[0]+"不在库");
+						return;
+					}
+
+					//判断条码是否已被冻结
+					if (ajaxData.STOCK != 1) {
+						beepAndVibrate();
+						toast(data[0]+"不是在库状态，不能入领料库");
+						return;
+					}
+
 					if (ajaxData.ENDPACK != undefined) {
 						if (!ajaxData.ENDPACK) {
 							beepAndVibrate();
-							toast("打包未结束");
+							toast(data[0]+"打包未结束");
 							return;
 						}
 					}
@@ -163,12 +177,12 @@
 					//判断条码是否为胚布(裁剪车间产品)
 					if ((ajaxData.CONSUMERSIMPLENAME).indexOf("裁剪车间") != 0) {
 						beepAndVibrate();
-						toast("该条码不是裁剪车间用胚布无法入胚布编织库");
+						toast(data[0]+"不是裁剪车间用胚布无法入胚布领料库");
 						return;
 					}
 
-					
 
+					$("#barCode").val(data[0]);
 					$("#orderCode").val(ajaxData.WP.SALESORDERCODE);
 					$("#consumer").val(ajaxData.WP.CONSUMERNAME);
 					$("#consumerProductName").val(ajaxData.PRODUCT.CONSUMERPRODUCTNAME);
@@ -208,12 +222,12 @@
 				//库房库位扫的数据
 				App.ajaxGet(queryWarhourseUrl + "?warehouseCode=" + code.split(";")[0].trim(),
 					function(ajaxData) {
-						if (ajaxData.WARETYPE == "pbbzk") {
+						if (ajaxData.WARETYPE == "pbllk") {
 							$("#warehouseCode").val(code.split(";")[0].trim());
 							$("#warehousePosCode").val(code.split(";")[1].trim());
 							$("#warehouseName").val(ajaxData.WAREHOUSENAME);
 						} else {
-							toast("扫描库位非胚布本地库库位，不能入库");
+							toast("扫描库位非胚布领料库位，不能入库");
 						}
 
 					},

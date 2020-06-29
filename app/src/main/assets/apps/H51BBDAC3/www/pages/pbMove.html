@@ -21,13 +21,7 @@
 					<div class="mui-card">
 						<div class="mui-card-header">
 							<form class="mui-input-group" id="rForm">
-								<div class="mui-input-row">
-									<label>选择仓库类型</label>
-									<select id="sWareType" onchange="choose()">
-										<option value="pbbdk" selected="true">胚布本地库</option>
-										<option value="pbdrk">胚布待入库</option>
-									</select>
-								</div>
+
 								<div class="mui-input-row">
 									<label>新仓库名称</label>
 									<input id="warehouseName" type="text" readonly required placeholder="仓库名称">
@@ -62,7 +56,7 @@
 	</body>
 
 	<script type="text/javascript">
-		var moveUrl = App.getServerUrl() + "stock/product/move";
+		var moveUrl = App.getServerUrl() + "stock2/product/pMove";
 		var moveInfoUrl = App.getServerUrl() + "stock/product/moveInfo";
 		var findInfoUrl = App.getServerUrl() + "common/infos";
 		var queryWarhourseUrl = App.getServerUrl() + "stock2/product/queryWarhourse";
@@ -95,18 +89,23 @@
 				}
 			}
 			var str = '';
-			var sWareType = $("#sWareType").val();
+
 			if (rdata != "") {
 				if (rdata.length == 5) {
 					waiting("正在查询该条码的状态信息");
 					App.ajaxGet(findInfoUrl + "?barCode=" + rdata[0], function(ajaxData) {
-						closeWaiting();
-						if (ajaxData.ERROR) {
-							tip(ajaxData.MSG);
-							return;
-						}
-						//判断条码是否产出登记
-						if (ajaxData.REGISTER) {
+							closeWaiting();
+							if (ajaxData.ERROR) {
+								tip(ajaxData.MSG);
+								return;
+							}
+
+							//判断条码是否产出登记
+							if (!ajaxData.REGISTER) {
+								beepAndVibrate();
+								toast("该条码未产出登记");
+							}
+
 							for (var i = 0; i < code.length; i++) {
 
 								if (code[i] == rdata[0]) {
@@ -121,41 +120,19 @@
 								toast("该条码已被冻结");
 								return;
 							}
-							// if (ajaxData.STOCK == -1) {	
-							// 	beepAndVibrate();
-							// 	toast("该条码没有入库");
-							// 	return;
-							// }
 
-							if (sWareType == "pbbdk") {
-								if (!(ajaxData.STOCK == 1 || ajaxData.STOCK == 3)) {
-									beepAndVibrate();
-									toast("该条码不是在库状态");
-									return;
-								}
-							} else if (sWareType == "pbdrk") {
-								if (!ajaxData.STOCK == 2) {
-									beepAndVibrate();
-									toast("该条码不是待入库状态");
-									return;
-								}
-							} else {
+							if (!(ajaxData.STOCK == 1 || ajaxData.STOCK == 4)) {
 								beepAndVibrate();
-								toast("请选择仓库类型");
+								toast("该条码不是在库(领料)状态");
 								return;
 							}
-
-							// if(ajaxData.STOCK==-1 || ajaxData.STOCK==0){
-							// 	beepAndVibrate();
-							// 	toast("该条码没有入库");
-							// 	return;
-							// }
-
+							
 							if (ajaxData.STOCK == 3) {
 								beepAndVibrate();
 								toast("已打托,不能单独移库");
 								return;
 							}
+							
 							$("#count").empty();
 							//动态拼条码扫的数据
 							code.push(rdata[0]);
@@ -192,48 +169,24 @@
 							total += mStr.productWeight;
 							$("#count").html("总托数：" + $("#list input").length + '\xa0\xa0\xa0' + "总重量：" + total + "KG");
 
-						} else {
+
+
+
+
+						},
+						function() {
+							closeWaiting();
 							beepAndVibrate();
-							toast("该条码未产出登记");
-						}
-
-
-
-					}, function() {
-						closeWaiting();
-						beepAndVibrate();
-						toast("查询条码信息失败");
-					});
+							toast("查询条码信息失败");
+						});
 				} else if (rdata.length == 2) {
 					//库房库位扫的数据
 					App.ajaxGet(queryWarhourseUrl + "?warehouseCode=" + rdata[0].trim(),
 						function(ajaxData) {
 
-
-							if (sWareType == "pbbdk") {
-								if (ajaxData.WARETYPE == "pbbdk") {
-									$("#warehouseCode").val(rdata[0].trim());
-									$("#warehousePosCode").val(rdata[1].trim());
-									$("#warehouseName").val(ajaxData.WAREHOUSENAME);
-								} else {
-									toast("扫描库位非胚布本地库库位，不能移库");
-								}
-							} else if (sWareType == "pbdrk") {
-								if (ajaxData.WARETYPE == "pbdrk") {
-									$("#warehouseCode").val(rdata[0].trim());
-									$("#warehousePosCode").val(rdata[1].trim());
-									$("#warehouseName").val(ajaxData.WAREHOUSENAME);
-								} else {
-									toast("扫描库位非胚布待入库库位，不能移库");
-								}
-							} else {
-								beepAndVibrate();
-								toast("请选择仓库类型");
-								return;
-							}
-
-
-
+							$("#warehouseCode").val(rdata[0].trim());
+							$("#warehousePosCode").val(rdata[1].trim());
+							$("#warehouseName").val(ajaxData.WAREHOUSENAME);
 						},
 						function() {
 							beepAndVibrate();
