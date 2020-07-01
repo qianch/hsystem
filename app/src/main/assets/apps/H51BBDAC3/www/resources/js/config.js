@@ -1,7 +1,7 @@
 //var SERVER_IP="10.10.1.211:8090/mes";//测试服务器
 var SERVER_IP="10.10.1.9/mes";//生产环境
-//var SERVER_IP="192.168.1.113/mes";//个人测试
-var EXTERNAL_IP="122.225.2.62:11111/mes" //外库映射IP
+//var SERVER_IP="192.168.101.18/mes";//个人测试
+var EXTERNAL_IP="122.225.2.62:11111/mes"; //外库映射IP
 var Config={
 	/**
 	 * 服务器地址  
@@ -19,7 +19,7 @@ var Config={
 		 * APP当前版本号
 		 */
 
-		version:"4.8.7"
+		version:"4.9.0"
 	},
 	/**
 	 * 动画定义
