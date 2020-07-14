@@ -1,199 +1,197 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
+<head>
+    <meta charset="UTF-8">
+    <title>主界面</title>
+    <script src="../resources/js/include.js"></script>
+    <style type="text/css">
+        .model-content {
+            text-align: center;
+            padding: 4px;
+            height: 80px;
+            line-height: 100px;
+        }
 
-	<head>
-		<meta charset="UTF-8">
-		<title>主界面</title>
-		<script src="../resources/js/include.js"></script>
-		<style type="text/css">
-			.model-content {
-				text-align: center;
-				padding: 4px;
-				height: 80px;
-				line-height: 100px;
-			}
-			 
-			.model-produce {
-				background: #309482;
-			}
-			
-			.model-stock {
-				background: #f7658c;
-			}
-			
-			.model-codeInfo {
-				background: #2a77af;
-			}
-			
-			.model-suit{
-				background:#70fd7c;
-			}
-			
-			.model-package{
-				background: #5a68d6;
-			}
-			
-			.mui-scroll-wrapper {
-				margin-top: 40px;
-			}
-			img{
-				height: 100%;
-			}
-			
-			.mui-card{
-				width:98%;
-				margin:0 auto;
-				margin-top:10px;
-				margin-bottom:5px;
-				text-align: center;
-				box-shadow: 0 0 10px black;
-			}
-			
-			.mui-card-header{
-				display: inline-block;
-				line-height: 45px;
-				width: 100%;
-				font-weight: bold;
-				font-size: 30px;
-			}
-			
-			.mui-card{
-				width:40%;
-				display: inline-block;
-				margin:10px;
-				box-shadow: 5px 5px 20px black;
-				color: #065846;
-			}
-			
-			.mui-scroll{
-				text-align: center;
-			}
-			
-			.mui-card-active{
-				    background: #1c6f0d;
-				    color: white;
-				    font-weight: bold;
-				    border-radius: 4px;
-			}
-			
-			.mui-card-active .mui-card-content{
-			}
-			
-			.mui-card-header:after, .mui-card-footer:before {
-			    background-color: rgba(200, 199, 204, 0);
-			}
-		</style>
-		<script>
-			mui.back = function() {}
-		</script>
-	</head>
+        .model-produce {
+            background: #309482;
+        }
 
-	<body>
-		<header class="mui-bar mui-bar-nav">
-			<h1 class="mui-title">恒石MES</h1>
-		</header>
-		<div class="mui-content">
-			<div class="mui-scroll-wrapper">
-				<div class="mui-scroll">
+        .model-stock {
+            background: #f7658c;
+        }
 
-					<div class="mui-card" index="1" href="produce.html">
-						<div class="mui-card-header">生产模块</div>
-						<div class="mui-card-content model-content model-produce">
-							<img src="../resources/images/prouce.png" />
-						</div>
-					</div>
+        .model-codeInfo {
+            background: #2a77af;
+        }
 
-					<div class="mui-card" index="2" href="stock.html">
-						<div class="mui-card-header">库存模块</div>
-						<div class="mui-card-content  model-content model-stock">
-							<img src="../resources/images/stock.png" />
-						</div>
-					</div>
-					
-					<div class="mui-card" index="3" href="PackageAndTurnBag.html">
-						<div class="mui-card-header">打包翻包</div>
-						<div class="mui-card-content  model-content model-package">
-							<img src="../resources/images/package.png" />
-						</div>
-					</div>
+        .model-suit {
+            background: #70fd7c;
+        }
 
-					<div class="mui-card" index="4" href="codeInfo.html">
-						<div class="mui-card-header">信息查询</div>
-						<div class="mui-card-content  model-content model-codeInfo">
-							<img src="../resources/images/info.png" />
-						</div>
-					</div>
-					
-					<div class="mui-card" index="5" href="suit.html">
-						<div class="mui-card-header">裁剪组套</div>
-						<div class="mui-card-content  model-content model-suit">
-							<img src="../resources/images/suit.png" />
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</body>
-	<script>
-		var pages;
-		App.ready(function() {
-			pages = {
-				"produce.html": App.preload("produce.html"),
-				"stock.html": App.preload("stock.html"),
-				"codeInfo.html": App.preload("codeInfo.html"),
-				"PackageAndTurnBag.html":App.preload("PackageAndTurnBag.html")
-			};
-		});
+        .model-package {
+            background: #5a68d6;
+        }
 
-		mui('.mui-scroll-wrapper').scroll({
-			deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
-		});
+        .mui-scroll-wrapper {
+            margin-top: 40px;
+        }
 
-		/**
-		 * 设置键盘事件
-		 */
-		$(document).keydown(function(e) {
-			if(e.keyCode == 40 || e.keyCode == 38) {
-				//判断方向键
-				var direction = e.keyCode == 40 ? 1 : -1;
-				if($(".mui-card-active").length == 0) {
-					$("div[index=1]").addClass("mui-card-active"); 
-				} else {
-					//获取当前选中项的index
-					var itemIndex = parseInt($(".mui-scroll .mui-card-active").attr("index"));
-					//根据方向键，计算下一项item的index
-					var nextIndex = itemIndex + direction;
+        img {
+            height: 100%;
+        }
 
-					//如果根据索引，找不到下一个选中项，那么就返回，不执行后续操作
-					if($(".mui-scroll div[index=" + nextIndex + "]").length == 0) {
-						return;
-					}
+        .mui-card {
+            width: 98%;
+            margin: 0 auto;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            text-align: center;
+            box-shadow: 0 0 10px black;
+        }
 
-					$(".mui-scroll div").removeClass("mui-card-active");
-					$(".mui-scroll div[index=" + nextIndex + "]").addClass("mui-card-active");
-				}
-			}
-			if(e.keyCode == 13) {
-				if($(".mui-card-active").length == 0) {
-					$("div[index=1]").addClass("mui-card-active");
-				} else {
-					App.show(pages[$(".mui-card-active").attr("href")]);
-				}
-			}
-		});
-		/**
-		 * 设置触摸事件
-		 */
-		mui(".mui-content").on('tap', ".mui-card", function() {
-			$(".mui-card").removeClass("mui-card-active");
-			$(this).addClass("mui-card-active");
-			if(pages[$(".mui-card-active").attr("href")]!=null){
-				App.show(pages[$(".mui-card-active").attr("href")]);
-			}else{
-				App.go($(".mui-card-active").attr("href"));
-			}
-			
-		});
-	</script>
+        .mui-card-header {
+            display: inline-block;
+            line-height: 45px;
+            width: 100%;
+            font-weight: bold;
+            font-size: 30px;
+        }
 
+        .mui-card {
+            width: 40%;
+            display: inline-block;
+            margin: 10px;
+            box-shadow: 5px 5px 20px black;
+            color: #065846;
+        }
+
+        .mui-scroll {
+            text-align: center;
+        }
+
+        .mui-card-active {
+            background: #1c6f0d;
+            color: white;
+            font-weight: bold;
+            border-radius: 4px;
+        }
+
+            .mui-card-active .mui-card-content {
+            }
+
+        .mui-card-header:after, .mui-card-footer:before {
+            background-color: rgba(200, 199, 204, 0);
+        }
+    </style>
+    <script>
+        mui.back = function () { }
+    </script>
+</head>
+
+<body>
+    <header class="mui-bar mui-bar-nav">
+        <h1 class="mui-title">恒石MES</h1>
+    </header>
+    <div class="mui-content">
+        <div class="mui-scroll-wrapper">
+            <div class="mui-scroll">
+
+                <div class="mui-card" index="1" href="produce.html">
+                    <div class="mui-card-header">生产模块</div>
+                    <div class="mui-card-content model-content model-produce">
+                        <img src="../resources/images/prouce.png" />
+                    </div>
+                </div>
+
+                <div class="mui-card" index="2" href="stock.html">
+                    <div class="mui-card-header">库存模块</div>
+                    <div class="mui-card-content  model-content model-stock">
+                        <img src="../resources/images/stock.png" />
+                    </div>
+                </div>
+
+                <div class="mui-card" index="3" href="PackageAndTurnBag.html">
+                    <div class="mui-card-header">打包翻包</div>
+                    <div class="mui-card-content  model-content model-package">
+                        <img src="../resources/images/package.png" />
+                    </div>
+                </div>
+
+                <div class="mui-card" index="4" href="codeInfo.html">
+                    <div class="mui-card-header">信息查询</div>
+                    <div class="mui-card-content  model-content model-codeInfo">
+                        <img src="../resources/images/info.png" />
+                    </div>
+                </div>
+
+                <div class="mui-card" index="5" href="suit.html">
+                    <div class="mui-card-header">裁剪组套</div>
+                    <div class="mui-card-content  model-content model-suit">
+                        <img src="../resources/images/suit.png" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var pages;
+        App.ready(function () {
+            pages = {
+                "produce.html": App.preload("produce.html"),
+                "stock.html": App.preload("stock.html"),
+                "codeInfo.html": App.preload("codeInfo.html"),
+                "PackageAndTurnBag.html": App.preload("PackageAndTurnBag.html")
+            };
+        });
+
+        mui('.mui-scroll-wrapper').scroll({
+            deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+        });
+
+        /**
+         * 设置键盘事件
+         */
+        $(document).keydown(function (e) {
+            if (e.keyCode == 40 || e.keyCode == 38) {
+                //判断方向键
+                var direction = e.keyCode == 40 ? 1 : -1;
+                if ($(".mui-card-active").length == 0) {
+                    $("div[index=1]").addClass("mui-card-active");
+                } else {
+                    //获取当前选中项的index
+                    var itemIndex = parseInt($(".mui-scroll .mui-card-active").attr("index"));
+                    //根据方向键，计算下一项item的index
+                    var nextIndex = itemIndex + direction;
+
+                    //如果根据索引，找不到下一个选中项，那么就返回，不执行后续操作
+                    if ($(".mui-scroll div[index=" + nextIndex + "]").length == 0) {
+                        return;
+                    }
+
+                    $(".mui-scroll div").removeClass("mui-card-active");
+                    $(".mui-scroll div[index=" + nextIndex + "]").addClass("mui-card-active");
+                }
+            }
+            if (e.keyCode == 13) {
+                if ($(".mui-card-active").length == 0) {
+                    $("div[index=1]").addClass("mui-card-active");
+                } else {
+                    App.show(pages[$(".mui-card-active").attr("href")]);
+                }
+            }
+        });
+        /**
+         * 设置触摸事件
+         */
+        mui(".mui-content").on('tap', ".mui-card", function () {
+            $(".mui-card").removeClass("mui-card-active");
+            $(this).addClass("mui-card-active");
+            if (pages[$(".mui-card-active").attr("href")] != null) {
+                App.show(pages[$(".mui-card-active").attr("href")]);
+            } else {
+                App.go($(".mui-card-active").attr("href"));
+            }
+        });
+    </script>
+</body>
 </html>
