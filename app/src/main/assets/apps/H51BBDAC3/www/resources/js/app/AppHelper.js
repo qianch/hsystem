@@ -130,8 +130,8 @@ $(document).ready(function () {
             App.go($(this).attr("href"));
         }
     });
-
 });
+
 mui.plusReady(function () {
     mui.init({
         gestureConfig: {
@@ -256,7 +256,7 @@ function appInit() {
     LS.remove(KEY.USER_ID);
     LS.remove(KEY.USER_NAME);
 
-    //检查是否屏幕常亮
+    //检查屏幕是否常亮
     if (!isEmpty(LS.get(KEY.WAKE_UP)) && LS.get(KEY.WAKE_UP)) {
         plus.device.setWakelock(true);
     } else {
@@ -268,9 +268,7 @@ function appInit() {
         LS.set(KEY.VERSION, Config.project.version)
     }
     //检查更新
-    setTimeout(function () {
-        checkForUpdate()
-    }, 5000)
+    checkForUpdate();
 }
 
 /**
