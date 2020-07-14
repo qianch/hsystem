@@ -1,181 +1,177 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
-	<head>
-		<meta charset="UTF-8">
-		<title>原料移库</title>
-		<script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
-		<style type="text/css">
-			
-		</style>
-	</head>
+<head>
+    <meta charset="UTF-8">
+    <title>原料移库</title>
+    <script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
+    <style type="text/css">
+    </style>
+</head>
 
-	<body>
-		<header class="mui-bar mui-bar-nav">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title">原料移库</h1>
-		</header>
-		<div class="mui-content">
-			<div class="mui-scroll-wrapper">
-				<div class="mui-scroll">
-					<div class="mui-card">
-						<div class="mui-card-header">
-							<form class="mui-input-group" id="formID" style="background:#dcdcdc;">
-								<div class="mui-input-row">
-									<label>新仓库</label>
-									<input id="warehouseCode" value="" type="text" readonly required placeholder="新仓库">
-								</div>
-								<div class="mui-input-row">
-									<label>新库位</label>
-									<input id="warehousePosCode" value="" type="text" readonly required placeholder="新库位">
-								</div>
-							</form>
-						</div>
-						<div class="mui-card-content mui-input-group" id="list">
-						</div>
-					</div>
-					<div class="mui-button-row">
-						<button type="button" class="mui-btn mui-btn-primary" onclick="doSubmit1()" style="width: 50%;">确认</button>
-					</div>
-				</div>
-			</div>
+<body>
+    <header class="mui-bar mui-bar-nav">
+        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+        <h1 class="mui-title">原料移库</h1>
+    </header>
+    <div class="mui-content">
+        <div class="mui-scroll-wrapper">
+            <div class="mui-scroll">
+                <div class="mui-card">
+                    <div class="mui-card-header">
+                        <form class="mui-input-group" id="formID" style="background:#dcdcdc;">
+                            <div class="mui-input-row">
+                                <label>新仓库</label>
+                                <input id="warehouseCode" value="" type="text" readonly required placeholder="新仓库">
+                            </div>
+                            <div class="mui-input-row">
+                                <label>新库位</label>
+                                <input id="warehousePosCode" value="" type="text" readonly required placeholder="新库位">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="mui-card-content mui-input-group" id="list">
+                    </div>
+                </div>
+                <div class="mui-button-row">
+                    <button type="button" class="mui-btn mui-btn-primary" onclick="doSubmit1()" style="width: 50%;">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-		</div>
-	</body>
-	<script type="text/javascript">
-		var mMove = App.getServerUrl() + "stock/material/move";
-		var codeInfoUrl = App.getServerUrl() + "stock/material/info/";
-		var code = [];
-		var scanner;
-		App.ready(function() {
-			scanner = new Scanner(parseCode);
-			scanner.scan();
-		});
+    <script type="text/javascript">
+        var mMove = App.getServerUrl() + "stock/material/move";
+        var codeInfoUrl = App.getServerUrl() + "stock/material/info/";
+        var code = [];
+        var scanner;
+        App.ready(function () {
+            scanner = new Scanner(parseCode);
+            scanner.scan();
+        });
 
-		function parseCode(data1) {
-			var data = data1.split(";");
-			for(var i = 0; i < code.length; i++) {
-				if(code[i] == data[2]) {
-					toast("扫描条码重复");
-					beepAndVibrate();
-					return;
-				}
-			}
-			if(data.length == 1) { //扫到原料条码
-				if(data[0].length > 15) {
-					waiting("正在加载原料信息");
-					App.ajaxGet(codeInfoUrl + data[0], function(ajaxData) {
-						closeWaiting();
-						if(ajaxData.error) {
-							tip(ajaxData.error);
-							return;
-						}
+        function parseCode(data1) {
+            var data = data1.split(";");
+            for (var i = 0; i < code.length; i++) {
+                if (code[i] == data[2]) {
+                    toast("扫描条码重复");
+                    beepAndVibrate();
+                    return;
+                }
+            }
+            if (data.length == 1) { //扫到原料条码
+                if (data[0].length > 15) {
+                    waiting("正在加载原料信息");
+                    App.ajaxGet(codeInfoUrl + data[0], function (ajaxData) {
+                        closeWaiting();
+                        if (ajaxData.error) {
+                            tip(ajaxData.error);
+                            return;
+                        }
 
-						//判断物料是否在库
-						if(ajaxData.STOCKSTATE == 1) {
-							toast("该原料不在库，请确认");
-							beepAndVibrate();
-							return;
-						}
-						
-						if($("#"+ajaxData.PALLETCODE).length>0){
-							tip("重复扫描");
-							return;
-						}
+                        //判断物料是否在库
+                        if (ajaxData.STOCKSTATE == 1) {
+                            toast("该原料不在库，请确认");
+                            beepAndVibrate();
+                            return;
+                        }
 
-						str = '<div class="mui-card-content-inner" style="border-bottom:1px solid gray;" mssId='+ajaxData.ID+' id=' + ajaxData.PALLETCODE + '>';
-						str += '<div class="mui-input-row">';
-						str += '<label>托盘编号</label>';
-						str += '<input id="materialCode" type="text" required readonly value=' + ajaxData.PALLETCODE + '>';
-						str += '</div>';
-						str += '<div class="mui-input-row">';
-						str += '<label>原仓库</label>';
-						str += '<input id="materialCode" type="text" required readonly value=' + ajaxData.WAREHOUSECODE + '>';
-						str += '</div>';
-						str += '<div class="mui-input-row">';
-						str += '<label>原仓库</label>';
-						str += '<input id="materialCode" type="text" required readonly value=' + ajaxData.WAREHOUSEPOSCODE + '>';
-						str += '</div>';
-						str += '</div>';
-						
-						$("#list").append(str);
-					}, function() {
-						tip("查询信息失败");
-					});
-				} else {
-					tip("未知条码：" + data[0]);
-				}
-			} else if(data.length == 2) {
-				//库房库位扫的数据
-				$("#warehouseCode").val(data[0]);
-				$("#warehousePosCode").val(data[1]);
-			} else {
-				tip("未知条码");
-			}
-		}
+                        if ($("#" + ajaxData.PALLETCODE).length > 0) {
+                            tip("重复扫描");
+                            return;
+                        }
 
-		function doSubmit1() {
-			if(!validForm('formID')) {
-				return;
-			}
-			if($("[mssId]").length == 0) {
-				toast("请扫条码");
-				return;
-			}
+                        str = '<div class="mui-card-content-inner" style="border-bottom:1px solid gray;" mssId=' + ajaxData.ID + ' id=' + ajaxData.PALLETCODE + '>';
+                        str += '<div class="mui-input-row">';
+                        str += '<label>托盘编号</label>';
+                        str += '<input id="materialCode" type="text" required readonly value=' + ajaxData.PALLETCODE + '>';
+                        str += '</div>';
+                        str += '<div class="mui-input-row">';
+                        str += '<label>原仓库</label>';
+                        str += '<input id="materialCode" type="text" required readonly value=' + ajaxData.WAREHOUSECODE + '>';
+                        str += '</div>';
+                        str += '<div class="mui-input-row">';
+                        str += '<label>原仓库</label>';
+                        str += '<input id="materialCode" type="text" required readonly value=' + ajaxData.WAREHOUSEPOSCODE + '>';
+                        str += '</div>';
+                        str += '</div>';
 
-			mconfirm('警告', '确认移库？', function() {
-				var ids=[];
-				if($("[mssId]").length==0){
-					tip("请扫条码")
-					return;
-				}
-				$("[mssId]").each(function(i,e){
-					ids.push($(this).attr("mssId"));
-				});
-				var form = {
-					'warehouseCode': $("#warehouseCode").val(),
-					'warehousePosCode': $("#warehousePosCode").val(),
-					'ids': ids.toString()
-				};
-				waiting("正在移库");
-				App.ajaxPost(mMove, form, function(data) {
-					if(data.length > 0) {
-						toast(data + "已在所扫的库位");
-						closeWaiting();
-					} else {
-						closeWaiting();
-						sucTip("保存成功");
-						$("#formID")[0].reset();
-						$("#list").empty();
-					}
-				}, function() {
-					//失败
-					closeWaiting();
-				});
-			}, function() {
-				closeWaiting();
-			});
+                        $("#list").append(str);
+                    }, function () {
+                        tip("查询信息失败");
+                    });
+                } else {
+                    tip("未知条码：" + data[0]);
+                }
+            } else if (data.length == 2) {
+                //库房库位扫的数据
+                $("#warehouseCode").val(data[0]);
+                $("#warehousePosCode").val(data[1]);
+            } else {
+                tip("未知条码");
+            }
+        }
 
-		}
+        function doSubmit1() {
+            if (!validForm('formID')) {
+                return;
+            }
+            if ($("[mssId]").length == 0) {
+                toast("请扫条码");
+                return;
+            }
 
-		mui.init({
-			gestureConfig: {
-				longtap: true //默认为false
-			}
-		});
-		mui('.mui-scroll-wrapper').scroll({
-			deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
-		});
-		mui('.mui-card-content').on('longtap', '.mui-card-content-inner', function() {
-			var id = this.getAttribute("id");
-			log(code);
-			mconfirm("删除", "确认删除", function() {
-				$("#"+id).slideUp(500,function(){
-					$(this).remove();
-				});
-			}, function() {});
+            mconfirm('警告', '确认移库？', function () {
+                var ids = [];
+                if ($("[mssId]").length == 0) {
+                    tip("请扫条码")
+                    return;
+                }
+                $("[mssId]").each(function (i, e) {
+                    ids.push($(this).attr("mssId"));
+                });
+                var form = {
+                    'warehouseCode': $("#warehouseCode").val(),
+                    'warehousePosCode': $("#warehousePosCode").val(),
+                    'ids': ids.toString()
+                };
+                waiting("正在移库");
+                App.ajaxPost(mMove, form, function (data) {
+                    if (data.length > 0) {
+                        toast(data + "已在所扫的库位");
+                        closeWaiting();
+                    } else {
+                        closeWaiting();
+                        sucTip("保存成功");
+                        $("#formID")[0].reset();
+                        $("#list").empty();
+                    }
+                }, function () {
+                    closeWaiting();
+                });
+            }, function () {
+                closeWaiting();
+            });
+        }
 
-		});
-	</script>
+        mui.init({
+            gestureConfig: {
+                longtap: true //默认为false
+            }
+        });
+        mui('.mui-scroll-wrapper').scroll({
+            deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+        });
+        mui('.mui-card-content').on('longtap', '.mui-card-content-inner', function () {
+            var id = this.getAttribute("id");
+            log(code);
+            mconfirm("删除", "确认删除", function () {
+                $("#" + id).slideUp(500, function () {
+                    $(this).remove();
+                });
+            }, function () { });
 
+        });
+    </script>
+</body>
 </html>

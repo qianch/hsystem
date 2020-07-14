@@ -34,7 +34,7 @@
             <div style="font-size: 12px;color:gray;">
                 <a id="serverIp"></a>
             </div>
-            <div style="height:40px;margin-left:20px;display:none;">
+            <div style="height:40px;margin-left:20px;">
                 <div style="float:left;height:30px;margin:5px;color:#007aff;">外库</div>
                 <div style="float:left;" id="external" class="mui-switch mui-switch-mini mui-switch-blue">
                     <div class="mui-switch-handle"></div>
@@ -53,8 +53,8 @@
         App.ready(function () {
             plus.navigator.closeSplashscreen();
             appInit();
-            //loadTasks();
             $("#serverIp").text("服务器地址：http://" + SERVER_IP)
+            LS.remove(KEY.SERVER_IP);
         });
 
         function loadTasks() {
@@ -126,11 +126,11 @@
 
         document.getElementById("external").addEventListener("toggle", function (event) {
             if (event.detail.isActive) {
-                Config.serverUrl = "http://" + EXTERNAL_IP + "/mobile/";
+                LS.set(KEY.SERVER_IP, EXTERNAL_IP);
                 $("#serverIp").text("外库地址： http://" + EXTERNAL_IP);
             } else {
-                Config.serverUrl = "http://" + SERVER_IP + "/mobile/";
-                $("#serverIp").text("服务器地址： http://" + SERVER_IP);
+                LS.set(KEY.SERVER_IP, SERVER_IP);
+                $("#serverIp").text("服务器地址： http://" + SERVER_IP);     
             }
         })
     </script>

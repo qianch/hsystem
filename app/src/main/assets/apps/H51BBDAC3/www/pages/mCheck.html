@@ -1,322 +1,317 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
+<head>
+    <meta charset="UTF-8">
+    <title>原料盘库</title>
+    <script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
+    <style type="text/css">
+        .waitingForCheck {
+            background: #ffffff;
+            color: #059825;
+        }
 
-	<head>
-		<meta charset="UTF-8">
-		<title>原料盘库</title>
-		<script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
-		<style type="text/css">
-			.waitingForCheck {
-				background: #ffffff;
-				color: #059825;
-			}
-			
-			.cuoku {
-				background: yellow;
-				font-size: 15px;
-			}
-			
-			.ffrk {
-				background: #ff9393;
-				font-size: 15px;
-			}
-			
-			.ffck {
-				background: #ff79e8;
-				font-size: 15px;
-			}
-			
-			.zc {
-				background: #86f186;
-				font-size: 15px;
-			}
-			
-			.ck_ffrk {
-				background: #EC971F;
-				font-size: 15px;
-			}
-			
-			tbody tr {
-				height: 35px;
-				font-size: 18px;
-				color: #044052;
-			}
-			
-			thead {
-				background: darkgrey;
-				color: #06123e;
-				height: 35px;
-				font-size: 18px;
-			}
-		</style>
-	</head>
+        .cuoku {
+            background: yellow;
+            font-size: 15px;
+        }
 
-	<body>
-		<header class="mui-bar mui-bar-nav">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title">原料盘库</h1>
-		</header>
-		<div class="mui-content">
-			<div class="mui-scroll-wrapper">
-				<div class="mui-scroll">
-					<div id="item1" class="mui-control-content mui-active">
-						<div class="mui-card">
-							<div class="mui-card-header">
-								<form class="mui-input-group" id="rForm" style="background:#dcdcdc;">
-									<div class="mui-input-row">
-										<label>库房</label>
-										<input id="wc" type="text" readonly required placeholder="请扫二维码">
-									</div>
-									<div class="mui-input-row">
-										<label>库位</label>
-										<input id="wpc" type="text" readonly required placeholder="请扫二维码">
-									</div>
-								</form>
-							</div>
-							<div class="mui-card-content" id="list">
-								<table border='1' style='width:100%;'>
-									<thead>
-										<tr>
-											<th>托盘编号</th>
-											<th>盘点状态</th>
-										</tr>
-									</thead>
-									<tbody id="codes">
-										<tr class='waitingForCheck'>
-											<th colspan="2">请先扫描库位</th>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-						</div>
-						<div class="mui-button-row">
-							<button id="sb" type="button" class="mui-btn mui-btn-primary" onclick="doREnd()" style="width: 80%;margin-bottom: 10px;">盘点结束</button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</body>
+        .ffrk {
+            background: #ff9393;
+            font-size: 15px;
+        }
 
-	<script type="text/javascript">
-		var findProductStockUrl = App.getServerUrl() + "stock/material/list";
-		var endCheckUrl = App.getServerUrl() + "stock/material/check";
-		var checkStateUrl = App.getServerUrl() + "stock/material/checkState";
-		var codeInfoUrl = App.getServerUrl() + "stock/material/info/";
-		var scanner;
-		var m;
-		App.ready(function() {
-			scanner = new Scanner(parseCode);
-			scanner.scan();
-			//parseCode("yclk2;2-2-011");
-		});
+        .ffck {
+            background: #ff79e8;
+            font-size: 15px;
+        }
 
-		function parseCode(barcode) {
-			$("#sb").text("盘点结束");
-			var code = barcode.split(";");
+        .zc {
+            background: #86f186;
+            font-size: 15px;
+        }
 
-			//如果条码长度超过15，那么就认为是原料条码
-			if(code.length == 1 && barcode.length > 15) {
+        .ck_ffrk {
+            background: #EC971F;
+            font-size: 15px;
+        }
 
-				if(isEmpty($("#wc").val())) {
-					tip("请先扫描库位二维码");
-					return;
-				}
+        tbody tr {
+            height: 35px;
+            font-size: 18px;
+            color: #044052;
+        }
 
-				waiting("正在加载库存信息");
+        thead {
+            background: darkgrey;
+            color: #06123e;
+            height: 35px;
+            font-size: 18px;
+        }
+    </style>
+</head>
 
-				App.ajaxGet(codeInfoUrl + barcode, function(ajaxData) {
-						closeWaiting();
-						//查询该物料的原料信息
-						if(isEmpty(ajaxData)) {
-							tip("未查询到原料信息，已判为非法入库");
-							$(".nodata").remove();
-							if($("#" + barcode.substring(4, 19)).length == 0)
-								$("#codes").append("<tr id='" + barcode.substring(4, 19) + "' class='ffrk'><th>" + barcode.substring(4, 19) + "</th><th>非法入库</th></tr>");
-							return;
-						}
+<body>
+    <header class="mui-bar mui-bar-nav">
+        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+        <h1 class="mui-title">原料盘库</h1>
+    </header>
+    <div class="mui-content">
+        <div class="mui-scroll-wrapper">
+            <div class="mui-scroll">
+                <div id="item1" class="mui-control-content mui-active">
+                    <div class="mui-card">
+                        <div class="mui-card-header">
+                            <form class="mui-input-group" id="rForm" style="background:#dcdcdc;">
+                                <div class="mui-input-row">
+                                    <label>库房</label>
+                                    <input id="wc" type="text" readonly required placeholder="请扫二维码">
+                                </div>
+                                <div class="mui-input-row">
+                                    <label>库位</label>
+                                    <input id="wpc" type="text" readonly required placeholder="请扫二维码">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="mui-card-content" id="list">
+                            <table border='1' style='width:100%;'>
+                                <thead>
+                                    <tr>
+                                        <th>托盘编号</th>
+                                        <th>盘点状态</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="codes">
+                                    <tr class='waitingForCheck'>
+                                        <th colspan="2">请先扫描库位</th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="mui-button-row">
+                        <button id="sb" type="button" class="mui-btn mui-btn-primary" onclick="doREnd()" style="width: 80%;margin-bottom: 10px;">盘点结束</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-						//检查该条码是否存在
-						if($("#" + ajaxData.PALLETCODE).length > 0) {
-							$(".nodata").remove();
-							//如果是已存在该条码，并且不是等待校验状态，那么就是重复扫码
-							if(!$("#" + ajaxData.PALLETCODE).hasClass("waitingForCheck")) {
-								tip("重复扫描");
-								return;
-							}
-						}
-						//错库
-						//如果该条码不存在于盘点列表总,但是是在库状态，那么就是错库
-						if($("#" + ajaxData.PALLETCODE).length == 0 && ajaxData.STOCKSTATE == 0) {
-							$(".nodata").remove();
-							$("#codes").append("<tr id='" + ajaxData.PALLETCODE + "' class='cuoku'><th>" + ajaxData.PALLETCODE + "</th><th>错库</th></tr>");
-							return;
-						}
+    <script type="text/javascript">
+        var findProductStockUrl = App.getServerUrl() + "stock/material/list";
+        var endCheckUrl = App.getServerUrl() + "stock/material/check";
+        var checkStateUrl = App.getServerUrl() + "stock/material/checkState";
+        var codeInfoUrl = App.getServerUrl() + "stock/material/info/";
+        var scanner;
+        var m;
+        App.ready(function () {
+            scanner = new Scanner(parseCode);
+            scanner.scan();
+            //parseCode("yclk2;2-2-011");
+        });
 
-						//非法入库，如果状态是不在库，那么就是非法入库
-						if($("#" + ajaxData.PALLETCODE).length == 0 && ajaxData.STOCKSTATE == 1) {
-							$(".nodata").remove();
-							$("#codes").append("<tr id='" + ajaxData.PALLETCODE + "' class='ffrk'><th>" + ajaxData.PALLETCODE + "</th><th>非法入库</th></tr>");
-							return;
-						}
+        function parseCode(barcode) {
+            $("#sb").text("盘点结束");
+            var code = barcode.split(";");
 
-						//非法出库，等到全部校验完了之后，剩下的列表中等待校验的，就是非法出库了
-						//正常的
-						if($("#" + ajaxData.PALLETCODE).length == 1 && ajaxData.STOCKSTATE == 0) {
-							$(".nodata").remove();
-							$("#" + ajaxData.PALLETCODE).attr("class", "zc");
-							$("#" + ajaxData.PALLETCODE).find("th:eq(1)").text("正常");
-						}
-					},
-					function() {
-						closeWaiting();
-						tip("查询信息失败");
-					});
-			} else if(code.length == 2) { //库房库位条码
-				$("#wc").val(code[0].toUpperCase());
-				$("#wpc").val(code[1].toUpperCase());
-				waiting("正在加载库存信息");
-				App.ajaxPost(findProductStockUrl, {
-					"warehouseCode": code[0],
-					"warehousePosCode": code[1]
-				}, function(data) {
-					closeWaiting();
-					$("#codes").empty();
-					if(data.length == 0) {
-						$("#codes").append("<tr class='nodata'><th colspan='2'>无库存,但可继续盘库</th></tr>");
-					} else {
-						var dom = "";
-						for(var i = 0; i < data.length; i++) {
-							dom += "<tr class='waitingForCheck' id='" + data[i].PALLETCODE + "'>";
-							dom += "<th>" + data[i].PALLETCODE + "</th>";
-							dom += "<th>待盘点</th>";
-							dom += "</tr>";
-						}
-						$("#codes").append(dom);
-						//parseCode("AAAA1311607292042WXAAAAA");
-					}
+            //如果条码长度超过15，那么就认为是原料条码
+            if (code.length == 1 && barcode.length > 15) {
 
-				}, function() {
-					closeWaiting();
-					tip("加载库存信息失败");
-				});
+                if (isEmpty($("#wc").val())) {
+                    tip("请先扫描库位二维码");
+                    return;
+                }
 
-			} else {
-				tip("未知条码");
-			}
-		}
-		mui('.mui-scroll-wrapper').scroll({
-			bounce: false,
-			indicators: false,
-			deceleration: 0.00001 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
-		});
+                waiting("正在加载库存信息");
 
-		//原料盘点结束
-		function doREnd() {
+                App.ajaxGet(codeInfoUrl + barcode, function (ajaxData) {
+                    closeWaiting();
+                    //查询该物料的原料信息
+                    if (isEmpty(ajaxData)) {
+                        tip("未查询到原料信息，已判为非法入库");
+                        $(".nodata").remove();
+                        if ($("#" + barcode.substring(4, 19)).length == 0)
+                            $("#codes").append("<tr id='" + barcode.substring(4, 19) + "' class='ffrk'><th>" + barcode.substring(4, 19) + "</th><th>非法入库</th></tr>");
+                        return;
+                    }
 
-			var optStr = $("#sb").text();
+                    //检查该条码是否存在
+                    if ($("#" + ajaxData.PALLETCODE).length > 0) {
+                        $(".nodata").remove();
+                        //如果是已存在该条码，并且不是等待校验状态，那么就是重复扫码
+                        if (!$("#" + ajaxData.PALLETCODE).hasClass("waitingForCheck")) {
+                            tip("重复扫描");
+                            return;
+                        }
+                    }
+                    //错库
+                    //如果该条码不存在于盘点列表总,但是是在库状态，那么就是错库
+                    if ($("#" + ajaxData.PALLETCODE).length == 0 && ajaxData.STOCKSTATE == 0) {
+                        $(".nodata").remove();
+                        $("#codes").append("<tr id='" + ajaxData.PALLETCODE + "' class='cuoku'><th>" + ajaxData.PALLETCODE + "</th><th>错库</th></tr>");
+                        return;
+                    }
 
-			if(isEmpty($("#wc").val())) {
-				tip("请先扫描库房库位");
-				return;
-			}
+                    //非法入库，如果状态是不在库，那么就是非法入库
+                    if ($("#" + ajaxData.PALLETCODE).length == 0 && ajaxData.STOCKSTATE == 1) {
+                        $(".nodata").remove();
+                        $("#codes").append("<tr id='" + ajaxData.PALLETCODE + "' class='ffrk'><th>" + ajaxData.PALLETCODE + "</th><th>非法入库</th></tr>");
+                        return;
+                    }
 
-			$(".nodata").remove();
+                    //非法出库，等到全部校验完了之后，剩下的列表中等待校验的，就是非法出库了
+                    //正常的
+                    if ($("#" + ajaxData.PALLETCODE).length == 1 && ajaxData.STOCKSTATE == 0) {
+                        $(".nodata").remove();
+                        $("#" + ajaxData.PALLETCODE).attr("class", "zc");
+                        $("#" + ajaxData.PALLETCODE).find("th:eq(1)").text("正常");
+                    }
+                },
+                    function () {
+                        closeWaiting();
+                        tip("查询信息失败");
+                    });
+            } else if (code.length == 2) { //库房库位条码
+                $("#wc").val(code[0].toUpperCase());
+                $("#wpc").val(code[1].toUpperCase());
+                waiting("正在加载库存信息");
+                App.ajaxPost(findProductStockUrl, {
+                    "warehouseCode": code[0],
+                    "warehousePosCode": code[1]
+                }, function (data) {
+                    closeWaiting();
+                    $("#codes").empty();
+                    if (data.length == 0) {
+                        $("#codes").append("<tr class='nodata'><th colspan='2'>无库存,但可继续盘库</th></tr>");
+                    } else {
+                        var dom = "";
+                        for (var i = 0; i < data.length; i++) {
+                            dom += "<tr class='waitingForCheck' id='" + data[i].PALLETCODE + "'>";
+                            dom += "<th>" + data[i].PALLETCODE + "</th>";
+                            dom += "<th>待盘点</th>";
+                            dom += "</tr>";
+                        }
+                        $("#codes").append(dom);
+                        //parseCode("AAAA1311607292042WXAAAAA");
+                    }
 
-			if($("#codes tr").length == 0) {
-				tip("列表为空，无法保存盘点结果");
-				return;
-			}
+                }, function () {
+                    closeWaiting();
+                    tip("加载库存信息失败");
+                });
 
-			if(optStr == "盘点结束") {
-				$("#codes tr").each(function(i, e) {
-					if($(this).attr("class") == "waitingForCheck") {
-						$(this).removeClass();
-						App.ajaxGet(codeInfoUrl + $(this).children().eq(0).text(), function(ajaxData) {
-							if(ajaxData.STOCKSTATE == 0 && ajaxData.WAREHOUSEPOSCODE != $("#warehousePosCode").val()) {
-								$(e).addClass("cuoku");
-								$(e).find("th:eq(1)").text("错库");
-							} else {
-								$(e).addClass("ck_ffrk");
-								$(e).find("th:eq(1)").text("非法出库或错库");
-							}
-						});
-					}
+            } else {
+                tip("未知条码");
+            }
+        }
+        mui('.mui-scroll-wrapper').scroll({
+            bounce: false,
+            indicators: false,
+            deceleration: 0.00001 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+        });
 
-				});
-				$("#sb").text("保存盘点结果");
-				return;
-			}
+        //原料盘点结束
+        function doREnd() {
+            var optStr = $("#sb").text();
+            if (isEmpty($("#wc").val())) {
+                tip("请先扫描库房库位");
+                return;
+            }
+            $(".nodata").remove();
 
-			$(".nodata").remove();
-			var checkResultInfo = [];
+            if ($("#codes tr").length == 0) {
+                tip("列表为空，无法保存盘点结果");
+                return;
+            }
 
-			$("#codes tr").each(function(i, e) {
-				var clazz = $(this).attr("class");
+            if (optStr == "盘点结束") {
+                $("#codes tr").each(function (i, e) {
+                    if ($(this).attr("class") == "waitingForCheck") {
+                        $(this).removeClass();
+                        App.ajaxGet(codeInfoUrl + $(this).children().eq(0).text(), function (ajaxData) {
+                            if (ajaxData.STOCKSTATE == 0 && ajaxData.WAREHOUSEPOSCODE != $("#warehousePosCode").val()) {
+                                $(e).addClass("cuoku");
+                                $(e).find("th:eq(1)").text("错库");
+                            } else {
+                                $(e).addClass("ck_ffrk");
+                                $(e).find("th:eq(1)").text("非法出库或错库");
+                            }
+                        });
+                    }
 
-				if(clazz == "zc") {
-					checkResultInfo.push({
-						"materialPalletCode": $(this).attr("id"),
-						"checkResult": 0
-					});
-				} else if(clazz == "ffrk") {
-					checkResultInfo.push({
-						"materialPalletCode": $(this).attr("id"),
-						"checkResult": 2
-					});
-				} else if(clazz == "ffck") {
-					checkResultInfo.push({
-						"materialPalletCode": $(this).attr("id"),
-						"checkResult": 3
-					});
-				} else if(clazz == "cuoku") {
-					checkResultInfo.push({
-						"materialPalletCode": $(this).attr("id"),
-						"checkResult": 1
-					});
-				} else if(clazz == "ck_ffrk") {
-					checkResultInfo.push({
-						"materialPalletCode": $(this).attr("id"),
-						"checkResult": 4
-					});
-				}
+                });
+                $("#sb").text("保存盘点结果");
+                return;
+            }
 
-			});
+            $(".nodata").remove();
+            var checkResultInfo = [];
 
-			var data = {
-				"checkWarehousePosCode": $("#wc").val(),
-				"checkWarehouseCode": $("#wpc").val(),
-				"optUser": App.getLoginUserName(),
-				"checkTime": new Calendar().format("yyyyMMdd"),
-				"checkType": 0,
-				"list": checkResultInfo
-			};
-			mconfirm('盘点结束', '是否保存结果？', function() {
-				waiting("正在保存");
-				$.ajax(endCheckUrl, {
-					data: JSON.stringify(data),
-					type: "post",
-					dataType: "json",
-					contentType: "application/json",
-					success: function(data) {
-						closeWaiting();
-						sucTip("数据保存成功！");
-						clearRoll();
-					},
-					error: function(data) {
-						closeWaiting();
-						tip("数据保存失败！");
-					}
-				});
+            $("#codes tr").each(function (i, e) {
+                var clazz = $(this).attr("class");
 
-			}, function() {});
-		}
+                if (clazz == "zc") {
+                    checkResultInfo.push({
+                        "materialPalletCode": $(this).attr("id"),
+                        "checkResult": 0
+                    });
+                } else if (clazz == "ffrk") {
+                    checkResultInfo.push({
+                        "materialPalletCode": $(this).attr("id"),
+                        "checkResult": 2
+                    });
+                } else if (clazz == "ffck") {
+                    checkResultInfo.push({
+                        "materialPalletCode": $(this).attr("id"),
+                        "checkResult": 3
+                    });
+                } else if (clazz == "cuoku") {
+                    checkResultInfo.push({
+                        "materialPalletCode": $(this).attr("id"),
+                        "checkResult": 1
+                    });
+                } else if (clazz == "ck_ffrk") {
+                    checkResultInfo.push({
+                        "materialPalletCode": $(this).attr("id"),
+                        "checkResult": 4
+                    });
+                }
 
-		function clearRoll() {
-			$("#rForm")[0].reset();
-			$("#codes").empty();
-			$("#sb").text("盘点结束");
-		}
-	</script>
+            });
 
+            var data = {
+                "checkWarehousePosCode": $("#wc").val(),
+                "checkWarehouseCode": $("#wpc").val(),
+                "optUser": App.getLoginUserName(),
+                "checkTime": new Calendar().format("yyyyMMdd"),
+                "checkType": 0,
+                "list": checkResultInfo
+            };
+            mconfirm('盘点结束', '是否保存结果？', function () {
+                waiting("正在保存");
+                $.ajax(endCheckUrl, {
+                    data: JSON.stringify(data),
+                    type: "post",
+                    dataType: "json",
+                    contentType: "application/json",
+                    success: function (data) {
+                        closeWaiting();
+                        sucTip("数据保存成功！");
+                        clearRoll();
+                    },
+                    error: function (data) {
+                        closeWaiting();
+                        tip("数据保存失败！");
+                    }
+                });
+
+            }, function () { });
+        }
+
+        function clearRoll() {
+            $("#rForm")[0].reset();
+            $("#codes").empty();
+            $("#sb").text("盘点结束");
+        }
+    </script>
+</body>
 </html>

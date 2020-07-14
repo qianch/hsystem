@@ -1,437 +1,439 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
-	<head>
-		<meta charset="UTF-8">
-		<title></title>
-		<script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../resources/js/app/Calc.js" type="text/javascript" charset="utf-8"></script>
-		<style type="text/css">
-			.mui-scroll-wrapper {
-				margin-top: 87px;
-			}
-			
-			.mui-input-row label {
-				float: none;
-			}
-			
-			.mui-input-row label~input,
-			.mui-input-row label~select,
-			.mui-input-row label~textarea {
-				float: none;
-			}
-			
-			.mui-popover {
-				margin-top: 50px;
-				margin-left: 20px;
-				height: 300px;
-			}
-			
-			.roll_row {}
-			
-			.roll_row label {
-				font-size: 18px;
-			}
-			
-			input {
-				font-size: 20px;
-			}
-			
-			.notray {
-				color: #504f4f;
-				font-size: 12px;
-				width: 250px;
-				margin: 0 auto;
-				text-align: center;
-			}
-			
-			.count {
-				text-align: center;
-				font-weight: bold;
-				color: red;
-				font-size: 20px;
-				padding-top: 10px;
-				/*display: none;*/
-			}
-			
-			#count {
-				font-size: 35px;
-				padding-left: 5px;
-				padding-right: 5px;
-			}
-			
-			.mui-bar {
-				-webkit-tray-shadow: none;
-			}
-			
-			.mui-bar-nav {
-				box-shadow: none;
-			}
-			
-			.mui-input-group input {
-				color: #20750b;
-				font-weight: bold;
-				width: 93%!important;
-			}
-			
-			.newBarcode {}
-			
-			.newBarcode label {
-				color: red;
-			}
-			
-			.newBarcode input {
-				color: red;
-			}
-			
-			.endpack {
-				background: #dd524d!important;
-			}
-			
-			.fbCode {
-				color: #FB6F18!important;
-			}
-		</style>
-	</head>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../resources/js/app/Calc.js" type="text/javascript" charset="utf-8"></script>
+    <style type="text/css">
+        .mui-scroll-wrapper {
+            margin-top: 87px;
+        }
 
-	<body>
-		<header class="mui-bar mui-bar-nav">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title">翻包托打包</h1>
-		</header>
-		<div class="mui-content">
-			<div id="trayField" class="mui-input-row" style="color: #ffffff; background: #064f65;">
-				<label>托条码</label>
-				<input id="trayCode" type="text" value="" readonly required placeholder="请扫托条码">
-			</div>
-			<div class="mui-scroll-wrapper">
-				<div class="mui-scroll">
-					<div class="mui-control-content mui-active" style="margin-top: 0px;">
-						<form class="mui-input-group" id="trayForm" onsubmit="return false;">
-						</form>
-						<div style="color:red;text-align: center;font-size: 23px;font-weight: bold;margin-top:10px;" id="count"></div>
-						<fieldset style="border: 1px solid lightgray;margin-top: 15px;">
-							<legend style="font-size: 14px;" align="center">打包方式</legend>
-							<ul id="packtask" style="font-size: 14px;text-align: center;list-style: none;margin: 0 auto;padding: 0;">
-							</ul>
-						</fieldset>
-						<div style="text-align: center;margin: 30px 0 20px 0;">
-							<label style="font-size: 14px;color:black;">条码可长按删除</label><br>
-							<label style="font-size: 14px;color: black;">橙色条码为非该订单或批次或不同的产品</label>
-							<br>
-							<button type="button" class="mui-btn mui-btn-primary" onclick="doPack()">点击打包</button>
-							<br>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		</div>
-		<script type="text/javascript">
-			//根据条码查询单号
-			var infos = App.getServerUrl() + "package/";
-			var trayInfo = App.getServerUrl() + "turnbag/tray/info/";
-			var rollInfo = App.getServerUrl() + "turnbag/roll/info/";
-			var boxInfo = App.getServerUrl() + "turnbag/box/info/";
-			var packUrl = App.getServerUrl() + "package2/tray";
-			var endPackUrl = App.getServerUrl() + "package2/endpack/";
-			var deleteInnerUrl = App.getServerUrl() + "package2/deleteInner";
-			var max=0;
-			//计划ID
-			var planId = undefined;
-			//单向布,-1,非单向布，1，默认0
-			var dxb = 0;
-			//部件ID
-			var partId = undefined;
-			//部件名称
-			var partName = undefined;
+        .mui-input-row label {
+            float: none;
+        }
 
-			var trayCode=null;
+            .mui-input-row label ~ input,
+            .mui-input-row label ~ select,
+            .mui-input-row label ~ textarea {
+                float: none;
+            }
 
-			//订单号
-			var salesOrder = undefined;
-			//批次号
-			var batchCode = undefined;
+        .mui-popover {
+            margin-top: 50px;
+            margin-left: 20px;
+            height: 300px;
+        }
 
-			mui('.mui-scroll-wrapper').scroll({
-				deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
-			});
+        .roll_row {
+        }
 
-			App.ready(function() {
-				new Scanner(parseCode).scan();
-			});
+            .roll_row label {
+                font-size: 18px;
+            }
 
-			function formatCode(code) {
-				try {
-					return code.split(";")[0];
-				} catch(e) {
-					tip("无效条码");
-					return undefined;
-				}
-			}
+        input {
+            font-size: 20px;
+        }
 
-			/**
-			 * PDA扫描回调
-			 * @param {Object} code
-			 */
-			function parseCode(code) {
-				code = formatCode(code);
-				if(!code) return;
+        .notray {
+            color: #504f4f;
+            font-size: 12px;
+            width: 250px;
+            margin: 0 auto;
+            text-align: center;
+        }
 
-				if(code.indexOf("T") == 0 || code.indexOf("P") == 0) {
-					showTrayInfo(code);
-					return;
-				}
+        .count {
+            text-align: center;
+            font-weight: bold;
+            color: red;
+            font-size: 20px;
+            padding-top: 10px;
+            /*display: none;*/
+        }
 
-				if(code.indexOf("B") == 0) {
-					if($("#trayForm input").length > 0 && ($("#trayForm input").val().indexOf("R") == 0 || $("#trayForm input").val().indexOf("P") == 0)) {
-						tip("只能扫卷条码");
-						return;
-					}
-					//加载托信息
-					showBoxInfo(code);
-					return;
-				}
+        #count {
+            font-size: 35px;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
 
-				if(code.indexOf("R") == 0 || code.indexOf("P") == 0) {
-					if($("#trayForm input").length > 0 && $("#trayForm input").val().indexOf("B") == 0) {
-						tip("只能扫盒条码");
-						return;
-					}
-					showRollInfo(code);
-				}
-			}
+        .mui-bar {
+            -webkit-tray-shadow: none;
+        }
 
-			//TODO 加载托信息
-			function showTrayInfo(code) {
-//				log(trayInfo + code)
-				waiting("正在加载信息");
-				App.ajaxGet(trayInfo + code,
-					function(data) {
-						log(data)
-						$("#trayCode").val(code);
-						$("#trayForm").empty();
-						$("#count").empty();
+        .mui-bar-nav {
+            box-shadow: none;
+        }
 
-						planId = data.PLANID;
+        .mui-input-group input {
+            color: #20750b;
+            font-weight: bold;
+            width: 93% !important;
+        }
 
-						$("#trayCode").val(data.CODE);
-						var children = data.CHILDREN;
-						var qrcode;
-						for(var i = 0; i < children.length; i++) {
-							qrcode = children[i].BARCODE;
-							var style = "";
-							if(planId != children[i].PLANID)
-								style = "fbCode";
-							$("#trayForm").append("<div id='" + qrcode + "' class=\"mui-input-row oldBarcode " + style + " \" > <input id=\"trayCode\" class=\"" + style + "\" rid=\"" + children[i].ID + "\" type=\"text\" value=\"" + qrcode + "\" readonly required> </div>");
-						}
-						if($("#trayForm input").length == 0) {
-							$("#count").html("");
-						} else {
-							if($("#trayForm input").val() && $("#trayForm input").val().indexOf("R") == 0) {
-								$("#count").html("共" + $("#trayForm input").length + "卷");
-							} else {
-								$("#count").html("共" + $("#trayForm input").length + "盒");
-							}
-						}
-						trayCode=qrcode;
-						loadPackTask();
-					}
-				);
-			}
+        .newBarcode {
+        }
 
-			function showBoxInfo(code) {
-				if(isEmpty($("#trayCode").val())) {
-					tip("请先扫描托条码");
-					return;
-				}
-				if($("#" + code).length > 0) {
-					tip("重复扫描");
-					return;
-				}
-				waiting("正在加载信息");
-				App.ajaxGet(boxInfo + code,
-					function(data) {
-						if($("#" + data.CODE).length > 0) {
-							tip("重复扫描");
-							return;
-						}
-						var style = "";
-						if(planId != data.PLANID)
-							style = "fbCode";
-						$("#trayForm").append("<div id=\"" + data.CODE + "\" class=\"mui-input-row newBarcode\" ><label>*</label><input id=\"trayCode\" class=\"" + style + "\" type=\"text\" value=\"" + data.CODE + "\" readonly></div>");
-						$("#count").html("共" + $("#trayForm input").length + "盒");
-					}
-				);
-			}
+            .newBarcode label {
+                color: red;
+            }
 
-			function showRollInfo(code) {
-				if(isEmpty($("#trayCode").val())) {
-					tip("请先扫描托条码");
-					return;
-				}
-				if($("#" + code).length > 0) {
-					tip("重复扫描");
-					return;
-				}
-				waiting("正在加载信息");
-				App.ajaxGet(rollInfo + code,
-					function(data) {
-						if($("#" + data.CODE).length > 0) {
-							tip("重复扫描");
-							return;
-						}
-						var style = "";
-						if(planId != data.PLANID)
-							style = "fbCode";
-						$("#trayForm").append("<div id=\"" + data.CODE + "\" class=\"mui-input-row newBarcode\" ><label>*</label><input id=\"trayCode\" class=\"" + style + "\" type=\"text\" value=\"" + data.CODE + "\" readonly></div>");
-						$("#count").html("共" + $("#trayForm input").length + "卷");
-						loadPackTask();
-					}
-				);
-			}
+            .newBarcode input {
+                color: red;
+            }
 
-			function doPack() {
-				var codes = [];
-				$("#trayForm div.newBarcode input").each(function(i, e) {
-					codes.push($(this).val());
-				});
-				if(codes.length == 0) {
-					tip("请扫条码");
-					return;
-				}
-				mconfirm("操作提示", "确认打包？", function() {
-					var boxCodes, rollCodes;
-					if(codes.join(",").indexOf("B") == 0) {
-						boxCodes = codes.join(",");
-						rollCodes = "";
-					} else {
-						boxCodes = "";
-						rollCodes = codes.join(",");
-					}
-					waiting("正在打包");
-					App.ajaxPost(packUrl, {
-						puname: App.getLoginUserName(),
-						trayCode: $("#trayCode").val(),
-						packagingStaff: App.getLoginUserId(),
-						rollCodes: rollCodes,
-						boxCodes: boxCodes,
-						planId: planId,
-						partName: partName == undefined ? "" : partName,
-						partId: partId == undefined ? "" : partId
-					}, function(data) {
-						sucTip("打包成功");
-						showTrayInfo($("#trayCode").val());
-					});
-				});
+        .endpack {
+            background: #dd524d !important;
+        }
 
-			}
+        .fbCode {
+            color: #FB6F18 !important;
+        }
+    </style>
+</head>
 
-			function endPack() {
-				if($("#trayForm div.newBarcode input").length > 0) {
-					mconfirm("操作提示", "尚有未打包进去的条码，点击确定将不会打包进去，是否继续？", function() {
-						mconfirm("操作提示", "结束后无法再扫新的条码，请确认是否打包结束?", function() {
-							App.ajaxPost(endPackUrl + $("#trayCode").val(), {}, function() {
-								sucTip("打包已结束");
-								$("#trayField").addClass("endpack");
-								setTimeout(function() {
-									$("#trayField").removeClass("endpack");
-									$("#count").html("");
-									showTrayInfo($("#trayCode").val());
-								}, 3000);
-							});
-						});
-					});
-				} else {
-					mconfirm("操作提示", "结束后无法再扫新的条码，请确认是否打包结束?", function() {
-						App.ajaxPost(endPackUrl + $("#trayCode").val(), {}, function() {
-							sucTip("打包已结束");
-							$("#trayField").addClass("endpack");
-							setTimeout(function() {
-								$("#count").html("");
-								$("#trayField").removeClass("endpack");
-								showTrayInfo($("#trayCode").val());
-							}, 1500);
-						});
-					});
-				}
-			}
+<body>
+    <header class="mui-bar mui-bar-nav">
+        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+        <h1 class="mui-title">翻包托打包</h1>
+    </header>
+    <div class="mui-content">
+        <div id="trayField" class="mui-input-row" style="color: #ffffff; background: #064f65;">
+            <label>托条码</label>
+            <input id="trayCode" type="text" value="" readonly required placeholder="请扫托条码">
+        </div>
+        <div class="mui-scroll-wrapper">
+            <div class="mui-scroll">
+                <div class="mui-control-content mui-active" style="margin-top: 0px;">
+                    <form class="mui-input-group" id="trayForm" onsubmit="return false;">
+                    </form>
+                    <div style="color:red;text-align: center;font-size: 23px;font-weight: bold;margin-top:10px;" id="count"></div>
+                    <fieldset style="border: 1px solid lightgray;margin-top: 15px;">
+                        <legend style="font-size: 14px;" align="center">打包方式</legend>
+                        <ul id="packtask" style="font-size: 14px;text-align: center;list-style: none;margin: 0 auto;padding: 0;">
+                        </ul>
+                    </fieldset>
+                    <div style="text-align: center;margin: 30px 0 20px 0;">
+                        <label style="font-size: 14px;color:black;">条码可长按删除</label><br>
+                        <label style="font-size: 14px;color: black;">橙色条码为非该订单或批次或不同的产品</label>
+                        <br>
+                        <button type="button" class="mui-btn mui-btn-primary" onclick="doPack()">点击打包</button>
+                        <br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-			mui("form").on("tap", "input", function(e) {
-				App.go("pInfo.html", {
-					code: $(this).val()
-				}, true);
-			});
+    <script type="text/javascript">
+        //根据条码查询单号
+        var infos = App.getServerUrl() + "package/";
+        var trayInfo = App.getServerUrl() + "turnbag/tray/info/";
+        var rollInfo = App.getServerUrl() + "turnbag/roll/info/";
+        var boxInfo = App.getServerUrl() + "turnbag/box/info/";
+        var packUrl = App.getServerUrl() + "package2/tray";
+        var endPackUrl = App.getServerUrl() + "package2/endpack/";
+        var deleteInnerUrl = App.getServerUrl() + "package2/deleteInner";
+        var max = 0;
+        //计划ID
+        var planId = undefined;
+        //单向布,-1,非单向布，1，默认0
+        var dxb = 0;
+        //部件ID
+        var partId = undefined;
+        //部件名称
+        var partName = undefined;
 
-			mui("form").on("longtap", ".mui-input-row",
-				function(e) {
-					var _this = this;
-					mconfirm("删除提示", "确认删除？", function() {
-						if($(_this).hasClass("newBarcode")) {
-							$(_this).slideUp(500, function() {
-								$(this).remove();
-								if($("#trayForm input").length == 0) {
-									partId = undefined;
-									dxb = 0;
-									planId = undefined;
-									partName = undefined;
-									salesOrder = undefined;
-									batchCode = undefined;
-								}
-								if($("#trayForm input").val().indexOf("R") == 0 || $("#trayForm input").val().indexOf("P") == 0) {
-									$("#count").html("共" + $("#trayForm input").length + "卷");
-									loadPackTask();
-								} else {
-									$("#count").html("共" + $("#trayForm input").length + "盒");
-								}
-							});
-						} else {
-							if($(".oldBarcode").length <= 1) {
-								tip("最后一盒或卷无法删除");
-								return;
-							}
-							var rid = $(_this).find("input:eq(0)").attr("rid");
-							log(rid)
-							waiting("正在删除")
-							App.ajaxPost(deleteInnerUrl, {
-								type: 'TRAY',
-								id: rid
-							}, function(data) {
-								$(_this).slideUp(500, function() {
-									$(this).remove();
-									sucTip("删除成功");
-									if($("#trayForm input").val().indexOf("R") == 0 || $("#trayForm input").val().indexOf("P") == 0) {
-										$("#count").html("共" + $("#trayForm input").length + "卷");
-									} else {
-										$("#count").html("共" + $("#trayForm input").length + "盒");
-									}
-								});
-							});
-						}
-					});
-				});
+        var trayCode = null;
 
-			function loadPackTask() {
-				if($("#trayForm input").length > max && max != 0) {
-					malert("打包提示", "已超出最大数量", "我已知晓", null);
-					return;
-				}
-				//if($("#packtask").children().length != 0) return;
-				if(trayCode==$("#trayCode").val())return;
-				App.ajaxGet(App.getServerUrl() + "package2/packtask/" + $("#trayCode").val(), function(data) {
-					var lis = "";
+        //订单号
+        var salesOrder = undefined;
+        //批次号
+        var batchCode = undefined;
 
-					for(var i = 0; i < data.length; i++) {
-						if(data[i].ROLLSPERTRAY > max) {
-							max = data[i].ROLLSPERTRAY;
-						}
-						lis += "<li>" + data[i].CODE + "</li>";
-					}
-					$("#packtask").empty();
-					$("#packtask").append(lis);
-				});
-			}
-		</script>
-	</body>
+        mui('.mui-scroll-wrapper').scroll({
+            deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+        });
+
+        App.ready(function () {
+            new Scanner(parseCode).scan();
+        });
+
+        function formatCode(code) {
+            try {
+                return code.split(";")[0];
+            } catch (e) {
+                tip("无效条码");
+                return undefined;
+            }
+        }
+
+        /**
+         * PDA扫描回调
+         * @param {Object} code
+         */
+        function parseCode(code) {
+            code = formatCode(code);
+            if (!code) return;
+
+            if (code.indexOf("T") == 0 || code.indexOf("P") == 0) {
+                showTrayInfo(code);
+                return;
+            }
+
+            if (code.indexOf("B") == 0) {
+                if ($("#trayForm input").length > 0 && ($("#trayForm input").val().indexOf("R") == 0 || $("#trayForm input").val().indexOf("P") == 0)) {
+                    tip("只能扫卷条码");
+                    return;
+                }
+                //加载托信息
+                showBoxInfo(code);
+                return;
+            }
+
+            if (code.indexOf("R") == 0 || code.indexOf("P") == 0) {
+                if ($("#trayForm input").length > 0 && $("#trayForm input").val().indexOf("B") == 0) {
+                    tip("只能扫盒条码");
+                    return;
+                }
+                showRollInfo(code);
+            }
+        }
+
+        //TODO 加载托信息
+        function showTrayInfo(code) {
+            //				log(trayInfo + code)
+            waiting("正在加载信息");
+            App.ajaxGet(trayInfo + code,
+                function (data) {
+                    log(data)
+                    $("#trayCode").val(code);
+                    $("#trayForm").empty();
+                    $("#count").empty();
+
+                    planId = data.PLANID;
+
+                    $("#trayCode").val(data.CODE);
+                    var children = data.CHILDREN;
+                    var qrcode;
+                    for (var i = 0; i < children.length; i++) {
+                        qrcode = children[i].BARCODE;
+                        var style = "";
+                        if (planId != children[i].PLANID)
+                            style = "fbCode";
+                        $("#trayForm").append("<div id='" + qrcode + "' class=\"mui-input-row oldBarcode " + style + " \" > <input id=\"trayCode\" class=\"" + style + "\" rid=\"" + children[i].ID + "\" type=\"text\" value=\"" + qrcode + "\" readonly required> </div>");
+                    }
+                    if ($("#trayForm input").length == 0) {
+                        $("#count").html("");
+                    } else {
+                        if ($("#trayForm input").val() && $("#trayForm input").val().indexOf("R") == 0) {
+                            $("#count").html("共" + $("#trayForm input").length + "卷");
+                        } else {
+                            $("#count").html("共" + $("#trayForm input").length + "盒");
+                        }
+                    }
+                    trayCode = qrcode;
+                    loadPackTask();
+                }
+            );
+        }
+
+        function showBoxInfo(code) {
+            if (isEmpty($("#trayCode").val())) {
+                tip("请先扫描托条码");
+                return;
+            }
+            if ($("#" + code).length > 0) {
+                tip("重复扫描");
+                return;
+            }
+            waiting("正在加载信息");
+            App.ajaxGet(boxInfo + code,
+                function (data) {
+                    if ($("#" + data.CODE).length > 0) {
+                        tip("重复扫描");
+                        return;
+                    }
+                    var style = "";
+                    if (planId != data.PLANID)
+                        style = "fbCode";
+                    $("#trayForm").append("<div id=\"" + data.CODE + "\" class=\"mui-input-row newBarcode\" ><label>*</label><input id=\"trayCode\" class=\"" + style + "\" type=\"text\" value=\"" + data.CODE + "\" readonly></div>");
+                    $("#count").html("共" + $("#trayForm input").length + "盒");
+                }
+            );
+        }
+
+        function showRollInfo(code) {
+            if (isEmpty($("#trayCode").val())) {
+                tip("请先扫描托条码");
+                return;
+            }
+            if ($("#" + code).length > 0) {
+                tip("重复扫描");
+                return;
+            }
+            waiting("正在加载信息");
+            App.ajaxGet(rollInfo + code,
+                function (data) {
+                    if ($("#" + data.CODE).length > 0) {
+                        tip("重复扫描");
+                        return;
+                    }
+                    var style = "";
+                    if (planId != data.PLANID)
+                        style = "fbCode";
+                    $("#trayForm").append("<div id=\"" + data.CODE + "\" class=\"mui-input-row newBarcode\" ><label>*</label><input id=\"trayCode\" class=\"" + style + "\" type=\"text\" value=\"" + data.CODE + "\" readonly></div>");
+                    $("#count").html("共" + $("#trayForm input").length + "卷");
+                    loadPackTask();
+                }
+            );
+        }
+
+        function doPack() {
+            var codes = [];
+            $("#trayForm div.newBarcode input").each(function (i, e) {
+                codes.push($(this).val());
+            });
+            if (codes.length == 0) {
+                tip("请扫条码");
+                return;
+            }
+            mconfirm("操作提示", "确认打包？", function () {
+                var boxCodes, rollCodes;
+                if (codes.join(",").indexOf("B") == 0) {
+                    boxCodes = codes.join(",");
+                    rollCodes = "";
+                } else {
+                    boxCodes = "";
+                    rollCodes = codes.join(",");
+                }
+                waiting("正在打包");
+                App.ajaxPost(packUrl, {
+                    puname: App.getLoginUserName(),
+                    trayCode: $("#trayCode").val(),
+                    packagingStaff: App.getLoginUserId(),
+                    rollCodes: rollCodes,
+                    boxCodes: boxCodes,
+                    planId: planId,
+                    partName: partName == undefined ? "" : partName,
+                    partId: partId == undefined ? "" : partId
+                }, function (data) {
+                    sucTip("打包成功");
+                    showTrayInfo($("#trayCode").val());
+                });
+            });
+
+        }
+
+        function endPack() {
+            if ($("#trayForm div.newBarcode input").length > 0) {
+                mconfirm("操作提示", "尚有未打包进去的条码，点击确定将不会打包进去，是否继续？", function () {
+                    mconfirm("操作提示", "结束后无法再扫新的条码，请确认是否打包结束?", function () {
+                        App.ajaxPost(endPackUrl + $("#trayCode").val(), {}, function () {
+                            sucTip("打包已结束");
+                            $("#trayField").addClass("endpack");
+                            setTimeout(function () {
+                                $("#trayField").removeClass("endpack");
+                                $("#count").html("");
+                                showTrayInfo($("#trayCode").val());
+                            }, 3000);
+                        });
+                    });
+                });
+            } else {
+                mconfirm("操作提示", "结束后无法再扫新的条码，请确认是否打包结束?", function () {
+                    App.ajaxPost(endPackUrl + $("#trayCode").val(), {}, function () {
+                        sucTip("打包已结束");
+                        $("#trayField").addClass("endpack");
+                        setTimeout(function () {
+                            $("#count").html("");
+                            $("#trayField").removeClass("endpack");
+                            showTrayInfo($("#trayCode").val());
+                        }, 1500);
+                    });
+                });
+            }
+        }
+
+        mui("form").on("tap", "input", function (e) {
+            App.go("pInfo.html", {
+                code: $(this).val()
+            }, true);
+        });
+
+        mui("form").on("longtap", ".mui-input-row",
+            function (e) {
+                var _this = this;
+                mconfirm("删除提示", "确认删除？", function () {
+                    if ($(_this).hasClass("newBarcode")) {
+                        $(_this).slideUp(500, function () {
+                            $(this).remove();
+                            if ($("#trayForm input").length == 0) {
+                                partId = undefined;
+                                dxb = 0;
+                                planId = undefined;
+                                partName = undefined;
+                                salesOrder = undefined;
+                                batchCode = undefined;
+                            }
+                            if ($("#trayForm input").val().indexOf("R") == 0 || $("#trayForm input").val().indexOf("P") == 0) {
+                                $("#count").html("共" + $("#trayForm input").length + "卷");
+                                loadPackTask();
+                            } else {
+                                $("#count").html("共" + $("#trayForm input").length + "盒");
+                            }
+                        });
+                    } else {
+                        if ($(".oldBarcode").length <= 1) {
+                            tip("最后一盒或卷无法删除");
+                            return;
+                        }
+                        var rid = $(_this).find("input:eq(0)").attr("rid");
+                        log(rid)
+                        waiting("正在删除")
+                        App.ajaxPost(deleteInnerUrl, {
+                            type: 'TRAY',
+                            id: rid
+                        }, function (data) {
+                            $(_this).slideUp(500, function () {
+                                $(this).remove();
+                                sucTip("删除成功");
+                                if ($("#trayForm input").val().indexOf("R") == 0 || $("#trayForm input").val().indexOf("P") == 0) {
+                                    $("#count").html("共" + $("#trayForm input").length + "卷");
+                                } else {
+                                    $("#count").html("共" + $("#trayForm input").length + "盒");
+                                }
+                            });
+                        });
+                    }
+                });
+            });
+
+        function loadPackTask() {
+            if ($("#trayForm input").length > max && max != 0) {
+                malert("打包提示", "已超出最大数量", "我已知晓", null);
+                return;
+            }
+            //if($("#packtask").children().length != 0) return;
+            if (trayCode == $("#trayCode").val()) return;
+            App.ajaxGet(App.getServerUrl() + "package2/packtask/" + $("#trayCode").val(), function (data) {
+                var lis = "";
+
+                for (var i = 0; i < data.length; i++) {
+                    if (data[i].ROLLSPERTRAY > max) {
+                        max = data[i].ROLLSPERTRAY;
+                    }
+                    lis += "<li>" + data[i].CODE + "</li>";
+                }
+                $("#packtask").empty();
+                $("#packtask").append(lis);
+            });
+        }
+    </script>
+</body>
 
 </html>

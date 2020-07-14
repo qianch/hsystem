@@ -1,317 +1,316 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
-	<head>
-		<meta charset="UTF-8">
-		<title></title>
-		<script type="text/javascript" src="../resources/js/include.js"></script>
-		<style type="text/css">
-			.mui-input-group .mui-input-row {
-				height: 25px;
-			}
-			
-			.mui-input-row label~input,
-			.mui-input-row label~select,
-			.mui-input-row label~textarea {
-				height: 25px;
-			}
-			
-			.mui-input-row .mui-input-clear~.mui-icon-clear,
-			.mui-input-row .mui-input-speech~.mui-icon-speech,
-			.mui-input-row .mui-input-password~.mui-icon-eye {
-				top: 2px;
-			}
-			
-			.mui-input-row label {
-				font-family: 'Helvetica Neue', Helvetica, sans-serif;
-				line-height: 25px;
-			}
-			
-			.mui-btn-primary,
-			.mui-btn-blue {
-				font-size: 20px;
-				color: #fff;
-				font-weight: bold;
-				border: 1px solid #007aff;
-				background-color: #007aff;
-				margin-top: -3px;
-				line-height: 18px;
-			}
-			
-			.mui-popover {
-				width: 280px;
-				height: 300px;
-				display: none;
-				position: fixed;
-				top: 50%;
-				margin-top: -150px;
-				left: 50%;
-				margin-left: -140px;
-			}
-			
-			.mui-scroll-wrapper {
-				margin-top: 45px;
-				background: white;
-			}
-			
-			.mui-scroll-wrapper .mui-input-row label {
-				height: 40px;
-			}
-			
-			.title {
-				text-align: right;
-				font-size: 16px;
-				width: 100px;
-				color: #232222;
-				font-weight: bold;
-				filter: alpha(opacity=80);
-				opacity: 0.80;
-				background: #fafafa;
-			}
-			
-			.q {
-				width: 80px;
-				height: 80px;
-				border-radius: 80px;
-				line-height: 80px;
-				position: fixed;
-				right: 10px;
-				bottom: 10px;
-				z-index: 100;
-				background: #064f65;
-				text-align: center;
-				color: white;
-				font-weight: bold;
-			}
-			
-			.q-close {
-				background: #820505;
-			}
-			
-			.q:active {
-				background: darkcyan;
-			}
-			
-			.newInfo {
-				background: #e2e2e2;
-				color: red!important;
-			}
-			
-			#details_content td {
-				text-align: center;
-			}
-			
-			select {
-				height: 50px;
-			}
-			
-			.fb_order {
-				width: 100%;
-			}
-			
-			.fb_order td {
-				text-align: center;
-				padding: 5px;
-				font-weight: bold;
-			}
-			
-			.fb_order_header {
-				height: 35px;
-				background: #064f65;
-				color: white;
-			}
-			
-			.fb_code {
-				font-weight: bold;
-				font-size: 20px;
-				color: red;
-				height: 50px;
-			}
-			
-			.fb_code:active {
-				background: gray;
-			}
-			
-			#content td {
-				padding: 5px;
-			}
-			
-			table {
-				table-layout: fixed;
-				word-break: break-all;
-			}
-		</style>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script type="text/javascript" src="../resources/js/include.js"></script>
+    <style type="text/css">
+        .mui-input-group .mui-input-row {
+            height: 25px;
+        }
 
-	</head>
+        .mui-input-row label ~ input,
+        .mui-input-row label ~ select,
+        .mui-input-row label ~ textarea {
+            height: 25px;
+        }
 
-	<body>
-		<header class="mui-bar mui-bar-nav">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title">整托翻包</h1>
-		</header>
-		<div class="mui-content">
-			<div class="mui-scroll-wrapper">
-				<div class="mui-scroll">
-					<div id="content">
-						<div class="mui-input-row" style="padding: 10px;color: #ffffff; background: #064f65;">
-							<label>翻包单号</label>
-							<input id="fbCode" type="text" value="" class="mui-input" placeholder="请扫托条码" readonly="readonly">
-						</div>
-					</div>
-					<div id="" style="text-align: center;">
-						<button id="fb_btn" type="button" class="mui-btn mui-btn-danger" style="width:200px;height: 50px;margin-top: 20px;font-size:25px;font-weight: bold;" onclick="doTurnBag()">点击翻包</button>
-					</div>
-				</div>
-			</div>
-		</div>
+        .mui-input-row .mui-input-clear ~ .mui-icon-clear,
+        .mui-input-row .mui-input-speech ~ .mui-icon-speech,
+        .mui-input-row .mui-input-password ~ .mui-icon-eye {
+            top: 2px;
+        }
 
-	</body>
-	<script id="oldTray" type="text/template">
-		<div id="oldTrayTable">
-			<div style="text-align: center;font-weight: bold;color: red;font-size: 22px;padding: 3px;">↑</div>
-			<table class="fb_order" border="1" cellspacing="0" cellpadding="0" bordercolor="gray" style="BORDER-COLLAPSE: collapse">
-				<tr class="fb_order_header">
-					<th>订单</th>
-					<th>批次</th>
-					<th>厂内名称</th>
-					<th>规格</th>
-				</tr>
-				<tr>
-					<td>{{data.ORDER_CODE}}</td>
-					<td>{{data.BATCH_CODE}}</td>
-					<td>{{data.PRODUCT_FACTORY_NAME}}</td>
-					<td>{{data.PRODUCT_MODEL}}</td>
-				</tr>
-				<tr class="fb_code" id="{{data.QR_CODE}}" isNew="false">
-					<td colspan="4">{{data.QR_CODE}}</td>
-				</tr>
-			</table>
-		</div>
-	</script>
-	<script id="newTray" type="text/template">
-		<div>
-			<div class="mui-input-row" style="padding: 10px;color: #ffffff; background: #064f65;">
-				<label>翻包单号</label>
-				<input id="fbCode" type="text" value="{{data.FB_CODE}}" class="mui-input" readonly="readonly">
-			</div>
-			<table id="newTrayTable" fbCheck="{{data.FB_CHECK}}" class="fb_order" border="1" cellspacing="0" cellpadding="0" bordercolor="gray" style="BORDER-COLLAPSE: collapse">
-				<tr class="fb_order_header" style="background:#29a50b;">
-					<th>订单</th>
-					<th>批次</th>
-					<th>厂内名称</th>
-					<th>规格</th>
-				</tr>
-				<tr>
-					<td>{{data.ORDER_CODE}}</td>
-					<td>{{data.BATCH_CODE}}</td>
-					<td>{{data.PRODUCT_FACTORY_NAME}}</td>
-					<td>{{data.PRODUCT_MODEL}}</td>
-				</tr>
-				<tr class="fb_code" id="{{data.QR_CODE}}" isNew="true">
-					<td colspan="4">{{data.QR_CODE}}</td>
-				</tr>
-			</table>
-		</div>
-	</script>
-	<script id="emptyContent" type="text/template">
-		<div class="mui-input-row" style="padding: 10px;color: #ffffff; background: #064f65;">
-			<label>翻包单号</label>
-			<input id="fbCode" type="text" value="" class="mui-input" placeholder="请扫托条码" readonly="readonly">
-		</div>
-	</script>
-	<script type="text/javascript">
-		var scanner;
-		App.ready(function() {
-			scanner = new Scanner(parseCode);
-			scanner.scan();
-		});
+        .mui-input-row label {
+            font-family: 'Helvetica Neue', Helvetica, sans-serif;
+            line-height: 25px;
+        }
 
-		mui('.mui-scroll-wrapper').scroll({
-			deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
-		});
+        .mui-btn-primary,
+        .mui-btn-blue {
+            font-size: 20px;
+            color: #fff;
+            font-weight: bold;
+            border: 1px solid #007aff;
+            background-color: #007aff;
+            margin-top: -3px;
+            line-height: 18px;
+        }
 
-		function parseCode(code) {
-			if(code.charAt(0) != "T" && code.charAt(0) != "P") {
-				tip("无效条码");
-				return;
-			}
-			code = code.split(";")[0];
-			loadProductInfo(code);
-		}
+        .mui-popover {
+            width: 280px;
+            height: 300px;
+            display: none;
+            position: fixed;
+            top: 50%;
+            margin-top: -150px;
+            left: 50%;
+            margin-left: -140px;
+        }
 
-		function loadProductInfo(code) {
-			App.ajaxGet(App.getServerUrl() + "turnbag/infos2?barCode=" + code, function(ajaxData) {
-				if(ajaxData.FB_CODE) {
-					$("#content").empty();
-					var html = template('newTray', {
-						"data": ajaxData
-					});
-					$("#content").append(html);
-				} else {
-					if($("#newTrayTable").length > 0) {
-						var checkString = $("#newTrayTable").attr("fbCheck");
-						if(checkString.indexOf("#" + ajaxData.ORDER_ID + "." + ajaxData.BATCH_CODE + "#") == -1) {
-							tip("该托无法不符合翻包需求");
-							return;
-						}
-						var html = template('oldTray', {
-							"data": ajaxData
-						});
-						$("#content").append(html);
-					} else {
-						tip("请扫描待新条码");
-					}
-				}
-			});
-		}
+        .mui-scroll-wrapper {
+            margin-top: 45px;
+            background: white;
+        }
 
-		mui("body").on("longtap", ".fb_code", function() {
-			var _this = this;
-			mconfirm("操作提示", "确认删除", function() {
-				if($(_this).attr("isNew") == "true") {
-					$(".fb_code").parent().parent().parent().slideUp(500, function() {
-						$(_this).remove();
-					});
-					$("#content").append(template("emptyContent", {}));
-				} else {
-					$(_this).parent().parent().parent().slideUp(500, function() {
-						$(_this).remove();
-					});
-				}
-			});
-		});
-		mui("body").on("tap", ".fb_code", function() {
-			App.go("pInfo.html", {
-				code: $(this).attr("id")
-			});
-		});
+            .mui-scroll-wrapper .mui-input-row label {
+                height: 40px;
+            }
 
-		function doTurnBag() {
-			var codes = [];
-			$(".fb_code").each(function(i, e) {
-				codes.push($(this).attr("id"));
-			});
-			if(codes.length != 2) {
-				tip("请扫新旧条码")
-				return;
-			}
-			mconfirm("翻包", "确认操作?", function() {
-				waiting();
-				App.ajaxPost(
-					App.getServerUrl() + "turnbag/doTurnBag", {
-						newTrayCode: codes[0],
-						oldTrayCode: codes[1],
-						optUser: App.getLoginUserName()
-					},
-					function(data) {
-						sucTip("翻包成功");
-						$(".fb_code").parent().parent().parent().slideUp(500, function() {
-							$(this).remove();
-						});
-						$("#content").append(template("emptyContent", {}));
-					});
-			});
-		}
-	</script>
+        .title {
+            text-align: right;
+            font-size: 16px;
+            width: 100px;
+            color: #232222;
+            font-weight: bold;
+            filter: alpha(opacity=80);
+            opacity: 0.80;
+            background: #fafafa;
+        }
 
+        .q {
+            width: 80px;
+            height: 80px;
+            border-radius: 80px;
+            line-height: 80px;
+            position: fixed;
+            right: 10px;
+            bottom: 10px;
+            z-index: 100;
+            background: #064f65;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .q-close {
+            background: #820505;
+        }
+
+        .q:active {
+            background: darkcyan;
+        }
+
+        .newInfo {
+            background: #e2e2e2;
+            color: red !important;
+        }
+
+        #details_content td {
+            text-align: center;
+        }
+
+        select {
+            height: 50px;
+        }
+
+        .fb_order {
+            width: 100%;
+        }
+
+            .fb_order td {
+                text-align: center;
+                padding: 5px;
+                font-weight: bold;
+            }
+
+        .fb_order_header {
+            height: 35px;
+            background: #064f65;
+            color: white;
+        }
+
+        .fb_code {
+            font-weight: bold;
+            font-size: 20px;
+            color: red;
+            height: 50px;
+        }
+
+            .fb_code:active {
+                background: gray;
+            }
+
+        #content td {
+            padding: 5px;
+        }
+
+        table {
+            table-layout: fixed;
+            word-break: break-all;
+        }
+    </style>
+
+</head>
+
+<body>
+    <header class="mui-bar mui-bar-nav">
+        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+        <h1 class="mui-title">整托翻包</h1>
+    </header>
+    <div class="mui-content">
+        <div class="mui-scroll-wrapper">
+            <div class="mui-scroll">
+                <div id="content">
+                    <div class="mui-input-row" style="padding: 10px;color: #ffffff; background: #064f65;">
+                        <label>翻包单号</label>
+                        <input id="fbCode" type="text" value="" class="mui-input" placeholder="请扫托条码" readonly="readonly">
+                    </div>
+                </div>
+                <div id="" style="text-align: center;">
+                    <button id="fb_btn" type="button" class="mui-btn mui-btn-danger" style="width:200px;height: 50px;margin-top: 20px;font-size:25px;font-weight: bold;" onclick="doTurnBag()">点击翻包</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script id="oldTray" type="text/template">
+        <div id="oldTrayTable">
+            <div style="text-align: center;font-weight: bold;color: red;font-size: 22px;padding: 3px;">↑</div>
+            <table class="fb_order" border="1" cellspacing="0" cellpadding="0" bordercolor="gray" style="BORDER-COLLAPSE: collapse">
+                <tr class="fb_order_header">
+                    <th>订单</th>
+                    <th>批次</th>
+                    <th>厂内名称</th>
+                    <th>规格</th>
+                </tr>
+                <tr>
+                    <td>{{data.ORDER_CODE}}</td>
+                    <td>{{data.BATCH_CODE}}</td>
+                    <td>{{data.PRODUCT_FACTORY_NAME}}</td>
+                    <td>{{data.PRODUCT_MODEL}}</td>
+                </tr>
+                <tr class="fb_code" id="{{data.QR_CODE}}" isNew="false">
+                    <td colspan="4">{{data.QR_CODE}}</td>
+                </tr>
+            </table>
+        </div>
+    </script>
+    <script id="newTray" type="text/template">
+        <div>
+            <div class="mui-input-row" style="padding: 10px;color: #ffffff; background: #064f65;">
+                <label>翻包单号</label>
+                <input id="fbCode" type="text" value="{{data.FB_CODE}}" class="mui-input" readonly="readonly">
+            </div>
+            <table id="newTrayTable" fbCheck="{{data.FB_CHECK}}" class="fb_order" border="1" cellspacing="0" cellpadding="0" bordercolor="gray" style="BORDER-COLLAPSE: collapse">
+                <tr class="fb_order_header" style="background:#29a50b;">
+                    <th>订单</th>
+                    <th>批次</th>
+                    <th>厂内名称</th>
+                    <th>规格</th>
+                </tr>
+                <tr>
+                    <td>{{data.ORDER_CODE}}</td>
+                    <td>{{data.BATCH_CODE}}</td>
+                    <td>{{data.PRODUCT_FACTORY_NAME}}</td>
+                    <td>{{data.PRODUCT_MODEL}}</td>
+                </tr>
+                <tr class="fb_code" id="{{data.QR_CODE}}" isNew="true">
+                    <td colspan="4">{{data.QR_CODE}}</td>
+                </tr>
+            </table>
+        </div>
+    </script>
+    <script id="emptyContent" type="text/template">
+        <div class="mui-input-row" style="padding: 10px;color: #ffffff; background: #064f65;">
+            <label>翻包单号</label>
+            <input id="fbCode" type="text" value="" class="mui-input" placeholder="请扫托条码" readonly="readonly">
+        </div>
+    </script>
+    <script type="text/javascript">
+        var scanner;
+        App.ready(function () {
+            scanner = new Scanner(parseCode);
+            scanner.scan();
+        });
+
+        mui('.mui-scroll-wrapper').scroll({
+            deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+        });
+
+        function parseCode(code) {
+            if (code.charAt(0) != "T" && code.charAt(0) != "P") {
+                tip("无效条码");
+                return;
+            }
+            code = code.split(";")[0];
+            loadProductInfo(code);
+        }
+
+        function loadProductInfo(code) {
+            App.ajaxGet(App.getServerUrl() + "turnbag/infos2?barCode=" + code, function (ajaxData) {
+                if (ajaxData.FB_CODE) {
+                    $("#content").empty();
+                    var html = template('newTray', {
+                        "data": ajaxData
+                    });
+                    $("#content").append(html);
+                } else {
+                    if ($("#newTrayTable").length > 0) {
+                        var checkString = $("#newTrayTable").attr("fbCheck");
+                        if (checkString.indexOf("#" + ajaxData.ORDER_ID + "." + ajaxData.BATCH_CODE + "#") == -1) {
+                            tip("该托无法不符合翻包需求");
+                            return;
+                        }
+                        var html = template('oldTray', {
+                            "data": ajaxData
+                        });
+                        $("#content").append(html);
+                    } else {
+                        tip("请扫描待新条码");
+                    }
+                }
+            });
+        }
+
+        mui("body").on("longtap", ".fb_code", function () {
+            var _this = this;
+            mconfirm("操作提示", "确认删除", function () {
+                if ($(_this).attr("isNew") == "true") {
+                    $(".fb_code").parent().parent().parent().slideUp(500, function () {
+                        $(_this).remove();
+                    });
+                    $("#content").append(template("emptyContent", {}));
+                } else {
+                    $(_this).parent().parent().parent().slideUp(500, function () {
+                        $(_this).remove();
+                    });
+                }
+            });
+        });
+        mui("body").on("tap", ".fb_code", function () {
+            App.go("pInfo.html", {
+                code: $(this).attr("id")
+            });
+        });
+
+        function doTurnBag() {
+            var codes = [];
+            $(".fb_code").each(function (i, e) {
+                codes.push($(this).attr("id"));
+            });
+            if (codes.length != 2) {
+                tip("请扫新旧条码")
+                return;
+            }
+            mconfirm("翻包", "确认操作?", function () {
+                waiting();
+                App.ajaxPost(
+                    App.getServerUrl() + "turnbag/doTurnBag", {
+                    newTrayCode: codes[0],
+                    oldTrayCode: codes[1],
+                    optUser: App.getLoginUserName()
+                },
+                    function (data) {
+                        sucTip("翻包成功");
+                        $(".fb_code").parent().parent().parent().slideUp(500, function () {
+                            $(this).remove();
+                        });
+                        $("#content").append(template("emptyContent", {}));
+                    });
+            });
+        }
+    </script>
+</body>
 </html>

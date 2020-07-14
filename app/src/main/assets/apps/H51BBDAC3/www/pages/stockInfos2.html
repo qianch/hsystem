@@ -1,182 +1,177 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
+<head>
+    <meta charset="UTF-8">
+    <title>成品仓库库位查询</title>
+    <script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
+    <link href="../resources/css/mui.picker.css" rel="stylesheet" />
+    <link href="../resources/css/mui.poppicker.css" rel="stylesheet" />
+    <script src="../resources/js/mui/mui.picker.js"></script>
+    <script src="../resources/js/mui/mui.poppicker.js"></script>
+    <style type="text/css">
+        select {
+            background: white;
+        }
 
-	<head>
-		<meta charset="UTF-8">
-		<title>成品仓库库位查询</title>
-		<script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
-		<link href="../resources/css/mui.picker.css" rel="stylesheet" />
-		<link href="../resources/css/mui.poppicker.css" rel="stylesheet" />
-		<script src="../resources/js/mui/mui.picker.js"></script>
-		<script src="../resources/js/mui/mui.poppicker.js"></script>
-		<style type="text/css">
-			select {
-				background: white;
-			}
-			
-			select:active {
-				background: #e4e0e0;
-			}
-			
-			.mui-active {
-				background: #e4e0e0!important;
-			}
-			
-			.mui-card-header,
-			.mui-card-content-inner {
-				border-bottom: 1px solid darkslategray;
-			}
-			
-			.mui-card-content-inner:active {
-				background: gray;
-			}
-			
-			.mui-table-view .mui-input-row label {
-				line-height: 50px;
-				font-size: 22px;
-				float: left;
-				text-align: right;
-				font-weight: bold;
-				width: 35%;
-				padding-left: 10px;
-			}
-			 .mui-scroll-wrapper{overflow-y:scroll}
-		</style>
-		<style>
-        .table {
-                border: 1px solid #cad9ea;
-                color: #666;
-                height: 100px;
+            select:active {
+                background: #e4e0e0;
             }
- 
+
+        .mui-active {
+            background: #e4e0e0 !important;
+        }
+
+        .mui-card-header,
+        .mui-card-content-inner {
+            border-bottom: 1px solid darkslategray;
+        }
+
+            .mui-card-content-inner:active {
+                background: gray;
+            }
+
+        .mui-table-view .mui-input-row label {
+            line-height: 50px;
+            font-size: 22px;
+            float: left;
+            text-align: right;
+            font-weight: bold;
+            width: 35%;
+            padding-left: 10px;
+        }
+
+        .mui-scroll-wrapper {
+            overflow-y: scroll
+        }
+    </style>
+    <style>
+        .table {
+            border: 1px solid #cad9ea;
+            color: #666;
+            height: 100px;
+        }
+
             .table th {
                 background-repeat: repeat-x;
                 height: 30px;
             }
- 
+
             .table td,
             .table th {
                 border: 1px solid #cad9ea;
                 padding: 0 1em 0;
             }
- 
+
             .table tr.alter {
                 background-color: #f5fafe;
-            }	
-            </style>
-	</head>
+            }
+    </style>
+</head>
 
-	<body>
-		<header class="mui-bar mui-bar-nav">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title">成品仓库库位查询</h1>
-		</header>
-		<div class="mui-content">
-<!-- style='display:none' -->
-			<div class="mui-scroll-wrapper">
-				<div class="mui-scroll">
-					<form class="mui-input-group" id="formID" style="">
-						
-						<div class="mui-input-row">
-							<label>条码类型:</label> 
-							<select id="stockType" data-options="'valueField':'v','textField':'t','url':'/dict/queryDict?rootcode=stockType'" >
-							</select>
-						</div>
-						
-						<div class="mui-input-row" style="display: none;">
-							<label>库存状态:</label> 
-							<input id="stockState" type="display:none" required readonly="readonly">
-						</div>
-						<div class="mui-input-row">
-							<label>订单号</label>
-							<input id="salesCode" type="text" required placeholder="请输入订单号">
-						</div>
-						<div class="mui-input-row">
-							<label>批次号</label>
-							<input id="batchCode" type="text" required placeholder="请输入批次号">
-						</div>
-						<div class="mui-input-row">
-							<label>厂内名称</label>
-							<input id="factoryProductName" type="text" required placeholder="请输入厂内名称">
-						</div>
-						<div class="mui-input-row">
-							<label>客户产品名称</label>
-							<input id="consumerProductnNme" type="text" required placeholder="请输入客户产品名称">
-						</div>
-						<!--		<div class="mui-input-row">
-							<label>入库时间-开始</label>
-							<input id="startDateSelect" type="text" readonly placeholder="请输入开始时间">
-						</div>
-						<div class="mui-input-row">
-							<label>入库时间-结束</label>
-							<input id="endDateSelect" type="text" readonly placeholder="请输入结束时间">
-						</div>-->
-					</form>
-					<div class="mui-button-row">
-						<button type="button" class="mui-btn mui-btn-primary" onclick="query()">查询</button>
-					</div>
-				
-					<div class="mui-card-content">
-						<div style="color:red;text-align: left;font-size: 15px;font-weight: bold;margin-top:10px;" id="count">
-							
-						</div>
-						<table id="table" class="table">
-							<thead>
-								<th>条码号</th>
-								<th>重量</th>
-								<th>库位</th>
-							</thead>
-							<tbody>
-						
-							</tbody>
-						</table>
-						
-						
-					</div>
+<body>
+    <header class="mui-bar mui-bar-nav">
+        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+        <h1 class="mui-title">成品仓库库位查询</h1>
+    </header>
+    <div class="mui-content">
+        <!-- style='display:none' -->
+        <div class="mui-scroll-wrapper">
+            <div class="mui-scroll">
+                <form class="mui-input-group" id="formID" style="">
 
-				</div>
-			</div>
-		</div>
-	</body>
+                    <div class="mui-input-row">
+                        <label>条码类型:</label>
+                        <select id="stockType" data-options="'valueField':'v','textField':'t','url':'dict/queryDict?rootcode=stockType'">
+                        </select>
+                    </div>
 
-	<script type="text/javascript">
-		var queryUrl = App.getServerUrl() + "stock/product/list";
-		App.ready(function() {
-			initSelect();
-		});
-		var total = 0.0;
-		$("#stockState").val(1);
-		function query() {
-			var stockState = $("#stockState").val();
-			var stockType = $("#stockType").val();
-			var salesCode = $("#salesCode").val();
-			var batchCode = $("#batchCode").val();
-			var factoryProductName = $("#factoryProductName").val();
-			var consumerProductnNme = $("#consumerProductnNme").val();
-			App.ajaxGet(queryUrl + "?stockState=" + stockState +"&stockType=" + stockType +"&salesCode=" + salesCode + "&batchCode=" + batchCode + "&factoryProductName" + factoryProductName + "&consumerProductnNme" + consumerProductnNme, function(data) {
-				
-				addBarcode(data);
-			});
-		}
-			function addBarcode(data) {
-				$("table tr").remove();
-				total = 0.0;
-				var table = document.body.querySelector('tbody');
-				var trtotal = document.createElement('tr');
-				trtotal.innerHTML = "<td>条码号</td><td>重量</td><td>库位</td>"; 
-				table.appendChild(trtotal); 
-				for(var i = 0; i < data.rows.length; i++) {
-					var tr = document.createElement('tr');
-					tr.innerHTML = "<td>"+data.rows[i].BARCODE+"</td><td>"+data.rows[i].WEIGHT+"</td><td>"+data.rows[i].WAREHOUSEPOSCODE+"</td>";
-					table.appendChild(tr);
-					total = total.add(data.rows[i].WEIGHT);
-				}
-				$("#count").empty();
-				$("#count").html("总托数：" + data.rows.length + '\xa0\xa0\xa0' + "总重量：" + total + "KG");
-				
-			}
-			
-		
-	</script>
+                    <div class="mui-input-row" style="display: none;">
+                        <label>库存状态:</label>
+                        <input id="stockState" type="display:none" required readonly="readonly">
+                    </div>
+                    <div class="mui-input-row">
+                        <label>订单号</label>
+                        <input id="salesCode" type="text" required placeholder="请输入订单号">
+                    </div>
+                    <div class="mui-input-row">
+                        <label>批次号</label>
+                        <input id="batchCode" type="text" required placeholder="请输入批次号">
+                    </div>
+                    <div class="mui-input-row">
+                        <label>厂内名称</label>
+                        <input id="factoryProductName" type="text" required placeholder="请输入厂内名称">
+                    </div>
+                    <div class="mui-input-row">
+                        <label>客户产品名称</label>
+                        <input id="consumerProductnNme" type="text" required placeholder="请输入客户产品名称">
+                    </div>
+                    <!--		<div class="mui-input-row">
+                        <label>入库时间-开始</label>
+                        <input id="startDateSelect" type="text" readonly placeholder="请输入开始时间">
+                    </div>
+                    <div class="mui-input-row">
+                        <label>入库时间-结束</label>
+                        <input id="endDateSelect" type="text" readonly placeholder="请输入结束时间">
+                    </div>-->
+                </form>
+                <div class="mui-button-row">
+                    <button type="button" class="mui-btn mui-btn-primary" onclick="query()">查询</button>
+                </div>
 
+                <div class="mui-card-content">
+                    <div style="color:red;text-align: left;font-size: 15px;font-weight: bold;margin-top:10px;" id="count">
+
+                    </div>
+                    <table id="table" class="table">
+                        <thead>
+                        <th>条码号</th>
+                        <th>重量</th>
+                        <th>库位</th>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        var queryUrl = App.getServerUrl() + "stock/product/list";
+        App.ready(function () {
+            initSelect();
+        });
+        var total = 0.0;
+        $("#stockState").val(1);
+        function query() {
+            var stockState = $("#stockState").val();
+            var stockType = $("#stockType").val();
+            var salesCode = $("#salesCode").val();
+            var batchCode = $("#batchCode").val();
+            var factoryProductName = $("#factoryProductName").val();
+            var consumerProductnNme = $("#consumerProductnNme").val();
+            App.ajaxGet(queryUrl + "?stockState=" + stockState + "&stockType=" + stockType + "&salesCode=" + salesCode + "&batchCode=" + batchCode + "&factoryProductName" + factoryProductName + "&consumerProductnNme" + consumerProductnNme, function (data) {
+
+                addBarcode(data);
+            });
+        }
+        function addBarcode(data) {
+            $("table tr").remove();
+            total = 0.0;
+            var table = document.body.querySelector('tbody');
+            var trtotal = document.createElement('tr');
+            trtotal.innerHTML = "<td>条码号</td><td>重量</td><td>库位</td>";
+            table.appendChild(trtotal);
+            for (var i = 0; i < data.rows.length; i++) {
+                var tr = document.createElement('tr');
+                tr.innerHTML = "<td>" + data.rows[i].BARCODE + "</td><td>" + data.rows[i].WEIGHT + "</td><td>" + data.rows[i].WAREHOUSEPOSCODE + "</td>";
+                table.appendChild(tr);
+                total = total.add(data.rows[i].WEIGHT);
+            }
+            $("#count").empty();
+            $("#count").html("总托数：" + data.rows.length + '\xa0\xa0\xa0' + "总重量：" + total + "KG");
+
+        }
+    </script>
+</body>
 </html>

@@ -1,153 +1,164 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="UTF-8">
-		<title>详情</title>
-		
-		<script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
-		<style type="text/css">
-			*{margin:0;padding:0;}
-			.m-slider{width:600px;margin:50px 20px;overflow:hidden;}
-			.plist {
-				width: 1000px;
-				margin: auto;
-				border: 1px solid #aaa;
-				border-collapse: collapse;
-			}
+<head>
+    <meta charset="UTF-8">
+    <title>详情</title>
 
-			.plist th,
-			.plist td {
-				width: auto;
-				line-height: 30px;
-				font-size: 16px;
-				font-family: "微软雅黑";
-				border: 3px solid #aaa;
-				text-align: center;
-				padding: 8px;
-			}
-			.plist td {
-				padding: 0;
-			}
-			.plist tr.headline {
-				background-color: #379;
-			}
-		</style>
-	</head>
+    <script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
 
-	<body>
-		<header class="mui-bar mui-bar-nav">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title">详情</h1>
-		</header>
-		<div class="mui-content">
-			<div class="mui-scroll-wrapper"
-				<div class="mui-scroll" style="width: 100%; overflow-x: auto;" id="block">
-					<table class="plist" >
-						<thead>
-							<tr class="headline">
-								<th>条码</th>
-								<th>产品名称</th>
-								<th>批次号</th>
-								<th>订单号</th>
-								<th>部件名称</th>
-								<th>产品重量</th>
-								<th>客户名称</th>
-							</tr>
-						</thead>
-						<tbody id="tbMain"></tbody>
-					</table>
-					<div style="color:red;text-align: center;font-size: 25px;font-weight: bold;margin-top:10px;" id="count"></div>
-				</div>
-			</div>
-		</div>
-	</body>
-	
-	<script type="text/javascript">
-	// // 获取节点
-	//  var block = document.getElementById("block");
-	//  var oW,oH;
-	//  // 绑定touchstart事件
-	//  block.addEventListener("touchstart", function(e) {
-	//   console.log(e);
-	//   var touches = e.touches[0];
-	//   oW = touches.clientX - block.offsetLeft;
-	// //   oH = touches.clientY - block.offsetTop;
-	//   //阻止页面的滑动默认事件
-	//   document.addEventListener("touchmove",defaultEvent,false);
-	//  },false)
-	//  
-	//  block.addEventListener("touchmove", function(e) {
-	//   var touches = e.touches[0];
-	//   var oLeft = touches.clientX - oW;
-	// //   var oTop = touches.clientY - oH;
-	//   if(oLeft < 0) {
-	//   oLeft = 0;
-	//   }else if(oLeft > document.documentElement.clientWidth - block.offsetWidth) {
-	//   oLeft = (document.documentElement.clientWidth - block.offsetWidth);
-	//   }
-	//   block.style.left = oLeft + "px";
-	// //   block.style.top = oTop + "px";
-	//  },false);
-	//   
-	//  block.addEventListener("touchend",function() {
-	//   document.removeEventListener("touchmove",defaultEvent,false);
-	//  },false);
-	//  function defaultEvent(e) {
-	//   e.preventDefault();
-	//  }
-		var moveList = JSON.parse(window.localStorage.getItem('moveList'));
-		var countTotal = JSON.parse(window.localStorage.getItem('countTotal'));
-		window.onload = function() {
-			var tbody = document.getElementById('tbMain');
-			for (var i = 0; i < moveList.length; i++) { //遍历一下json数据 
-		
-				var trow = getDataRow(moveList[i]); //定义一个方法,返回tr数据  
-				tbody.appendChild(trow);
-			}
-		}
-		
-		function getDataRow(h) {
-			var row = document.createElement('tr'); //创建行  
-		
-			var barCodeCell = document.createElement('td'); //创建第一列barCode  
-			barCodeCell.innerHTML = h.barCode; //填充数据  
-			row.appendChild(barCodeCell); //加入行  ，下面类似  
-		
-			var productNameCell = document.createElement('td'); //创建第二列productName 
-			productNameCell.innerHTML = h.productName;
-			row.appendChild(productNameCell);
-		
-			var batchCodeCell = document.createElement('td'); //创建第三列batchCode 
-			batchCodeCell.innerHTML = h.batchCode;
-			row.appendChild(batchCodeCell);
-		
-			var salesOrderCodeCell = document.createElement('td'); //创建第四列salesOrderCode 
-			salesOrderCodeCell.innerHTML = h.salesOrderCode;
-			row.appendChild(salesOrderCodeCell);
-		
-			var partNameCell = document.createElement('td'); //创建第五列partName 
-			partNameCell.innerHTML = h.partName;
-			row.appendChild(partNameCell);
-		
-			var productWeightCell = document.createElement('td'); //创建第六列productWeight 
-			productWeightCell.innerHTML = h.productWeight;
-			row.appendChild(productWeightCell);
-		
-			var CONSUMERNAMECell = document.createElement('td'); //创建第六列CONSUMERNAME
-			CONSUMERNAMECell.innerHTML = h.CONSUMERNAME;
-			row.appendChild(CONSUMERNAMECell);
-		
-			return row; //返回tr数据      
-		}
-	$("#count").html("总托数：" + moveList.length + '\xa0\xa0\xa0' + "总重量：" + countTotal + "KG");
-		document.onkeydown = function(e) {
-			//键盘事件
-			if (e.keyCode == 37 || e.keyCode == 39) {}
-		
-			if (e.keyCode == 13) {}
-		}
-		mui('.mui-scroll-wrapper').scroll({
-			deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
-		});
-	</script>
+        .m-slider {
+            width: 600px;
+            margin: 50px 20px;
+            overflow: hidden;
+        }
+
+        .plist {
+            width: 1000px;
+            margin: auto;
+            border: 1px solid #aaa;
+            border-collapse: collapse;
+        }
+
+            .plist th,
+            .plist td {
+                width: auto;
+                line-height: 30px;
+                font-size: 16px;
+                font-family: "微软雅黑";
+                border: 3px solid #aaa;
+                text-align: center;
+                padding: 8px;
+            }
+
+            .plist td {
+                padding: 0;
+            }
+
+            .plist tr.headline {
+                background-color: #379;
+            }
+    </style>
+</head>
+
+<body>
+    <header class="mui-bar mui-bar-nav">
+        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+        <h1 class="mui-title">详情</h1>
+    </header>
+    <div class="mui-content">
+        <div class="mui-scroll-wrapper">
+            <div class="mui-scroll" style="width: 100%; overflow-x: auto;" id="block">
+                <table class="plist">
+                    <thead>
+                        <tr class="headline">
+                            <th>条码</th>
+                            <th>产品名称</th>
+                            <th>批次号</th>
+                            <th>订单号</th>
+                            <th>部件名称</th>
+                            <th>产品重量</th>
+                            <th>客户名称</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbMain"></tbody>
+                </table>
+                <div style="color:red;text-align: center;font-size: 25px;font-weight: bold;margin-top:10px;" id="count"></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        // // 获取节点
+        //  var block = document.getElementById("block");
+        //  var oW,oH;
+        //  // 绑定touchstart事件
+        //  block.addEventListener("touchstart", function(e) {
+        //   console.log(e);
+        //   var touches = e.touches[0];
+        //   oW = touches.clientX - block.offsetLeft;
+        // //   oH = touches.clientY - block.offsetTop;
+        //   //阻止页面的滑动默认事件
+        //   document.addEventListener("touchmove",defaultEvent,false);
+        //  },false)
+        //  
+        //  block.addEventListener("touchmove", function(e) {
+        //   var touches = e.touches[0];
+        //   var oLeft = touches.clientX - oW;
+        // //   var oTop = touches.clientY - oH;
+        //   if(oLeft < 0) {
+        //   oLeft = 0;
+        //   }else if(oLeft > document.documentElement.clientWidth - block.offsetWidth) {
+        //   oLeft = (document.documentElement.clientWidth - block.offsetWidth);
+        //   }
+        //   block.style.left = oLeft + "px";
+        // //   block.style.top = oTop + "px";
+        //  },false);
+        //   
+        //  block.addEventListener("touchend",function() {
+        //   document.removeEventListener("touchmove",defaultEvent,false);
+        //  },false);
+        //  function defaultEvent(e) {
+        //   e.preventDefault();
+        //  }
+        var moveList = JSON.parse(window.localStorage.getItem('moveList'));
+        var countTotal = JSON.parse(window.localStorage.getItem('countTotal'));
+        window.onload = function () {
+            var tbody = document.getElementById('tbMain');
+            for (var i = 0; i < moveList.length; i++) { //遍历一下json数据 
+
+                var trow = getDataRow(moveList[i]); //定义一个方法,返回tr数据  
+                tbody.appendChild(trow);
+            }
+        }
+
+        function getDataRow(h) {
+            var row = document.createElement('tr'); //创建行  
+
+            var barCodeCell = document.createElement('td'); //创建第一列barCode  
+            barCodeCell.innerHTML = h.barCode; //填充数据  
+            row.appendChild(barCodeCell); //加入行  ，下面类似  
+
+            var productNameCell = document.createElement('td'); //创建第二列productName 
+            productNameCell.innerHTML = h.productName;
+            row.appendChild(productNameCell);
+
+            var batchCodeCell = document.createElement('td'); //创建第三列batchCode 
+            batchCodeCell.innerHTML = h.batchCode;
+            row.appendChild(batchCodeCell);
+
+            var salesOrderCodeCell = document.createElement('td'); //创建第四列salesOrderCode 
+            salesOrderCodeCell.innerHTML = h.salesOrderCode;
+            row.appendChild(salesOrderCodeCell);
+
+            var partNameCell = document.createElement('td'); //创建第五列partName 
+            partNameCell.innerHTML = h.partName;
+            row.appendChild(partNameCell);
+
+            var productWeightCell = document.createElement('td'); //创建第六列productWeight 
+            productWeightCell.innerHTML = h.productWeight;
+            row.appendChild(productWeightCell);
+
+            var CONSUMERNAMECell = document.createElement('td'); //创建第六列CONSUMERNAME
+            CONSUMERNAMECell.innerHTML = h.CONSUMERNAME;
+            row.appendChild(CONSUMERNAMECell);
+
+            return row; //返回tr数据      
+        }
+        $("#count").html("总托数：" + moveList.length + '\xa0\xa0\xa0' + "总重量：" + countTotal + "KG");
+        document.onkeydown = function (e) {
+            //键盘事件
+            if (e.keyCode == 37 || e.keyCode == 39) { }
+
+            if (e.keyCode == 13) { }
+        }
+        mui('.mui-scroll-wrapper').scroll({
+            deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+        });
+    </script>
+</body>
 </html>

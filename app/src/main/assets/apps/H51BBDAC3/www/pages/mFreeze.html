@@ -1,146 +1,142 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
+<head>
+    <meta charset="UTF-8">
+    <title>原料冻结</title>
+    <script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
+    <style type="text/css">
+    </style>
+</head>
 
-	<head>
-		<meta charset="UTF-8">
-		<title>原料冻结</title>
-		<script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
-		<style type="text/css">
-			
-		</style>
-	</head>
+<body>
+    <header class="mui-bar mui-bar-nav">
+        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+        <h1 class="mui-title">原料冻结</h1>
+    </header>
+    <div class="mui-content">
+        <div class="mui-scroll-wrapper">
+            <div class="mui-scroll">
+                <div class="mui-card">
+                    <div class="mui-card-content" id="list">
 
-	<body>
-		<header class="mui-bar mui-bar-nav">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title">原料冻结</h1>
-		</header>
-		<div class="mui-content">
-			<div class="mui-scroll-wrapper">
-				<div class="mui-scroll">
-					<div class="mui-card">
-						<div class="mui-card-content" id="list">
-							
-						</div>
-					</div>
-					<div class="mui-button-row">
-						<button type="button" class="mui-btn mui-btn-primary" onclick="doFreeze()" style="width: 50%;">冻结</button>
-						<div style="font-weight: bold;">
-							（请直接扫描原料条码）
-						</div>
-					</div>
-				</div>
-			</div>
+                    </div>
+                </div>
+                <div class="mui-button-row">
+                    <button type="button" class="mui-btn mui-btn-primary" onclick="doFreeze()" style="width: 50%;">冻结</button>
+                    <div style="font-weight: bold;">
+                        （请直接扫描原料条码）
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-		</div>
-	</body>
+    <script type="text/javascript">
+        var freezeUrl = App.getServerUrl() + "stock/material/freeze";
+        var findStateUrl = App.getServerUrl() + "common/findCodeState";
+        var mdata = "";
+        var code = [];
 
-	<script type="text/javascript">
-		var freezeUrl = App.getServerUrl() + "stock/material/freeze";
-		var findStateUrl = App.getServerUrl() + "common/findCodeState";
-		var mdata = "";
-		var code = [];
-		
-		var scanner;
-		App.ready(function() {
-			scanner = new Scanner(parseCode);
-			scanner.scan();
-		});
+        var scanner;
+        App.ready(function () {
+            scanner = new Scanner(parseCode);
+            scanner.scan();
+        });
 
-		mui('.mui-scroll-wrapper').scroll({
-			deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
-		});
-		
-		function parseCode(data) {
-			mdata = data.split(";");
-			
-			for(var i = 0; i < code.length; i++) {
-				if(code[i] == code[0]) {
-					toast("扫描条码重复");
-					beepAndVibrate();
-					return;
-				}
-			}
-			var str = '';
-			if(mdata != "") { //托tab
-				if(mdata.length >2) {
-					waiting("查询中。。。", true);
-					App.ajaxPost(findStateUrl, {"materialCode":mdata[2]}, function(data) {
-						closeWaiting();
-						if(data=="IN"){
-							//动态拼条码扫的数据
-							code.push(mdata[2]);
-							str = '<div class="mui-card-content-inner" id=' + mdata[2] + '>';
-							str += '<div class="mui-input-row">';
-							str += '<label>物料条码</label>';
-							str += '<input id="materialCode" type="text" required readonly class="mui-input-clear" value=' + mdata[2] + '>';
-							str += '</div>';
-							str += '</div>';
-							$("#list").append(str);
-						}else{
-							toast("该条码不在库,无法冻结!");
-							beepAndVibrate();
-						}
-					}, function() {
-						closeWaiting();
-						toast("查询失败");
-						beepAndVibrate();
-					});
-				}
-			}
-		}
+        mui('.mui-scroll-wrapper').scroll({
+            deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+        });
 
-		document.onkeydown = function(e) {
-			//键盘事件
-			if(e.keyCode == 37 || e.keyCode == 39) { }
+        function parseCode(data) {
+            mdata = data.split(";");
 
-			if(e.keyCode == 13) { }
-		}
+            for (var i = 0; i < code.length; i++) {
+                if (code[i] == code[0]) {
+                    toast("扫描条码重复");
+                    beepAndVibrate();
+                    return;
+                }
+            }
+            var str = '';
+            if (mdata != "") { //托tab
+                if (mdata.length > 2) {
+                    waiting("查询中。。。", true);
+                    App.ajaxPost(findStateUrl, { "materialCode": mdata[2] }, function (data) {
+                        closeWaiting();
+                        if (data == "IN") {
+                            //动态拼条码扫的数据
+                            code.push(mdata[2]);
+                            str = '<div class="mui-card-content-inner" id=' + mdata[2] + '>';
+                            str += '<div class="mui-input-row">';
+                            str += '<label>物料条码</label>';
+                            str += '<input id="materialCode" type="text" required readonly class="mui-input-clear" value=' + mdata[2] + '>';
+                            str += '</div>';
+                            str += '</div>';
+                            $("#list").append(str);
+                        } else {
+                            toast("该条码不在库,无法冻结!");
+                            beepAndVibrate();
+                        }
+                    }, function () {
+                        closeWaiting();
+                        toast("查询失败");
+                        beepAndVibrate();
+                    });
+                }
+            }
+        }
 
-		//托数据提交
-		function doFreeze() {
-			if(code.length==0){
-				toast("请先扫条码!");
-				beepAndVibrate();
-				return;
-			}
-			mconfirm('警告', '确认冻结？', function() {
-				waiting("冻结中。。。", true);
-				App.ajaxPost(freezeUrl,{"codes":code.toString()} , function(data) {
-					closeWaiting();
-					toast("冻结成功");
-					$("#list").empty();
-				}, function() {
-					//失败
-					closeWaiting();
-					toast("冻结失败");
-					beepAndVibrate();
-				});
-			}, function() {
-				closeWaiting();
-			});
-		}
-		
-		mui.init({
-			gestureConfig: {longtap: true}
-		});
-		
-		//长按删除事件
-		mui('.mui-card-content').on('longtap', '.mui-card-content-inner', function() {
-				var id = this.getAttribute("id");
-				mconfirm("删除", "确认删除", function() {
-					//删除托中tcode数组中的值
-					var del;
-					for(var j = 0; j < code.length; j++) {
-						if(code[j] == id) {
-							del = code[j];
-						}
-					}
-					code.splice(code.indexOf(del), 1);
-					$("#" + id).remove();
-				}, function() {});
+        document.onkeydown = function (e) {
+            //键盘事件
+            if (e.keyCode == 37 || e.keyCode == 39) { }
 
-			});
-	</script>
+            if (e.keyCode == 13) { }
+        }
 
+        //托数据提交
+        function doFreeze() {
+            if (code.length == 0) {
+                toast("请先扫条码!");
+                beepAndVibrate();
+                return;
+            }
+            mconfirm('警告', '确认冻结？', function () {
+                waiting("冻结中。。。", true);
+                App.ajaxPost(freezeUrl, { "codes": code.toString() }, function (data) {
+                    closeWaiting();
+                    toast("冻结成功");
+                    $("#list").empty();
+                }, function () {
+                    //失败
+                    closeWaiting();
+                    toast("冻结失败");
+                    beepAndVibrate();
+                });
+            }, function () {
+                closeWaiting();
+            });
+        }
+
+        mui.init({
+            gestureConfig: { longtap: true }
+        });
+
+        //长按删除事件
+        mui('.mui-card-content').on('longtap', '.mui-card-content-inner', function () {
+            var id = this.getAttribute("id");
+            mconfirm("删除", "确认删除", function () {
+                //删除托中tcode数组中的值
+                var del;
+                for (var j = 0; j < code.length; j++) {
+                    if (code[j] == id) {
+                        del = code[j];
+                    }
+                }
+                code.splice(code.indexOf(del), 1);
+                $("#" + id).remove();
+            }, function () { });
+
+        });
+    </script>
+</body>
 </html>

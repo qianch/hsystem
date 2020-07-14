@@ -1,298 +1,297 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
+<head>
+    <meta charset="UTF-8">
+    <title>原料查询</title>
+    <script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
+    <style type="text/css">
+        .mui-input-group .mui-input-row {
+            height: 25px;
+        }
 
-	<head>
-		<meta charset="UTF-8">
-		<title>原料查询</title>
-		<script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
-		<style type="text/css">
-			.mui-input-group .mui-input-row {
-				height: 25px;
-			}
-			
-			.mui-input-row label~ input,
-			.mui-input-row label~ select,
-			.mui-input-row label~ textarea {
-				height: 25px;
-			}
-			
-			.mui-input-row .mui-input-clear~ .mui-icon-clear,
-			.mui-input-row .mui-input-speech~ .mui-icon-speech,
-			.mui-input-row .mui-input-password~ .mui-icon-eye {
-				top: 2px;
-			}
-			.mui-input-row label {
-				font-family: 'Helvetica Neue', Helvetica, sans-serif;
-				line-height: 25px;
-			}
-			
-			.mui-btn-primary,
-			.mui-btn-blue {
-				font-size: 20px;
-				color: #fff;
-				font-weight: bold;
-				border: 1px solid #007aff;
-				background-color: #007aff;
-				margin-top: -3px;
-				line-height: 18px;
-			}
-			
-			.mui-popover {
-				margin-top: 50px;
-				margin-left: 20px;
-				height: 300px;
-			}
-			
-			.mui-scroll-wrapper .mui-input-row label {
-				height: 40px;
-			}
-			
-			.mui-table-view{ 
-				padding: 10px;
-			}
-			
-			.pop_bg{
-				display: none;
-				background: rgba(0, 0, 0, 0.54);
-				width:100%;
-				height:100%;
-				position: fixed;
-				top:0;
-			}
-			
-			.pop {
-				width: 200px;
-				position: fixed;
-				margin: 0px;
-				top: 50%;
-				margin-top: -125px;
-				left: 50%;
-				margin-left: -100px;
-			}
-			.pop li{
-				font-size: 20px;
-				height: 30px;
-			}
-		</style>
-	</head>
+        .mui-input-row label ~ input,
+        .mui-input-row label ~ select,
+        .mui-input-row label ~ textarea {
+            height: 25px;
+        }
 
-	<body>
-		<header class="mui-bar mui-bar-nav">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title">原料查询</h1>
-		</header>
-		<div class="mui-content">
-			<div class="mui-control-content mui-active">
-				<div class="mui-input-row" style="line-height: 40px;color:red;background:#dcdcdc;">
-					<label style="line-height: 40px;">原料条码</label>
-					<input id="materialCode" mssId="" type="text" readonly required placeholder="请扫条形码" style="height: 40px;">
-				</div>
-				<form class="mui-input-group" id="form">
-				</form>
-				<div style="text-align: center;">
-					<button type="button" class="mui-btn mui-btn-primary" onclick="doGrade()" style="width: 80%;height:40px;margin-top:10px;">质量判级</button>
-				</div>
-			</div>
-		</div>
-		<div class="pop_bg">
-			<div class="pop">
-				<ul class="mui-table-view mui-table-view-radio">
-					<li class="mui-table-view-cell" value="0">
-						<a class="mui-navigate-right">待检</a>
-					</li>
-					<li class="mui-table-view-cell mui-selected"  value="1">
-						<a class="mui-navigate-right">合格</a>
-					</li>
-					<li class="mui-table-view-cell"  value="2">
-						<a class="mui-navigate-right">不合格</a>
-					</li>
-				</ul>
-			</div>
-		</div>
-		<script type="text/template" id="materialInfo">
-			<div class='mui-input-row'>
-				<label>产品大类</label>
-				<input type='text' class='mui-input-clear' readonly value="{{v.PRODUCECATEGORY}}">
-			</div>
-			<div class='mui-input-row'>
-				<label>规格型号</label>
-				<input type='text' class='mui-input-clear' readonly value="{{v.MATERIALMODEL}}">
-			</div>
-			<div class='mui-input-row'>
-				<label>重量</label>
-				<input type='text' class='mui-input-clear' readonly value="{{v.WEIGHT}}">
-			</div>
-			<div class='mui-input-row'>
-				<label>上下偏差</label>
-				<input type='text' class='mui-input-clear' readonly value="{{v.REALLOWERDEVIATION}}~{{v.REALUPPERDEVIATION}}">
-			</div>
-			<div class='mui-input-row'>
-				<label>接头方式</label>
-				<input type='text' class='mui-input-clear' readonly value="{{v.REALSUBWAY}}">
-			</div>
-			<div class='mui-input-row'>
-				<label>编码</label>
-				<input type='text' class='mui-input-clear' readonly value="{{v.MATERIALCODE}}">
-			</div>
-			<div class='mui-input-row'>
-				<label>保质期</label>
-				<input type='text' class='mui-input-clear' readonly value="{{v.MATERIALSHELFLIFE}}">
-			</div>
-			<div class='mui-input-row'>
-				<label>原料状态</label>
-				<input type='text' class='mui-input-clear' readonly value="{{state(v.STATE)}}">
-			</div>
-			<div class='mui-input-row'>
-				<label>库存状态</label>
-				<input type='text' class='mui-input-clear' readonly value="{{stockState(v.STOCKSTATE)}}">
-			</div>
-			<div class='mui-input-row'>
-				<label>库房</label>
-				<input type='text' class='mui-input-clear' readonly value="{{v.WAREHOUSECODE}}">
-			</div>
-			<div class='mui-input-row'>
-				<label>库位</label>
-				<input type='text' class='mui-input-clear' readonly value="{{v.WAREHOUSEPOSCODE}}">
-			</div>
-		</script>
-	</body>
+        .mui-input-row .mui-input-clear ~ .mui-icon-clear,
+        .mui-input-row .mui-input-speech ~ .mui-icon-speech,
+        .mui-input-row .mui-input-password ~ .mui-icon-eye {
+            top: 2px;
+        }
 
-	<script type="text/javascript">
-		var findMaterialInfo = App.getServerUrl() + "stock/material/info/";
-		var setGradeUrl=App.getServerUrl()+"stock/material/grade";
-		var stt = "";
-		var m;
-		
-		template.helper("state", function(v){
-			if(v==0){
-				return "待检";
-			}
-			if(v==1){
-				return "合格";
-			}
-			if(v==2){
-				return "不合格";
-			}
-			return "";
-		});
-		
-		template.helper("stockState", function(v){
-			return v==0?"在库":"出库";
-		});
-		
-		
-		var scanner;
-		App.ready(function() {
-			scanner = new Scanner(parseCode);
-			scanner.scan();
-			parseCode("2221702111056XX");
-		});
+        .mui-input-row label {
+            font-family: 'Helvetica Neue', Helvetica, sans-serif;
+            line-height: 25px;
+        }
 
-		function doGrade() {
-			if(isEmpty(m)){
-				tip("请先扫描原料条码");
-				return;
-			}
-			
-			$(".pop li").removeClass("mui-selected");
-			//设置默认选中
-			$(".pop li[value="+m.STATE+"]").addClass("mui-selected");
-			$(".pop_bg").show();
-		}
+        .mui-btn-primary,
+        .mui-btn-blue {
+            font-size: 20px;
+            color: #fff;
+            font-weight: bold;
+            border: 1px solid #007aff;
+            background-color: #007aff;
+            margin-top: -3px;
+            line-height: 18px;
+        }
 
-		function parseCode(code) {
-			log(code)
-			if(code.length > 1 && code.split(";").length == 1) {
-				
-				//查询条码的库存状态
-				waiting("正在查询原料信息");
-				App.ajaxGet(findMaterialInfo + code, function(data) {
-					//条码扫的数据
-					$("#materialCode").val(data.PALLETCODE);
-					$("#materialCode").attr("mssId",data.ID);
-					if(data != null) {
-						m=data;
-						initMaterial(data);
-					} else {
-						tip("找不到原料信息");
-						return;
-					}
-				}, function() {
-					toast("查询失败!");
-					beepAndVibrate();
-					return;
-				});
-			} else {
-				tip("未知条码");
-			}
-		}
+        .mui-popover {
+            margin-top: 50px;
+            margin-left: 20px;
+            height: 300px;
+        }
 
-		function clearData() {
-			$("#form").empty();
-			$("#materialCode").val("");
-			mdata = "";
-		}
+        .mui-scroll-wrapper .mui-input-row label {
+            height: 40px;
+        }
 
-		function initMaterial(data) {
-			$("#form").empty();
-			var html=template('materialInfo', {
-						"v": data
-					});
-			$("#form").append(html);
-		}
+        .mui-table-view {
+            padding: 10px;
+        }
 
-		/**
-		 * 0:待检
-		 * 1:合格
-		 * 2:不合格
-		 * 3:冻结
-		 * 4:放行
-		 * 5:退货
-		 */
-		function formatState(state) {
-			switch(state) {
-				case 0:
-					return "待检";
-				case 1:
-					return "合格";
-				case 2:
-					return "不合格";
-				default:
-					return "";
-			}
-		}
-		
-		mui("body").on("tap",".pop_bg",function(e){
-			$(".pop_bg").hide();
-		});
-		mui(".pop_bg").on("tap","li",function(e){
-			//阻止事件冒泡
-			e.stopPropagation();
+        .pop_bg {
+            display: none;
+            background: rgba(0, 0, 0, 0.54);
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+        }
 
-			$(this).parent().children().removeClass("mui-selected");
-			$(this).toggleClass("mui-selected");
-			
-			var _this=this;
-			
-			if($(this).attr("value")!=m.STATE){
-				mconfirm("质量判级","是否判级为"+$(this).find("a:eq(0)").text()+"?",function(){
-					
-					waiting("正在判级");
-					//确定
-					App.ajaxGet(setGradeUrl+"?mssId="+$("#materialCode").attr("mssId")+"&state="+$(_this).attr("value"),function(data){
-						sucTip("判级成功");
-						$(".pop_bg").hide();
-						parseCode($("#materialCode").val());
-					},function(){
-						tip("系统错误");
-					});
-					
-				},function(){
-					//取消
-				});
-				
-			}
-		});
-	</script>
+        .pop {
+            width: 200px;
+            position: fixed;
+            margin: 0px;
+            top: 50%;
+            margin-top: -125px;
+            left: 50%;
+            margin-left: -100px;
+        }
 
+            .pop li {
+                font-size: 20px;
+                height: 30px;
+            }
+    </style>
+</head>
+
+<body>
+    <header class="mui-bar mui-bar-nav">
+        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+        <h1 class="mui-title">原料查询</h1>
+    </header>
+    <div class="mui-content">
+        <div class="mui-control-content mui-active">
+            <div class="mui-input-row" style="line-height: 40px;color:red;background:#dcdcdc;">
+                <label style="line-height: 40px;">原料条码</label>
+                <input id="materialCode" mssId="" type="text" readonly required placeholder="请扫条形码" style="height: 40px;">
+            </div>
+            <form class="mui-input-group" id="form">
+            </form>
+            <div style="text-align: center;">
+                <button type="button" class="mui-btn mui-btn-primary" onclick="doGrade()" style="width: 80%;height:40px;margin-top:10px;">质量判级</button>
+            </div>
+        </div>
+    </div>
+    <div class="pop_bg">
+        <div class="pop">
+            <ul class="mui-table-view mui-table-view-radio">
+                <li class="mui-table-view-cell" value="0">
+                    <a class="mui-navigate-right">待检</a>
+                </li>
+                <li class="mui-table-view-cell mui-selected" value="1">
+                    <a class="mui-navigate-right">合格</a>
+                </li>
+                <li class="mui-table-view-cell" value="2">
+                    <a class="mui-navigate-right">不合格</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <script type="text/template" id="materialInfo">
+        <div class='mui-input-row'>
+            <label>产品大类</label>
+            <input type='text' class='mui-input-clear' readonly value="{{v.PRODUCECATEGORY}}">
+        </div>
+        <div class='mui-input-row'>
+            <label>规格型号</label>
+            <input type='text' class='mui-input-clear' readonly value="{{v.MATERIALMODEL}}">
+        </div>
+        <div class='mui-input-row'>
+            <label>重量</label>
+            <input type='text' class='mui-input-clear' readonly value="{{v.WEIGHT}}">
+        </div>
+        <div class='mui-input-row'>
+            <label>上下偏差</label>
+            <input type='text' class='mui-input-clear' readonly value="{{v.REALLOWERDEVIATION}}~{{v.REALUPPERDEVIATION}}">
+        </div>
+        <div class='mui-input-row'>
+            <label>接头方式</label>
+            <input type='text' class='mui-input-clear' readonly value="{{v.REALSUBWAY}}">
+        </div>
+        <div class='mui-input-row'>
+            <label>编码</label>
+            <input type='text' class='mui-input-clear' readonly value="{{v.MATERIALCODE}}">
+        </div>
+        <div class='mui-input-row'>
+            <label>保质期</label>
+            <input type='text' class='mui-input-clear' readonly value="{{v.MATERIALSHELFLIFE}}">
+        </div>
+        <div class='mui-input-row'>
+            <label>原料状态</label>
+            <input type='text' class='mui-input-clear' readonly value="{{state(v.STATE)}}">
+        </div>
+        <div class='mui-input-row'>
+            <label>库存状态</label>
+            <input type='text' class='mui-input-clear' readonly value="{{stockState(v.STOCKSTATE)}}">
+        </div>
+        <div class='mui-input-row'>
+            <label>库房</label>
+            <input type='text' class='mui-input-clear' readonly value="{{v.WAREHOUSECODE}}">
+        </div>
+        <div class='mui-input-row'>
+            <label>库位</label>
+            <input type='text' class='mui-input-clear' readonly value="{{v.WAREHOUSEPOSCODE}}">
+        </div>
+    </script>
+
+    <script type="text/javascript">
+        var findMaterialInfo = App.getServerUrl() + "stock/material/info/";
+        var setGradeUrl = App.getServerUrl() + "stock/material/grade";
+        var stt = "";
+        var m;
+
+        template.helper("state", function (v) {
+            if (v == 0) {
+                return "待检";
+            }
+            if (v == 1) {
+                return "合格";
+            }
+            if (v == 2) {
+                return "不合格";
+            }
+            return "";
+        });
+
+        template.helper("stockState", function (v) {
+            return v == 0 ? "在库" : "出库";
+        });
+
+
+        var scanner;
+        App.ready(function () {
+            scanner = new Scanner(parseCode);
+            scanner.scan();
+        });
+
+        function doGrade() {
+            if (isEmpty(m)) {
+                tip("请先扫描原料条码");
+                return;
+            }
+
+            $(".pop li").removeClass("mui-selected");
+            //设置默认选中
+            $(".pop li[value=" + m.STATE + "]").addClass("mui-selected");
+            $(".pop_bg").show();
+        }
+
+        function parseCode(code) {
+            log(code)
+            if (code.length > 1 && code.split(";").length == 1) {
+
+                //查询条码的库存状态
+                waiting("正在查询原料信息");
+                App.ajaxGet(findMaterialInfo + code, function (data) {
+                    //条码扫的数据
+                    $("#materialCode").val(data.PALLETCODE);
+                    $("#materialCode").attr("mssId", data.ID);
+                    if (data != null) {
+                        m = data;
+                        initMaterial(data);
+                    } else {
+                        tip("找不到原料信息");
+                        return;
+                    }
+                }, function () {
+                    toast("查询失败!");
+                    beepAndVibrate();
+                    return;
+                });
+            } else {
+                tip("未知条码");
+            }
+        }
+
+        function clearData() {
+            $("#form").empty();
+            $("#materialCode").val("");
+            mdata = "";
+        }
+
+        function initMaterial(data) {
+            $("#form").empty();
+            var html = template('materialInfo', {
+                "v": data
+            });
+            $("#form").append(html);
+        }
+
+        /**
+         * 0:待检
+         * 1:合格
+         * 2:不合格
+         * 3:冻结
+         * 4:放行
+         * 5:退货
+         */
+        function formatState(state) {
+            switch (state) {
+                case 0:
+                    return "待检";
+                case 1:
+                    return "合格";
+                case 2:
+                    return "不合格";
+                default:
+                    return "";
+            }
+        }
+
+        mui("body").on("tap", ".pop_bg", function (e) {
+            $(".pop_bg").hide();
+        });
+        mui(".pop_bg").on("tap", "li", function (e) {
+            //阻止事件冒泡
+            e.stopPropagation();
+
+            $(this).parent().children().removeClass("mui-selected");
+            $(this).toggleClass("mui-selected");
+
+            var _this = this;
+
+            if ($(this).attr("value") != m.STATE) {
+                mconfirm("质量判级", "是否判级为" + $(this).find("a:eq(0)").text() + "?", function () {
+
+                    waiting("正在判级");
+                    //确定
+                    App.ajaxGet(setGradeUrl + "?mssId=" + $("#materialCode").attr("mssId") + "&state=" + $(_this).attr("value"), function (data) {
+                        sucTip("判级成功");
+                        $(".pop_bg").hide();
+                        parseCode($("#materialCode").val());
+                    }, function () {
+                        tip("系统错误");
+                    });
+
+                }, function () {
+                    //取消
+                });
+
+            }
+        });
+    </script>
+</body>
 </html>

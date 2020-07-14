@@ -1,110 +1,107 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
+<head>
+    <meta charset="UTF-8">
+    <title>信息查询</title>
+    <script src="../resources/js/include.js"></script>
+    <style type="text/css">
+        .mui-table-view-cell:after {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            left: 15px;
+            height: 1px;
+            content: '';
+            -webkit-transform: scaleY(.5);
+            transform: scaleY(.5);
+        }
 
-	<head>
-		<meta charset="UTF-8">
-		<title>信息查询</title>
-		<script src="../resources/js/include.js"></script>
-		<style type="text/css">
-			.mui-table-view-cell:after {
-				position: absolute;
-				right: 0;
-				bottom: 0;
-				left: 15px;
-				height: 1px;
-				content: '';
-				-webkit-transform: scaleY(.5);
-				transform: scaleY(.5);
-			}
-			
-			.mui-table-view {
-				position: relative;
-				margin-top: 0;
-				margin-bottom: 0;
-				padding-left: 0;
-				list-style: none;
-				background-color: #efeff4!important;
-			}
-			
-			.mui-table-view:before {
-				height: 0px;
-			}
-			
-			.mui-table-view:after {
-				height: 0px;
-			}
-			
-			.mui-table-view-cell:after {
-				height: 0px;
-			}
-			.mui-control-content {
-				margin-top: 60px;
-			}
-		</style>
-	</head>
+        .mui-table-view {
+            position: relative;
+            margin-top: 0;
+            margin-bottom: 0;
+            padding-left: 0;
+            list-style: none;
+            background-color: #efeff4 !important;
+        }
 
-	<body>
-		<header class="mui-bar mui-bar-nav">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title">信息查询</h1>
-		</header>
-		<div class="mui-control-content mui-active">
-			<ul class="mui-table-view">
-				<li class="mui-table-view-cell" index="1" href="mInfo.html">
-					原料信息查询
-				</li>
-				<li class="mui-table-view-cell" index="2" href="pInfo.html">
-					成品信息查询
-				</li>
-				<li class="mui-table-view-cell" index="2" href="pInvalid.html">
-					条码作废
-				</li>
-			</ul>
-		</div>
-	</body>
-	<script type="text/javascript">
-		/**
-		 * 设置键盘事件
-		 */
-		$(document).keydown(function(e) {
-			if(e.keyCode == 40 || e.keyCode == 38) {
-				//判断方向键
-				var direction = e.keyCode == 40 ? 1 : -1;
-				//如果没有选中项，那么选择第一项
-				if($("ul .mui-item-active").length == 0) {
-					$("li[index=1]").addClass("mui-item-active");
-				} else {
-					//获取当前选中项的index
-					var itemIndex = parseInt($("ul .mui-item-active").attr("index"));
+            .mui-table-view:before {
+                height: 0px;
+            }
 
-					//根据方向键，计算下一项item的index
-					var nextIndex = itemIndex + direction;
+            .mui-table-view:after {
+                height: 0px;
+            }
 
-					//如果根据索引，找不到下一个选中项，那么就返回，不执行后续操作
-					if($("ul li[index=" + nextIndex + "]").length == 0) {
-						return;
-					}
+        .mui-table-view-cell:after {
+            height: 0px;
+        }
 
-					$("ul li").removeClass("mui-item-active");
-					$("ul li[index=" + nextIndex + "]").addClass("mui-item-active");
-				}
-			}
-			if(e.keyCode == 13) {
-				if($("ul .mui-item-active").length == 0) {
-					$("li[index=1]").addClass("mui-item-active");
-				}
-				App.go($("ul .mui-item-active").attr("href"));
-			}
-		});
-		/**
-		 * 设置触摸事件
-		 */
-		mui(".mui-control-content").on('tap', "li", function() {
-			//获取当前的tab的索引
-			$("ul li").removeClass("mui-item-active");
-			$(this).addClass("mui-item-active");
-			App.go($(this).attr("href"));
-		});
-	</script>
+        .mui-control-content {
+            margin-top: 60px;
+        }
+    </style>
+</head>
 
+<body>
+    <header class="mui-bar mui-bar-nav">
+        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+        <h1 class="mui-title">信息查询</h1>
+    </header>
+    <div class="mui-control-content mui-active">
+        <ul class="mui-table-view">
+            <li class="mui-table-view-cell" index="1" href="mInfo.html">
+                原料信息查询
+            </li>
+            <li class="mui-table-view-cell" index="2" href="pInfo.html">
+                成品信息查询
+            </li>
+            <li class="mui-table-view-cell" index="2" href="pInvalid.html">
+                条码作废
+            </li>
+        </ul>
+    </div>
+    <script type="text/javascript">
+        /**
+         * 设置键盘事件
+         */
+        $(document).keydown(function (e) {
+            if (e.keyCode == 40 || e.keyCode == 38) {
+                //判断方向键
+                var direction = e.keyCode == 40 ? 1 : -1;
+                //如果没有选中项，那么选择第一项
+                if ($("ul .mui-item-active").length == 0) {
+                    $("li[index=1]").addClass("mui-item-active");
+                } else {
+                    //获取当前选中项的index
+                    var itemIndex = parseInt($("ul .mui-item-active").attr("index"));
+                    //根据方向键，计算下一项item的index
+                    var nextIndex = itemIndex + direction;
+                    //如果根据索引，找不到下一个选中项，那么就返回，不执行后续操作
+                    if ($("ul li[index=" + nextIndex + "]").length == 0) {
+                        return;
+                    }
+
+                    $("ul li").removeClass("mui-item-active");
+                    $("ul li[index=" + nextIndex + "]").addClass("mui-item-active");
+                }
+            }
+            if (e.keyCode == 13) {
+                if ($("ul .mui-item-active").length == 0) {
+                    $("li[index=1]").addClass("mui-item-active");
+                }
+                App.go($("ul .mui-item-active").attr("href"));
+            }
+        });
+        /**
+         * 设置触摸事件
+         */
+        mui(".mui-control-content").on('tap', "li", function () {
+            //获取当前的tab的索引
+            $("ul li").removeClass("mui-item-active");
+            $(this).addClass("mui-item-active");
+            App.go($(this).attr("href"));
+        });
+    </script>
+</body>
 </html>

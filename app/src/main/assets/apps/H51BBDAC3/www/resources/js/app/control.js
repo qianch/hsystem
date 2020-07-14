@@ -15,7 +15,7 @@ function getOption(item) {
         var valueField = jsondata["valueField"];
         var textField = jsondata["textField"];
         var url = jsondata["url"];
-        App.ajaxGet("http://" + SERVER_IP + url, function (data) {
+        App.ajaxGet(App.getServerUrl() + url, function (data) {
             if (data.length > 0) {
                 var optionstring = "";
                 $.each(data, function (infoIndex, info) {

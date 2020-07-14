@@ -162,7 +162,6 @@
                     var itemIndex = parseInt($(".mui-scroll .mui-card-active").attr("index"));
                     //根据方向键，计算下一项item的index
                     var nextIndex = itemIndex + direction;
-
                     //如果根据索引，找不到下一个选中项，那么就返回，不执行后续操作
                     if ($(".mui-scroll div[index=" + nextIndex + "]").length == 0) {
                         return;

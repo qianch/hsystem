@@ -268,7 +268,9 @@ function appInit() {
         LS.set(KEY.VERSION, Config.project.version)
     }
     //检查更新
-    checkForUpdate();
+    setTimeout(function () {
+        checkForUpdate()
+    }, 5000)
 }
 
 /**
