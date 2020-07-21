@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -54,6 +54,7 @@
             .table th {
                 background-repeat: repeat-x;
                 height: 30px;
+				
             }
 
             .table td,
@@ -64,6 +65,7 @@
 
             .table tr.alter {
                 background-color: #f5fafe;
+				 -webkit-overflow-scrolling: touch;
             }
     </style>
 </head>
@@ -126,6 +128,7 @@
                         <thead>
                         <th>条码号</th>
                         <th>重量</th>
+						 <th>仓库名称</th>
                         <th>库位</th>
                         </thead>
                         <tbody>
@@ -160,11 +163,12 @@
             total = 0.0;
             var table = document.body.querySelector('tbody');
             var trtotal = document.createElement('tr');
-            trtotal.innerHTML = "<td>条码号</td><td>重量</td><td>库位</td>";
+            trtotal.innerHTML = "<td>条码号</td><td>重量</td><td>仓库名称</td><td>库位</td>";
             table.appendChild(trtotal);
             for (var i = 0; i < data.rows.length; i++) {
                 var tr = document.createElement('tr');
-                tr.innerHTML = "<td>" + data.rows[i].BARCODE + "</td><td>" + data.rows[i].WEIGHT + "</td><td>" + data.rows[i].WAREHOUSEPOSCODE + "</td>";
+                tr.innerHTML = "<td>" + data.rows[i].BARCODE + "</td><td>" 
+				+ data.rows[i].WEIGHT + "</td><td>" +data.rows[i].WAREHOUSENAME+ "</td><td>" + data.rows[i].WAREHOUSEPOSCODE + "</td>";
                 table.appendChild(tr);
                 total = total.add(data.rows[i].WEIGHT);
             }
