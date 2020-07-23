@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -298,12 +298,14 @@
         <table id="" class="StockPosition" border="1" width="320" cellspacing="0" cellpadding="0" bordercolor="gray" style="BORDER-COLLAPSE: collapse;display: none;">
             <tr>
                 <th>序号</th>
-                <th width="130" align="center">库位</th>
+				 <th width="80" align="center">仓库名称</th>
+                <th width="80" align="center">库位</th>
                 <th>重量</th>
             </tr>
             {{each data as value i}}
             <tr>
                 <td align="center">{{i+1}}</td>
+				  <td align="center">{{value.WAREHOUSENAME}}</td>
                 <td align="center">{{value.WAREHOUSEPOSCODE}}</td>
                 <td align="center">{{(value.WEIGHT).toFixed(1)}}</td>
             </tr>
