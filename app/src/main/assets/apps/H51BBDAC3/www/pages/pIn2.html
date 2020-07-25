@@ -284,7 +284,7 @@
 
                             //加一个回调函数，查询同一批次的其他货物所在的位置
                             if (ajaxData.ORDER != null) {
-                                findWarhourse(ajaxData.ORDER.SALESORDERSUBCODE, ajaxData.CODE.BATCHCODE, ajaxData.PRODUCT.PRODUCTMODEL);
+                                findWarhourse(ajaxData.ORDER.SALESORDERSUBCODE, ajaxData.CODE.BATCHCODE, ajaxData.PRODUCT.PRODUCTMODEL || "");
                             }
 
                             var now = new Calendar();

@@ -284,9 +284,7 @@
 
                             //加一个回调函数，查询同一批次的其他货物所在的位置
                             if (ajaxData.ORDER != null) {
-                                findWarhourse(ajaxData.ORDER.SALESORDERSUBCODE,
-                                    ajaxData.CODE.BATCHCODE,
-                                    ajaxData.PRODUCT.PRODUCTMODEL);
+                                findWarhourse(ajaxData.ORDER.SALESORDERSUBCODE, ajaxData.CODE.BATCHCODE, ajaxData.PRODUCT.PRODUCTMODEL || "");
                             }
 
                             var now = new Calendar();
@@ -338,9 +336,7 @@
             if (e.keyCode == 13) { }
         }
 
-        function findWarhourse(salesOrderCode,
-            batchCode,
-            productModel) {
+        function findWarhourse(salesOrderCode, batchCode, productModel) {
             App.ajaxGet(findWarhourseUrl + "?salesOrderCode=" + salesOrderCode + "&batchCode=" + batchCode + "&productModel=" + productModel,
                 function (ajaxData) {
                     //ajaxData 库房，库位
@@ -412,10 +408,7 @@
                 rStr,
                 function (data) {
                     closeWaiting();
-                    if (data == "false") {
-                        toast("该条码已存在！");
-                        beepAndVibrate();
-                    } else {
+                    if (data == "") {
                         plus.audio.createPlayer("notice.mp3").play();
                         toast("保存成功");
                         clear();
@@ -423,11 +416,14 @@
                             jsks = jsks + 1;
                             $("#lb1").text(jsks);
                         }
+                    } else {
+                        toast("保存失败");
+                        beepAndVibrate();
                     }
                 },
                 function (data) {
                     closeWaiting();
-                    toast("保存失败");
+                    toast("保存失败" + data);
                     beepAndVibrate();
                 }
             );

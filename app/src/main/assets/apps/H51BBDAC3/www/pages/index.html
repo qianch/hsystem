@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -43,10 +43,11 @@
         </div>
     </div>
     <script>
+		
         $(document).ready(function () {
-            $("#app_version").text(Config.project.version)
+            $("#app_version").text(Config.project.version);
         });
-
+		var scanner;
         /**
          * 进入首页，做一些初始化操作
          */
@@ -55,8 +56,15 @@
             appInit();
             $("#serverIp").text("服务器地址：http://" + SERVER_IP)
             LS.remove(KEY.SERVER_IP);
+			scanner = new Scanner(parseCode);
+			scanner.scan();
         });
-
+		function parseCode(code) {
+		    var user = code.split(";")[0];
+			var password = code.split(";")[1];
+		    $("#user").val(user);
+			$("#password").val(password);
+		}
         function loadTasks() {
             App.ajaxGet(App.getServerUrl() + "/msg", function (data) {
                 var notices = data.notice;
@@ -134,6 +142,7 @@
             }
             checkForUpdate();
         })
+		
     </script>
 </body>
 </html>
