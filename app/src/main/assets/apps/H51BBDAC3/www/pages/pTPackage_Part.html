@@ -591,10 +591,9 @@
                 sucTip("打包成功");
                 showTrayInfo($("#trayCode").val());
             }, function (data) {
-                tip("打包失败:" + data);
+                tip(data.response);
+                showTrayInfo($("#trayCode").val());
             });
-            //});
-
         }
 
         function endPack() {

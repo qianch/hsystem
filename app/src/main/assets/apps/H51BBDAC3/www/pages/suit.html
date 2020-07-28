@@ -414,8 +414,7 @@
         });
 
         App.ready(function () {
-            scanner = new Scanner(parseCode);
-            scanner.scan();
+            new Scanner(parseCode).scan();
             init();
         });
 

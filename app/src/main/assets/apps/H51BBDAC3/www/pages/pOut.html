@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
 <head>
@@ -59,7 +59,7 @@
                             <div class="mui-input-row">
                                 <label>搜索项目</label>
                                 <select id="project">
-									<option value="deliveryCode">出货单号</option>
+                                    <option value="deliveryCode">出货单号</option>
                                     <option value="deliveryTargetCompany">要货单位</option>
                                     <option value="ladingCode">提单号</option>
                                     <option value="boxNumber">箱号</option>
@@ -162,20 +162,22 @@
         function removeDone(id) {
             $("#" + id).remove();
         }
-		var scanner;
-		App.ready(function () {
-		    scanner = new Scanner(parseCode);
-		    scanner.scan();
-		});
-		function parseCode(code) {
-			var project = $("#project").val();
-			if(project != "deliveryCode"){
-				 toast("请选择出货单二维码");
-			}
-		    code = code.split(";")[0];
-		    $("#content").val(code);
-			doSearch();
-		}
+        var scanner;
+        App.ready(function () {
+            scanner = new Scanner(parseCode);
+            scanner.scan();
+        });
+        function parseCode(code) {
+            if (code.indexOf("WX") == 0 || code.indexOf("NX") == 0 || code.indexOf("YK") == 0) {
+                var project = $("#project").val();
+                if (project != "deliveryCode") {
+                    toast("出货单二维码");
+                }
+                code = code.split(";")[0];
+                $("#content").val(code);
+                doSearch();
+            }
+        }
     </script>
 </body>
 </html>
