@@ -168,10 +168,10 @@
             scanner.scan();
         });
         function parseCode(code) {
-            if (code.indexOf("WX") == 0 || code.indexOf("NX") == 0 || code.indexOf("YK") == 0) {
+            if (code.indexOf("WX") == 0 || code.indexOf("NX") == 0) {
                 var project = $("#project").val();
                 if (project != "deliveryCode") {
-                    toast("出货单二维码");
+                    toast("请扫发货单编号二维码");
                 }
                 code = code.split(";")[0];
                 $("#content").val(code);
