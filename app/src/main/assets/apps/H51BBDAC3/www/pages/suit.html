@@ -447,6 +447,7 @@
                 var codes = get(SUIT_FRAGMENT_CODES).split(",");
                 for (var i = 0; i < codes.length; i++) {
                     var code = codes[i].split("#");
+                    if (code.length < 2) continue;
                     //需要按序组套
                     if (needSort) {
                         var nextTr = $("tr.next");
@@ -458,8 +459,6 @@
                         } else {
                             if ($("tr[index=" + replaceAllDot(code[1]) + "]").length == 0) {
                                 errorModel(code[0]);
-                            } else {
-                                errorSort(code[0]);
                             }
                         }
                     } else {
