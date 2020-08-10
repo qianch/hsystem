@@ -55,7 +55,8 @@ App = {
         waiting("请稍后", true);
         mui.ajax(url, {
             beforeSend: function (request) {
-                request.setRequestHeader("AppVersion", Config.project.version)
+                request.setRequestHeader("AppVersion", Config.project.version);
+                request.setRequestHeader("UserID",LS.get(KEY.USER_ID));
             },
             type: "get",
             dataType: "json",
@@ -102,7 +103,8 @@ App = {
         waiting("请稍后", true);
         mui.ajax(url, {
             beforeSend: function (request) {
-                request.setRequestHeader("AppVersion", Config.project.version)
+                request.setRequestHeader("AppVersion", Config.project.version);
+                request.setRequestHeader("UserID",LS.get(KEY.USER_ID));
             },
             data: data,
             type: "post",

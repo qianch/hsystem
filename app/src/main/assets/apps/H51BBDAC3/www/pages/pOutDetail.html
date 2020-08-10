@@ -349,6 +349,13 @@
 				App.ajaxPost(findProductUrl, {
 					"barCode": tdata
 				}, function(data) {
+
+					if ($("#" + tdata).length > 0) {
+						toast("该条码已加到出库队列,请勿重复条码！");
+						beepAndVibrate();
+						return;
+					}
+
 					/*log(data.STOCK)*/
 					var model = data.PRODUCT.PRODUCTMODEL || data.FINISHED.PRODUCTMODEL;
 					if (model != null) {
@@ -537,13 +544,7 @@
 						tip("未知条码!");
 						return;
 					}
-					
-					if ($("#" + barcode).length > 0) {
-						toast("该条码已加到出库队列,请勿重复条码！");
-						beepAndVibrate();
-						return;
-					}
-					
+
 					//判断条码是否产出登记
 					if (data.REGISTER) {
 						//判断条码是否已被冻结

@@ -38,5 +38,4 @@ var Config = {
 	 * 超时时间,单位秒
 	 */
     EXPIRE_TIME: 30 * 60//30分钟
-
 }
