@@ -61,12 +61,10 @@
             }
             result = result.replace(/\n/g, '');
             wo.evalJS((scanCallback || "parseCode") + "('" + result + "');");
-            //				setTimeout(function(){
-            //					back();
-            //				},0);
             setTimeout(function () {
                 scan.start();
             }, 3000);
+            back();
         }
         mui.back = function () {
             back();
