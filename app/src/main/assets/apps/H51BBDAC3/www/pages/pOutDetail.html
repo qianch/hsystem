@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
 	<head>
@@ -606,8 +606,8 @@
 								"-" + data.CODE.BATCHCODE + "-").parent().find("tr:eq(6)").find("td:eq(1)").text();
 							if ((parseInt(scanNum) + 1) > deliveryNum) {
 								beep();
-								//toast("多于计划数量，请确认发货数量!");
-								//return;
+								toast("多于计划数量，请确认发货数量!");
+								return;
 							}
 						}
 					} else {

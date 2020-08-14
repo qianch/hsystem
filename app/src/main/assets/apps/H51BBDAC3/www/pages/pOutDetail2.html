@@ -6,7 +6,6 @@
 		<title>成品出库</title>
 		<script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
 		<style type="text/css">
-			.deliveryPlan,
 			.deliveryPlanOrders,
 			.StockPosition,
 			.logisticsCompany {
@@ -33,7 +32,7 @@
 				background: lightgray;
 				text-align: right;
 				padding-right: 5px;
-				width: 25%;
+				width: 35%;
 			}
 
 			.content {
@@ -41,6 +40,8 @@
 				padding-left: 5px;
 				background: white;
 			}
+
+			.deliveryPlan {}
 
 			.deliveryPlan .title {
 				background: cadetblue;
@@ -159,66 +160,75 @@
 			<h1 class="mui-title">成品出库</h1>
 		</header>
 		<div class="mui-content">
-			<div class="mui-scroll-wrapper">
-				<div class="mui-input-group" style="position: absolute;z-index:2;">
+
+			<div class="mui-input-group" style="position: absolute;z-index:2;">
 
 
-					<div class="mui-button-row">
-						<button type="button" class="mui-btn mui-btn-primary" onclick="doOut(0)" style="width: 40%;">分批出库</button>
-						<button type="button" class="mui-btn mui-btn-primary" onclick="doOut(1)" style="width: 40%;">完成出库</button>
-					</div>
-				</div>
-
-				<div class="positions">
-					<div class="positions_title">
-						库存位置
-						<button style="float:right;width:80px;height: 45px;" onclick="closePosition()">关闭</button>
-					</div>
-					<div class="mui-scroll-wrapper">
-						<div class="mui-scroll">
-							<div id="stock_position_display">
-
-							</div>
-						</div>
-					</div>
-
-				</div>
-				<div class="mui-scroll-wrapper">
-					<div class="mui-scroll" style="width: 100%; overflow:scroll;" id="scorllblock">
-						<div id="deliveryPlan" style="width: 100%;position: relative;">
-						</div>
-						<div id="deliveryPlanProduct">
-						</div>
-						<div id="deliveryTrayBarcode">
-							<table class="plist">
-								<thead>
-									<tr class="headline">
-										<th>删除</th>
-										<th>条码</th>
-										<th>产品名称</th>
-										<th>批次号</th>
-										<th>订单号</th>
-										<th>部件名称</th>
-										<th>产品重量</th>
-										<th>客户名称</th>
-									</tr>
-								</thead>
-								<tbody id="tbMain"></tbody>
-							</table>
-							<div style="color:red;text-align: center;font-size: 25px;font-weight: bold;margin-top:10px;" id="count"></div>
-
-						</div>
-
-					</div>
+				<div class="mui-button-row">
+					<button type="button" class="mui-btn mui-btn-primary" onclick="doOut(0)" style="width: 40%;">分批出库</button>
+					<button type="button" class="mui-btn mui-btn-primary" onclick="doOut(1)" style="width: 40%;">完成出库</button>
 				</div>
 			</div>
+
+			<div id="deliveryPlan" style="position: absolute;z-index:0;top:100px;width: 100%;">
+			</div>
+
+
+			<div class="mui-scroll-wrapper" style="z-index:1;">
+
+				<div class="mui-scroll" style="position: relative;top:255px; width: 100%; overflow:scroll;" id="scorllblock">
+
+					<div id="deliveryPlanProduct">
+					</div>
+					<div id="deliveryTrayBarcode">
+						<table class="plist">
+							<thead>
+								<tr class="headline">
+									<th>删除</th>
+									<th>条码</th>
+									<th>产品名称</th>
+									<th>批次号</th>
+									<th>订单号</th>
+									<th>部件名称</th>
+									<th>产品重量</th>
+									<th>客户名称</th>
+								</tr>
+
+							</thead>
+							<tbody id="tbMain"></tbody>
+						</table>
+
+						<div style="color:red;text-align: center;font-size: 25px;font-weight: bold;margin-top:10px;" id="count"></div>
+
+
+						<div style="height: 255px;"></div>
+					</div>
+
+				</div>
+			</div>
+			<div class="positions">
+				<div class="positions_title">
+					库存位置
+					<button style="float:right;width:80px;height: 45px;" onclick="closePosition()">关闭</button>
+				</div>
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<div id="stock_position_display">
+
+						</div>
+					</div>
+				</div>
+
+
+			</div>
+		</div>
 	</body>
 
 	<script id="deliveryPlanDetail" type="text/template">
 		{{each data as value i}}
 		<table shrink="true" id="{{value.ID}}" class="deliveryPlan" border="1" cellspacing="0" cellpadding="0" bordercolor="gray" style="BORDER-COLLAPSE: collapse;">
 			<tr>
-				<th class="title">要货单位</th>
+				<th class="title" >要货单位</th>
 				<th class="content" style="color:red;">{{value.DELIVERYTARGETCOMPANY}}</th>
 			</tr>
 			<tr>
@@ -233,10 +243,18 @@
 				<th class="title">提单号</th>
 				<th class="content" style="color:red;">{{value.LADINGCODE}}</th>
 			</tr>
-			<tr>
+			<!-- <tr>
 				<th class="title">尺码</th>
 				<th class="content">{{value.SIZE}}</th>
+			</tr> --> 
+			<tr> 
+				<th class="title" >总发货数量</th>
+				<th class="content" style="color:red;"></th>
 			</tr>
+			<tr>
+				<th class="title">已扫描数量</th>
+				<th class="content" id="countScan" style="color:red;"></th>
+			</tr> 
 			<tr>
 				<th class="title">件数</th>
 				<th class="content">{{value.COUNT}}</th>
@@ -245,7 +263,7 @@
 				<th class="title">毛重</th>
 				<th class="content">{{value.WEIGHT}} KG</th>
 			</tr>
-			<tr>
+			<!-- <tr>
 				<th class="title">实际箱号</th>
 				<th class="content" style="padding-left: 0;"><input placeholder="请输入实际箱号" id="boxNumber" value="{{value.BOXNUMBER}}"></th>
 			</tr>
@@ -263,16 +281,16 @@
 				<th class="title">物流公司</th>
 				<th class="content" style="color: red;">{{value.LOGISTICSCOMPANY}}</th>
 			</tr>
-			<tr>
+			<tr> 
 				<th class="title">包装方式</th>
 				<th class="content" style="color: red;">{{value.PACKAGINGTYPE}}</th>
-			</tr>
+			</tr> --> 
 			<tr>
 				<th class="title">注意事项</th>
 				<th class="content">{{value.ATTENTION}}</th>
 			</tr>
-		</table>
-		<button id="expand" action="shrink" onclick="expand()">↑收起↑</button> {{/each}}
+		</table> 
+		<button id="expand" action="shrink" style="display: none;" onclick="expand()">↑收起↑</button> {{/each}}
 	</script>
 	<!--
     	作者：golphei@gmail.com
@@ -280,7 +298,7 @@
     	描述：发货的产品列表
     -->
 	<script id="deliveryPlanOrders" type="text/template">
-		<table  class="plist" border="1" cellspacing="0" cellpadding="0" bordercolor="gray" style="BORDER-COLLAPSE: collapse;">
+		<table  class="plist" id="tabdeliveryPlanOrders" border="1" cellspacing="0" cellpadding="0" bordercolor="gray" style="BORDER-COLLAPSE: collapse;">
 		<tr>
 		<th class="title" height="10">订单号</th>
 		<th class="title" height="10">客户订单</th>
@@ -321,7 +339,6 @@
 
 	<script type="text/javascript">
 		var scanner;
-		var barcode = "";
 		var barcode1 = "";
 		var tcode = [];
 		var deliveryPlanDetailId = [];
@@ -354,70 +371,10 @@
 			$(".positions").show();
 		}
 
-		function addCode(tdata) {
-			App.ajaxPost(findProductUrl, {
-				"barCode": tdata
-			}, function(data) {
-				/*log(data.STOCK)*/
-				var model = data.PRODUCT.PRODUCTMODEL || data.FINISHED.PRODUCTMODEL;
-				if (model != null) {
-					tcode.push(tdata);
-					var trayCodeAndWeighthtml = template('trayCodeAndWeight', {
-						"data": data
-					});
-					log(trayCodeAndWeighthtml)
-					if (data.CODE.PARTID == null) {
-						$("#out-" + data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g, "") + "-" + data.CODE.BATCHCODE + "-").append(
-							trayCodeAndWeighthtml);
-					} else {
-						$("#out-" + data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g, "") + "-" + data.CODE.BATCHCODE + "-" +
-							data.CODE.PARTID).append(trayCodeAndWeighthtml);
-					}
-
-					if (color == "red") {
-						$("#" + data.TRAY.TRAYBARCODE).css("color", "red");
-						color = "";
-					}
-					var tweight = data.TRAY.WEIGHT.toFixed(2);
-					var weights;
-					var sum;
-					if (data.CODE.PARTID == null) {
-						weights = $("#weight-" + data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g, "") + "-" + data.ORDER.PRODUCTID +
-							"-" + data.CODE.BATCHCODE + "-");
-						sum = $("#sum-" + data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g, "") + "-" + data.ORDER.PRODUCTID +
-							"-" + data.CODE.BATCHCODE + "-");
-					} else {
-						weights = $("#weight-" + data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g, "") + "-" + data.ORDER.PRODUCTID +
-							"-" + data.CODE.BATCHCODE + "-" + data.CODE.PARTID);
-						sum = $("#sum-" + data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g, "") + "-" + data.ORDER.PRODUCTID +
-							"-" + data.CODE.BATCHCODE + "-" + data.CODE.PARTID);
-					}
-					if (sum.text() == "") {
-						sum.text(1);
-					} else {
-						sum.text(parseInt(sum.text()) + 1);
-					}
-
-					if (weights.text() == "") {
-						weights.text(parseFloat(tweight).toFixed(1));
-					} else {
-						weights.text((parseFloat(weights.text()) + parseFloat(tweight)).toFixed(1));
-					}
-				} else {
-					toast("该条码没有对应的成品记录！");
-					beepAndVibrate();
-					return;
-				}
-			}, function() {
-				beepAndVibrate();
-				toast("查询失败！");
-			})
-		}
-
 		App.ready(function() {
 			id = App.param("id_");
 			pn = App.param("pn");
-			document.addEventListener('touchmove', touch, true);
+			//document.addEventListener('touchmove', touch, true);
 			App.ajaxGet(App.getServerUrl() + "stock/product/cars",
 				function(data) {
 					cars = data;
@@ -491,38 +448,19 @@
 
 				});
 
-
-
 			scanner = new Scanner(parseCode);
 			scanner.scan();
 			window.addEventListener('customEvent', function(event) {
+				barCodeInfo = JSON.parse(window.localStorage.getItem('barCodeInfo'));
 				//通过event.detail可获得传递过来的参数内容
-				//log(event.detail.code);
 				if (event.detail.code) {
-					if ($("#" + barcode).length > 0) {
-						toast("该条码已加到出库队列,请勿重复条码！");
-						beepAndVibrate();
-						return;
-					} else {
-						addCode(barcode);
-						barcode1 = "";
-					}
-
-				} else {
-					barcode1 = "";
+					addCode(barCodeInfo);
 				}
+
+				window.localStorage.setItem('barCodeInfo', "");
 			});
 
 		});
-
-		function touch(event) {
-			var event = event || window.event;
-			switch (event.type) {
-				case "touchmove":
-					divdeliveryPlan.style.left = scorllblock.scrollLeft + "px";
-					break;
-			}
-		}
 
 
 		function parseCode(data) {
@@ -605,43 +543,33 @@
 						if ((parseInt(scanNum) + 1) > deliveryNum) {
 							beep();
 							toast("多于计划数量，请确认发货数量!");
-							//return;
+							return;
 						}
 
+						//判断该托是否为超期产品
+						var productShelfLife = ajaxData.PRODUCT.PRODUCTSHELFLIFE;
+						var inTime = new Calendar(ajaxData.INTIME);
+						var now = new Calendar();
+						var diff;
+						try {
+							diff = Calendar.diff(inTime, now, Calendar.field.DAY) //得出两个日期相差的天数
+						} catch (error) {
+							toast(error.message + ",请检查时间是否设置正确");
+						}
 
-						$("#count").empty();
-						//动态拼条码扫的数据
-						code.push(rdata[0]);
+						//判断是否重复扫描条码
 
-						var productPartName = '';
-						if (isEmpty(ajaxData.PRODUCT.FACTORYPRODUCTNAME)) {
-							productPartName = ajaxData.PRODUCT.TCPROCBOMVERSIONPARTSNAME;
+						if (diff > productShelfLife) {
+
+							mconfirm("超期产品", "该托为超期产品，确认扫入?", function() {
+								inBarcode(ajaxData);
+							});
+
 						} else {
-							productPartName = ajaxData.PRODUCT.FACTORYPRODUCTNAME;
+							inBarcode(ajaxData);
 						}
 
-						var partBatchCode = '';
-						if (isEmpty(ajaxData.BATCHCODE)) {
-							partBatchCode = ajaxData.CODE.BATCHCODE;
-						} else {
-							partBatchCode = ajaxData.BATCHCODE;
-						}
 
-						var mStr = {
-							"newWarehouseCode": $("#warehouseCode").val(),
-							"newWarehousePosCode": $("#warehousePosCode").val(),
-							"barCode": ajaxData.TRAY.TRAYBARCODE,
-							"productName": productPartName,
-							"batchCode": partBatchCode,
-							"salesOrderCode": ajaxData.CODE.SALESORDERCODE,
-							"productWeight": ajaxData.TRAY.WEIGHT,
-							"CONSUMERNAME": ajaxData.CONSUMERSIMPLENAME,
-							"partName": ajaxData.PARTNAME
-						};
-						pInfoList.push(mStr);
-						addBarcode(mStr);
-						total = total.add(mStr.productWeight);
-						$("#count").html("总托数：" + pInfoList.length + '\xa0\xa0\xa0' + "总重量：" + total + "KG");
 
 					}, function() {
 						closeWaiting();
@@ -650,6 +578,88 @@
 					});
 				}
 			}
+		}
+
+		function addCode(data) {
+
+			var barcode = data.CODE.BARCODE;
+			for (var i = 0; i < code.length; i++) {
+				if (code[i] == barcode) {
+					toast("扫描条码重复");
+					beepAndVibrate();
+					return;
+				}
+			}
+
+			$("#count").empty();
+			//动态拼条码扫的数据
+			code.push(barcode);
+
+			var productPartName = '';
+			if (isEmpty(data.PRODUCT.FACTORYPRODUCTNAME)) {
+				productPartName = data.PRODUCT.TCPROCBOMVERSIONPARTSNAME;
+			} else {
+				productPartName = data.PRODUCT.FACTORYPRODUCTNAME;
+			}
+
+			var partBatchCode = '';
+			if (isEmpty(data.BATCHCODE)) {
+				partBatchCode = data.CODE.BATCHCODE;
+			} else {
+				partBatchCode = data.BATCHCODE;
+			}
+
+			var productid = data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g, "") + "-" + data.ORDER.PRODUCTID +
+				"-" + data.CODE.BATCHCODE + "-";
+			if (data.CODE.PARTID != null) {
+				productid += data.CODE.PARTID
+			}
+
+			var mStr = {
+				"newWarehouseCode": data.WAREHOUSENAME,
+				"newWarehousePosCode": data.WAREHOUSEPOSCODE,
+				"barCode": barcode,
+				"productName": productPartName,
+				"batchCode": data.BATCHCODE,
+				"salesOrderCode": data.CODE.SALESORDERCODE,
+				"productWeight": data.TRAY.WEIGHT,
+				"CONSUMERNAME": data.CONSUMERSIMPLENAME,
+				"partName": data.PARTNAME,
+				"productid": productid
+			};
+			pInfoList.push(mStr);
+			addBarcode(mStr);
+			total = total.add(mStr.productWeight);
+			calculate(mStr);
+			$("#countScan").text(pInfoList.length);
+			$("#count").html("总托数：" + pInfoList.length + '\xa0\xa0\xa0' + "总重量：" + total + "KG");
+		}
+
+		function calculate(mStr) {
+			var productid = mStr.productid;
+			var tweight = parseFloat(mStr.productWeight).toFixed(2);
+			var weights = $("#weight-" + productid);
+			var sum = $("#sum-" + productid);
+
+			if (sum.text() == "") {
+				sum.text(1);
+			} else {
+				sum.text(parseInt(sum.text()) + 1);
+			}
+
+			if (weights.text() == "") {
+				weights.text(parseFloat(tweight).toFixed(1));
+			} else {
+				weights.text((parseFloat(weights.text()) + parseFloat(tweight)).toFixed(1));
+			}
+
+		}
+
+		function inBarcode(ajaxData) {
+			window.localStorage.setItem('barCodeInfo', JSON.stringify(ajaxData));
+			App.go("pInfoForDelivery2.html", {
+				url: "pOutDetail2.html"
+			});
 		}
 
 		function addBarcode(h) {
@@ -702,36 +712,34 @@
 					if (pInfoList[i].barCode == vbarcode) {
 						total = toFixed((total - pInfoList[i].productWeight), 1);
 						pInfoList.splice(i, 1);
+						var num;
+						var weight;
+
+						var productid = pInfoList[i].productid;
+						num = $("#sum-" + productid);
+						weight = $("#weight-" + productid);
+
+						weight.text(parseFloat(parseFloat(weight.text()).toFixed(1) - pInfoList[i].productWeight.toFixed(1)).toFixed(1));
+						num.text(parseInt(num.text()) - 1);
 					}
 				}
+				$("#countScan").text(pInfoList.length);
 				$("#count").html("总托数：" + pInfoList.length + '\xa0\xa0\xa0' + "总重量：" + total + "KG");
 			}
 		}
 
+		//重写toFixed方法
+		function toFixed(num, d) {
+			num *= Math.pow(10, d);
+			num = Math.round(num);
+			return num / (Math.pow(10, d));
+		}
+
 		function doOut(isfinished) { //出库
 
-			var counts = 0;
-			var isContinue = false;
+			var counts = pInfoList.length;
 
-			for (var xx = 0; xx < deliveryPlanDetailId.length; xx++) {
-				var detailId = deliveryPlanDetailId[xx];
-				var count = 0;
-				count = $("#" + detailId)[0].rows[7].cells[1].innerText;
-				counts += parseInt(count);
-				if (parseInt(count) > 0) {
-					isContinue = true;
-				}
-				if (parseInt(count) < parseInt($("#" + detailId)[0].rows[6].cells[1].innerText)) {
-					str = "少于计划数量，是否继续？";
-				} else if (parseInt(count) > parseInt($("#" + detailId)[0].rows[6].cells[1].innerText)) {
-					beep();
-					//toast("多于计划数量，请确认发货数量!");
-					//return;
-				}
-
-			}
-
-			if (!isContinue) {
+			if (counts==0) {
 				if (isfinished == 0) {
 					beep();
 					toast("实际发货托数为0，请扫描要发货的托!");
@@ -780,7 +788,7 @@
 						mconfirm('警告', str, function() {
 							waiting("正在出库", true);
 							var tStr = {
-								"codes": tcode.toString(),
+								"codes": code.toString(),
 								"UserId": App.getLoginUserId(),
 								"puid": App.getLoginUserId(),
 								"puname": App.getLoginUserName(),
@@ -906,39 +914,6 @@
 			$("#plate").val(car);
 		}
 
-		function del(code) {
-			mconfirm("操作提示", "确认删除" + code + "吗?", function() {
-				App.ajaxPost(findProductUrl, {
-					"barCode": code
-				}, function(data) {
-					var num;
-					var weight;
-					if (data.CODE.PARTID == null) { //部件id为空时
-						num = $("#sum-" + data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g, "") + "-" + data.ORDER.PRODUCTID +
-							"-" + data.CODE.BATCHCODE + "-");
-						weight = $("#weight-" + data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g, "") + "-" + data.ORDER.PRODUCTID +
-							"-" + data.CODE.BATCHCODE + "-");
-					} else {
-						num = $("#sum-" + data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g, "") + "-" + data.ORDER.PRODUCTID +
-							"-" + data.CODE.BATCHCODE + "-" + data.CODE.PARTID);
-						weight = $("#weight-" + data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g, "") + "-" + data.ORDER.PRODUCTID +
-							"-" + data.CODE.BATCHCODE + "-" + data.CODE.PARTID);
-					}
-					weight.text(parseFloat(parseFloat(weight.text()).toFixed(1) - data.TRAY.WEIGHT.toFixed(1)).toFixed(1));
-					num.text(parseInt(num.text()) - 1);
-					$("#" + code).remove();
-					for (var j = 0; j < tcode.length; j++) {
-						if (tcode[j] == code) {
-							code = tcode[j];
-							if (code == barcode1) {
-								barcode1 = "";
-							}
-						}
-					}
-					tcode.splice(tcode.indexOf(code), 1);
-				}, function() {})
-			});
-		}
 
 		function closePosition() {
 			$(".positions").hide();

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -151,11 +151,16 @@
                 code.splice(code.indexOf(vbarcode), 1);
                 for (var i = 0; i < pInfoList.length; i++) {
                     if (pInfoList[i].barCode == vbarcode) {
-                        total = toFixed((total - pInfoList[i].productWeight), 1);
+                        total = Number((total - pInfoList[i].productWeight).toFixed(1));
                         pInfoList.splice(i, 1);
                     }
                 }
-                $("#count").html("总托数：" + pInfoList.length + '\xa0\xa0\xa0' + "总重量：" + total + "KG");
+				if (0.0 != total || 0 != total) {
+					$("#count").html("总托数：" + pInfoList.length + '\xa0\xa0\xa0' + "总重量：" + total + "KG");
+				} else {
+					$("#count").empty();
+				}
+                
             }
         }
 

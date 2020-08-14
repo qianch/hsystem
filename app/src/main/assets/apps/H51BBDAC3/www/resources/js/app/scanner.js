@@ -24,7 +24,7 @@
 			malert("代码异常", "Exception:new Scanner()必须传入一个回调方法，参数为扫描到的条码号");
 		}
 
-		var devices = ["SAMSUNG","HUAWEI","XIAOMI"];
+		var devices = ["SAMSUNG","HUAWEI","XIAOMI","OPPO","VIVO","MEIZU","ONEPLUS"];
 		if(devices.indexOf(plus.device.vendor.toUpperCase()) != -1) {
 			$("body").append("<div id=\"scan_qrcode\" style=\"z-index:999;position: fixed;bottom:50px;left: 10px;height: 100px;width:100px;border-radius:10px;background: url(../resources/images/scan.png);background-size: 100% 100%;\"></div>");
 			$("#scan_qrcode").draggable();

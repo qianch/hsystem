@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>成品信息查询</title>
+		<script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			.mui-input-group .mui-input-row {
+				height: 25px;
+			}
+
+			.mui-input-row label~input,
+			.mui-input-row label~select,
+			.mui-input-row label~textarea {
+				height: 25px;
+			}
+
+			.mui-input-row .mui-input-clear~.mui-icon-clear,
+			.mui-input-row .mui-input-speech~.mui-icon-speech,
+			.mui-input-row .mui-input-password~.mui-icon-eye {
+				top: 2px;
+			}
+
+			.mui-input-row label {
+				font-family: 'Helvetica Neue', Helvetica, sans-serif;
+				line-height: 25px;
+				font-size: 20px;
+			}
+
+			.mui-btn-primary,
+			.mui-btn-blue {
+				font-size: 20px;
+				color: #fff;
+				font-weight: bold;
+				border: 1px solid #007aff;
+				background-color: #007aff;
+				margin-top: -3px;
+				line-height: 18px;
+			}
+
+			.mui-popover {
+				margin-top: 50px;
+				margin-left: 20px;
+				height: 300px;
+			}
+
+			.mui-scroll-wrapper .mui-input-row label {
+				height: 40px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">成品查询</h1>
+		</header>
+		<div class="mui-input-row" onclick="searchInfo()" style="line-height: 40px;color:white;background: #064f65;position: fixed;top:44px;z-index: 99;width: 100%;">
+			<label style="line-height: 40px;">成品条码</label>
+			<input id="barCode" type="text" readonly required placeholder="请扫二维码" style="height: 40px;">
+		</div>
+
+		<div class="mui-content">
+			<div class="mui-scroll-wrapper" style="margin-top:85px;">
+				<div class="mui-scroll">
+					<form class="mui-input-group" id="form">
+					</form>
+					<div class="mui-button-row" style="margin-bottom: 30px;">
+						<button type="button" class="mui-btn mui-btn-primary" onclick="ok()" style="width: 30%;height:30px;padding:0;">确定</button>
+						<button type="button" class="mui-btn mui-btn-primary" onclick="cannel()" style="width: 30%;height:30px;padding:0;">取消</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="barcodePopover" class="mui-popover">
+			<div class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<ul class="mui-table-view" id="barcodeInfo">
+					</ul>
+				</div>
+			</div>
+
+		</div>
+
+		<script type="text/javascript">
+			var data = "";
+			var stt = "";
+			var _barCode;
+			var ppd = ""; //生产计划明细
+			var deviceCode = ""; //产出机台
+			var qualityGradeCode = ""; //质量等级
+			var weight = ""; //实际重量
+			var time = ""; //产出时间
+			var stock = ""; //库存状态
+			var product = ""; //成品信息
+			var barCode = "";
+			var productState = "";
+			var _productState;
+			var productModel = "";
+			var barCodeInfo = "";
+			var pOut = null;
+			var url = "";
+			var scanner;
+
+			function ok() {
+				if (!pOut) {
+					pOut = plus.webview.getWebviewById(url);
+				}
+				mui.fire(pOut, 'customEvent', {
+					code: true
+				});
+				plus.webview.currentWebview().close();
+				//mui.back();
+			}
+
+			function cannel() {
+				if (!pOut) {
+					pOut = plus.webview.getWebviewById(url);
+				}
+				mui.fire(pOut, 'customEvent', {
+					code: false
+				});
+				plus.webview.currentWebview().close();
+				//mui.back();
+			}
+
+			var barCodeInfo = JSON.parse(window.localStorage.getItem('barCodeInfo'));
+			window.onload = function() {
+				//var barCodeInfo = App.param("data");
+				initProduct(barCodeInfo);
+			}
+
+			App.ready(function() {
+				url = App.param("url");
+			});
+
+			mui('.mui-scroll-wrapper').scroll({
+				deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+			});
+
+
+			document.onkeydown = function(e) {
+				//键盘事件
+				if (e.keyCode == 37 || e.keyCode == 39) {}
+			}
+
+			function initProduct(data) {
+				var barcode = data.CODE.BARCODE;
+				$("#barCode").val(barcode);
+				_productState = data.STATE;
+				if (data.STATE == 0) {
+					productState = "正常";
+				} else if (data.STATE == -1) {
+					productState = "不合格";
+				} else if (data.STATE == 3) {
+					productState = "冻结";
+				} else if (data.STATE == 5) {
+					productState = "退货";
+				} else if (data.STATE == 6) {
+					productState = "超产";
+				}
+				log(data.STOCK);
+
+				//库存状态
+				if (data.STOCK == -1) {
+					stock = "出库";
+				} else if (data.STOCK == 1) {
+					stock = "在库";
+				} else if (data.STOCK == 2) {
+					stock = "待入库";
+				} else if (data.STOCK == 3) {
+					stock = "在途库";
+				} else if (data.STOCK == 4) {
+					stock = "领料";
+				} else if (data.STOCK == 5) {
+					stock = "退库";
+				} else {
+					stock = "不在库";
+				}
+				//作废状态
+				if (data.CODE.ISABANDON == 1) {
+					isAbandon = "作废";
+				} else {
+					isAbandon = "正常";
+				}
+				//判断条码类型
+				if ((barcode.indexOf("R") == 0 || barcode.indexOf("P") == 0) && data.ROLL != null) { //卷
+					deviceCode = data.ROLL.ROLLDEVICECODE;
+					if (deviceCode == null) {
+						deviceCode = "";
+					}
+					qualityGradeCode = data.ROLL.ROLLQUALITYGRADECODE;
+					weight = Number(data.ROLL.ROLLWEIGHT).toFixed(1);
+					time = isEmpty(data.ROLL.ROLLOUTPUTTIME) ? "" : data.ROLL.ROLLOUTPUTTIME;
+					//productModel=product.PRODUCTMODEL;
+				} else if (barcode.indexOf("B") == 0) { //箱
+					qualityGradeCode = data.BOX.ROLLQUALITYGRADECODE;
+					weight = Number(data.BOX.WEIGHT).toFixed(1);
+					time = isEmpty(data.BOX.PACKAGINGTIME) ? "" : data.BOX.PACKAGINGTIME;
+					//productModel="";
+				} else { //托
+					qualityGradeCode = data.TRAY.ROLLQUALITYGRADECODE;
+					weight = Number(data.TRAY.WEIGHT).toFixed(1);
+					time = isEmpty(data.TRAY.PACKAGINGTIME) ? "" : data.TRAY.PACKAGINGTIME;
+					//productModel="";
+				}
+				//生产计划明细
+				ppd = data.PPD;
+				product = data.PRODUCT;
+				productModel = product.PRODUCTMODEL;
+				//}
+
+				//if(barcode.indexOf("T")!=0){
+				stt += "<div class='mui-input-row'><label>产品名称</label>";
+				if (isEmpty(product.FACTORYPRODUCTNAME)) {
+					stt += "<input type='text' class='mui-input-clear' readonly value='" + product.TCPROCBOMVERSIONPARTSNAME +
+						"'></div>"
+				} else {
+					stt += "<input type='text' class='mui-input-clear' readonly value='" + product.FACTORYPRODUCTNAME + "'></div>";
+				}
+				stt += "<div class='mui-input-row'><label>产品规格</label>";
+				if (isEmpty(product.PRODUCTMODEL)) {
+					stt += "<input type='text' class='mui-input-clear' readonly value='" + product.TCPROCBOMVERSIONPARTSTYPE +
+						"'></div>";
+				} else {
+					stt += "<input type='text' class='mui-input-clear' readonly value='" + product.PRODUCTMODEL + "'></div>";
+				}
+
+				stt += "<div class='mui-input-row'><label>批次号</label>";
+				stt += "<input type='text' class='mui-input-clear' readonly value='" + data.CODE.BATCHCODE + "'></div>";
+
+				stt += "<div class='mui-input-row'><label>部件</label>";
+				stt += "<input type='text' class='mui-input-clear' readonly value='" + data.PARTNAME + "'></div>";
+				
+				stt += "<div class='mui-input-row'><label>客户订单号</label>";
+				stt += "<input type='text' class='mui-input-clear' readonly value='" + data.ORDER.SALESORDERSUBCODEPRINT +
+					"'></div>";
+
+				stt += "<div class='mui-input-row'><label>客户名称</label>";
+				stt += "<input type='text' class='mui-input-clear' readonly value='" + data.CONSUMER.CONSUMERNAME + "'></div>";
+
+				var PRODUCTWIDTH = "";
+				try {
+					PRODUCTWIDTH = product.PRODUCTWIDTH;
+					if (PRODUCTWIDTH == null) {
+						PRODUCTWIDTH = ppd.PRODUCTWIDTH;
+					}
+					if (PRODUCTWIDTH == null) {
+						PRODUCTWIDTH = "";
+					}
+				} catch (e) {
+					if (PRODUCTWIDTH == null) {
+						PRODUCTWIDTH = "";
+					}
+				}
+				if (PRODUCTWIDTH != "")
+					PRODUCTWIDTH += "mm";
+
+				stt += "<div class='mui-input-row'><label>门幅</label>";
+				stt += "<input type='text' class='mui-input-clear' readonly value='" + PRODUCTWIDTH + "'></div>";
+
+				stt += "<div class='mui-input-row'><label>定重/定长</label>";
+				var l = (isEmpty(ppd) ? data.PRODUCT.PRODUCTROLLLENGTH : ppd.PRODUCTLENGTH);
+				var w = (isEmpty(ppd) ? data.PRODUCT.PRODUCTROLLWEIGHT : ppd.PRODUCTROLLWEIGHT);
+				if (isEmpty(l) && isEmpty(w)) {
+					w = 0.00;
+					l = 0.00;
+				}
+				stt += "<input type='text' class='mui-input-clear' readonly value='" + (isEmpty(w) ? (l + " m") : (w + " kg")) +
+					"'></div>";
+
+				stt += "<div class='mui-input-row'><label>产品重量</label>";
+				stt += "<input type='text' class='mui-input-clear' readonly value='" + Number(weight).toFixed(2) + "kg'></div>";
+
+				if (barcode.indexOf("B") != 0 && barcode.indexOf("T") != 0) {
+					stt += "<div class='mui-input-row'><label>产出机台</label>";
+					if (deviceCode == null || deviceCode == "null") {
+						deviceCode = "";
+					}
+					stt += "<input type='text' class='mui-input-clear' readonly value='" + deviceCode + "'></div>";
+				}
+
+				stt += "<div class='mui-input-row'><label>产出时间</label>";
+				stt += "<input type='text' class='mui-input-clear' readonly value='" + time + "'></div>";
+
+				stt += "<div class='mui-input-row'><label>质量等级</label>";
+				stt += "<input type='text' class='mui-input-clear' id='qualityGrade' readonly value='" + qualityGradeCode +
+					"'></div>";
+
+				if (barcode.indexOf("T") == 0) {
+					stt += "<div class='mui-input-row'><label>在库状态</label>";
+					stt += "<input type='text' class='mui-input-clear' readonly value='" + stock + "'></div>";
+				}
+
+				stt += "<div class='mui-input-row'><label>成品状态</label>";
+				stt += "<input type='text' class='mui-input-clear' id='productState' readonly value='" + productState + "'></div>";
+
+				stt += "<div class='mui-input-row'><label>作废状态</label>";
+				stt += "<input type='text' class='mui-input-clear' id='isAbandon' readonly value='" + isAbandon + "'></div>";
+
+				stt += "<div class='mui-input-row'><label>操作人</label>";
+				stt += "<input type='text' class='mui-input-clear' readonly value='" + data.OPERATOR + " (" + data.DEPARTMENT +
+					")'></div>";
+				$("#form").empty();
+				$("#form").append(stt);
+				stt = "";
+			}
+
+
+			mui.back = function() {
+				plus.nativeUI.actionSheet({
+					title: "确认返回？",
+					cancel: "取消",
+					buttons: [{
+						title: "返回"
+					}, {
+						title: "不返回"
+					}]
+				}, function(e) {
+					if (e.index == 1) {
+
+						if (!pOut) {
+							pOut = plus.webview.getWebviewById(url);
+						}
+						mui.fire(pOut, 'customEvent', {
+							code: false
+						});
+						plus.webview.currentWebview().close();
+					};
+				});
+			};
+		</script>
+	</body>
+</html>
