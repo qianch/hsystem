@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -122,7 +122,8 @@
         var infos = App.getServerUrl() + "package/";
         var trayInfo = App.getServerUrl() + "common/tray/info/";
         var boxInfo = App.getServerUrl() + "common/box/info/";
-        var openPackUrl = App.getServerUrl() + "package2/open/";
+       // var openPackUrl = App.getServerUrl() + "package2/open/";
+	    var openPackUrl = App.getServerUrl() + "package2/openPackBarCode/";
 
         mui('.mui-scroll-wrapper').scroll({
             deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
@@ -282,7 +283,7 @@
 
         function openPack() {
             //mconfirm("操作提示","确认拆包？",function(){
-            App.ajaxPost(openPackUrl, { code: $("#barcode").val() }, function (data) {
+            App.ajaxPost(openPackUrl, { code: $("#barcode").val(),operateUserId:App.getLoginUserId() }, function (data) {
                 sucTip("拆包成功,里面条码可继续打包");
                 $("#barcode").val("");
                 $("#form").empty();

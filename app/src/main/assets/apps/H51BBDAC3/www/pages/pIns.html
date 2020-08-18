@@ -59,14 +59,70 @@
                     <input id="warehouseCode" type="hidden" readonly required placeholder="仓库代码">
                     <input id="warehousePosCode" type="hidden" readonly required placeholder="库位">
                 </div>
+				<div style="color:red;text-align: center;font-size: 25px;font-weight: bold;margin-top:10px;" id="count"></div>
                 <div class="mui-button-row">
-                    <button type="button" class="mui-btn mui-btn-primary" onclick="doSubmit()" style="width: 50%;">保存</button>
+                    <button type="button" class="mui-btn mui-btn-primary" onclick="doSubmit()" style="width: 33%;">保存</button>
+					<button type="button" class="mui-btn mui-btn-primary" onclick="change()" style="width: 33%;">条码列表</button>
                 </div>
             </div>
-            <div class="mui-scroll" style="width: 100%; overflow-x: auto;" id="block">
-
-
-                <table class="plist">
+	
+			
+	
+			<div class="mui-scroll" id = "divBlock" style="position: absolute;top:auto; width: 100%;z-index:1;">
+			    <div class="mui-input-group"
+			         style="background:#dcdcdc;border-bottom: 2px solid #007aff;margin-bottom: 1px;">
+			        <label>订单数量</label>
+			        <label id="num1" style="color: green;">0</label>/
+			        <label id="num2">0</label>
+			        <label>打包进度</label>
+			        <label id="num3" style="color: green;">0</label>/
+			        <label id="num4">0</label>
+			    </div>
+			
+			    <form class="mui-input-group" id="rForm">
+			        <input id="state" type="hidden">
+			        <div class="mui-input-row">
+			            <label>条码号</label>
+			            <input id="barCode" type="text" readonly required placeholder="条码号">
+			        </div>
+			        <div class="mui-input-row">
+			            <label>客户订单号</label>
+			            <input id="SALESORDERSUBCODEPRINT" type="text" readonly class="mui-input-clear" required placeholder="客户订单号">
+			        </div>
+			        <div class="mui-input-row">
+			            <label>产品名称</label>
+			            <input id="consumerProductName" type="text" readonly class="mui-input-clear" required placeholder="客户产品名称">
+			        </div>
+			        <div class="mui-input-row">
+			            <label>产品型号</label>
+			            <input id="productModel" type="text" style="font-size: 15px" readonly="readonly"
+			                   class="mui-input-clear" placeholder="产品型号">
+			        </div>
+			        <div class="mui-input-row">
+			            <label>部件</label>
+			            <input id="partName" type="text" readonly class="mui-input-clear" placeholder="部件">
+			        </div>
+			        <div class="mui-input-row">
+			            <label>批次号</label>
+			            <input id="batchCode" type="text" readonly class="mui-input-clear" required placeholder="批次号">
+			        </div>
+			        <div class="mui-input-row">
+			            <label>门幅</label>
+			            <input id="productWidth" type="text" readonly class="mui-input-clear" placeholder="门幅">
+			        </div>
+			        <div class="mui-input-row">
+			            <label>客户</label>
+			            <input id="consumer" type="text" readonly class="mui-input-clear" required placeholder="客户">
+			        </div>
+			        <div class="mui-input-row">
+			            <label>重量</label>
+			            <input id="weight" readonly type="text" class="mui-input-clear" placeholder="重量">
+			        </div>		
+			    </form>		
+			</div>
+				
+            <div class="mui-scroll" style="position: relative;top:auto;z-index:0; width: 100%;overflow:scroll;" id="pblock">
+				<table class="plist">
                     <thead>
                         <tr class="headline">
                             <th>删除</th>
@@ -81,7 +137,7 @@
                     </thead>
                     <tbody id="tbMain"></tbody>
                 </table>
-                <div style="color:red;text-align: center;font-size: 25px;font-weight: bold;margin-top:10px;" id="count"></div>
+				
             </div>
         </div>
     </div>
@@ -100,9 +156,10 @@
             scanner = new Scanner(parseCode);
             scanner.scan();
         });
-
-
-
+		
+		var divBlock = document.getElementById("divBlock");
+		var pblock = document.getElementById("pblock");
+		
         function addBarcode(h) {
             var row = document.createElement('tr'); //创建行  
 
@@ -137,7 +194,6 @@
             var CONSUMERNAMECell = document.createElement('td'); //创建第六列CONSUMERNAME
             CONSUMERNAMECell.innerHTML = h.CONSUMERNAME;
             row.appendChild(CONSUMERNAMECell);
-
             tbody.appendChild(row);
         }
 
@@ -187,7 +243,7 @@
                             tip(ajaxData.MSG);
                             return;
                         }
-
+						$("#barCode").val(rdata[0]);
                         //判断条码是否产出登记
                         if (!ajaxData.REGISTER) {
                             beepAndVibrate();
@@ -226,6 +282,61 @@
                             toast("该条码是裁剪车间用,胚布无法入成品库");
                             return;
                         }
+						if (ajaxData.orderCnt) {
+						    if (parseInt(ajaxData.orderCnt) > parseInt(ajaxData.strockCnt)) {
+						        $("#num1").css("color", "red");
+						    }
+						    $("#num1").text(ajaxData.orderCnt);
+						}
+						if (ajaxData.strockCnt) {
+						
+						    $("#num2").text(ajaxData.strockCnt);
+						    $("#num4").text(ajaxData.strockCnt);
+						}
+						if (ajaxData.packageCnt) {
+						    $("#num3").text(ajaxData.packageCnt);
+						}
+						
+						
+						if (ajaxData.ORDER != null) {
+						    $("#orderCode").val(ajaxData.ORDER.SALESORDERSUBCODE);
+						    $("#SALESORDERSUBCODEPRINT").val(ajaxData.ORDER.SALESORDERSUBCODEPRINT);
+						}
+						
+						if (ajaxData.CONSUMER != null) {
+						    $("#consumer").val(ajaxData.CONSUMER.CONSUMERNAME);
+						}
+						
+						if (ajaxData.PRODUCT != null) {
+						    $("#consumerProductName").val(ajaxData.PRODUCT.CONSUMERPRODUCTNAME || "");
+						    $("#productWidth").val(ajaxData.PRODUCT.PRODUCTWIDTH || "");
+						}
+						
+						if (ajaxData.FINISHED != null) {
+						    $("#consumerProductName").val(ajaxData.FINISHED.CONSUMERPRODUCTNAME || "")
+						    $("#productWidth").val(ajaxData.FINISHED.PRODUCTWIDTH || "");
+						}
+						
+						$("#batchCode").val(ajaxData.CODE.BATCHCODE);
+						$("#partName").val(ajaxData.PARTNAME);
+						
+						//var shelfLife = ajaxData.PRODUCT.PRODUCTSHELFLIFE;
+						var outTime;
+						if (data[0].indexOf("R") == 0) {
+						    $("#weight").val(ajaxData.ROLL.ROLLWEIGHT);
+						    $("#productModel").val(ajaxData.PRODUCT.PRODUCTMODEL || ajaxData.FINISHED.PRODUCTMODEL || "");
+						    outTime = new Calendar(new Date(ajaxData.ROLL.ROLLOUTPUTTIME.replace(/-/g,
+						        "/")));
+						} else if (data[0].indexOf("T") == 0 || data[0].indexOf("P") == 0) {
+						    try {
+						        $("#weight").val(Number(ajaxData.TRAY.WEIGHT).toFixed(1));
+						    } catch (e) {
+						        $("#weight").val(ajaxData.TRAY.WEIGHT);
+						    }
+						    $("#productModel").val(ajaxData.PRODUCT.PRODUCTMODEL || ajaxData.FINISHED.PRODUCTMODEL || "");
+						    outTime = new Calendar(new Date(ajaxData.TRAY.PACKAGINGTIME.replace(/-/g,
+						        "/")));
+						}
 
                         $("#count").empty();
                         //动态拼条码扫的数据
@@ -351,13 +462,28 @@
                 closeWaiting();
             });
         }
-
         function clearRoll() {
             pInfoList.empty();
             tbody.empty();
             rdata = "";
             code = [];
         }
+		
+		function change() {
+			var vplanIndex = pblock.style.zIndex;
+			pblock.style.zIndex = divBlock.style.zIndex;
+			divBlock.style.zIndex = vplanIndex;
+		
+			divBlock.style.display = "block";
+			pblock.style.display = "block";
+	
+			if (pblock.style.zIndex == 0) {
+				pblock.style.display = "none";
+			}
+			if (divBlock.style.zIndex == 0) {
+				divBlock.style.display = "none";
+			}
+		}
     </script>
 </body>
 </html>

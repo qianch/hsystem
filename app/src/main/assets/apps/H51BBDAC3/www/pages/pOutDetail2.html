@@ -161,22 +161,21 @@
 		</header>
 		<div class="mui-content">
 
-			<div class="mui-input-group" style="position: absolute;z-index:2;">
-
-
+			<div class="mui-input-group" style="position: absolute;z-index:2; height: 40px;">
 				<div class="mui-button-row">
-					<button type="button" class="mui-btn mui-btn-primary" onclick="doOut(0)" style="width: 40%;">分批出库</button>
-					<button type="button" class="mui-btn mui-btn-primary" onclick="doOut(1)" style="width: 40%;">完成出库</button>
+					<button type="button" onclick="doOut(0)" style="width: 30%;">分批出库</button>
+					<button type="button" onclick="doOut(1)" style="width: 30%;">完成出库</button>
+					<button type="button" onclick="change()" style="width: 30%;">切换信息</button>
 				</div>
 			</div>
 
-			<div id="deliveryPlan" style="position: absolute;z-index:0;top:100px;width: 100%;">
+			<div id="deliveryPlan" style="position: absolute;z-index:1;top:80px;width:100%;">
 			</div>
 
 
-			<div class="mui-scroll-wrapper" style="z-index:1;">
+			<div class="mui-scroll-wrapper" style="position: absolute;z-index:0;width:100%;" id="divscorllblock">
 
-				<div class="mui-scroll" style="position: relative;top:255px; width: 100%; overflow:scroll;" id="scorllblock">
+				<div class="mui-scroll" style="position: relative;top:38px; width: 100%; overflow:scroll;" id="scorllblock">
 
 					<div id="deliveryPlanProduct">
 					</div>
@@ -356,7 +355,10 @@
 		var data_ = null;
 
 		var scorllblock = document.getElementById("scorllblock");
+		var divscorllblock = document.getElementById("divscorllblock");
 		var divdeliveryPlan = document.getElementById("deliveryPlan");
+
+
 		var tbody = document.getElementById('tbMain');
 		var rdata = "";
 		var code = [];
@@ -465,12 +467,18 @@
 
 		function parseCode(data) {
 			rdata = data.split(";");
+
 			for (var i = 0; i < code.length; i++) {
 				if (code[i] == rdata[0]) {
 					toast("扫描条码重复");
 					beepAndVibrate();
 					return;
 				}
+			}
+
+			var vplanIndex = divdeliveryPlan.style.zIndex;
+			if (vplanIndex == 1) {
+				change();
 			}
 
 			if (rdata != "") {
@@ -481,6 +489,15 @@
 						if (ajaxData.ERROR) {
 							tip(ajaxData.MSG);
 							return;
+						}
+
+						for (var i = 0; i < code.length; i++) {
+
+							if (code[i] == rdata[0]) {
+								toast("扫描条码重复");
+								beepAndVibrate();
+								return;
+							}
 						}
 
 						//判断条码是否产出登记
@@ -498,15 +515,6 @@
 								toast("打包未结束");
 							}
 							return;
-						}
-
-						for (var i = 0; i < code.length; i++) {
-
-							if (code[i] == rdata[0]) {
-								toast("扫描条码重复");
-								beepAndVibrate();
-								return;
-							}
 						}
 
 						if (ajaxData.STOCK != 1) {
@@ -535,14 +543,14 @@
 						}
 
 						//限制条码多扫
-						//扫描数量
-						var scanNum = $("#" + productid).find("td:eq(6)").text();
 						//发货数量
-						var deliveryNum = $("#" + productid).find("td:eq(7)").text();
+						var deliveryNum = $("#" + productid).find("td:eq(6)").text();
+						//扫描数量
+						var scanNum = $("#" + productid).find("td:eq(7)").text();
 
 						if ((parseInt(scanNum) + 1) > deliveryNum) {
 							beep();
-							toast("多于计划数量，请确认发货数量!");
+							toast("扫描数量("+scanNum+")多于计划数量(" + deliveryNum + ")，请确认发货数量(" + deliveryNum + ")!");
 							return;
 						}
 
@@ -711,16 +719,16 @@
 				for (var i = 0; i < pInfoList.length; i++) {
 					if (pInfoList[i].barCode == vbarcode) {
 						total = toFixed((total - pInfoList[i].productWeight), 1);
-						pInfoList.splice(i, 1);
+						 
 						var num;
 						var weight;
-
 						var productid = pInfoList[i].productid;
 						num = $("#sum-" + productid);
 						weight = $("#weight-" + productid);
 
 						weight.text(parseFloat(parseFloat(weight.text()).toFixed(1) - pInfoList[i].productWeight.toFixed(1)).toFixed(1));
 						num.text(parseInt(num.text()) - 1);
+						pInfoList.splice(i, 1);
 					}
 				}
 				$("#countScan").text(pInfoList.length);
@@ -739,7 +747,7 @@
 
 			var counts = pInfoList.length;
 
-			if (counts==0) {
+			if (counts == 0) {
 				if (isfinished == 0) {
 					beep();
 					toast("实际发货托数为0，请扫描要发货的托!");
@@ -839,6 +847,22 @@
 			var _this = this;
 
 		});
+
+		function change() {
+			var vplanIndex = divdeliveryPlan.style.zIndex;
+			divdeliveryPlan.style.zIndex = divscorllblock.style.zIndex;
+			divscorllblock.style.zIndex = vplanIndex;
+
+			divdeliveryPlan.style.display = "block";
+			divscorllblock.style.display = "block";
+
+			if (divdeliveryPlan.style.zIndex == 0) {
+				divdeliveryPlan.style.display = "none";
+			}
+			if (divscorllblock.style.zIndex == 0) {
+				divscorllblock.style.display = "none";
+			}
+		}
 
 		mui.back = function() {
 			/*mconfirm("操作提示", "确认返回？", function() {
