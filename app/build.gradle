@@ -7,8 +7,8 @@ android {
         applicationId "com.bluebird.hs"
         minSdkVersion 14
         targetSdkVersion 29
-        versionCode 497
-        versionName "4.9.7"
+        versionCode 498
+        versionName "4.9.8"
         multiDexEnabled true
         ndk {
             abiFilters 'x86','armeabi-v7a'
