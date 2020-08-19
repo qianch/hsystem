@@ -52,12 +52,10 @@
 				font-size: 15px;
 				width: 100%;
 			}
-			.divrow
-			{
+
+			.divrow {
 				height: 100px;
 			}
-
-			
 		</style>
 	</head>
 
@@ -67,74 +65,83 @@
 			<h1 class="mui-title">成品批量入库</h1>
 		</header>
 		<div class="mui-content">
-			<div class="mui-scroll-wrapper">
-				<div class="mui-input-group" style="background:#dcdcdc;border-bottom: 2px solid #007aff;margin-bottom: 1px;">
-					<div class="mui-input-row">
-						<input id="position" type="text" readonly required placeholder="仓库信息">
-						<input id="warehouseName" type="hidden" readonly required placeholder="仓库名称">
-						<input id="warehouseCode" type="hidden" readonly required placeholder="仓库代码">
-						<input id="warehousePosCode" type="hidden" readonly required placeholder="库位">
-					</div>
-					<div style="color:red;text-align: center;font-size: 25px;font-weight: bold;margin-top:10px;" id="count"></div>
-					<div class="mui-button-row" height="20px">
-						<button type="button" onclick="doSubmit()" style="width: 33%;">保存</button>
-						<button type="button" onclick="change()" style="width: 33%;">条码列表</button>
+
+			<div class="mui-input-group" style="position: absolute;z-index:2;height: 90px; background-color: beige">
+				<div class="mui-button-row"  >
+					<button type="button" onclick="doSubmit()" style="width: 33%;">保存</button>
+					<button type="button" onclick="change()" style="width: 30%;">切换信息</button>
+				</div>
+				<div class="mui-input-row"  >
+					<div style="color:red;text-align: center;font-size: 20px;font-weight: bold;" id="count">总托数： 总重量:
 					</div>
 				</div>
-				<div class="mui-scroll" id="divBlock" style="position: absolute;top:auto; width: 100%; z-index:1;">
-					<div class="mui-input-group" style="background:#dcdcdc;border-bottom: 2px solid #007aff;margin-bottom: 1px; ">
-						<label>订单数量</label>
-						<label id="num1" style="color: green;">0</label>/
-						<label id="num2">0</label>
-						<label>打包进度</label>
-						<label id="num3" style="color: green;">0</label>/
-						<label id="num4">0</label>
+			</div> 
+
+
+			<div id="divBlock" style="position: absolute;top:135px; width: 100%; z-index:1;">
+				<div class="mui-input-group" style="background:#dcdcdc;border-bottom: 2px solid #007aff;margin-bottom: 1px; ">
+					<label>订单数量</label>
+					<label id="num1" style="color: green;">0</label>/
+					<label id="num2">0</label>
+					<label>打包进度</label>
+					<label id="num3" style="color: green;">0</label>/
+					<label id="num4">0</label>
+				</div>
+				
+				<div class="mui-input-group">
+					<input id="position" type="text" readonly required placeholder="仓库信息">
+					<input id="warehouseName" type="hidden" readonly required placeholder="仓库名称">
+					<input id="warehouseCode" type="hidden" readonly required placeholder="仓库代码">
+					<input id="warehousePosCode" type="hidden" readonly required placeholder="库位">
+				</div>
+				
+
+				<form class="mui-input-group" id="rForm">
+					<input id="state" type="hidden">
+					<div class="mui-input-row " style="height: 30px;">
+						<label>条码号</label>
+						<input id="barCode" type="text" readonly required placeholder="条码号">
+					</div>
+					<div class="mui-input-row" style="height: 30px;">
+						<label>客户订单号</label>
+						<input id="SALESORDERSUBCODEPRINT" type="text" readonly class="mui-input-clear" required placeholder="客户订单号">
+					</div>
+					<div class="mui-input-row" style="height: 30px;">
+						<label>产品名称</label>
+						<input id="consumerProductName" type="text" readonly class="mui-input-clear" required placeholder="客户产品名称">
+					</div>
+					<div class="mui-input-row" style="height: 30px;">
+						<label>产品型号</label>
+						<input id="productModel" type="text" style="font-size: 15px" readonly="readonly" class="mui-input-clear"
+						 placeholder="产品型号" style="height: 30px;">
+					</div>
+					<div class="mui-input-row" style="height: 30px;">
+						<label>部件</label>
+						<input id="partName" type="text" readonly class="mui-input-clear" placeholder="部件">
+					</div>
+					<div class="mui-input-row" style="height: 30px;">
+						<label>批次号</label>
+						<input id="batchCode" type="text" readonly class="mui-input-clear" required placeholder="批次号">
+					</div>
+					<div class="mui-input-row" style="height: 30px;">
+						<label>门幅</label>
+						<input id="productWidth" type="text" readonly class="mui-input-clear" placeholder="门幅">
+					</div>
+					<div class="mui-input-row" style="height: 30px;">
+						<label>客户</label>
+						<input id="consumer" type="text" readonly class="mui-input-clear" required placeholder="客户">
+					</div>
+					<div class="mui-input-row" style="height: 30px;">
+						<label>重量</label>
+						<input id="weight" readonly type="text" class="mui-input-clear" placeholder="重量">
 					</div>
 
-					<form class="mui-input-group" id="rForm">
-						<input id="state" type="hidden">
-						<div class="mui-input-row " style="height: 35px;">
-							<label >条码号</label>
-							<input id="barCode" type="text" readonly required placeholder="条码号">
-						</div>
-						<div class="mui-input-row"  style="height: 35px;">
-							<label>客户订单号</label>
-							<input id="SALESORDERSUBCODEPRINT" type="text" readonly class="mui-input-clear" required placeholder="客户订单号">
-						</div>
-						<div class="mui-input-row"  style="height: 35px;">
-							<label>产品名称</label>
-							<input id="consumerProductName" type="text" readonly class="mui-input-clear" required placeholder="客户产品名称">
-						</div>
-						<div class="mui-input-row" style="height: 35px;">
-							<label>产品型号</label>
-							<input id="productModel" type="text" style="font-size: 15px" readonly="readonly" class="mui-input-clear"
-							 placeholder="产品型号" style="height: 35px;">
-						</div>
-						<div class="mui-input-row" style="height: 35px;">
-							<label>部件</label>
-							<input id="partName" type="text" readonly class="mui-input-clear" placeholder="部件">
-						</div>
-						<div class="mui-input-row" style="height: 35px;">
-							<label>批次号</label>
-							<input id="batchCode" type="text" readonly class="mui-input-clear" required placeholder="批次号">
-						</div>
-						<div class="mui-input-row" style="height: 35px;">
-							<label>门幅</label>
-							<input id="productWidth" type="text" readonly class="mui-input-clear" placeholder="门幅">
-						</div>
-						<div class="mui-input-row" style="height: 35px;">
-							<label>客户</label>
-							<input id="consumer" type="text" readonly class="mui-input-clear" required placeholder="客户">
-						</div>
-						<div class="mui-input-row" style="height: 35px;">
-							<label>重量</label>
-							<input id="weight" readonly type="text" class="mui-input-clear" placeholder="重量">
-						</div>
+				</form>
+			</div>
 
-					</form>
-				</div>
 
-				<div class="mui-scroll" style="position: relative;top:auto;z-index:0; width: 100%;overflow:scroll;" id="pblock">
+			<div class="mui-scroll-wrapper" style="position: absolute;z-index:0;width:100%;display: none;" id="divscorllblock">
+				<div class="mui-scroll" style="position: relative;top:90px; width: 100%;overflow:scroll;" id="pblock">
 					<table class="plist">
 						<thead>
 							<tr class="headline">
@@ -150,9 +157,10 @@
 						</thead>
 						<tbody id="tbMain"></tbody>
 					</table>
-
+					<div style="height: 90px;"></div>
 				</div>
 			</div>
+		</div>
 		</div>
 
 		<script type="text/javascript">
@@ -163,6 +171,12 @@
 			var code = [];
 			var total = 0.0;
 			var pInfoList = [];
+
+			var pblock = document.getElementById("pblock");
+
+			var divBlock = document.getElementById("divBlock");
+			var divscorllblock = document.getElementById("divscorllblock");
+
 			var tbody = document.getElementById('tbMain');
 
 			App.ready(function() {
@@ -170,8 +184,9 @@
 				scanner.scan();
 			});
 
-			var divBlock = document.getElementById("divBlock");
-			var pblock = document.getElementById("pblock");
+
+
+
 
 			function addBarcode(h) {
 				var row = document.createElement('tr'); //创建行  
@@ -484,15 +499,16 @@
 			}
 
 			function change() {
-				var vplanIndex = pblock.style.zIndex;
-				pblock.style.zIndex = divBlock.style.zIndex;
+
+				var vplanIndex = divscorllblock.style.zIndex;
+				divscorllblock.style.zIndex = divBlock.style.zIndex;
 				divBlock.style.zIndex = vplanIndex;
 
 				divBlock.style.display = "block";
-				pblock.style.display = "block";
+				divscorllblock.style.display = "block";
 
-				if (pblock.style.zIndex == 0) {
-					pblock.style.display = "none";
+				if (divscorllblock.style.zIndex == 0) {
+					divscorllblock.style.display = "none";
 				}
 				if (divBlock.style.zIndex == 0) {
 					divBlock.style.display = "none";

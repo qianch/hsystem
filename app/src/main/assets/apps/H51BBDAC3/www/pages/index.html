@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -54,7 +54,7 @@
         App.ready(function () {
             plus.navigator.closeSplashscreen();
             appInit();
-            $("#serverIp").text("服务器地址：http://" + SERVER_IP)
+            $("#serverIp").text("地址：http://" + SERVER_IP)
             LS.remove(KEY.SERVER_IP);
 			scanner = new Scanner(parseCode);
 			scanner.scan();
@@ -135,10 +135,10 @@
         document.getElementById("external").addEventListener("toggle", function (event) {
             if (event.detail.isActive) {
                 LS.set(KEY.SERVER_IP, EXTERNAL_IP);
-                $("#serverIp").text("外库地址： http://" + EXTERNAL_IP);
+                $("#serverIp").text("地址：http://" + EXTERNAL_IP);
             } else {
                 LS.set(KEY.SERVER_IP, SERVER_IP);
-                $("#serverIp").text("服务器地址： http://" + SERVER_IP);     
+                $("#serverIp").text("地址：http://" + SERVER_IP);     
             }
             checkForUpdate();
         })
