@@ -245,15 +245,19 @@
 			<!-- <tr>
 				<th class="title">尺码</th>
 				<th class="content">{{value.SIZE}}</th>
-			</tr> --> 
+			</tr> 
 			<tr> 
 				<th class="title" >总发货数量</th>
 				<th class="content" style="color:red;"></th>
-			</tr>
+			</tr>--> 
 			<tr>
 				<th class="title">已扫描数量</th>
 				<th class="content" id="countScan" style="color:red;"></th>
 			</tr> 
+			<tr>
+				<th class="title" >已发货数量</th>
+				<th class="content" style="color:red;">{{value.OUTCOUNT}}</th>
+			</tr>
 			<tr>
 				<th class="title">件数</th>
 				<th class="content">{{value.COUNT}}</th>
@@ -306,6 +310,7 @@
 		<th class="title">厂内名称</th>
 		<th class="title">部件</th>
 		<th class="title">发货数量</th>
+		<th class="title">剩余发货数量</th>
 		<th class="title">扫描数量</th>
 		<th class="title">扫描重量</th>
 		<th class="title">备注</th>
@@ -322,6 +327,7 @@
 			<td class="content">{{value.FACTORYPRODUCTNAME}}</td>
 			<td class="content">{{value.PARTNAME}}</td>
 			<td class="content" style="color:blue;">{{value.DELIVERYCOUNT}}</td>
+			<td class="content" style="color:blue;">{{value.DELIVERYCOUNT-value.OUTDETAILCOUNT}}</td>
 			<td class="content" style="color:blue;" id="sum-{{value.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g,"")}}-{{value.PRODUCTID}}-{{value.BATCHCODE}}-{{value.PARTID}}">0</td>
 			<td class="content" id="weight-{{value.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g,"")}}-{{value.PRODUCTID}}-{{value.BATCHCODE}}-{{value.PARTID}}" align="left"></td>
 			<td class="content">{{value.MEMO}}</td>
@@ -376,7 +382,7 @@
 		App.ready(function() {
 			id = App.param("id_");
 			pn = App.param("pn");
-			//document.addEventListener('touchmove', touch, true);
+
 			App.ajaxGet(App.getServerUrl() + "stock/product/cars",
 				function(data) {
 					cars = data;
@@ -543,14 +549,14 @@
 						}
 
 						//限制条码多扫
-						//发货数量
-						var deliveryNum = $("#" + productid).find("td:eq(6)").text();
+						//剩余发货数量
+						var deliveryNum = $("#" + productid).find("td:eq(7)").text();
 						//扫描数量
-						var scanNum = $("#" + productid).find("td:eq(7)").text();
-
+						var scanNum = $("#" + productid).find("td:eq(8)").text();
+						
 						if ((parseInt(scanNum) + 1) > deliveryNum) {
 							beep();
-							toast("扫描数量("+scanNum+")多于计划数量(" + deliveryNum + ")，请确认发货数量(" + deliveryNum + ")!");
+							toast("扫描数量(" + scanNum + ")多于剩余发货数量(" + deliveryNum + ")，请确认剩余发货数量(" + deliveryNum + ")!");
 							return;
 						}
 
@@ -719,7 +725,7 @@
 				for (var i = 0; i < pInfoList.length; i++) {
 					if (pInfoList[i].barCode == vbarcode) {
 						total = toFixed((total - pInfoList[i].productWeight), 1);
-						 
+
 						var num;
 						var weight;
 						var productid = pInfoList[i].productid;
@@ -787,65 +793,67 @@
 						malert("操作提示", "该任务尚未绑定此PDA", "我已知晓");
 						return;
 					}
+
 					if (data[0].PDAID != null && data[0].PDAID != plus.device.imei) {
 						malert("操作提示", data[0].OPTUSER + "正在另外一台PDA使用此箱号:" + data[0].PN, "我已知晓", function() {
 							plus.webview.currentWebview().close();
 						});
 						return;
-					} else {
-						mconfirm('警告', str, function() {
-							waiting("正在出库", true);
-							var tStr = {
-								"codes": code.toString(),
-								"UserId": App.getLoginUserId(),
-								"puid": App.getLoginUserId(),
-								"puname": App.getLoginUserName(),
-								"packingNum": packingNum,
-								"plate": $("#plate").val(),
-								"boxNumber": $("#boxNumber").val(),
-								"count": counts,
-								"isfinished": isfinished
-							};
-
-							App.ajaxPost(outUrl, tStr, function(data) {
-								closeWaiting();
-								if (!isEmpty(data.error)) {
-									malert("提示", data.error, "确认", function() {});
-									beep();
-									return;
-								} else if (data != "") {
-									tip(data);
-								} else {
-									sucTip("出库成功");
-									//$(".mui-content").empty();
-									//mui.back();
-									var currentWebview = plus.webview.currentWebview();
-									currentWebview.opener().evalJS("removeDone(" + id + ")");
-									currentWebview.close();
-								}
-								tdata = "";
-								data = "";
-								//productIsTc = null;
-								tcode = [];
-							}, function(data) {
-								//失败
-								closeWaiting();
-								toast(data.responseText);
-								beepAndVibrate();
-							})
-
-						}, function() {
-							//closeWaiting();
-						});
-
 					}
+
+
+					mconfirm('警告', str, function() {
+						waiting("正在出库", true);
+						var tStr = {
+							"codes": code.toString(),
+							"UserId": App.getLoginUserId(),
+							"puid": App.getLoginUserId(),
+							"puname": App.getLoginUserName(),
+							"packingNum": packingNum,
+							"plate": $("#plate").val(),
+							"boxNumber": $("#boxNumber").val(),
+							"count": counts,
+							"isfinished": isfinished
+						};
+
+						App.ajaxPost(outUrl, tStr, function(data) {
+							closeWaiting();
+							if (!isEmpty(data.error)) {
+								malert("提示", data.error, "确认", function() {});
+								beep();
+								return;
+							} else if (data != "") {
+								tip(data);
+							} else {
+								sucTip("出库成功");
+								//$(".mui-content").empty();
+								//mui.back();
+								var currentWebview = plus.webview.currentWebview();
+								currentWebview.opener().evalJS("removeDone(" + id + ")");
+								currentWebview.close();
+							}
+							tdata = "";
+							data = "";
+							//productIsTc = null;
+							tcode = [];
+						}, function(data) {
+							//失败
+							closeWaiting();
+							toast(data.responseText);
+							beepAndVibrate();
+						})
+
+					}, function() {
+						//closeWaiting();
+					});
+
+
 
 				});
 		}
 
 		mui(".traycode_item").on("longtap", "td", function() {
 			var _this = this;
-
 		});
 
 		function change() {

@@ -35,6 +35,10 @@
                 <input value="" type="text" id="productName" readonly="true" required class="mui-input-clear" placeholder="部件名称">
             </div>
             <div class="mui-input-row">
+                <label>批&nbsp;&nbsp;次&nbsp;&nbsp;号</label>
+                <input value="" type="text" id="batchCode" readonly="true" required class="mui-input-clear" placeholder="批次号">
+            </div>
+            <div class="mui-input-row">
                 <label>卷&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;重</label>
                 <input value="" type="number" id="rollWeight" required class="mui-input-clear" placeholder="卷重">
             </div>
@@ -82,7 +86,7 @@
                     if (pName != null) {
                         $("#productName").val(pName);
                     }
-
+                    $("#batchCode").val(ajaxData.CODE.BATCHCODE);
                 }, function () {
                     closeWaiting();
                     toast("查询部件条码信息失败");
