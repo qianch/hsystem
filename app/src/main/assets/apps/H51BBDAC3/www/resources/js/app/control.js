@@ -1,3 +1,8 @@
+  function initControl()
+  {
+	 initSelect();
+  }
+  
 function initSelect() {
     var select_items = document.getElementsByTagName("select");
     for (var i = 0; i < select_items.length; i++) {

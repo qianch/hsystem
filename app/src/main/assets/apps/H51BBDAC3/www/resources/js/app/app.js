@@ -13,6 +13,16 @@ App = {
             if (fn) {
                 fn();
             }
+			
+			try
+			{
+				initControl();
+			}
+			catch(ex)
+			{
+				
+			}
+			 
         });
     },
     preload: function (url, data, styles) {

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 
 	<head>
@@ -313,7 +313,7 @@
 						//0，不确定是否单向布
 						if (dxb == 0) {
 							if (salesOrder == undefined) {
-								salesOrder == data.ORDER;
+								salesOrder = data.ORDER;
 							} else {
 								if (salesOrder != data.ORDER) {
 									tip("不同订单无法打包");
@@ -322,7 +322,7 @@
 							}
 
 							if (batchCode == undefined) {
-								batchCode == data.BATCH;
+								batchCode = data.BATCH;
 							} else {
 								if (batchCode != data.BATCH) {
 									tip("不同批次无法打包");
