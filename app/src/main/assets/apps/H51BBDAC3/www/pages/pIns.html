@@ -67,15 +67,17 @@
 		<div class="mui-content">
 
 			<div class="mui-input-group" style="position: absolute;z-index:2;height: 90px; background-color: beige">
-				<div class="mui-button-row"  >
+				<div class="mui-button-row">
 					<button type="button" onclick="doSubmit()" style="width: 33%;">保存</button>
 					<button type="button" onclick="change()" style="width: 30%;">切换信息</button>
+					<button type="button" onclick="clearRoll()" style="width: 30%;">清空信息</button>
+
 				</div>
-				<div class="mui-input-row"  >
+				<div class="mui-input-row">
 					<div style="color:red;text-align: center;font-size: 20px;font-weight: bold;" id="count">总托数： 总重量:
 					</div>
 				</div>
-			</div> 
+			</div>
 
 
 			<div id="divBlock" style="position: absolute;top:135px; width: 100%; z-index:1;">
@@ -87,14 +89,14 @@
 					<label id="num3" style="color: green;">0</label>/
 					<label id="num4">0</label>
 				</div>
-				
+
 				<div class="mui-input-group">
 					<input id="position" type="text" readonly required placeholder="仓库信息">
 					<input id="warehouseName" type="hidden" readonly required placeholder="仓库名称">
 					<input id="warehouseCode" type="hidden" readonly required placeholder="仓库代码">
 					<input id="warehousePosCode" type="hidden" readonly required placeholder="库位">
 				</div>
-				
+
 
 				<form class="mui-input-group" id="rForm">
 					<input id="state" type="hidden">
@@ -183,10 +185,6 @@
 				scanner = new Scanner(parseCode);
 				scanner.scan();
 			});
-
-
-
-
 
 			function addBarcode(h) {
 				var row = document.createElement('tr'); //创建行  
@@ -492,10 +490,13 @@
 			}
 
 			function clearRoll() {
-				pInfoList.empty();
-				tbody.empty();
+
+				pInfoList = [];
 				rdata = "";
+				total=0.0;
 				code = [];
+				$("#tbMain tr").remove();
+				$("#count").html("总托数：" + pInfoList.length + '\xa0\xa0\xa0' + "总重量：" + total + "KG");
 			}
 
 			function change() {

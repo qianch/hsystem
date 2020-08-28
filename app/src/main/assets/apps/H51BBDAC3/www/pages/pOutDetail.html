@@ -587,19 +587,16 @@
                 }
 
                 if (data.CODE.PARTID == null) { //部件id为空时
-                    if ($("#" + data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g, "") + "-" + data.ORDER.PRODUCTID + "-" +
-                        data.CODE.BATCHCODE + "-").length == 0) {
+                    if ($("#" + data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g, "") + "-" + data.ORDER.PRODUCTID + "-" + data.CODE.BATCHCODE + "-").length == 0) {
                         beepAndVibrate();
-                        toast("该托产品不在出库单中");
+                        toast("该托产品不在出库单中，订单号：" + data.ORDER.SALESORDERSUBCODE + "，产品ID：" + data.ORDER.PRODUCTID + " ，批次号：" + data.CODE.BATCHCODE);
                         return;
                     } else {
                         //限制条码多扫
                         //扫描数量
-                        var scanNum = $("#" + data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g, "") + "-" + data.ORDER.PRODUCTID +
-                            "-" + data.CODE.BATCHCODE + "-").parent().find("tr:eq(7)").find("td:eq(1)").text();
+                        var scanNum = $("#" + data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g, "") + "-" + data.ORDER.PRODUCTID + "-" + data.CODE.BATCHCODE + "-").parent().find("tr:eq(7)").find("td:eq(1)").text();
                         //发货数量
-                        var deliveryNum = $("#" + data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g, "") + "-" + data.ORDER.PRODUCTID +
-                            "-" + data.CODE.BATCHCODE + "-").parent().find("tr:eq(6)").find("td:eq(1)").text();
+                        var deliveryNum = $("#" + data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g, "") + "-" + data.ORDER.PRODUCTID + "-" + data.CODE.BATCHCODE + "-").parent().find("tr:eq(6)").find("td:eq(1)").text();
                         if ((parseInt(scanNum) + 1) > deliveryNum) {
                             beep();
                             toast("多于计划数量，请确认发货数量!");
@@ -607,23 +604,19 @@
                         }
                     }
                 } else {
-                    if ($("#" + data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g, "") + "-" + data.ORDER.PRODUCTID + "-" +
-                        data.CODE.BATCHCODE + "-" + data.CODE.PARTID).length == 0) {
+                    if ($("#" + data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g, "") + "-" + data.ORDER.PRODUCTID + "-" + data.CODE.BATCHCODE + "-" + data.CODE.PARTID).length == 0) {
                         beepAndVibrate();
-                        toast("该托产品不在出库单中");
+                        toast("该托产品不在出库单中，订单号：" + data.ORDER.SALESORDERSUBCODE + "，产品ID：" + data.ORDER.PRODUCTID + "，批次号：" + data.CODE.BATCHCODE + "，部件ID:" + data.CODE.PARTID);
                         return;
                     } else {
                         //扫描数量
-                        var scanNum = $("#" + data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g, "") + "-" + data.ORDER.PRODUCTID +
-                            "-" + data.CODE.BATCHCODE + "-" + data.CODE.PARTID).parent().find("tr:eq(7)").find("td:eq(1)").text();
+                        var scanNum = $("#" + data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g, "") + "-" + data.ORDER.PRODUCTID + "-" + data.CODE.BATCHCODE + "-" + data.CODE.PARTID).parent().find("tr:eq(7)").find("td:eq(1)").text();
                         //发货数量
-                        var deliveryNum = $("#" + data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g, "") + "-" + data.ORDER.PRODUCTID +
-                            "-" + data.CODE.BATCHCODE + "-" + data.CODE.PARTID).parent().find("tr:eq(6)").find("td:eq(1)").text();
-
+                        var deliveryNum = $("#" + data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g, "") + "-" + data.ORDER.PRODUCTID + "-" + data.CODE.BATCHCODE + "-" + data.CODE.PARTID).parent().find("tr:eq(6)").find("td:eq(1)").text();
                         if ((parseInt(scanNum) + 1) > deliveryNum) {
                             beep();
-                            //toast("多于计划数量，请确认发货数量!");
-                            //return;
+                            toast("多于计划数量，请确认发货数量!");
+                            return;
                         }
                     }
                 }
@@ -702,8 +695,8 @@
                     str = "少于计划数量，是否继续？";
                 } else if (parseInt(count) > parseInt($("#" + detailId)[0].rows[6].cells[1].innerText)) {
                     beep();
-                    //toast("多于计划数量，请确认发货数量!");
-                    //return;
+                    toast("多于计划数量，请确认发货数量!");
+                    return;
                 }
 
             }
@@ -866,8 +859,7 @@
             var li = "";
             for (var i = 0; i < cars.length; i++) {
                 if (cars[i].indexOf(keyWord) >= 0) {
-                    li += "<li onclick='carSelected(\"" + cars[i] + "\")'>" + cars[i].replace(keyWord, '<font color=red>' + keyWord +
-                        '</font>') + "</li>"
+                    li += "<li onclick='carSelected(\"" + cars[i] + "\")'>" + cars[i].replace(keyWord, '<font color=red>' + keyWord + '</font>') + "</li>"
                 }
             }
             $("#carsList").empty();
@@ -891,15 +883,11 @@
                     var num;
                     var weight;
                     if (data.CODE.PARTID == null) { //部件id为空时
-                        num = $("#sum-" + data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g, "") + "-" + data.ORDER.PRODUCTID +
-                            "-" + data.CODE.BATCHCODE + "-");
-                        weight = $("#weight-" + data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g, "") + "-" + data.ORDER.PRODUCTID +
-                            "-" + data.CODE.BATCHCODE + "-");
+                        num = $("#sum-" + data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g, "") + "-" + data.ORDER.PRODUCTID + "-" + data.CODE.BATCHCODE + "-");
+                        weight = $("#weight-" + data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g, "") + "-" + data.ORDER.PRODUCTID + "-" + data.CODE.BATCHCODE + "-");
                     } else {
-                        num = $("#sum-" + data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g, "") + "-" + data.ORDER.PRODUCTID +
-                            "-" + data.CODE.BATCHCODE + "-" + data.CODE.PARTID);
-                        weight = $("#weight-" + data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g, "") + "-" + data.ORDER.PRODUCTID +
-                            "-" + data.CODE.BATCHCODE + "-" + data.CODE.PARTID);
+                        num = $("#sum-" + data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g, "") + "-" + data.ORDER.PRODUCTID + "-" + data.CODE.BATCHCODE + "-" + data.CODE.PARTID);
+                        weight = $("#weight-" + data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g, "") + "-" + data.ORDER.PRODUCTID + "-" + data.CODE.BATCHCODE + "-" + data.CODE.PARTID);
                     }
                     weight.text(parseFloat(parseFloat(weight.text()).toFixed(1) - data.TRAY.WEIGHT.toFixed(1)).toFixed(1));
                     num.text(parseInt(num.text()) - 1);

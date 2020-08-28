@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 
 	<head>
@@ -115,7 +115,8 @@
 						<div style="text-align: center;margin: 30px 0 20px 0;">
 							<label style="font-size: 14px;color: gray;">红色<font color='red'>*</font>号的卷条码可长按删除</label>
 							<br>
-							<button type="button" class="mui-btn mui-btn-primary" onclick="doPack()">点击打包</button>
+							<!--<button type="button" class="mui-btn mui-btn-primary" onclick="doPack()">点击打包</button>-->
+							<button type="button" class="mui-btn mui-btn-primary" onclick="doPack2()">点击打包</button>
 							<!--<button type="button" class="mui-btn mui-btn-primary mui-btn-danger " onclick="endPack()">结束打包</button>-->
 							<br>
 						</div>
@@ -131,6 +132,7 @@
 			var rollInfo = App.getServerUrl() + "common/roll/info/";
 			var boxInfo = App.getServerUrl() + "common/box/info/";
 			var packUrl = App.getServerUrl() + "package2/tray";
+			var pack2Url = App.getServerUrl() + "package2/tray2";
 			var endPackUrl = App.getServerUrl() + "package2/endpack/";
 			var deleteInnerUrl = App.getServerUrl() + "package2/deleteInner";
 			var max = 0;
@@ -577,6 +579,43 @@
 				}
 				waiting("正在打包");
 				App.ajaxPost(packUrl, {
+					puname: App.getLoginUserName(),
+					trayCode: $("#trayCode").val(),
+					packagingStaff: App.getLoginUserId(),
+					rollCodes: rollCodes,
+					boxCodes: boxCodes,
+					planId: planId,
+					partName: partName == undefined ? "" : partName,
+					partId: partId == undefined ? "" : partId
+				}, function(data) {
+					sucTip("打包成功");
+					showTrayInfo($("#trayCode").val());
+				}, function(data) {
+					tip(data.response);
+					showTrayInfo($("#trayCode").val());
+				});
+			}
+			
+			function doPack2() {
+				var codes = [];
+				$("#trayForm div.newBarcode input").each(function(i, e) {
+					codes.push($(this).val());
+				});
+				if (codes.length == 0) {
+					tip("请扫条码");
+					return;
+				}
+				//mconfirm("操作提示", "确认打包？", function() {
+				var boxCodes, rollCodes;
+				if (codes.join(",").indexOf("B") == 0) {
+					boxCodes = codes.join(",");
+					rollCodes = "";
+				} else {
+					boxCodes = "";
+					rollCodes = codes.join(",");
+				}
+				waiting("正在打包");
+				App.ajaxPost(pack2Url, {
 					puname: App.getLoginUserName(),
 					trayCode: $("#trayCode").val(),
 					packagingStaff: App.getLoginUserId(),
