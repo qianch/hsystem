@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -154,7 +154,7 @@
 
         function parseCode(code) {
             // 2018.11.26 添加正则判断，code是否以字母开头
-            if (code.length < 5 && /^[A-Za-z]/.test(code)) {
+            if (code.length < 5 ) {
                 $("#deviceCode").val("");
                 $("#pikerInfo").empty();
                 //$("#weaveId").val("");
