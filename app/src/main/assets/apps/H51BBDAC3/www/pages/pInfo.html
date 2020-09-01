@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -285,7 +285,6 @@
             } else {
                 stt += "<input type='text' class='mui-input-clear' readonly value='" + product.PRODUCTMODEL + "'></div>";
             }
-
             stt += "<div class='mui-input-row'><label>批次号</label>";
             stt += "<input type='text' class='mui-input-clear' readonly value='" + data.CODE.BATCHCODE + "'></div>";
 
@@ -361,6 +360,10 @@
 
             stt += "<div class='mui-input-row'><label>操作人</label>";
             stt += "<input type='text' class='mui-input-clear' readonly value='" + data.OPERATOR + " (" + data.DEPARTMENT + ")'></div>";
+			if(!isEmpty(data.TRAYBARCODE)){
+				stt += "<div class='mui-input-row'><label>托条码</label>";
+				stt += "<input type='text' class='mui-input-clear' readonly value='" + data.TRAYBARCODE + "'></div>";
+			}
         }
 
         //冻结/解冻

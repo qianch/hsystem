@@ -154,12 +154,15 @@
 			}
 
 			function doSubmit() {
+				
+				
 				if (!validForm('formID')) {
 					return;
 				}
+				
 				var workShopCode = $("#selworkShop").val();
-				var workShopName = $("#selworkShop").text();
-
+				var workShopName = $("#selworkShop option:selected").text();
+				
 				// var cunsumerName = $("#cunsumerName").val();
 				if ($(".mui-card-content-inner").length == 0) {
 					toast("请扫描条码");
