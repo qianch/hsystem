@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -318,7 +318,7 @@
             </tr>
             {{each data as value i}}
 
-            <tr id="{{value.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g,"")}}-{{value.PRODUCTID}}-{{value.BATCHCODE}}-{{value.PARTID}}">
+            <tr id="{{value.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g,"")}}-{{value.PRODUCTID}}-{{value.BATCHCODE.replace(/[\s*\+\*\/()]+/g, "")}}-{{value.PARTID}}">
 
                 <td class="content" style="color:red;">{{value.SALESORDERSUBCODE}}</td>
                 <td class="content" style="color:red;">{{value.SALESORDERSUBCODEPRINT}}</td>
@@ -328,8 +328,8 @@
                 <td class="content">{{value.PARTNAME}}</td>
                 <td class="content" style="color:blue;">{{value.DELIVERYCOUNT}}</td>
                 <td class="content" style="color:blue;">{{value.DELIVERYCOUNT-value.OUTDETAILCOUNT}}</td>
-                <td class="content" style="color:blue;" id="sum-{{value.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g,"")}}-{{value.PRODUCTID}}-{{value.BATCHCODE}}-{{value.PARTID}}">0</td>
-                <td class="content" id="weight-{{value.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g,"")}}-{{value.PRODUCTID}}-{{value.BATCHCODE}}-{{value.PARTID}}" align="left"></td>
+                <td class="content" style="color:blue;" id="sum-{{value.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g,"")}}-{{value.PRODUCTID}}-{{value.BATCHCODE.replace(/[\s*\+\*\/()]+/g, "")}}-{{value.PARTID}}">0</td>
+                <td class="content" id="weight-{{value.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g,"")}}-{{value.PRODUCTID}}-{{value.BATCHCODE.replace(/[\s*\+\*\/()]+/g, "")}}-{{value.PARTID}}" align="left"></td>
                 <td class="content">{{value.MEMO}}</td>
 
             </tr>
@@ -535,7 +535,7 @@
                             toast("该条码是裁剪车间用,胚布无法出库");
                             return;
                         }
-                        var productid = ajaxData.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g, "") + "-" + ajaxData.ORDER.PRODUCTID + "-" + ajaxData.CODE.BATCHCODE + "-";
+                        var productid = ajaxData.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g, "") + "-" + ajaxData.ORDER.PRODUCTID + "-" + ajaxData.CODE.BATCHCODE.replace(/[\s*\+\*\/()]+/g, "") + "-";
 
                         if (ajaxData.CODE.PARTID != null) {
                             productid += ajaxData.CODE.PARTID
@@ -543,7 +543,7 @@
 
                         if ($("#" + productid).length == 0) {
                             beepAndVibrate();
-                            toast("该托产品不在出库单中，订单号：" + ajaxData.ORDER.SALESORDERSUBCODE + "，产品ID：" + ajaxData.ORDER.PRODUCTID + ",批次号：" + ajaxData.CODE.BATCHCODE);
+                            toast("该托产品不在出库单中，订单号：" + ajaxData.ORDER.SALESORDERSUBCODE + "，产品ID：" + ajaxData.ORDER.PRODUCTID + ",批次号：" + ajaxData.CODE.BATCHCODE.replace(/[\s*\+\*\/()]+/g, ""));
                             return;
                         }
 
@@ -617,13 +617,13 @@
 
             var partBatchCode = '';
             if (isEmpty(data.BATCHCODE)) {
-                partBatchCode = data.CODE.BATCHCODE;
+                partBatchCode = data.CODE.BATCHCODE.replace(/[\s*\+\*\/()]+/g, "");
             } else {
-                partBatchCode = data.BATCHCODE;
+                partBatchCode = data.BATCHCODE.replace(/[\s*\+\*\/()]+/g, "");
             }
 
             var productid = data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g, "") + "-" + data.ORDER.PRODUCTID +
-                "-" + data.CODE.BATCHCODE + "-";
+                "-" + data.CODE.BATCHCODE.replace(/[\s*\+\*\/()]+/g, "") + "-";
             if (data.CODE.PARTID != null) {
                 productid += data.CODE.PARTID
             }
