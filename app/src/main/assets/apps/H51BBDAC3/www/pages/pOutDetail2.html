@@ -193,6 +193,7 @@
                                 <th>部件名称</th>
                                 <th>产品重量</th>
                                 <th>客户名称</th>
+								<th>库位信息</th>
                             </tr>
 
                         </thead>
@@ -709,6 +710,10 @@
             var CONSUMERNAMECell = document.createElement('td'); //创建第六列CONSUMERNAME
             CONSUMERNAMECell.innerHTML = h.CONSUMERNAME;
             row.appendChild(CONSUMERNAMECell);
+			
+			var WarehouseCell = document.createElement('td'); //创建第七列库位信息
+			WarehouseCell.innerHTML = h.newWarehouseCode+","+h.newWarehousePosCode;
+			row.appendChild(WarehouseCell);
 
             tbody.appendChild(row);
         }
