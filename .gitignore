@@ -28,6 +28,7 @@ node_modules/
 *.pyc 
 *.pyo __pycache__ 
 *.db
-build
-.gradle
-.idea
+build/
+.gradle/
+.idea/
+*.iml
