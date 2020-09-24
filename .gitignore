@@ -32,3 +32,5 @@ build/
 .gradle/
 .idea/
 *.iml
+*.apk
+*.json
