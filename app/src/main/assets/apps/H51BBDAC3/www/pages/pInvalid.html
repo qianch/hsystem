@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -66,7 +66,7 @@
                 <form class="mui-input-group" id="form">
                 </form>
                 <div class="mui-button-row" style="margin-bottom: 30px;">
-                    <button type="button" class="mui-btn mui-btn-primary" onclick="doGrade()" style="width: 30%;height:30px;padding:0;">条码作废</button>
+                    <button id="tmzf" type="button" class="mui-btn mui-btn-primary" onclick="doGrade()" style="width: 30%;height:30px;padding:0;">条码作废</button>
                 </div>
             </div>
         </div>
@@ -139,6 +139,7 @@
         });
 
         function parseCode(codeData) {
+			
             $("#barCode").val("");
             data = codeData.split(";");
             barCode = data[0];
@@ -204,8 +205,10 @@
             //作废状态
             if (data.CODE.ISABANDON == 1) {
                 isAbandon = "作废";
+				$("#tmzf").hide();
             } else {
                 isAbandon = "正常";
+				$("#tmzf").show();
             }
             //判断条码类型
             if (barcode.indexOf("R") == 0 || barcode.indexOf("P") == 0) { //卷
@@ -337,10 +340,11 @@
                 toast("请扫二维码");
                 return;
             }
-            App.ajaxPost(App.getServerUrl() + "/stock/product/abandon", {
+            App.ajaxPost(App.getServerUrl() + "/stock/product/abandon2", {
                 "code": barCode
             }, function (ajaxData) {
                 $("#isAbandon").val("作废");
+				$("#tmzf").hide();
             }, function () {
                 Loading.hide();
             });
