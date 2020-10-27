@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>编织投料登记</title>
+		<script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
+		<!--<link href="../resources/css/mui.picker.css" rel="stylesheet" />
+    <link href="../resources/css/mui.poppicker.css" rel="stylesheet" />
+    <script src="../resources/js/mui/mui.picker.js"></script>
+    <script src="../resources/js/mui/mui.poppicker.js"></script>-->
+		<style type="text/css">
+			.mui-popover {
+				top: 50px;
+				margin-left: 20px;
+				height: 300px;
+			}
+
+			.mui-table-view-cell {
+				height: 90px;
+				word-break: break-all;
+				word-wrap: break-word;
+			}
+
+			.mui-scroll-wrapper label {
+				height: 40px;
+			}
+
+			.mui-input-row {
+				height: auto;
+			}
+
+			#pikerInfo li {
+				border-radius: 0px;
+				border: 1px solid #b3b3b3;
+				padding: 10px;
+				background: white;
+				color: #043747;
+				font-weight: bold;
+				font-size: 20px;
+			}
+
+			#ordersInfo {
+				height: 90%;
+				padding: 10px;
+				color: red;
+				font-weight: bold;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">编织投料</h1>
+		</header>
+		<div class="mui-content" style="height: 100%;">
+			<form class="mui-input-group" id="formID" style="">
+				<div class="mui-input-row">
+					<label>设备代码</label>
+					<input type="text" id="deviceCode" readonly="true" required value="" class="mui-input-clear" placeholder="设备代码">
+				</div>
+				<input type="hidden" id="operateUserId" readonly="true" required class="mui-input-clear" placeholder="操作人ID">
+				<div class="mui-input-row">
+					<label>原料条码</label>
+					<input type="text" id="materialCode" readonly="true" required class="mui-input-clear" placeholder="原料条码">
+				</div>
+			</form>
+			<div class="mui-button-row">
+				<button type="button" class="mui-btn mui-btn-primary" onclick="addFeedingMaterial()">确认</button>
+			</div>
+		</div>
+		<div id="popover" class="mui-popover" style="background: none;">
+			<div class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<ul class="mui-table-view" id="pikerInfo" style="border-radius: none;">
+					</ul>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+			var bomDetails;
+			var scanner;
+			var doc = document;
+			var deviceOrderUrl = App.getServerUrl() + "produce/deviceOrder1";
+			var materialUrl = App.getServerUrl() + "stock/material/";
+			var addMaterialUrl = App.getServerUrl() + "produce/add";
+			var getBomDetails = App.getServerUrl() + "produce/getBomDetails";
+			var orderInfo;
+			var jitai;
+			//PDA端扫描
+			App.ready(function() {
+				scanner = new Scanner(parseCode);
+				scanner.scan();
+				//			userPicker.setData([{
+				//				value: "#none",
+				//				text: "请扫描机台"
+				//			}]);
+				$("#operateUserId").val(App.getLoginUserId());
+				//			parseCode("E11");
+			}, false);
+
+
+			function choose(data) {
+				var id = data.getAttribute("id");
+				
+				selectPlan();
+				$("#ordersInfo").empty();
+				$("#ordersInfo").append(data.innerHTML);
+				orderInfo = data.innerHTML;
+				mui('#popover').popover('hide');
+			}
+
+			function parseCode(code) {
+				// 2018.11.26 添加正则判断，code是否以字母开头
+				//alert(code.length);
+				if (code.length < 5) {
+					$("#deviceCode").val("");
+					$("#pikerInfo").empty();
+					
+					var rStr = {
+						"deviceCode": code,
+						"userId": App.getLoginUserId(),
+					};
+					App.ajaxPost(deviceOrderUrl, rStr, function(data) {
+						closeWaiting();
+						if (data) {
+							$("#pikerInfo").empty();
+							$("#deviceCode").val(code);
+							return;
+						}
+					}, function(data) {
+						//失败
+						closeWaiting();
+						beepAndVibrate();
+						toast("扫描机器码失败，操作未完成");
+					});
+
+				} /* else if(code.length>5&&code.length<15){
+					toast("原料条码错误");
+					return;
+				} */
+				else {
+					if (code.length==18){
+						closeWaiting();
+						beepAndVibrate();
+						toast("原料条码错误");
+						return;
+					}
+					if (code.length < 20) {
+						code = "____" + code + "______";
+					}
+					
+					
+					App.ajaxPost(materialUrl + code, {}, function(data) {
+						if (data.error) {
+							tip(data.error)
+							return;
+						}
+						result = false;
+					
+						$("#materialCode").val(code);
+						return;
+						
+					}, function(data) {});
+
+				}
+
+			}
+
+			function addFeedingMaterial() {
+				if ($("#deviceCode").val() == "" || $("#deviceCode").val() == null) {
+					beepAndVibrate();
+					toast("机台未绑定，请扫描机台二维码");
+					return;
+				}
+				if (App.getLoginUserId() == "" || App.getLoginUserId() == null) {
+					beepAndVibrate();
+					toast("未登陆，请重新登陆");
+					return;
+				}
+				if ($("#materialCode").val() == null || $("#materialCode").val() == "") {
+
+					beepAndVibrate();
+					toast("物料条码未绑定，请扫描物料条码");
+					return;
+				}
+				/* if ($("#weaveId").val() == null || $("#weaveId").val() == "") {
+
+					beepAndVibrate();
+					toast("请选择生产任务");
+					return;
+				} */
+				var rStr = {
+					"deviceCode": $("#deviceCode").val(),
+					"operateUserId": App.getLoginUserId(),
+					"puid": App.getLoginUserId(),
+					"puname": App.getLoginUserName(),
+					"materialCode": $("#materialCode").val(),
+					//"weaveId": $("#weaveId").val()
+				};
+				waiting("正在保存", true);
+				App.ajaxPost(addMaterialUrl, rStr, function(data) {
+					closeWaiting();
+					if (data == "success") {
+						$("#materialCode").val("");
+						//$("#ordersInfo").empty();
+						//$("#ordersInfo").append("点击选择订单");
+						toast("投料成功");
+						return;
+					}
+					/*else if(data == "exist") {
+					                               beepAndVibrate();
+					                               toast("重复投料");
+					                               return;
+					                           }*/
+					else {
+						beepAndVibrate();
+						toast("绑定物料失败，操作未完成");
+						return;
+					}
+					//成功
+				}, function(data) {
+					//失败
+					closeWaiting();
+					beepAndVibrate();
+					toast("保存失败，操作未完成");
+				});
+			}
+		</script>
+	</body>
+</html>

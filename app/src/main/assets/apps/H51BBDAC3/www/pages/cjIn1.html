@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>裁剪投料登记</title>
+    <script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
+    <!--<link href="../resources/css/mui.picker.css" rel="stylesheet" />
+    <link href="../resources/css/mui.poppicker.css" rel="stylesheet" />
+    <script src="../resources/js/mui/mui.picker.js"></script>
+    <script src="../resources/js/mui/mui.poppicker.js"></script>-->
+    <style type="text/css">
+        .mui-popover {
+            top: 50px;
+            margin-left: 20px;
+            height: 400px;
+        }
+
+            .mui-popover .mui-table-view {
+                max-height: 1000px;
+                padding: 10px;
+            }
+
+                .mui-popover .mui-table-view .mui-table-view-cell:last-child, .mui-popover .mui-table-view .mui-table-view-cell:last-child > a:not(.mui-btn) {
+                    border-bottom-right-radius: 0px;
+                    border-bottom-left-radius: 0px;
+                }
+
+                .mui-popover .mui-table-view .mui-table-view-cell:first-child, .mui-popover .mui-table-view .mui-table-view-cell:first-child > a:not(.mui-btn) {
+                    border-top-left-radius: 0px;
+                    border-top-right-radius: 0px;
+                }
+
+        .mui-scroll-wrapper label {
+            height: 40px;
+        }
+
+        .mui-input-row {
+            height: auto;
+        }
+
+        #pikerInfo li {
+            border-radius: 5px;
+            border: 1px solid #b3b3b3;
+            /* padding: 10px; */
+            background: white;
+            color: #043747;
+            /* font-weight: bold; */
+            font-size: 20px;
+            border-radius: 5px;
+            /* height: 100px; */
+        }
+
+        .mui-table-view-cell {
+            word-break: break-all;
+            word-wrap: break-word;
+            height: auto !important;
+            line-height: 25px;
+            text-align: left;
+            padding: 10px;
+        }
+
+        #ordersInfo {
+            height: 90%;
+            padding: 10px;
+            color: red;
+            font-weight: bold;
+        }
+
+        .mui-table-view-cell > a:not(.mui-btn) {
+            margin: 0px;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="mui-bar mui-bar-nav">
+        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+        <h1 class="mui-title">裁剪投料登记</h1>
+    </header>
+    <div class="mui-content" style="height: 100%;">
+
+        <form class="mui-input-group" id="formID" style="height: 100%;">
+            <div class="mui-input-row">
+                <label>设备代码</label>
+                <input type="text" id="deviceCode" readonly="true" required class="mui-input-clear" placeholder="设备代码">
+            </div>
+
+            <input type="hidden" id="operateUserId" readonly="true" required class="mui-input-clear" placeholder="操作人ID">
+
+            <div class="mui-input-row">
+                <label>原料条码</label>
+                <input type="text" id="materialCode" readonly="true" required class="mui-input-clear" placeholder="原料条码">
+            </div>
+         <!--   <div class="mui-input-row" style="height: 100px;">
+                <label style="height: 90%;">订单信息</label>
+                <div id="ordersInfo" style="height: 90%;padding-left: 100px;width:100%;" onclick="doGrade()">点击选择订单</div>
+            </div> -->
+            <input type="hidden" id="weaveId" readonly="true" required class="mui-input-clear" placeholder="编织计划ID">
+            <div id="bomInfo"></div>
+            <div class="mui-button-row">
+                <button type="button" class="mui-btn mui-btn-primary" onclick="addFeedingMaterial()">确认</button>
+            </div>
+        </form>
+
+    </div>
+    <div id="popover" class="mui-popover">
+        <div class="mui-scroll-wrapper">
+            <div class="mui-scroll">
+                <ul class="mui-table-view" id="pikerInfo">
+                    <li class="mui-table-view-cell">
+                        <a href="#">扫描机台获取订单</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var findInfoUrl = App.getServerUrl() + "common/infos";
+        var bomDetails;
+        var scanner;
+        var doc = document;
+        var deviceOrderUrl = App.getServerUrl() + "produce/deviceOrder1";
+        var materialUrl = App.getServerUrl() + "material/";
+        var addMaterialUrl = App.getServerUrl() + "produce/add";
+        function doGrade() {
+            if ($("#deviceCode").val() == "" || $("#deviceCode").val() == null) {
+                beepAndVibrate();
+                toast("请扫描机台二维码");
+                return;
+            }
+
+            /* if ($("#pikerInfo li").length == 0) {
+                tip("您无订单");
+                return;
+            } */
+            mui('#popover').popover('show');
+            mui('.mui-scroll-wrapper').scroll({
+                deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+            });
+        }
+
+        function choose(data) {
+            var id = data.getAttribute("id");
+            $("#weaveId").val(id);
+            $("#ordersInfo").empty();
+            $("#ordersInfo").append(data.innerHTML.substring(2).replace(new RegExp(/(;)/g), ""));
+            mui('#popover').popover('hide');
+
+        }
+
+        function parseCode(data) {
+            var deviceInfos = data.split(";");
+            if (!(deviceInfos[0].length > 5)) {
+                $("#deviceCode").val(deviceInfos[0]);
+
+            } else {
+                /* if ($("#weaveId").val() == null || "" == ($("#weaveId").val())) {
+                    beepAndVibrate();
+                    toast("请先选择要生产的订单");
+                    return;
+                } */
+                var barcode = deviceInfos[0];
+                if (!(barcode.indexOf("R") == 0)) {
+                    beepAndVibrate();
+                    toast("错误的原料条码");
+                    return;
+                }
+                //查询原料信息
+                App.ajaxGet(findInfoUrl + "?barCode=" + barcode, function (ajaxData) {
+                    closeWaiting();
+                    if (ajaxData.ERROR) {
+                        tip(ajaxData.MSG);
+                        return;
+                    }
+                    //判断条码是否产出登记
+                    if (ajaxData.REGISTER) {
+                        //判断条码是否已被冻结
+                        if (ajaxData.STATE == 3) {
+                            beepAndVibrate();
+                            toast("该条码已被冻结");
+                            return;
+                        }
+                        if (ajaxData.STOCK == -1) {
+                            beepAndVibrate();
+                            toast("该条码没有入库");
+                            return;
+                        }
+                        if (ajaxData.WARETYPE != "pbbzk") {
+                            beepAndVibrate();
+                            toast("该条码没有领料");
+                            return;
+                        }
+                        $('#materialCode').val(barcode);
+
+                    } else {
+                        beepAndVibrate();
+                        toast("该条码未产出登记");
+                    }
+                }, function () {
+                    closeWaiting();
+                    beepAndVibrate();
+                    toast("查询条码信息失败");
+                });
+            }
+        }
+
+        function addFeedingMaterial() {
+            if ($("#deviceCode").val() == "" || $("#deviceCode").val() == null) {
+                beepAndVibrate();
+                toast("机台未绑定，请扫描机台二维码");
+                return;
+            }
+            if (App.getLoginUserId() == "" || App.getLoginUserId() == null) {
+                beepAndVibrate();
+                toast("未登陆，请重新登陆");
+                return;
+            }
+            if ($("#materialCode").val() == null || $("#materialCode").val() == "") {
+
+                beepAndVibrate();
+                toast("物料条码未绑定，请扫描物料条码");
+                return;
+            }
+            /* if ($("#weaveId").val() == null || $("#weaveId").val() == "") {
+
+                beepAndVibrate();
+                toast("请选择生产任务");
+                return;
+            } */
+            var rStr = {
+                "deviceCode": $("#deviceCode").val(),
+                "operateUserId": App.getLoginUserId(),
+                "puid": App.getLoginUserId(),
+                "puname": App.getLoginUserName(),
+                "rollCode": $("#materialCode").val(),
+                "cutId": $("#weaveId").val()
+            };
+            var deviceCode = $("#deviceCode").val();
+            waiting("正在保存", true);
+            App.ajaxPost(addMaterialUrl, rStr, function (data) {
+                closeWaiting();
+                if (data == "success") {
+                    $("#formID")[0].reset();
+                    $("#deviceCode").val(deviceCode);
+                    toast("绑定物料成功");
+                    return;
+                } else if (data == "exist") {
+                    beepAndVibrate();
+                    toast("重复登记物料，操作未完成");
+                    return;
+                } else {
+                    beepAndVibrate();
+                    toast("绑定物料失败，操作未完成");
+                    return;
+                }
+            }, function (data) {
+                closeWaiting();
+                beepAndVibrate();
+                toast("保存失败，操作未完成");
+            });
+        }
+
+       App.ready(function() {
+       	scanner = new Scanner(parseCode);
+       	scanner.scan();
+       	//			userPicker.setData([{
+       	//				value: "#none",
+       	//				text: "请扫描机台"
+       	//			}]);
+       	$("#operateUserId").val(App.getLoginUserId());
+       	//			parseCode("E11");
+       }, false);
+    </script>
+</body>
+</html>

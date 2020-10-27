@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -144,6 +144,10 @@
             <input type='text' class='mui-input-clear' readonly value="{{state(v.STATE)}}">
         </div>
         <div class='mui-input-row'>
+			<label>投料状态</label>
+			    <input type='text' class='mui-input-clear' readonly value="{{isFeed(v.ISFEED)}}">
+			</div>
+		<div class='mui-input-row'>
             <label>库存状态</label>
             <input type='text' class='mui-input-clear' readonly value="{{stockState(v.STOCKSTATE)}}">
         </div>
@@ -175,6 +179,13 @@
             }
             return "";
         });
+		
+		template.helper("isFeed", function (v) {
+		    if (v == 1) {
+		        return "已投料";
+		    }
+		    return "未投料";
+		});
 
         template.helper("stockState", function (v) {
             return v == 0 ? "在库" : "出库";
