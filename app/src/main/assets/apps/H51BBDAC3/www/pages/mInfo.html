@@ -211,20 +211,18 @@
         }
 
         function parseCode(code) {
-            log(code)
             if (code.length > 1 && code.split(";").length == 1) {
-
                 //查询条码的库存状态
                 waiting("正在查询原料信息");
                 App.ajaxGet(findMaterialInfo + code, function (data) {
-                    //条码扫的数据
-                    $("#materialCode").val(data.PALLETCODE);
-                    $("#materialCode").attr("mssId", data.ID);
                     if (data != null) {
                         m = data;
                         initMaterial(data);
+                        $("#materialCode").val(data.PALLETCODE);
+                        $("#materialCode").attr("mssId", data.ID);
                     } else {
                         tip("找不到原料信息");
+                        clearData();
                         return;
                     }
                 }, function () {
@@ -240,7 +238,7 @@
         function clearData() {
             $("#form").empty();
             $("#materialCode").val("");
-            mdata = "";
+            m = "";
         }
 
         function initMaterial(data) {

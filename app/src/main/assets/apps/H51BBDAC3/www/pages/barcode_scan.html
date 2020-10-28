@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript">
         var ws = null,
@@ -11,7 +11,6 @@
         var scanCallback = "parseCode";
         // H5 plus事件处理
         function plusReady() {
-
             if (ws || !window.plus || !domready) {
                 return;
             }
@@ -60,6 +59,9 @@
                     break;
             }
             result = result.replace(/\n/g, '');
+            if(result.indexOf("{") == 0 && result.indexOf("salverNumver") != -1){
+                result = JSON.parse(result).salverNumver;
+            }
             wo.evalJS((scanCallback || "parseCode") + "('" + result + "');");
             setTimeout(function () {
                 scan.start();
@@ -73,6 +75,7 @@
             ws.hide("pop-out", 500);
             history.back();
         }
+
     </script>
     <style type="text/css">
         #bcid {
@@ -91,15 +94,18 @@
             color: #FFF;
             z-index: 9999;
         }
+
     </style>
 </head>
 <body style="background-color: #000000;">
-    <div id="bcid">
-        <div style="height:40%"></div>
-        <p class="tip">...载入中...</p>
+<div id="bcid">
+    <div style="height:40%"></div>
+    <p class="tip">...载入中...</p>
+</div>
+<footer style="height: 120px;">
+    <div style="background: #0b70a2;width:100px;height: 100px;position:fixed;left:50%;margin-left:-50px;border-radius: 50px;bottom:0px;text-align: center;line-height: 100px;font-size:30px;"
+         onclick="back()">取 消
     </div>
-    <footer style="height: 120px;">
-        <div style="background: #0b70a2;width:100px;height: 100px;position:fixed;left:50%;margin-left:-50px;border-radius: 50px;bottom:0px;text-align: center;line-height: 100px;font-size:30px;" onclick="back()">取 消</div>
-    </footer>
+</footer>
 </body>
 </html>
