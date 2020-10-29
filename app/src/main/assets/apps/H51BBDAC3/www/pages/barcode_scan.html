@@ -59,9 +59,6 @@
                     break;
             }
             result = result.replace(/\n/g, '');
-            if(result.indexOf("{") == 0 && result.indexOf("salverNumver") != -1){
-                result = JSON.parse(result).salverNumver;
-            }
             wo.evalJS((scanCallback || "parseCode") + "('" + result + "');");
             setTimeout(function () {
                 scan.start();
