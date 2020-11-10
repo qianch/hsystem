@@ -102,7 +102,7 @@
 
 			function choose(data) {
 				var id = data.getAttribute("id");
-				
+
 				selectPlan();
 				$("#ordersInfo").empty();
 				$("#ordersInfo").append(data.innerHTML);
@@ -116,7 +116,7 @@
 				if (code.length < 5) {
 					$("#deviceCode").val("");
 					$("#pikerInfo").empty();
-					
+
 					var rStr = {
 						"deviceCode": code,
 						"userId": App.getLoginUserId(),
@@ -135,12 +135,13 @@
 						toast("扫描机器码失败，操作未完成");
 					});
 
-				} /* else if(code.length>5&&code.length<15){
+				}
+				/* else if(code.length>5&&code.length<15){
 					toast("原料条码错误");
 					return;
 				} */
 				else {
-					if (code.length==18){
+					if (code.length == 18) {
 						closeWaiting();
 						beepAndVibrate();
 						toast("原料条码错误");
@@ -149,18 +150,23 @@
 					if (code.length < 20) {
 						code = "____" + code + "______";
 					}
-					
-					
+
+
 					App.ajaxPost(materialUrl + code, {}, function(data) {
 						if (data.error) {
 							tip(data.error)
 							return;
 						}
 						result = false;
-					
+						if (data.stockState != 1) {
+							beepAndVibrate();
+							toast("该条码没有出库");
+							return;
+						}
+
 						$("#materialCode").val(code);
 						return;
-						
+
 					}, function(data) {});
 
 				}
