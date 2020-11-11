@@ -31,3 +31,12 @@ function parseRollCode(qrcode, code) {
     var qrarray = qrcode.split(";");
     return qrarray[code];
 }
+
+function formatMateriaCode(code){
+    var reg = /^[\'\"]+|[\'\"]+$/g;
+    code = code.replace(reg,"");
+    if(code.indexOf("{") == 0 && code.indexOf("salverNumver") != -1){
+        code = JSON.parse(code).salverNumver;
+    }
+    return code;
+}

@@ -91,18 +91,11 @@
 			App.ready(function() {
 				scanner = new Scanner(parseCode);
 				scanner.scan();
-				//			userPicker.setData([{
-				//				value: "#none",
-				//				text: "请扫描机台"
-				//			}]);
 				$("#operateUserId").val(App.getLoginUserId());
-				//			parseCode("E11");
 			}, false);
-
 
 			function choose(data) {
 				var id = data.getAttribute("id");
-
 				selectPlan();
 				$("#ordersInfo").empty();
 				$("#ordersInfo").append(data.innerHTML);
@@ -111,8 +104,7 @@
 			}
 
 			function parseCode(code) {
-				// 2018.11.26 添加正则判断，code是否以字母开头
-				//alert(code.length);
+			    code = formatMateriaCode(code);
 				if (code.length < 5) {
 					$("#deviceCode").val("");
 					$("#pikerInfo").empty();
@@ -134,7 +126,6 @@
 						beepAndVibrate();
 						toast("扫描机器码失败，操作未完成");
 					});
-
 				}
 				/* else if(code.length>5&&code.length<15){
 					toast("原料条码错误");
@@ -150,7 +141,6 @@
 					if (code.length < 20) {
 						code = "____" + code + "______";
 					}
-
 
 					App.ajaxPost(materialUrl + code, {}, function(data) {
 						if (data.error) {

@@ -126,6 +126,7 @@
 
         function parseCode(code) {
             waiting("正在加载原料信息");
+            code = formatMateriaCode(code);
             App.ajaxGet(mInfo + code, function (ajaxData) {
                 $("#list").empty();
                 log(ajaxData)

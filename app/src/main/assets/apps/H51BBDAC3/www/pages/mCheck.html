@@ -111,6 +111,7 @@
 
         function parseCode(barcode) {
             $("#sb").text("盘点结束");
+            barcode = formatMateriaCode(barcode);
             var code = barcode.split(";");
 
             //如果条码长度超过15，那么就认为是原料条码

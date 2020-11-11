@@ -67,6 +67,7 @@
 			});
 
 			function parseCode(data1) {
+			    data1 = formatMateriaCode(data1);
 				var data = data1.split(";");
 				if (data.length != 1) {
 					tip("该条码不存在");

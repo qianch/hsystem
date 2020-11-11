@@ -211,9 +211,7 @@
         }
 
         function parseCode(code) {
-            if(code.indexOf("{") == 0 && code.indexOf("salverNumver") != -1){
-                code = JSON.parse(code).salverNumver;
-            }
+            code = formatMateriaCode(code);
             if (code.length > 1 && code.split(";").length == 1) {
                 //查询条码的库存状态
                 waiting("正在查询原料信息");
