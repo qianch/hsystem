@@ -262,6 +262,19 @@
                 productModel="";
             }else{*/
             //成品信息
+			//检测状态
+			if(null != ppd){
+				if (ppd.PRODUCTSTATUS == null) {
+				    productStatus = "未检测";
+				} else if (ppd.PRODUCTSTATUS == 1) {
+				    productStatus = "已送样未检测";
+				} else if (ppd.PRODUCTSTATUS == 2) {
+				    productStatus = "检测合格";
+				} else if (ppd.PRODUCTSTATUS == 3) {
+				    productStatus = "检测不合格";
+				} 
+			}
+			
             product = data.PRODUCT;
             if (product != null) {
                 productModel = product.PRODUCTMODEL;
@@ -354,7 +367,10 @@
 
             stt += "<div class='mui-input-row'><label>成品状态</label>";
             stt += "<input type='text' class='mui-input-clear' id='productState' readonly value='" + productState + "'></div>";
-
+			if (barcode.startsWith("T") || barcode.startsWith("PHS")) {
+			stt += "<div class='mui-input-row'><label>检测状态</label>";
+            stt += "<input type='text' class='mui-input-clear' id='productStatus' readonly value='" + productStatus + "'></div>";
+			}
             stt += "<div class='mui-input-row'><label>作废状态</label>";
             stt += "<input type='text' class='mui-input-clear' id='isAbandon' readonly value='" + isAbandon + "'></div>";
 

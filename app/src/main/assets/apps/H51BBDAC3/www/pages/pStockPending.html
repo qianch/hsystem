@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -218,6 +218,12 @@
                                 toast("该条码已被冻结");
                                 return;
                             }
+							//判断条码是否已检测
+							if ((data[0].startsWith("PHS") || data[0].startsWith("T"))&& ajaxData.PPD.PRODUCTSTATUS == null) {
+							    beepAndVibrate();
+							    toast("该批次该规格未送样检测");
+							    return;
+							}
                             //判断条码是否在库
                             if (ajaxData.STOCK == 1) {
                                 beepAndVibrate();
