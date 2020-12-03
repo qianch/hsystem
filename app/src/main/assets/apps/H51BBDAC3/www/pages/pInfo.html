@@ -231,7 +231,7 @@
             if (data.CODE.ISABANDON == 1) {
                 isAbandon = "作废";
             } else {
-                isAbandon = "正常";
+                isAbandon = "未作废";
             }
             //判断条码类型
             if ((barcode.indexOf("R") == 0 || barcode.indexOf("P") == 0) && data.ROLL != null) { //卷
@@ -364,6 +364,16 @@
                 stt += "<div class='mui-input-row'><label>在库状态</label>";
                 stt += "<input type='text' class='mui-input-clear' readonly value='" + stock + "'></div>";
             }
+			if (data.STOCK == 1 || data.STOCK == 2 || data.STOCK == 3 || data.STOCK == 5) {
+				var WAREHOUSEPOSNAME=data.WAREHOUSEPOSNAME;
+				var WAREHOUSENAME=data.WAREHOUSENAME;
+				if (barcode.indexOf("T") == 0 || barcode.indexOf("P") == 0) {
+					stt += "<div class='mui-input-row'><label>仓库信息</label>";
+					stt += "<input type='text' class='mui-input-clear' readonly value='" + WAREHOUSENAME + "'></div>";
+					stt += "<div class='mui-input-row'><label>库位信息</label>";
+					stt += "<input type='text' class='mui-input-clear' readonly value='" + WAREHOUSEPOSNAME + "'></div>";
+				}
+			}
 
             stt += "<div class='mui-input-row'><label>成品状态</label>";
             stt += "<input type='text' class='mui-input-clear' id='productState' readonly value='" + productState + "'></div>";
