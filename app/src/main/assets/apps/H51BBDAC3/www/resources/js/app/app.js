@@ -122,6 +122,10 @@ App = {
             dataType: "json",
             success: function (data) {
                 closeWaiting();
+                if(data && data.error){
+                    tip(data.error);
+                    return;
+                }
                 if (successCB) {
                     successCB(data);
                 }
