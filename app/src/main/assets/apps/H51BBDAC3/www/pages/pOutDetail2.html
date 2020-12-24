@@ -453,8 +453,6 @@
                         function () {
                             malert("操作提示", "PDA操作绑定失败");
                         });
-
-
                 });
 
             scanner = new Scanner(parseCode);
@@ -793,10 +791,16 @@
                     3.装箱扫描
                     4.返回时候，确定返回，就取消装箱
                     */
-                    if (data[0].PDAID == null) {
+                   /* if (data[0].PDAID == null) {
                         malert("操作提示", "该任务尚未绑定此PDA", "我已知晓");
                         return;
-                    }
+                    } */
+					if (data[0].PDAID == null) {
+						App.ajaxGet(App.getServerUrl() + "stock/product/bind?id=" + data[0].ID + "&pdaID=" + plus.device.imei +
+							"&optUser=" + App.getLoginUserName());
+						toast("PDA未绑定,重新绑定成功，请再次点击出库");
+						return;
+					}
 
                     if (data[0].PDAID != null && data[0].PDAID != plus.device.imei) {
                         malert("操作提示", data[0].OPTUSER + "正在另外一台PDA使用此箱号:" + data[0].PN, "我已知晓", function () {
@@ -877,14 +881,6 @@
         }
 
         mui.back = function () {
-            /*mconfirm("操作提示", "确认返回？", function() {
-                mconfirm()
-                plus.webview.currentWebview().close();
-                if(tipView != undefined) {
-                    tipView.close();
-                    scanView.close();
-                }
-            });*/
             plus.nativeUI.actionSheet({
                 title: "确认返回？",
                 cancel: "取消",
