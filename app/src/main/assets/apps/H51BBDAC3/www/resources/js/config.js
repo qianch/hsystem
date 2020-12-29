@@ -1,7 +1,7 @@
 //var SERVER_IP = "10.10.1.211:8090/mesTest";//测试服务器
-//var SERVER_IP = "192.168.101.99:8080/hsmes";//个人测试
-var SERVER_IP = "192.168.101.99:8070/int";//国际化测试
-//var SERVER_IP = "10.10.1.9/mes";//生产环境
+//var SERVER_IP = "192.168.101.99:8090/mes";//个人测试
+//var SERVER_IP = "192.168.101.99:8070/int";//国际化测试
+var SERVER_IP = "10.10.1.9/mes";//生产环境
 var EXTERNAL_IP = "122.225.2.62:11111/mes"; //外库映射IP
 var Config = {
 	/**
@@ -20,7 +20,7 @@ var Config = {
 		 * APP当前版本号
 		 */
 
-        version: "5.1.6"
+        version: "5.1.7"
     },
 	/**
 	 * 动画定义

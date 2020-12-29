@@ -73,12 +73,19 @@ App = {
             timeout: 30000,
             success: function (data) {
                 closeWaiting();
+
+                if(data && data.error){
+                   tip(data.error);
+                   return;
+                }
+
                 if (successCB) {
                     successCB(data);
                 }
             },
             error: function (xhr, type, errorThrown) {
                 closeWaiting();
+
                 try {
                     var ret = JSON.parse(xhr.responseText);
                     tip(ret.error);
@@ -122,16 +129,19 @@ App = {
             dataType: "json",
             success: function (data) {
                 closeWaiting();
+
                 if(data && data.error){
                     tip(data.error);
                     return;
                 }
+
                 if (successCB) {
                     successCB(data);
                 }
             },
             error: function (xhr, type, errorThrown) {
                 closeWaiting();
+
                 try {
                     var ret = JSON.parse(xhr.responseText);
                     tip(ret.error);
