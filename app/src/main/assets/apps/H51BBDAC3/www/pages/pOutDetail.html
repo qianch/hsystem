@@ -300,17 +300,19 @@
 		<script id="stockPosition" type="text/template">
 			<table id="" class="StockPosition" border="1" width="320" cellspacing="0" cellpadding="0" bordercolor="gray" style="BORDER-COLLAPSE: collapse;display: none;">
             <tr>
-                <th>序号</th>
-                <th width="80" align="center">仓库名称</th>
-                <th width="80" align="center">库位</th>
-                <th>重量</th>
+                <th style="font-size: 14px;">序号</th>
+                <th style="font-size: 14px;" width="60" align="center">仓库名称</th>
+                <th style="font-size: 14px;" width="55" align="center">库位</th>
+                <th style="font-size: 14px;" width="45" align="center">重量</th>
+				<th style="font-size: 14px;">条码号</th>
             </tr>
             {{each data as value i}}
             <tr>
-                <td align="center">{{i+1}}</td>
-                <td align="center">{{value.WAREHOUSENAME}}</td>
-                <td align="center">{{value.WAREHOUSEPOSCODE}}</td>
-                <td align="center">{{(value.WEIGHT).toFixed(1)}}</td>
+                <td style="font-size: 14px;" align="center">{{i+1}}</td>
+                <td style="font-size: 14px;" align="center">{{value.WAREHOUSENAME}}</td>
+                <td style="font-size: 14px;" align="center">{{value.WAREHOUSEPOSCODE}}</td>
+                <td style="font-size: 14px;" align="center">{{(value.WEIGHT).toFixed(1)}}</td>
+				<td style="font-size: 14px;" align="center">{{value.BARCODE}}</td>
             </tr>
             {{/each}}
         </table>
