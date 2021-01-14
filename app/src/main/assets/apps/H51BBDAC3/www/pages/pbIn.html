@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -134,6 +134,12 @@
                         beepAndVibrate();
                         toast("该条码未产出登记");
                     }
+					
+					if( ajaxData.PPD.PRODUCTSTATUS == null){
+						beepAndVibrate();
+						toast("该批次该规格未送样检测");
+						return;
+					}
 
                     //判断条码是否在库
                     if (ajaxData.STOCK == 1) {

@@ -5,6 +5,7 @@
 		<title>成品批量入库</title>
 
 		<script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../resources/js/app/Convert_Pinyin.js" type="text/javascript" charset="utf-8"></script>
 		<style type="text/css">
 			* {
 				margin: 0;
@@ -180,6 +181,7 @@
 			var divscorllblock = document.getElementById("divscorllblock");
 
 			var tbody = document.getElementById('tbMain');
+			
 
 			App.ready(function() {
 				scanner = new Scanner(parseCode);
@@ -212,6 +214,8 @@
 				var partNameCell = document.createElement('td'); //创建第五列partName 
 				partNameCell.innerHTML = h.partName;
 				row.appendChild(partNameCell);
+				//新插入部件名称
+				var fullName = pinyin.getFullChars(h.partName);
 
 				var productWeightCell = document.createElement('td'); //创建第六列productWeight 
 				productWeightCell.innerHTML = h.productWeight;
@@ -220,7 +224,28 @@
 				var CONSUMERNAMECell = document.createElement('td'); //创建第六列CONSUMERNAME
 				CONSUMERNAMECell.innerHTML = h.CONSUMERNAME;
 				row.appendChild(CONSUMERNAMECell);
-				tbody.appendChild(row);
+				//第一次不用比较先加载
+				if(tbody.rows.length==0){
+					tbody.appendChild(row);
+				}else{
+					//比较新插入部件和原部件名称
+					for (var i = 0; i < tbody.rows.length; i++) {      
+						var oldFullName = pinyin.getFullChars(tbody.rows[i].cells[5].innerHTML);
+						if(fullName.localeCompare(oldFullName)<0){
+							tbody.insertBefore(row,tbody.rows[i]);
+							break;
+						}
+						if(fullName.localeCompare(oldFullName)==0){
+							tbody.appendChild(row);
+							break;
+						}
+						if(i==tbody.rows.length-1 && fullName.localeCompare(oldFullName)>0){
+							tbody.appendChild(row);
+						}
+					}
+				}
+				
+				
 			}
 
 			function delRow(obj) {

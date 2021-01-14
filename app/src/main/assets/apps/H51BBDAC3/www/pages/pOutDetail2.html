@@ -243,6 +243,7 @@
                 <th class="title">提单号</th>
                 <th class="content" style="color:red;">{{value.LADINGCODE}}</th>
             </tr>
+			
             <!-- <tr>
                 <th class="title">尺码</th>
                 <th class="content">{{value.SIZE}}</th>
@@ -314,6 +315,7 @@
                 <th class="title">剩余发货数量</th>
                 <th class="title">扫描数量</th>
                 <th class="title">扫描重量</th>
+				<th class="title">计划产品ID</th>
                 <th class="title">备注</th>
 
             </tr>
@@ -331,7 +333,8 @@
                 <td class="content" style="color:blue;">{{value.DELIVERYCOUNT-value.OUTDETAILCOUNT}}</td>
                 <td class="content" style="color:blue;" id="sum-{{value.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g,"")}}-{{value.PRODUCTID}}-{{value.BATCHCODE.replace(/[\s*\+\*\/()]+/g, "")}}-{{value.PARTID}}">0</td>
                 <td class="content" id="weight-{{value.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g,"")}}-{{value.PRODUCTID}}-{{value.BATCHCODE.replace(/[\s*\+\*\/()]+/g, "")}}-{{value.PARTID}}" align="left"></td>
-                <td class="content">{{value.MEMO}}</td>
+                 <td class="content">{{value.PRODUCTID}}</td>
+				<td class="content">{{value.MEMO}}</td>
 
             </tr>
 
@@ -395,7 +398,7 @@
                 function (data) {
                     data_ = JSON.parse(data);
                     data = JSON.parse(data);
-
+					
                     if (data.error != null) {
                         beep();
                         return;
@@ -542,7 +545,7 @@
 
                         if ($("#" + productid).length == 0) {
                             beepAndVibrate();
-                            toast("该托产品不在出库单中，订单号：" + ajaxData.ORDER.SALESORDERSUBCODE + "，产品ID：" + ajaxData.ORDER.PRODUCTID + ",批次号：" + ajaxData.CODE.BATCHCODE.replace(/[\s*\+\*\/()]+/g, ""));
+                            toast("该托产品不在出库单中，订单号：" + ajaxData.ORDER.SALESORDERSUBCODE + "，条码产品ID：" + ajaxData.ORDER.PRODUCTID + ",批次号：" + ajaxData.CODE.BATCHCODE.replace(/[\s*\+\*\/()]+/g, ""));
                             return;
                         }
 
