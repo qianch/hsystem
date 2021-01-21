@@ -243,7 +243,7 @@
                                 return;
                             }
                             //判断条码是否出库
-                            if (data.STOCK == -1) {
+                            if (ajaxData.STOCK == -1) {
                                 beepAndVibrate();
                                 toast("该条码已出库");
                                 return;
