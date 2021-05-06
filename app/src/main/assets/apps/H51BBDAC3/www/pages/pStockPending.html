@@ -219,7 +219,7 @@
                                 return;
                             }
 							//判断条码是否已检测
-							if ((data[0].indexOf("PHS") == 0 || data[0].indexOf("T") == 0)&& ajaxData.PPD.PRODUCTSTATUS == null) {
+							if ((data[0].indexOf("P") == 0 || data[0].indexOf("T") == 0)&& ajaxData.PPD.PRODUCTSTATUS == null) {
 							    beepAndVibrate();
 							    toast("该批次该规格未送样检测");
 							    return;
