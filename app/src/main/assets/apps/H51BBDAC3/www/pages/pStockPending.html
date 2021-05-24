@@ -218,11 +218,35 @@
                                 toast("该条码已被冻结");
                                 return;
                             }
-							//判断条码是否已检测
-							if ((data[0].indexOf("P") == 0 || data[0].indexOf("T") == 0)&& ajaxData.PPD.PRODUCTSTATUS == null) {
+							//判断托条码是否已检测
+							if ((data[0].indexOf("PHS") == 0 || data[0].indexOf("T") == 0)&& ajaxData.PPD.PRODUCTSTATUS == null) {
 							    beepAndVibrate();
 							    toast("该批次该规格未送样检测");
 							    return;
+							}
+							//判断部件条码是否已检测
+							//判断部件条码是否已检测
+							if(data[0].indexOf("PCJ") == 0){
+								if(ajaxData.PPD.length==0){
+									beepAndVibrate();
+									toast("该批次的部件还未生产相关的胚布");
+									return;
+								}else{
+									var b= false;
+									var productModel=[];
+									for(var i=0;i<ajaxData.PPD.length;i++){
+										if(ajaxData.PPD[i].PRODUCTSTATUS==null){
+											b=true;
+											productModel.push(ajaxData.PPD[i].PRODUCTMODEL);
+										}
+									}
+									if(b){
+										beepAndVibrate();
+										toast("批次号为："+ajaxData.PPD[0].BATCHCODE+"；规格为："+productModel+"；的胚布尚未送样检测；");
+										return;
+									}
+								}
+								
 							}
                             //判断条码是否在库
                             if (ajaxData.STOCK == 1) {

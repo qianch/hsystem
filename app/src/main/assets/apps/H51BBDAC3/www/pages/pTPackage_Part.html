@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 
 	<head>
@@ -207,6 +207,10 @@
 				waiting("正在加载信息");
 				App.ajaxGet(trayInfo + code,
 					function(data) {
+						if(data.TURNBAG){
+							tip("该托条码为翻包条码，只能用于翻包操作");
+							return;
+						}
 						$("#trayCode").val("");
 						$("#trayForm").empty();
 						$("#count").empty();
@@ -246,6 +250,7 @@
 								tip("该条码已拆包，无法打包");
 								return;
 							}
+							
 
 							dxb = data.DXB;
 							partId = data.PARTID;
