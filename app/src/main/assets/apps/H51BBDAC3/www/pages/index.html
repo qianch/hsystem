@@ -98,6 +98,10 @@
             waiting("正在登陆");
             App.ajaxGet(App.getServerUrl() + "login?userName=" + user.val() + "&password=" + password.val(), function (data) {
                 //登陆成功后，清空用户信息
+                if(data.ID == undefined || data.USERNAME == undefined){
+                    closeWaiting();
+                    toast("账户或者密码错误!");
+                }
                 user.val("");
                 password.val("");
                 toast("登陆成功");
