@@ -1,5 +1,5 @@
-# LongManager
-**HBuilder 恒石项目**
+# hsystem
+**恒石系统**
 
 ## License
 **MIT**
