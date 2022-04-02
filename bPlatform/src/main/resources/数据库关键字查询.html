@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<!-- saved from url=(0028)http://www.xdemo.org/db.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta charset="UTF-8">
+	<title>数据库关键字查询</title>
+<style type="text/css">
+	fieldset {
+		border: 2px solid #5C5F80;
+		color: red;
+		/* background: #F9F9F9; */
+		
+		margin: 0 auto;
+		margin-bottom: 10px;
+		margin-top: 10px;
+		border-radius: 10px;
+	}
+	legend {
+		background: #666666;
+		border: 2px solid #666666;
+		color: white;
+		font-weight: bold;
+		border-radius: 5px;
+		height: 20px;
+		line-height: 20px;
+	}
+	li {
+		display: inline-block;
+		padding: 3px;
+		color: blue;
+		font-family: arial;
+		margin: 5px;
+		background: white;
+		border: 1px solid #F9F9F9;
+		box-shadow: 2px 2px 2px 2px #B9B7B5;
+		border-radius: 3px;
+		-webkit-box-shadow: 2px 2px 2px 2px #B9B7B5;
+		-moz-box-shadow: 2px 2px 2px 2px #B9B7B5;
+		height: 20px;
+		line-height: 20px;
+	}
+	h1 {
+		background: #666666;
+		width: 100%;
+		padding: 20px;
+		font: bold 55px/100% "微软雅黑", "Lucida Grande", "Lucida Sans", Helvetica, Arial, Sans;
+		;
+		text-align: center;
+		color: #fff;
+		text-transform: uppercase;
+		margin: 0 auto;
+	}
+	input {
+		width: 400px;
+		height: 30px;
+		margin: 10px;
+		font-size: 18px;
+		color: #1C8802;
+		font-weight: bold;
+		outline: none;
+		font: arial;
+		vertical-align: middle
+	}
+	select {
+		height: 37px;
+		font-size: 15px;
+		outline: none;
+		vertical-align: middle
+	}
+	.on {
+		background: #D27D7D;
+		border: 1px solid #B11515;
+		color: white;
+		/*font-weight: bold;*/
+		
+		outline: none;
+	}
+	.like {
+		background: #ECFB77;
+		border: 1px dashed #C50707;
+		color: #FF0000;
+		outline: none;
+	}
+	label {
+		color: red;
+		font-weight: bold;
+	}
+	button {
+		border: 1px solid darkgrey;
+		height: 35px;
+		line-height: 30px;
+		outline: none;
+		background: #FBFBFB;
+		cursor: help;
+		color: #7B7575;
+		font-weight: bold;
+		vertical-align: middle;
+	}
+</style><script src="./数据库关键字查询_files/jquery.min.js"></script><style type="text/css" adt="123"></style><script type="text/javascript">
+	var mysqlKey = ["ADD", "ALL", "ALTER", "ANALYZE", "AND", "AS", "ASC", "ASENSITIVE", "BEFORE", "BETWEEN", "BIGINT", "BINARY", "BLOB", "BOTH", "BY", "CALL", "CASCADE", "CASE", "CHANGE", "CHAR", "CHARACTER", "CHECK", "COLLATE", "COLUMN", "CONDITION", "CONNECTION", "CONSTRAINT", "CONTINUE", "CONVERT", "CREATE", "CROSS", "CURRENT_DATE", "CURRENT_TIME", "CURRENT_TIMESTAMP", "CURRENT_USER", "CURSOR", "DATABASE", "DATABASES", "DAY_HOUR", "DAY_MICROSECOND", "DAY_MINUTE", "DAY_SECOND", "DEC", "DECIMAL", "DECLARE", "DEFAULT", "DELAYED", "DELETE", "DESC", "DESCRIBE", "DETERMINISTIC", "DISTINCT", "DISTINCTROW", "DIV", "DOUBLE", "DROP", "DUAL", "EACH", "ELSE", "ELSEIF", "ENCLOSED", "ESCAPED", "EXISTS", "EXIT", "EXPLAIN", "FALSE", "FETCH", "FLOAT", "FLOAT4", "FLOAT8", "FOR", "FORCE", "FOREIGN", "FROM", "FULLTEXT", "GOTO", "GRANT", "GROUP", "HAVING", "HIGH_PRIORITY", "HOUR_MICROSECOND", "HOUR_MINUTE", "HOUR_SECOND", "IF", "IGNORE", "IN", "INDEX", "INFILE", "INNER", "INOUT", "INSENSITIVE", "INSERT", "INT", "INT1", "INT2", "INT3", "INT4", "INT8", "INTEGER", "INTERVAL", "INTO", "IS", "ITERATE", "JOIN", "KEY", "KEYS", "KILL", "LABEL", "LEADING", "LEAVE", "LEFT", "LIKE", "LIMIT", "LINEAR", "LINES", "LOAD", "LOCALTIME", "LOCALTIMESTAMP", "LOCK", "LONG", "LONGBLOB", "LONGTEXT", "LOOP", "LOW_PRIORITY", "MATCH", "MEDIUMBLOB", "MEDIUMINT", "MEDIUMTEXT", "MIDDLEINT", "MINUTE_MICROSECOND", "MINUTE_SECOND", "MOD", "MODIFIES", "NATURAL", "NOT", "NO_WRITE_TO_BINLOG", "NULL", "NUMERIC", "ON", "OPTIMIZE", "OPTION", "OPTIONALLY", "OR", "ORDER", "OUT", "OUTER", "OUTFILE", "PRECISION", "PRIMARY", "PROCEDURE", "PURGE", "RAID0", "RANGE", "READ", "READS", "REAL", "REFERENCES", "REGEXP", "RELEASE", "RENAME", "REPEAT", "REPLACE", "REQUIRE", "RESTRICT", "RETURN", "REVOKE", "RIGHT", "RLIKE", "SCHEMA", "SCHEMAS", "SECOND_MICROSECOND", "SELECT", "SENSITIVE", "SEPARATOR", "SET", "SHOW", "SMALLINT", "SPATIAL", "SPECIFIC", "SQL", "SQLEXCEPTION", "SQLSTATE", "SQLWARNING", "SQL_BIG_RESULT", "SQL_CALC_FOUND_ROWS", "SQL_SMALL_RESULT", "SSL", "STARTING", "STRAIGHT_JOIN", "TABLE", "TERMINATED", "THEN", "TINYBLOB", "TINYINT", "TINYTEXT", "TO", "TRAILING", "TRIGGER", "TRUE", "UNDO", "UNION", "UNIQUE", "UNLOCK", "UNSIGNED", "UPDATE", "USAGE", "USE", "USING", "UTC_DATE", "UTC_TIME", "UTC_TIMESTAMP", "VALUES", "VARBINARY", "VARCHAR", "VARCHARACTER", "VARYING", "WHEN", "WHERE", "WHILE", "WITH", "WRITE", "X509", "XOR", "YEAR_MONTH", "ZEROFILL"];
+	var oracleKey = ["ACCESS", "ADD", "ALL", "ALTER", "AND", "ANY", "AS", "ASC", "AUDIT", "BETWEEN", "BY", "CHAR", "CHECK", "CLUSTER", "COLUMN", "COMMENT", "COMPRESS", "CONNECT", "CREATE", "CURRENT", "DATE", "DECIMAL", "DEFAULT", "DELETE", "DESC", "DISTINCT", "DROP", "ELSE", "EXCLUSIVE", "EXISTS", "FILE", "FLOAT", "FOR", "FROM", "GRANT", "GROUP", "HAVING", "IDENTIFIED", "IMMEDIATE", "IN", "INCREMENT", "INDEX", "INITIAL", "INSERT", "INTEGER", "INTERSECT", "INTO", "IS", "LEVEL", "LIKE", "LOCK", "LONG", "MAXEXTENTS", "MINUS", "MLSLABEL", "MODE", "MODIFY", "NOAUDIT", "NOCOMPRESS", "NOT", "NOWAIT", "NULL", "NUMBER", "OF", "OFFLINE", "ON", "ONLINE", "OPTION", "OR", "ORDER", "P", "CTFREE", "PRIOR", "PRIVILEGES", "PUBLIC", "RAW", "RENAME", "RESOURCE", "REVOKE", "ROW", "ROWID", "ROWNUM", "ROWS", "SELECT", "SESSION", "SET", "SHARE", "SIZE", "SMALLINT", "START", "SUCCESSFUL", "SYNONYM", "SYSDATE", "TABLE", "THEN", "TO", "TRIGGER", "UID", "UNION", "UNIQUE", "UPDATE", "USER", "VALIDATE", "VALUES", "VARCHAR", "VARCHAR2", "VIEW", "WHENEVER", "WHERE", "WITH"];
+	var mssqlKey = ["ADD", "EXCEPT", "PERCENT", "ALL", "EXEC", "PLAN", "ALTER", "EXECUTE", "PRECISION", "AND", "EXISTS", "PRIMARY", "ANY", "EXIT", "PRINT", "AS", "FETCH", "PROC", "ASC", "FILE", "PROCEDURE", "AUTHORIZATION", "FILLFACTOR", "PUBLIC", "BACKUP", "FOR", "RAISERROR", "BEGIN", "FOREIGN", "READ", "BETWEEN", "FREETEXT", "READTEXT", "BREAK", "FREETEXTTABLE", "RECONFIGURE", "BROWSE", "FROM", "REFERENCES", "BULK", "FULL", "REPLICATION", "BY", "FUNCTION", "RESTORE", "CASCADE", "GOTO", "RESTRICT", "CASE", "GRANT", "RETURN", "CHECK", "GROUP", "REVOKE", "CHECKPOINT", "HAVING", "RIGHT", "CLOSE", "HOLDLOCK", "ROLLBACK", "CLUSTERED", "IDENTITY", "ROWCOUNT", "COALESCE", "IDENTITY_INSERT", "ROWGUIDCOL", "COLLATE", "IDENTITYCOL", "RULE", "COLUMN", "IF", "SAVE", "COMMIT", "IN", "SCHEMA", "COMPUTE", "INDEX", "SELECT", "CONSTRAINT", "INNER", "SESSION_USER", "CONTAINS", "INSERT", "SET", "CONTAINSTABLE", "INTERSECT", "SETUSER", "CONTINUE", "INTO", "SHUTDOWN", "CONVERT", "IS", "SOME", "CREATE", "JOIN", "STATISTICS", "CROSS", "KEY", "SYSTEM_USER", "CURRENT", "KILL", "TABLE", "CURRENT_DATE", "LEFT", "TEXTSIZE", "CURRENT_TIME", "LIKE", "THEN", "CURRENT_TIMESTAMP", "LINENO", "TO", "CURRENT_USER", "LOAD", "TOP", "CURSOR", "NATIONAL", "TRAN", "DATABASE", "NOCHECK", "TRANSACTION", "DBCC", "NONCLUSTERED", "TRIGGER", "DEALLOCATE", "NOT", "TRUNCATE", "DECLARE", "NULL", "TSEQUAL", "DEFAULT", "NULLIF", "UNION", "DELETE", "OF", "UNIQUE", "DENY", "OFF", "UPDATE", "DESC", "OFFSETS", "UPDATETEXT", "DISK", "ON", "USE", "DISTINCT", "OPEN", "USER", "DISTRIBUTED", "OPENDATASOURCE", "VALUES", "DOUBLE", "OPENQUERY", "VARYING", "DROP", "OPENROWSET", "VIEW", "DUMMY", "OPENXML", "WAITFOR", "DUMP", "OPTION", "WHEN", "ELSE", "OR", "WHERE", "END", "ORDER", "WHILE", "ERRLVL", "OUTER", "WITH", "ESCAPE", "OVER", "WRITETEXT"];
+	var indexes;
+	$(document).ready(function() {
+		$("#search").focus();
+		$("#search").keyup(function() {
+			doSearch();
+		});
+		$("#dbType").change(function() {
+			doSearch();
+			var dbType = $("#dbType").val();
+			if (dbType != "all") {
+				$("#" + dbType).slideUp(300, function() {
+					$("#dbBlock").prepend($("#" + dbType));
+				});
+				$("#" + dbType).slideDown(300);
+			}
+		});
+		$("#baidu").click(function() {
+			var dbType = $("#dbType").val();
+			var searchKey = $("#search").val();
+			if (dbType == "all") {
+				window.open("http://www.baidu.com/s?wd=数据库 " + searchKey);
+			} else {
+				window.open("http://www.baidu.com/s?wd=" + dbType + " " + searchKey);
+			}
+		});
+	});
+	var doSearch = function() {
+		$(".on").removeClass("on");
+		$(".like").removeClass("like");
+		var dbType = $("#dbType").val();
+		if (dbType == "all") {
+			indexes = mysqlKey.concat(oracleKey).concat(mssqlKey);
+		} else if (dbType == "oracle") {
+			indexes = oracleKey;
+		} else if (dbType == "mssql") {
+			indexes = mssqlKey;
+		} else if (dbType == "mysql") {
+			indexes = mysqlKey;
+		}
+		var searchKey = $("#search").val();
+		if (searchKey == "") return;
+		for (var i = 0; i < indexes.length; i++) {
+			if (indexes[i].indexOf(searchKey.toUpperCase()) != -1) {
+				if (dbType == "all") {
+					if (indexes[i] == searchKey.toUpperCase()) {
+						$("#oracle_" + indexes[i].toLowerCase()).addClass("on");
+						$("#mssql_" + indexes[i].toLowerCase()).addClass("on");
+						$("#mysql_" + indexes[i].toLowerCase()).addClass("on");
+					} else {
+						$("#oracle_" + indexes[i].toLowerCase()).addClass("like");
+						$("#mssql_" + indexes[i].toLowerCase()).addClass("like");
+						$("#mysql_" + indexes[i].toLowerCase()).addClass("like");
+					}
+				} else {
+					if (indexes[i] == searchKey.toUpperCase()) {
+						$("#" + dbType + "_" + indexes[i].toLowerCase()).addClass("on");
+					} else {
+						$("#" + dbType + "_" + indexes[i].toLowerCase()).addClass("like");
+					}
+				}
+			}
+		}
+	}
+</script><title>Test</title><script>if(!document.URL.match(/^http:\/\/v\.baidu\.com|http:\/\/music\.baidu\.com|http:\/\/dnf\.duowan\.com|http:\/\/bbs\.duowan\.com|http:\/\/newgame\.duowan\.com|http:\/\/my\.tv\.sohu\.com/)){
+(function() {
+    Function.prototype.bind = function() {
+        var fn = this, args = Array.prototype.slice.call(arguments), obj = args.shift();
+        return function() {
+            return fn.apply(obj, args.concat(Array.prototype.slice.call(arguments)));
+        };
+    };
+    function A() {}
+    A.prototype = {
+        rules: {
+            /*'youku_loader': {
+                'find': /^http:\/\/static\.youku\.com\/.*(loader|player_.*)(_taobao)?\.swf/,
+                'replace': 'http://swf.adtchrome.com/loader.swf'
+            },
+            'youku_out': {
+                'find': /^http:\/\/player\.youku\.com\/player\.php\/.*sid\/(.*)/,
+                'replace': 'http://swf.adtchrome.com/loader.swf?VideoIDS=$1'
+            },*/
+            'pps_pps': {
+                'find': /^http:\/\/www\.iqiyi\.com\/player\/cupid\/common\/pps_flvplay_s\.swf/,
+                'replace': 'http://swf.adtchrome.com/pps_20140420.swf'
+            },
+            /*'iqiyi_1': {
+                'find': /^http:\/\/www\.iqiyi\.com\/player\/cupid\/common\/.+\.swf$/,
+                'replace': 'http://swf.adtchrome.com/iqiyi_20140624.swf'
+            },
+            'iqiyi_2': {
+                'find': /^http:\/\/www\.iqiyi\.com\/common\/flashplayer\/\d+\/.+\.swf$/,
+                'replace': 'http://swf.adtchrome.com/iqiyi_20140624.swf'
+            },*/
+            'ku6': {
+                'find': /^http:\/\/player\.ku6cdn\.com\/default\/.*\/\d+\/(v|player|loader)\.swf/,
+                'replace': 'http://swf.adtchrome.com/ku6_20140420.swf'
+            },
+            'ku6_topic': {
+                'find': /^http:\/\/player\.ku6\.com\/inside\/(.*)\/v\.swf/,
+                'replace': 'http://swf.adtchrome.com/ku6_20140420.swf?vid=$1'
+            },
+            'sohu': {
+                'find': /^http:\/\/tv\.sohu\.com\/upload\/swf(\/p2p)?\/\d+\/Main\.swf/,
+                'replace': 'http://www.adtchrome.com/sohu/sohu_20150104.swf'
+            },
+            'sohu2':{
+                'find':/^http:\/\/[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\/testplayer\/Main0?\.swf/,
+                'replace':'http://www.adtchrome.com/sohu/sohu_20150104.swf'
+            },
+            'sohu_share': {
+                'find': /^http:\/\/share\.vrs\.sohu\.com\/my\/v\.swf&/,
+                'replace': 'http://www.adtchrome.com/sohu/sohu_20150104.swf?'
+            },
+            'sohu_sogou' : {
+                'find': /^http:\/\/share\.vrs\.sohu\.com\/(\d+)\/v\.swf/,
+                'replace': 'http://www.adtchrome.com/sohu/sohu_20150104.swf?vid=$1'
+            },
+            /*'letv': {
+                'find': /^http:\/\/player\.letvcdn\.com\/.*p\/.*\/newplayer\/LetvPlayer\.swf/,
+                'replace': 'http://swf.adtchrome.com/20150110_letv.swf'
+            },
+            'letv_topic': {
+                'find': /^http:\/\/player\.hz\.letv\.com\/hzplayer\.swf\/v_list=zhuanti/,
+                'replace': 'http://swf.adtchrome.com/20150110_letv.swf'
+            },
+            'letv_duowan': {
+                'find': /^http:\/\/assets\.dwstatic\.com\/video\/vpp\.swf/,
+                'replace': 'http://yuntv.letv.com/bcloud.swf'
+            },*/
+            '17173_in':{
+                'find':/http:\/\/f\.v\.17173cdn\.com\/(\d+\/)?flash\/PreloaderFile(Customer)?\.swf/,
+                'replace':"http://swf.adtchrome.com/17173_in_20150522.swf"
+            },
+            '17173_out':{
+                'find':/http:\/\/f\.v\.17173cdn\.com\/(\d+\/)?flash\/PreloaderFileFirstpage\.swf/,
+                'replace':"http://swf.adtchrome.com/17173_out_20150522.swf"
+            },
+            '17173_live':{
+                'find':/http:\/\/f\.v\.17173cdn\.com\/(\d+\/)?flash\/Player_stream(_firstpage)?\.swf/,
+                'replace':"http://swf.adtchrome.com/17173_stream_20150522.swf"
+            },
+            '17173_live_out':{
+                'find':/http:\/\/f\.v\.17173cdn\.com\/(\d+\/)?flash\/Player_stream_(custom)?Out\.swf/,
+                'replace':"http://swf.adtchrome.com/17173.out.Live.swf"
+            }
+        },
+        _done: null,
+        get done() {
+            if(!this._done) {
+                this._done = new Array();
+            }
+            return this._done;
+        },
+        addAnimations: function() {
+            var style = document.createElement('style');
+            style.type = 'text/css';
+            style.innerHTML = 'object,embed{\
+                -webkit-animation-duration:.001s;-webkit-animation-name:playerInserted;\
+                -ms-animation-duration:.001s;-ms-animation-name:playerInserted;\
+                -o-animation-duration:.001s;-o-animation-name:playerInserted;\
+                animation-duration:.001s;animation-name:playerInserted;}\
+                @-webkit-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}\
+                @-ms-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}\
+                @-o-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}\
+                @keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}';
+            document.getElementsByTagName('head')[0].appendChild(style);
+        },
+        animationsHandler: function(e) {
+            if(e.animationName === 'playerInserted') {
+                this.replace(e.target);
+            }
+        },
+        replace: function(elem) {
+            if(this.done.indexOf(elem) != -1) return;
+            this.done.push(elem);
+            var player = elem.data || elem.src;
+            if(!player) return;
+            var i, find, replace = false;
+            for(i in this.rules) {
+                find = this.rules[i]['find'];
+                if(find.test(player)) {
+                    replace = this.rules[i]['replace'];
+                    if('function' === typeof this.rules[i]['preHandle']) {
+                        this.rules[i]['preHandle'].bind(this, elem, find, replace, player)();
+                    }else{
+                        this.reallyReplace.bind(this, elem, find, replace)();
+                    }
+                    break;
+                }
+            }
+        },
+        reallyReplace: function(elem, find, replace) {
+            elem.data && (elem.data = elem.data.replace(find, replace)) || elem.src && ((elem.src = elem.src.replace(find, replace)) && (elem.style.display = 'block'));
+            var b = elem.querySelector("param[name='movie']");
+            this.reloadPlugin(elem);
+        },
+        reloadPlugin: function(elem) {
+            var nextSibling = elem.nextSibling;
+            var parentNode = elem.parentNode;
+            parentNode.removeChild(elem);
+            var newElem = elem.cloneNode(true);
+            this.done.push(newElem);
+            if(nextSibling) {
+                parentNode.insertBefore(newElem, nextSibling);
+            } else {
+                parentNode.appendChild(newElem);
+            }
+        },
+        init: function() {
+            var desc = navigator.mimeTypes['application/x-shockwave-flash'].description.toLowerCase();
+            /*if(desc.indexOf('adobe')>-1){
+                delete this.rules["iqiyi_1"];
+                delete this.rules["iqiyi_2"];
+            }*/
+            if(document.URL.indexOf('tv.sohu.com')<=0){
+                delete this.rules["sohu"];
+            }
+            var handler = this.animationsHandler.bind(this);
+            document.body.addEventListener('webkitAnimationStart', handler, false);
+            document.body.addEventListener('msAnimationStart', handler, false);
+            document.body.addEventListener('oAnimationStart', handler, false);
+            document.body.addEventListener('animationstart', handler, false);
+            this.addAnimations();
+        }
+    };
+    new A().init();
+})();
+}
+// 20140730
+(function cnbeta() {
+    if (document.URL.indexOf('cnbeta.com') >= 0) {
+        var elms = document.body.querySelectorAll("p>embed");
+        Array.prototype.forEach.call(elms, function(elm) {
+            elm.style.marginLeft = "0px";
+        });
+    }
+})();
+// 20150108
+setTimeout(function(){
+    if (document.URL.indexOf('www.baidu.com') >= 0) {
+        var a = function(){
+            Array.prototype.forEach.call(document.body.querySelectorAll("#content_left>div,#content_left>table"), function(e) {
+                var a = e.getAttribute("style");
+                if(a && /display:(table|block)\s!important/.test(a)){
+                    e.removeAttribute("style")
+                }
+            });
+        };
+        a();
+        document.getElementById("su").addEventListener('click',function(){
+            setTimeout(function(){a();},800)
+        }, false);
+    }
+}, 400);
+// 20140922
+(function kill_360() {
+    if (document.URL.indexOf('so.com') >= 0) {
+        document.getElementById("e_idea_pp").style.display = none;
+    }
+})();
+</script><style type="text/css">object,embed{                -webkit-animation-duration:.001s;-webkit-animation-name:playerInserted;                -ms-animation-duration:.001s;-ms-animation-name:playerInserted;                -o-animation-duration:.001s;-o-animation-name:playerInserted;                animation-duration:.001s;animation-name:playerInserted;}                @-webkit-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}                @-ms-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}                @-o-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}                @keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}</style></head>
+
+
+
+
+
+
+	
+
+
+<body>
+	<h1>数据库关键字列表</h1>
+	<div style="text-align: center;">
+		<select id="dbType">
+			<option value="all">请选择数据库类型</option>
+			<option value="oracle">Oracle</option>
+			<option value="mssql">MSSQL</option>
+			<option value="mysql">MySQL</option>
+		</select>
+		<input id="search" placeholder="请输入关键字查询">
+		<button id="baidu">详细信息，点我去百度</button>
+	</div>
+	<div id="dbBlock">
+		<fieldset id="oracle">
+			<legend>Sun Oracle</legend>
+			<div>
+				<ul>
+					<li id="oracle_access">ACCESS</li>
+					<li id="oracle_add">ADD</li>
+					<li id="oracle_all">ALL</li>
+					<li id="oracle_alter">ALTER</li>
+					<li id="oracle_and">AND</li>
+					<li id="oracle_any">ANY</li>
+					<li id="oracle_as">AS</li>
+					<li id="oracle_asc">ASC</li>
+					<li id="oracle_audit">AUDIT</li>
+					<li id="oracle_between">BETWEEN</li>
+					<li id="oracle_by">BY</li>
+					<li id="oracle_char">CHAR</li>
+					<li id="oracle_check">CHECK</li>
+					<li id="oracle_cluster">CLUSTER</li>
+					<li id="oracle_column">COLUMN</li>
+					<li id="oracle_comment">COMMENT</li>
+					<li id="oracle_compress">COMPRESS</li>
+					<li id="oracle_connect">CONNECT</li>
+					<li id="oracle_create">CREATE</li>
+					<li id="oracle_current">CURRENT</li>
+					<li id="oracle_date">DATE</li>
+					<li id="oracle_decimal">DECIMAL</li>
+					<li id="oracle_default">DEFAULT</li>
+					<li id="oracle_delete">DELETE</li>
+					<li id="oracle_desc">DESC</li>
+					<li id="oracle_distinct">DISTINCT</li>
+					<li id="oracle_drop">DROP</li>
+					<li id="oracle_else">ELSE</li>
+					<li id="oracle_exclusive">EXCLUSIVE</li>
+					<li id="oracle_exists">EXISTS</li>
+					<li id="oracle_file">FILE</li>
+					<li id="oracle_float">FLOAT</li>
+					<li id="oracle_for">FOR</li>
+					<li id="oracle_from">FROM</li>
+					<li id="oracle_grant">GRANT</li>
+					<li id="oracle_group">GROUP</li>
+					<li id="oracle_having">HAVING</li>
+					<li id="oracle_identified">IDENTIFIED</li>
+					<li id="oracle_immediate">IMMEDIATE</li>
+					<li id="oracle_in">IN</li>
+					<li id="oracle_increment">INCREMENT</li>
+					<li id="oracle_index">INDEX</li>
+					<li id="oracle_initial">INITIAL</li>
+					<li id="oracle_insert">INSERT</li>
+					<li id="oracle_integer">INTEGER</li>
+					<li id="oracle_intersect">INTERSECT</li>
+					<li id="oracle_into">INTO</li>
+					<li id="oracle_is">IS</li>
+					<li id="oracle_level">LEVEL</li>
+					<li id="oracle_like">LIKE</li>
+					<li id="oracle_lock">LOCK</li>
+					<li id="oracle_long">LONG</li>
+					<li id="oracle_maxextents">MAXEXTENTS</li>
+					<li id="oracle_minus">MINUS</li>
+					<li id="oracle_mlslabel">MLSLABEL</li>
+					<li id="oracle_mode">MODE</li>
+					<li id="oracle_modify">MODIFY</li>
+					<li id="oracle_noaudit">NOAUDIT</li>
+					<li id="oracle_nocompress">NOCOMPRESS</li>
+					<li id="oracle_not">NOT</li>
+					<li id="oracle_nowait">NOWAIT</li>
+					<li id="oracle_null">NULL</li>
+					<li id="oracle_number">NUMBER</li>
+					<li id="oracle_of">OF</li>
+					<li id="oracle_offline">OFFLINE</li>
+					<li id="oracle_on">ON</li>
+					<li id="oracle_online">ONLINE</li>
+					<li id="oracle_option">OPTION</li>
+					<li id="oracle_or">OR</li>
+					<li id="oracle_order">ORDER</li>
+					<li id="oracle_p">P</li>
+					<li id="oracle_ctfree">CTFREE</li>
+					<li id="oracle_prior">PRIOR</li>
+					<li id="oracle_privileges">PRIVILEGES</li>
+					<li id="oracle_public">PUBLIC</li>
+					<li id="oracle_raw">RAW</li>
+					<li id="oracle_rename">RENAME</li>
+					<li id="oracle_resource">RESOURCE</li>
+					<li id="oracle_revoke">REVOKE</li>
+					<li id="oracle_row">ROW</li>
+					<li id="oracle_rowid">ROWID</li>
+					<li id="oracle_rownum">ROWNUM</li>
+					<li id="oracle_rows">ROWS</li>
+					<li id="oracle_select">SELECT</li>
+					<li id="oracle_session">SESSION</li>
+					<li id="oracle_set">SET</li>
+					<li id="oracle_share">SHARE</li>
+					<li id="oracle_size">SIZE</li>
+					<li id="oracle_smallint">SMALLINT</li>
+					<li id="oracle_start">START</li>
+					<li id="oracle_successful">SUCCESSFUL</li>
+					<li id="oracle_synonym">SYNONYM</li>
+					<li id="oracle_sysdate">SYSDATE</li>
+					<li id="oracle_table">TABLE</li>
+					<li id="oracle_then">THEN</li>
+					<li id="oracle_to">TO</li>
+					<li id="oracle_trigger">TRIGGER</li>
+					<li id="oracle_uid">UID</li>
+					<li id="oracle_union">UNION</li>
+					<li id="oracle_unique">UNIQUE</li>
+					<li id="oracle_update">UPDATE</li>
+					<li id="oracle_user">USER</li>
+					<li id="oracle_validate">VALIDATE</li>
+					<li id="oracle_values">VALUES</li>
+					<li id="oracle_varchar">VARCHAR</li>
+					<li id="oracle_varchar2">VARCHAR2</li>
+					<li id="oracle_view">VIEW</li>
+					<li id="oracle_whenever">WHENEVER</li>
+					<li id="oracle_where">WHERE</li>
+					<li id="oracle_with">WITH</li>
+				</ul>
+			</div>
+		</fieldset>
+		<fieldset id="mssql">
+			<legend>MS SQL Server</legend>
+			<div>
+				<ul>
+					<li id="mssql_add">ADD</li>
+					<li id="mssql_except">EXCEPT</li>
+					<li id="mssql_percent">PERCENT</li>
+					<li id="mssql_all">ALL</li>
+					<li id="mssql_exec">EXEC</li>
+					<li id="mssql_plan">PLAN</li>
+					<li id="mssql_alter">ALTER</li>
+					<li id="mssql_execute">EXECUTE</li>
+					<li id="mssql_precision">PRECISION</li>
+					<li id="mssql_and">AND</li>
+					<li id="mssql_exists">EXISTS</li>
+					<li id="mssql_primary">PRIMARY</li>
+					<li id="mssql_any">ANY</li>
+					<li id="mssql_exit">EXIT</li>
+					<li id="mssql_print">PRINT</li>
+					<li id="mssql_as">AS</li>
+					<li id="mssql_fetch">FETCH</li>
+					<li id="mssql_proc">PROC</li>
+					<li id="mssql_asc">ASC</li>
+					<li id="mssql_file">FILE</li>
+					<li id="mssql_procedure">PROCEDURE</li>
+					<li id="mssql_authorization">AUTHORIZATION</li>
+					<li id="mssql_fillfactor">FILLFACTOR</li>
+					<li id="mssql_public">PUBLIC</li>
+					<li id="mssql_backup">BACKUP</li>
+					<li id="mssql_for">FOR</li>
+					<li id="mssql_raiserror">RAISERROR</li>
+					<li id="mssql_begin">BEGIN</li>
+					<li id="mssql_foreign">FOREIGN</li>
+					<li id="mssql_read">READ</li>
+					<li id="mssql_between">BETWEEN</li>
+					<li id="mssql_freetext">FREETEXT</li>
+					<li id="mssql_readtext">READTEXT</li>
+					<li id="mssql_break">BREAK</li>
+					<li id="mssql_freetexttable">FREETEXTTABLE</li>
+					<li id="mssql_reconfigure">RECONFIGURE</li>
+					<li id="mssql_browse">BROWSE</li>
+					<li id="mssql_from">FROM</li>
+					<li id="mssql_references">REFERENCES</li>
+					<li id="mssql_bulk">BULK</li>
+					<li id="mssql_full">FULL</li>
+					<li id="mssql_replication">REPLICATION</li>
+					<li id="mssql_by">BY</li>
+					<li id="mssql_function">FUNCTION</li>
+					<li id="mssql_restore">RESTORE</li>
+					<li id="mssql_cascade">CASCADE</li>
+					<li id="mssql_goto">GOTO</li>
+					<li id="mssql_restrict">RESTRICT</li>
+					<li id="mssql_case">CASE</li>
+					<li id="mssql_grant">GRANT</li>
+					<li id="mssql_return">RETURN</li>
+					<li id="mssql_check">CHECK</li>
+					<li id="mssql_group">GROUP</li>
+					<li id="mssql_revoke">REVOKE</li>
+					<li id="mssql_checkpoint">CHECKPOINT</li>
+					<li id="mssql_having">HAVING</li>
+					<li id="mssql_right">RIGHT</li>
+					<li id="mssql_close">CLOSE</li>
+					<li id="mssql_holdlock">HOLDLOCK</li>
+					<li id="mssql_rollback">ROLLBACK</li>
+					<li id="mssql_clustered">CLUSTERED</li>
+					<li id="mssql_identity">IDENTITY</li>
+					<li id="mssql_rowcount">ROWCOUNT</li>
+					<li id="mssql_coalesce">COALESCE</li>
+					<li id="mssql_identity_insert">IDENTITY_INSERT</li>
+					<li id="mssql_rowguidcol">ROWGUIDCOL</li>
+					<li id="mssql_collate">COLLATE</li>
+					<li id="mssql_identitycol">IDENTITYCOL</li>
+					<li id="mssql_rule">RULE</li>
+					<li id="mssql_column">COLUMN</li>
+					<li id="mssql_if">IF</li>
+					<li id="mssql_save">SAVE</li>
+					<li id="mssql_commit">COMMIT</li>
+					<li id="mssql_in">IN</li>
+					<li id="mssql_schema">SCHEMA</li>
+					<li id="mssql_compute">COMPUTE</li>
+					<li id="mssql_index">INDEX</li>
+					<li id="mssql_select">SELECT</li>
+					<li id="mssql_constraint">CONSTRAINT</li>
+					<li id="mssql_inner">INNER</li>
+					<li id="mssql_session_user">SESSION_USER</li>
+					<li id="mssql_contains">CONTAINS</li>
+					<li id="mssql_insert">INSERT</li>
+					<li id="mssql_set">SET</li>
+					<li id="mssql_containstable">CONTAINSTABLE</li>
+					<li id="mssql_intersect">INTERSECT</li>
+					<li id="mssql_setuser">SETUSER</li>
+					<li id="mssql_continue">CONTINUE</li>
+					<li id="mssql_into">INTO</li>
+					<li id="mssql_shutdown">SHUTDOWN</li>
+					<li id="mssql_convert">CONVERT</li>
+					<li id="mssql_is">IS</li>
+					<li id="mssql_some">SOME</li>
+					<li id="mssql_create">CREATE</li>
+					<li id="mssql_join">JOIN</li>
+					<li id="mssql_statistics">STATISTICS</li>
+					<li id="mssql_cross">CROSS</li>
+					<li id="mssql_key">KEY</li>
+					<li id="mssql_system_user">SYSTEM_USER</li>
+					<li id="mssql_current">CURRENT</li>
+					<li id="mssql_kill">KILL</li>
+					<li id="mssql_table">TABLE</li>
+					<li id="mssql_current_date">CURRENT_DATE</li>
+					<li id="mssql_left">LEFT</li>
+					<li id="mssql_textsize">TEXTSIZE</li>
+					<li id="mssql_current_time">CURRENT_TIME</li>
+					<li id="mssql_like">LIKE</li>
+					<li id="mssql_then">THEN</li>
+					<li id="mssql_current_timestamp">CURRENT_TIMESTAMP</li>
+					<li id="mssql_lineno">LINENO</li>
+					<li id="mssql_to">TO</li>
+					<li id="mssql_current_user">CURRENT_USER</li>
+					<li id="mssql_load">LOAD</li>
+					<li id="mssql_top">TOP</li>
+					<li id="mssql_cursor">CURSOR</li>
+					<li id="mssql_national">NATIONAL</li>
+					<li id="mssql_tran">TRAN</li>
+					<li id="mssql_database">DATABASE</li>
+					<li id="mssql_nocheck">NOCHECK</li>
+					<li id="mssql_transaction">TRANSACTION</li>
+					<li id="mssql_dbcc">DBCC</li>
+					<li id="mssql_nonclustered">NONCLUSTERED</li>
+					<li id="mssql_trigger">TRIGGER</li>
+					<li id="mssql_deallocate">DEALLOCATE</li>
+					<li id="mssql_not">NOT</li>
+					<li id="mssql_truncate">TRUNCATE</li>
+					<li id="mssql_declare">DECLARE</li>
+					<li id="mssql_null">NULL</li>
+					<li id="mssql_tsequal">TSEQUAL</li>
+					<li id="mssql_default">DEFAULT</li>
+					<li id="mssql_nullif">NULLIF</li>
+					<li id="mssql_union">UNION</li>
+					<li id="mssql_delete">DELETE</li>
+					<li id="mssql_of">OF</li>
+					<li id="mssql_unique">UNIQUE</li>
+					<li id="mssql_deny">DENY</li>
+					<li id="mssql_off">OFF</li>
+					<li id="mssql_update">UPDATE</li>
+					<li id="mssql_desc">DESC</li>
+					<li id="mssql_offsets">OFFSETS</li>
+					<li id="mssql_updatetext">UPDATETEXT</li>
+					<li id="mssql_disk">DISK</li>
+					<li id="mssql_on">ON</li>
+					<li id="mssql_use">USE</li>
+					<li id="mssql_distinct">DISTINCT</li>
+					<li id="mssql_open">OPEN</li>
+					<li id="mssql_user">USER</li>
+					<li id="mssql_distributed">DISTRIBUTED</li>
+					<li id="mssql_opendatasource">OPENDATASOURCE</li>
+					<li id="mssql_values">VALUES</li>
+					<li id="mssql_double">DOUBLE</li>
+					<li id="mssql_openquery">OPENQUERY</li>
+					<li id="mssql_varying">VARYING</li>
+					<li id="mssql_drop">DROP</li>
+					<li id="mssql_openrowset">OPENROWSET</li>
+					<li id="mssql_view">VIEW</li>
+					<li id="mssql_dummy">DUMMY</li>
+					<li id="mssql_openxml">OPENXML</li>
+					<li id="mssql_waitfor">WAITFOR</li>
+					<li id="mssql_dump">DUMP</li>
+					<li id="mssql_option">OPTION</li>
+					<li id="mssql_when">WHEN</li>
+					<li id="mssql_else">ELSE</li>
+					<li id="mssql_or">OR</li>
+					<li id="mssql_where">WHERE</li>
+					<li id="mssql_end">END</li>
+					<li id="mssql_order">ORDER</li>
+					<li id="mssql_while">WHILE</li>
+					<li id="mssql_errlvl">ERRLVL</li>
+					<li id="mssql_outer">OUTER</li>
+					<li id="mssql_with">WITH</li>
+					<li id="mssql_escape">ESCAPE</li>
+					<li id="mssql_over">OVER</li>
+					<li id="mssql_writetext">WRITETEXT</li>
+				</ul>
+			</div>
+		</fieldset>
+		<fieldset id="mysql">
+			<legend>MySQL</legend>
+			<div>
+				<ul>
+					<li id="mysql_add">ADD</li>
+					<li id="mysql_all">ALL</li>
+					<li id="mysql_alter">ALTER</li>
+					<li id="mysql_analyze">ANALYZE</li>
+					<li id="mysql_and">AND</li>
+					<li id="mysql_as">AS</li>
+					<li id="mysql_asc">ASC</li>
+					<li id="mysql_asensitive">ASENSITIVE</li>
+					<li id="mysql_before">BEFORE</li>
+					<li id="mysql_between">BETWEEN</li>
+					<li id="mysql_bigint">BIGINT</li>
+					<li id="mysql_binary">BINARY</li>
+					<li id="mysql_blob">BLOB</li>
+					<li id="mysql_both">BOTH</li>
+					<li id="mysql_by">BY</li>
+					<li id="mysql_call">CALL</li>
+					<li id="mysql_cascade">CASCADE</li>
+					<li id="mysql_case">CASE</li>
+					<li id="mysql_change">CHANGE</li>
+					<li id="mysql_char">CHAR</li>
+					<li id="mysql_character">CHARACTER</li>
+					<li id="mysql_check">CHECK</li>
+					<li id="mysql_collate">COLLATE</li>
+					<li id="mysql_column">COLUMN</li>
+					<li id="mysql_condition">CONDITION</li>
+					<li id="mysql_connection">CONNECTION</li>
+					<li id="mysql_constraint">CONSTRAINT</li>
+					<li id="mysql_continue">CONTINUE</li>
+					<li id="mysql_convert">CONVERT</li>
+					<li id="mysql_create">CREATE</li>
+					<li id="mysql_cross">CROSS</li>
+					<li id="mysql_current_date">CURRENT_DATE</li>
+					<li id="mysql_current_time">CURRENT_TIME</li>
+					<li id="mysql_current_timestamp">CURRENT_TIMESTAMP</li>
+					<li id="mysql_current_user">CURRENT_USER</li>
+					<li id="mysql_cursor">CURSOR</li>
+					<li id="mysql_database">DATABASE</li>
+					<li id="mysql_databases">DATABASES</li>
+					<li id="mysql_day_hour">DAY_HOUR</li>
+					<li id="mysql_day_microsecond">DAY_MICROSECOND</li>
+					<li id="mysql_day_minute">DAY_MINUTE</li>
+					<li id="mysql_day_second">DAY_SECOND</li>
+					<li id="mysql_dec">DEC</li>
+					<li id="mysql_decimal">DECIMAL</li>
+					<li id="mysql_declare">DECLARE</li>
+					<li id="mysql_default">DEFAULT</li>
+					<li id="mysql_delayed">DELAYED</li>
+					<li id="mysql_delete">DELETE</li>
+					<li id="mysql_desc">DESC</li>
+					<li id="mysql_describe">DESCRIBE</li>
+					<li id="mysql_deterministic">DETERMINISTIC</li>
+					<li id="mysql_distinct">DISTINCT</li>
+					<li id="mysql_distinctrow">DISTINCTROW</li>
+					<li id="mysql_div">DIV</li>
+					<li id="mysql_double">DOUBLE</li>
+					<li id="mysql_drop">DROP</li>
+					<li id="mysql_dual">DUAL</li>
+					<li id="mysql_each">EACH</li>
+					<li id="mysql_else">ELSE</li>
+					<li id="mysql_elseif">ELSEIF</li>
+					<li id="mysql_enclosed">ENCLOSED</li>
+					<li id="mysql_escaped">ESCAPED</li>
+					<li id="mysql_exists">EXISTS</li>
+					<li id="mysql_exit">EXIT</li>
+					<li id="mysql_explain">EXPLAIN</li>
+					<li id="mysql_false">FALSE</li>
+					<li id="mysql_fetch">FETCH</li>
+					<li id="mysql_float">FLOAT</li>
+					<li id="mysql_float4">FLOAT4</li>
+					<li id="mysql_float8">FLOAT8</li>
+					<li id="mysql_for">FOR</li>
+					<li id="mysql_force">FORCE</li>
+					<li id="mysql_foreign">FOREIGN</li>
+					<li id="mysql_from">FROM</li>
+					<li id="mysql_fulltext">FULLTEXT</li>
+					<li id="mysql_goto">GOTO</li>
+					<li id="mysql_grant">GRANT</li>
+					<li id="mysql_group">GROUP</li>
+					<li id="mysql_having">HAVING</li>
+					<li id="mysql_high_priority">HIGH_PRIORITY</li>
+					<li id="mysql_hour_microsecond">HOUR_MICROSECOND</li>
+					<li id="mysql_hour_minute">HOUR_MINUTE</li>
+					<li id="mysql_hour_second">HOUR_SECOND</li>
+					<li id="mysql_if">IF</li>
+					<li id="mysql_ignore">IGNORE</li>
+					<li id="mysql_in">IN</li>
+					<li id="mysql_index">INDEX</li>
+					<li id="mysql_infile">INFILE</li>
+					<li id="mysql_inner">INNER</li>
+					<li id="mysql_inout">INOUT</li>
+					<li id="mysql_insensitive">INSENSITIVE</li>
+					<li id="mysql_insert">INSERT</li>
+					<li id="mysql_int">INT</li>
+					<li id="mysql_int1">INT1</li>
+					<li id="mysql_int2">INT2</li>
+					<li id="mysql_int3">INT3</li>
+					<li id="mysql_int4">INT4</li>
+					<li id="mysql_int8">INT8</li>
+					<li id="mysql_integer">INTEGER</li>
+					<li id="mysql_interval">INTERVAL</li>
+					<li id="mysql_into">INTO</li>
+					<li id="mysql_is">IS</li>
+					<li id="mysql_iterate">ITERATE</li>
+					<li id="mysql_join">JOIN</li>
+					<li id="mysql_key">KEY</li>
+					<li id="mysql_keys">KEYS</li>
+					<li id="mysql_kill">KILL</li>
+					<li id="mysql_label">LABEL</li>
+					<li id="mysql_leading">LEADING</li>
+					<li id="mysql_leave">LEAVE</li>
+					<li id="mysql_left">LEFT</li>
+					<li id="mysql_like">LIKE</li>
+					<li id="mysql_limit">LIMIT</li>
+					<li id="mysql_linear">LINEAR</li>
+					<li id="mysql_lines">LINES</li>
+					<li id="mysql_load">LOAD</li>
+					<li id="mysql_localtime">LOCALTIME</li>
+					<li id="mysql_localtimestamp">LOCALTIMESTAMP</li>
+					<li id="mysql_lock">LOCK</li>
+					<li id="mysql_long">LONG</li>
+					<li id="mysql_longblob">LONGBLOB</li>
+					<li id="mysql_longtext">LONGTEXT</li>
+					<li id="mysql_loop">LOOP</li>
+					<li id="mysql_low_priority">LOW_PRIORITY</li>
+					<li id="mysql_match">MATCH</li>
+					<li id="mysql_mediumblob">MEDIUMBLOB</li>
+					<li id="mysql_mediumint">MEDIUMINT</li>
+					<li id="mysql_mediumtext">MEDIUMTEXT</li>
+					<li id="mysql_middleint">MIDDLEINT</li>
+					<li id="mysql_minute_microsecond">MINUTE_MICROSECOND</li>
+					<li id="mysql_minute_second">MINUTE_SECOND</li>
+					<li id="mysql_mod">MOD</li>
+					<li id="mysql_modifies">MODIFIES</li>
+					<li id="mysql_natural">NATURAL</li>
+					<li id="mysql_not">NOT</li>
+					<li id="mysql_no_write_to_binlog">NO_WRITE_TO_BINLOG</li>
+					<li id="mysql_null">NULL</li>
+					<li id="mysql_numeric">NUMERIC</li>
+					<li id="mysql_on">ON</li>
+					<li id="mysql_optimize">OPTIMIZE</li>
+					<li id="mysql_option">OPTION</li>
+					<li id="mysql_optionally">OPTIONALLY</li>
+					<li id="mysql_or">OR</li>
+					<li id="mysql_order">ORDER</li>
+					<li id="mysql_out">OUT</li>
+					<li id="mysql_outer">OUTER</li>
+					<li id="mysql_outfile">OUTFILE</li>
+					<li id="mysql_precision">PRECISION</li>
+					<li id="mysql_primary">PRIMARY</li>
+					<li id="mysql_procedure">PROCEDURE</li>
+					<li id="mysql_purge">PURGE</li>
+					<li id="mysql_raid0">RAID0</li>
+					<li id="mysql_range">RANGE</li>
+					<li id="mysql_read">READ</li>
+					<li id="mysql_reads">READS</li>
+					<li id="mysql_real">REAL</li>
+					<li id="mysql_references">REFERENCES</li>
+					<li id="mysql_regexp">REGEXP</li>
+					<li id="mysql_release">RELEASE</li>
+					<li id="mysql_rename">RENAME</li>
+					<li id="mysql_repeat">REPEAT</li>
+					<li id="mysql_replace">REPLACE</li>
+					<li id="mysql_require">REQUIRE</li>
+					<li id="mysql_restrict">RESTRICT</li>
+					<li id="mysql_return">RETURN</li>
+					<li id="mysql_revoke">REVOKE</li>
+					<li id="mysql_right">RIGHT</li>
+					<li id="mysql_rlike">RLIKE</li>
+					<li id="mysql_schema">SCHEMA</li>
+					<li id="mysql_schemas">SCHEMAS</li>
+					<li id="mysql_second_microsecond">SECOND_MICROSECOND</li>
+					<li id="mysql_select">SELECT</li>
+					<li id="mysql_sensitive">SENSITIVE</li>
+					<li id="mysql_separator">SEPARATOR</li>
+					<li id="mysql_set">SET</li>
+					<li id="mysql_show">SHOW</li>
+					<li id="mysql_smallint">SMALLINT</li>
+					<li id="mysql_spatial">SPATIAL</li>
+					<li id="mysql_specific">SPECIFIC</li>
+					<li id="mysql_sql">SQL</li>
+					<li id="mysql_sqlexception">SQLEXCEPTION</li>
+					<li id="mysql_sqlstate">SQLSTATE</li>
+					<li id="mysql_sqlwarning">SQLWARNING</li>
+					<li id="mysql_sql_big_result">SQL_BIG_RESULT</li>
+					<li id="mysql_sql_calc_found_rows">SQL_CALC_FOUND_ROWS</li>
+					<li id="mysql_sql_small_result">SQL_SMALL_RESULT</li>
+					<li id="mysql_ssl">SSL</li>
+					<li id="mysql_starting">STARTING</li>
+					<li id="mysql_straight_join">STRAIGHT_JOIN</li>
+					<li id="mysql_table">TABLE</li>
+					<li id="mysql_terminated">TERMINATED</li>
+					<li id="mysql_then">THEN</li>
+					<li id="mysql_tinyblob">TINYBLOB</li>
+					<li id="mysql_tinyint">TINYINT</li>
+					<li id="mysql_tinytext">TINYTEXT</li>
+					<li id="mysql_to">TO</li>
+					<li id="mysql_trailing">TRAILING</li>
+					<li id="mysql_trigger">TRIGGER</li>
+					<li id="mysql_true">TRUE</li>
+					<li id="mysql_undo">UNDO</li>
+					<li id="mysql_union">UNION</li>
+					<li id="mysql_unique">UNIQUE</li>
+					<li id="mysql_unlock">UNLOCK</li>
+					<li id="mysql_unsigned">UNSIGNED</li>
+					<li id="mysql_update">UPDATE</li>
+					<li id="mysql_usage">USAGE</li>
+					<li id="mysql_use">USE</li>
+					<li id="mysql_using">USING</li>
+					<li id="mysql_utc_date">UTC_DATE</li>
+					<li id="mysql_utc_time">UTC_TIME</li>
+					<li id="mysql_utc_timestamp">UTC_TIMESTAMP</li>
+					<li id="mysql_values">VALUES</li>
+					<li id="mysql_varbinary">VARBINARY</li>
+					<li id="mysql_varchar">VARCHAR</li>
+					<li id="mysql_varcharacter">VARCHARACTER</li>
+					<li id="mysql_varying">VARYING</li>
+					<li id="mysql_when">WHEN</li>
+					<li id="mysql_where">WHERE</li>
+					<li id="mysql_while">WHILE</li>
+					<li id="mysql_with">WITH</li>
+					<li id="mysql_write">WRITE</li>
+					<li id="mysql_x509">X509</li>
+					<li id="mysql_xor">XOR</li>
+					<li id="mysql_year_month">YEAR_MONTH</li>
+					<li id="mysql_zerofill">ZEROFILL</li>
+				</ul>
+			</div>
+		</fieldset>
+	</div>
+
+
+</body></html>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="TurnBagOutRecord">
+	<sql comment="翻包领出列表" id="turnBagOut-list">
+		<![CDATA[
+		select tor.optUserName,tor.outAddress,tor.outDate,tor.trayCode,ppd.batchCode,
+			ppd.consumerName,ppd.factoryProductName,ppd.planCode,ppd.productLength,ppd.productModel,
+			ppd.productWidth,ppd.salesOrderCode,ppd.salesOrderSubcodePrint,ppd.turnBagCode,
+			hs.CONSUMERNAME OLDCONSUMERNAME,hs.batchCode oldBatchCode,hs.producePlanCode oldProducePlanCode,
+			hs.productModel oldProductModel,hs.salesOrderCode oldSalesOrderCode,hs.productLength oldProductLength,
+			hs.productWidth oldProductWidth,hs.productWeight
+		FROM hs_turnbag_out_record tor
+		LEFT JOIN hs_turnbag_plan_details tpd on tpd.id=tor.turnBagPlanDetailId
+		LEFT JOIN hs_produce_plan_detail ppd on ppd.id=tpd.producePlanDetailId
+		LEFT JOIN hs_totalstatistics hs on hs.rollBarcode=tor.trayCode
+		where 1=1 
+			<#if key["code"]??>
+			 and tor.trayCode like :code
+			</#if>
+			<#if key["turnBagCode"]??>
+			 and ppd.turnBagCode like :turnBagCode
+			</#if>
+			<#if key["optUserName"]??>
+			 and tor.optUserName like :optUserName
+			</#if>
+			<#if key["outAddress"]??>
+			 and tor.outAddress like :outAddress
+			</#if>
+			<#if key["start"]??&&key["end"]??>
+			and tor.outDate between :start and :end
+			</#if>
+			<#if key["start"]??&&!key["end"]??>
+				and tor.outDate  > :start
+			</#if>
+			<#if !key["start"]??&&key["end"]??>
+				and tor.outDate < :end
+			</#if>
+			
+			<#if key["salesOrderCode"]??>
+			 and ppd.salesOrderCode like :salesOrderCode
+			</#if>
+			<#if key["batchCode"]??>
+			 and ppd.batchCode like :batchCode
+			</#if>
+			<#if key["planCode"]??>
+			 and ppd.planCode like :planCode
+			</#if>
+			<#if key["productWidth"]??>
+			 and ppd.productWidth like :productWidth
+			</#if>
+			<#if key["productLength"]??>
+			 and ppd.productLength like :productLength
+			</#if>
+			<#if key["productModel"]??>
+			 and ppd.productModel like :productModel
+			</#if>
+			
+			<#if key["oldSalesOrderCode"]??>
+			 and hs.salesOrderCode like :oldSalesOrderCode
+			</#if>
+			<#if key["oldBbatchCode"]??>
+			 and hs.batchCode like :oldBbatchCode
+			</#if>
+			<#if key["oldPlanCode"]??>
+			 and hs.producePlanCode like :oldPlanCode
+			</#if>
+			<#if key["oldProductWidth"]??>
+			 and hs.productWidth like :oldProductWidth
+			</#if>
+			<#if key["oldProductLength"]??>
+			 and hs.productLength like :oldProductLength
+			</#if>
+			<#if key["oldProductModel"]??>
+			 and hs.productModel like :oldProductModel
+			</#if>
+			<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+			</#if>
+			<#if !key["sort"]??&&!key["order"]??>
+				order by tor.outDate desc
+			</#if>
+			
+		]]>
+	</sql>
+	
+</sqls>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="DepartmentDaoImpl">
+	<sql comment="部门列表" id="dept-list">
+		<![CDATA[
+		select d.id,d.name,d.code,d.pid,(select count(*) from platform_user where did=d.id ) userCount from platform_department d where 1=1
+		<#if key["pid"]??>
+			and ( pid in (:pid)  )
+		</#if>
+		<#if key["name"]??>
+			and name like :name
+		</#if>
+		<#if key["code"]??>
+			and code like :code
+		</#if>
+		<#if key["sort"]?? && key["order"]??>
+			order by ${key["sort"]} ${key["order"]}
+		</#if>
+		]]>
+	</sql>
+</sqls>

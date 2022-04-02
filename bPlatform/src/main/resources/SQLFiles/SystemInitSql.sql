@@ -1,0 +1,19 @@
+-- 初始化菜单
+INSERT INTO platform_menu (id, buttonCode, code, icon, isButton, levelCount, name, parentId, sortOrder, url) VALUES (1, NULL, NULL, NULL, 0, 0, '所有功能', NULL, NULL, NULL);
+INSERT INTO platform_menu (id, buttonCode, code, icon, isButton, levelCount, name, parentId, sortOrder, url) VALUES (4, '', '001', '', 0, 1, '系统平台', 1, 1, '');
+INSERT INTO platform_menu (id, buttonCode, code, icon, isButton, levelCount, name, parentId, sortOrder, url) VALUES (5, '', '001001', '', 0, 2, '能级管理', 4, 1, '');
+INSERT INTO platform_menu (id, buttonCode, code, icon, isButton, levelCount, name, parentId, sortOrder, url) VALUES (6, '', '001001001', '', 0, 3, '部门管理', 5, 1, 'department');
+INSERT INTO platform_menu (id, buttonCode, code, icon, isButton, levelCount, name, parentId, sortOrder, url) VALUES (7, '', '001001001001', '', 1, 4, '删除部门', 6, 1, 'department/delete');
+INSERT INTO platform_menu (id, buttonCode, code, icon, isButton, levelCount, name, parentId, sortOrder, url) VALUES (8, '', '001001002', '', 0, 3, '用户管理', 5, 2, 'user');
+INSERT INTO platform_menu (id, buttonCode, code, icon, isButton, levelCount, name, parentId, sortOrder, url) VALUES (9, '', '001001003', '', 0, 3, '角色管理', 5, 3, 'role');
+INSERT INTO platform_menu (id, buttonCode, code, icon, isButton, levelCount, name, parentId, sortOrder, url) VALUES (10, '', '001001004', '', 0, 3, '模块菜单管理', 5, 4, 'menu');
+INSERT INTO platform_menu (id, buttonCode, code, icon, isButton, levelCount, name, parentId, sortOrder, url) VALUES (11, '', '001001004001', '', 1, 4, '添加', 10, 1, 'menu/add');
+INSERT INTO platform_menu (id, buttonCode, code, icon, isButton, levelCount, name, parentId, sortOrder, url) VALUES (12, '', '001002', '', 0, 2, '系统监控', 4, 2, '');
+INSERT INTO platform_menu (id, buttonCode, code, icon, isButton, levelCount, name, parentId, sortOrder, url) VALUES (13, '', '001002001', '', 0, 3, '异常监控管理', 12, 1, 'exception');
+INSERT INTO platform_menu (id, buttonCode, code, icon, isButton, levelCount, name, parentId, sortOrder, url) VALUES (14, '', '001002002', '', 0, 3, '日志监控管理', 12, 2, 'log');
+INSERT INTO platform_menu (id, buttonCode, code, icon, isButton, levelCount, name, parentId, sortOrder, url) VALUES (15, '', '001003', '', 0, 2, '系统设置', 4, 3, '');
+INSERT INTO platform_menu (id, buttonCode, code, icon, isButton, levelCount, name, parentId, sortOrder, url) VALUES (16, '', '001003001', '', 0, 3, '系统调度设置', 15, 1, 'schedule');
+INSERT INTO platform_menu (id, buttonCode, code, icon, isButton, levelCount, name, parentId, sortOrder, url) VALUES (17, '', '001003002', '', 0, 3, '数据采集设置', 15, 2, 'demo');
+INSERT INTO platform_menu (id, buttonCode, code, icon, isButton, levelCount, name, parentId, sortOrder, url) VALUES (18, '', '001003003', '', 0, 3, '数据字典设置', 15, 3, 'dict');
+INSERT INTO platform_menu (id, buttonCode, code, icon, isButton, levelCount, name, parentId, sortOrder, url) VALUES (19, '', '001004', '', 0, 2, '系统消息', 4, 4, '');
+INSERT INTO platform_menu (id, buttonCode, code, icon, isButton, levelCount, name, parentId, sortOrder, url) VALUES (20, '', '001004001', '', 0, 3, '公告管理', 19, 1, 'notice');

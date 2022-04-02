@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="CutDailyPlanDetailDaoImpl">
+	<sql comment="日计划列表" id="cutDailyPlan-list">
+		<![CDATA[
+	select t.*,t1.userName,DATE_FORMAT(t.planDate,'%Y-%m-%d')Date,t2.partNames,t2.cutPlanId,t3.batchCode,t3.productName  from  hs_cut_Daily_Plan t
+		left join platform_user t1 on t1.id=t.operator
+		LEFT JOIN hs_cut_daily_plan_detail t2 ON t.id = t2.cutPlanDailyId
+        LEFT JOIN hs_cut_plan t3 ON t2.cutPlanId = t3.id
+		where 1=1
+		<#if key["workshop"]??>
+			and t.workshop=:workshop
+		</#if>
+		<#if key["workShopCode"]??>
+			and t.workShopCode=:workShopCode
+		</#if>
+		<#if key["produceDate"]??>
+			and t.planDate=:produceDate
+		</#if>
+		<#if key["batchCode"]??>
+			and t3.batchCode like :batchCode
+		</#if>
+		<#if key["productName"]??>
+			and t3.productName like :productName
+		</#if>
+		<#if key["partNames"]??>
+			and t2.partNames like :partNames
+		</#if>
+		order by t.planDate desc
+
+		]]>
+	</sql>
+	<sql comment="日计划细节列表" id="cutDailyPlanDetail-list">
+		<![CDATA[
+	SELECT t1.*,t2.workShop,t2.workShopCode FROM hs_cut_daily_plan_detail t1 LEFT JOIN hs_cut_daily_plan t2 on t1.cutPlanDailyId = t2.id where
+  t1.cutPlanId = (:cutPlanId)
+		]]>
+	</sql>
+	<sql comment="未完成的裁剪计划" id="findNoFinishCutPlan">
+		<![CDATA[ 
+		select 
+			t.*,t1.workShop,t1.workShopCode from hs_cut_plan t
+			left join hs_produce_plan t1 on t.planCode = t1.producePlanCode
+			where t.isFinished=-1  and ( t.closed <>1 or t.closed is NULL)
+			<#if key["batchCode"]??>
+				and (t.batchCode like :batchCode)
+			</#if>
+			<#if key["salesOrderCode"]??>
+				and (t.salesOrderCode like :salesOrderCode)
+			</#if>
+			<#if key["sort"]??&&key["order"]??>
+				order by isSettled asc,${key["sort"]} ${key["order"]}
+				<#else>
+				order by isSettled asc,id desc
+			</#if>
+		]]>
+	</sql>
+	<sql comment="查询日计划下的裁剪计划" id="findCutPlan-list">
+		<![CDATA[
+			SELECT
+				t.*,
+				o.userAndCount,
+				o.COMMENT comment2,
+				o.count,
+				o.userIds,
+				o.counts,
+				o.partNames,
+				o.partIds,
+				o.cutPlanDailyId,
+				d.workShopCode,
+				d.workShop,
+				fm.consumerProductName
+			FROM
+				hs_Cut_Daily_Plan_Detail o
+				LEFT JOIN HS_cut_Plan t ON t.id = o.cutPlanId
+				LEFT JOIN hs_cut_daily_plan d ON d.id = o.cutPlanDailyId
+				LEFT JOIN hs_finishproduct_mirror fm ON fm.productId = t.productId
+			WHERE
+				fm.salesOrderDetailId = t.fromSalesOrderDetailId AND o.cutPlanDailyId in (:id)
+		]]>
+	</sql>
+	<sql comment="查询裁剪计划人员表信息" id="findCutPlanUserByDetailId">
+		<![CDATA[
+		select u.*,pu.userName from hs_cut_daily_plan_users u
+		left join platform_user pu on pu.id=u.userId
+		where u.cutPlanId=(:cutPlanDetailId)
+		order by u.userId desc
+		]]>
+	</sql>
+</sqls>

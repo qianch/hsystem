@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="StockDaoImpl">
+	<sql comment="库存统计" id="stock-sum">
+		<![CDATA[
+			<#if key["wtype"]=="cp">
+					<#if key["ptype"]=="tray">
+							SELECT
+								count(1) trayCount,
+								warehousePosCode
+							FROM
+								hs_product_stock_state
+							WHERE stockState = 1
+								AND warehousePoscode in (:pos) and LEFT(barCode,1)='T' 
+							GROUP BY
+								warehousePosCode
+						<#else>
+							SELECT
+								count(1) rollCount,
+								warehousePosCode
+							FROM
+								hs_product_stock_state
+							WHERE 
+								stockState = 1
+								AND  warehousePoscode in (:pos) and  LEFT(barCode,1)='R' 
+							GROUP BY
+								warehousePosCode
+					</#if>
+				<#else>
+					SELECT
+						sum(r.inWeight) WEIGTH,
+						s.warehousePosCode
+					FROM
+						hs_material_stock_state s
+					LEFT JOIN 
+						hs_material_in_record r 
+					ON s.materialCode = r.materialCode
+					WHERE
+						s.warehousePosCode in (:pos)
+					GROUP BY
+						s.warehousePosCode
+			</#if>
+		]]>
+	</sql>
+</sqls>

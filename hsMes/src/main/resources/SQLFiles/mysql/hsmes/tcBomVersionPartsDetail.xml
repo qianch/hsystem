@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="TcBomVersionPartsDetailDaoImpl">
+	<sql comment="部件明细列表" id="partsDetail-list">
+		<![CDATA[
+		SELECT
+				t.*,
+				t1.id pid,
+				t1.materielCode,
+				t1.productProcessName,
+				t1.productProcessBomVersion,
+				t1.productRollWeight,
+				t1.productProcessCode,
+				t1.productPackageVersion,
+				t1.productPackagingCode,
+				t1.productWidth,
+				t1.productRollLength
+			FROM
+				HS_Tc_Proc_Bom_Version_Parts_Detail t
+			LEFT JOIN HS_FINISHPRODUCT t1 ON t1.id = t.tcFinishedProductId
+			WHERE
+				1 = 1
+			<#if key["ids"]??>
+				and t.TCPROCBOMPARTSID in (:ids)
+			</#if>
+			order by t.SORTING asc
+			
+		]]>
+	</sql>
+	<sql comment="删除部件明细信息" id="partsDetail-delete">
+		<![CDATA[
+			delete from HS_Tc_Proc_Bom_Version_Parts_Detail where id in (:id)	
+		]]>
+	</sql>
+
+	<sql comment="部件明细列表" id="partsDetail-mirrorList">
+		<![CDATA[
+		SELECT
+				t.*,
+				t1.id pid,
+				t1.materielCode,
+				t1.productProcessName,
+				t1.productProcessBomVersion,
+				t1.productRollWeight,
+				t1.productProcessCode,
+				t1.productPackageVersion,
+				t1.productPackagingCode,
+				t1.productWidth,
+				t1.productRollLength,
+				t1.factoryProductName
+			FROM
+				HS_Tc_Proc_Bom_Version_Parts_Detail_Mirror t
+			LEFT JOIN HS_FINISHPRODUCT_MIRROR t1 ON t1.id = t.tcFinishedProductId
+			WHERE
+				1 = 1
+			<#if key["ids"]??>
+				and t.TCPROCBOMPARTSID in (:ids)
+			</#if>
+			order by t.SORTING asc
+
+		]]>
+	</sql>
+	
+</sqls>

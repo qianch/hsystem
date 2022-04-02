@@ -1,0 +1,303 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="TrayBoxRollRelationServiceImpl">
+	<sql comment="托盒卷对应关系" id="trayboxrollrelation-list">
+		<![CDATA[
+			select 
+z.rollBarcode,
+	z.boxBarcode,
+  z.trayBarcode,
+	z.producePlanCode,
+	z.salesOrderCode,
+  z.CONSUMERNAME,
+  z.productModel,
+	z.batchcode,
+  z.rollQualityGradeCode,
+  z.rollDeviceCode,
+  z.name,
+  z.rollWeight,
+	z.productWidth,
+  z.productWeight,
+	z.productLength,
+  z.rollOutputTime
+from (SELECT
+	ht.rollBarcode,
+	br.boxBarcode,
+  tbr.trayBarcode,
+	ht.producePlanCode,
+	ht.salesOrderCode,
+  ht.CONSUMERNAME,
+  ht.productModel,
+	ht.batchcode,
+  ht.rollQualityGradeCode,
+  ht.DeviceCode as rollDeviceCode,
+  ht.name,
+  ht.rollWeight,
+	ht.productWidth,
+  ht.productWeight,
+	ht.productLength,
+  ht.rollOutputTime
+FROM 
+hs_totalstatistics ht
+INNER JOIN hs_box_roll br ON ht.rollBarcode = br.rollBarcode   
+INNER JOIN hs_tray_box_roll tbr on br.boxBarcode = tbr.boxBarcode
+WHERE  1=1
+and ht.barcodeType = 'roll'
+<#if key["start"]??&&key["end"]??>
+			and ht.rollOutputTime between :start and :end
+		</#if>
+		<#if key["start"]??&&!key["end"]??>
+			and ht.rollOutputTime > :start
+		</#if>
+		<#if !key["start"]??&&key["end"]??>
+			and ht.rollOutputTime < :end
+		</#if>
+		<#if !key["start"]??>
+			and 1=2
+		</#if>
+		<#if key["rollBarcode"]??>
+			and ht.rollBarcode like :rollBarcode
+		</#if>
+		<#if key["boxBarcode"]??>
+			and br.boxBarcode like :boxBarcode
+		</#if>
+		<#if key["trayBarcode"]??>
+			and tbr.trayBarcode like :trayBarcode
+		</#if>
+		<#if key["consumerName"]??>
+			and ht.CONSUMERNAME like :consumerName
+		</#if>
+		<#if key["salesOrderCode"]??>
+			and ht.salesOrderCode = replace(:salesOrderCode,'%','')
+		</#if>
+		<#if key["batchcode"]??>
+			and ht.batchcode = replace(:batchcode,'%','') 
+		</#if>
+		<#if key["productModel"]??>
+			and ht.productModel like :productModel
+		</#if>
+		<#if key["rollDeviceCode"]??>
+			and ht.DeviceCode = :rollDeviceCode
+		</#if>
+		<#if key["productWidth"]??>
+			and ht.productWidth = :productWidth
+		</#if>
+		<#if key["productRollLength"]??>
+			and ht.productRollLength = :productRollLength
+		</#if>
+		<#if key["workshop"]??>
+			and ht.name = :workshop
+		</#if>
+
+union ALL
+SELECT
+	ht.rollBarcode,
+	'' as boxBarcode,
+  tbr.trayBarcode,
+	ht.producePlanCode,
+	ht.salesOrderCode,
+  ht.CONSUMERNAME,
+  ht.productModel,
+	ht.batchcode,
+  ht.rollQualityGradeCode,
+  ht.DeviceCode as rollDeviceCode,
+  ht.name,
+  ht.rollWeight,
+	ht.productWidth,
+  ht.productWeight,
+	ht.productLength,
+  ht.rollOutputTime
+FROM 
+hs_totalstatistics ht 
+INNER JOIN hs_tray_box_roll tbr on ht.rollBarcode = tbr.rollBarcode 
+WHERE  1=1
+and ht.barcodeType = 'roll'
+<#if key["start"]??&&key["end"]??>
+			and ht.rollOutputTime between :start and :end
+		</#if>
+		<#if key["start"]??&&!key["end"]??>
+			and ht.rollOutputTime > :start
+		</#if>
+		<#if !key["start"]??&&key["end"]??>
+			and ht.rollOutputTime < :end
+		</#if>
+		<#if !key["start"]??>
+			and 1=2
+		</#if>
+		<#if key["rollBarcode"]??>
+			and ht.rollBarcode like :rollBarcode
+		</#if>
+		<#if key["trayBarcode"]??>
+			and tbr.trayBarcode like :trayBarcode
+		</#if>
+		<#if key["consumerName"]??>
+			and ht.CONSUMERNAME like :consumerName
+		</#if>
+		<#if key["salesOrderCode"]??>
+			and ht.salesOrderCode = replace(:salesOrderCode,'%','')
+		</#if>
+		<#if key["batchcode"]??>
+			and ht.batchcode = replace(:batchcode,'%','') 
+		</#if>
+		<#if key["productModel"]??>
+			and ht.productModel like :productModel
+		</#if>
+		<#if key["rollDeviceCode"]??>
+			and ht.DeviceCode = :rollDeviceCode
+		</#if>
+		<#if key["productWidth"]??>
+			and ht.productWidth = :productWidth
+		</#if>
+		<#if key["productRollLength"]??>
+			and ht.productRollLength = :productRollLength
+		</#if>
+		<#if key["workshop"]??>
+			and ht.name = :workshop
+		</#if>
+) z
+ORDER BY z.trayBarcode,z.boxBarcode,z.rollBarcode
+
+		]]>
+	</sql>
+	<sql comment="托盒卷对应关系" id="trayboxrollrelation-totalrollweight">
+		<![CDATA[
+			select
+  IFNULL(FORMAT(SUM(z.rollWeight),1),0) as totalRollWeight
+from (SELECT
+	ht.rollBarcode,
+	br.boxBarcode,
+  tbr.trayBarcode,
+	ht.producePlanCode,
+	ht.salesOrderCode,
+  ht.CONSUMERNAME,
+  ht.productModel,
+	ht.batchcode,
+  ht.rollQualityGradeCode,
+  ht.DeviceCode as rollDeviceCode,
+  ht.name,
+  ht.rollWeight,
+	ht.productWidth,
+  ht.productWeight,
+	ht.productLength,
+  ht.rollOutputTime
+FROM
+hs_totalstatistics ht
+INNER JOIN hs_box_roll br ON ht.rollBarcode = br.rollBarcode
+INNER JOIN hs_tray_box_roll tbr on br.boxBarcode = tbr.boxBarcode
+WHERE  1=1
+and ht.barcodeType = 'roll'
+<#if key["start"]??&&key["end"]??>
+			and ht.rollOutputTime between :start and :end
+		</#if>
+		<#if key["start"]??&&!key["end"]??>
+			and ht.rollOutputTime > :start
+		</#if>
+		<#if !key["start"]??&&key["end"]??>
+			and ht.rollOutputTime < :end
+		</#if>
+		<#if !key["start"]??>
+			and 1=2
+		</#if>
+		<#if key["rollBarcode"]??>
+			and ht.rollBarcode like :rollBarcode
+		</#if>
+		<#if key["boxBarcode"]??>
+			and br.boxBarcode like :boxBarcode
+		</#if>
+		<#if key["trayBarcode"]??>
+			and tbr.trayBarcode like :trayBarcode
+		</#if>
+		<#if key["consumerName"]??>
+			and ht.CONSUMERNAME like :consumerName
+		</#if>
+		<#if key["salesOrderCode"]??>
+			and ht.salesOrderCode = replace(:salesOrderCode,'%','')
+		</#if>
+		<#if key["batchcode"]??>
+			and ht.batchcode = replace(:batchcode,'%','')
+		</#if>
+		<#if key["productModel"]??>
+			and ht.productModel like :productModel
+		</#if>
+		<#if key["rollDeviceCode"]??>
+			and ht.DeviceCode = :rollDeviceCode
+		</#if>
+		<#if key["productWidth"]??>
+			and ht.productWidth = :productWidth
+		</#if>
+		<#if key["productRollLength"]??>
+			and ht.productRollLength = :productRollLength
+		</#if>
+		<#if key["workshop"]??>
+			and ht.name = :workshop
+		</#if>
+
+union ALL
+SELECT
+	ht.rollBarcode,
+	'' as boxBarcode,
+  tbr.trayBarcode,
+	ht.producePlanCode,
+	ht.salesOrderCode,
+  ht.CONSUMERNAME,
+  ht.productModel,
+	ht.batchcode,
+  ht.rollQualityGradeCode,
+  ht.DeviceCode as rollDeviceCode,
+  ht.name,
+  ht.rollWeight,
+	ht.productWidth,
+  ht.productWeight,
+	ht.productLength,
+  ht.rollOutputTime
+FROM
+hs_totalstatistics ht
+INNER JOIN hs_tray_box_roll tbr on ht.rollBarcode = tbr.rollBarcode
+WHERE  1=1
+and ht.barcodeType = 'roll'
+<#if key["start"]??&&key["end"]??>
+			and ht.rollOutputTime between :start and :end
+		</#if>
+		<#if key["start"]??&&!key["end"]??>
+			and ht.rollOutputTime > :start
+		</#if>
+		<#if !key["start"]??&&key["end"]??>
+			and ht.rollOutputTime < :end
+		</#if>
+		<#if !key["start"]??>
+			and 1=2
+		</#if>
+		<#if key["rollBarcode"]??>
+			and ht.rollBarcode like :rollBarcode
+		</#if>
+		<#if key["trayBarcode"]??>
+			and tbr.trayBarcode like :trayBarcode
+		</#if>
+		<#if key["consumerName"]??>
+			and ht.CONSUMERNAME like :consumerName
+		</#if>
+		<#if key["salesOrderCode"]??>
+			and ht.salesOrderCode = replace(:salesOrderCode,'%','')
+		</#if>
+		<#if key["batchcode"]??>
+			and ht.batchcode = replace(:batchcode,'%','')
+		</#if>
+		<#if key["productModel"]??>
+			and ht.productModel like :productModel
+		</#if>
+		<#if key["rollDeviceCode"]??>
+			and ht.DeviceCode = :rollDeviceCode
+		</#if>
+		<#if key["productWidth"]??>
+			and ht.productWidth = :productWidth
+		</#if>
+		<#if key["productRollLength"]??>
+			and ht.productRollLength = :productRollLength
+		</#if>
+		<#if key["workshop"]??>
+			and ht.name = :workshop
+		</#if>
+) z
+		]]>
+	</sql>
+</sqls>

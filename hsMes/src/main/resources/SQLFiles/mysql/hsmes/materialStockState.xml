@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="MaterialStockStateDaoImpl">
+	<sql comment="物料库存状态列表" id="materialStockState-list">
+		<![CDATA[
+SELECT DISTINCT
+	t.*, DATE_FORMAT(t2.produceDate, '%Y-%m-%d') produceDate,
+	t1.materialShelfLife,war.WAREHOUSENAME,DATE_FORMAT(minr.inTime, '%Y-%m-%d') intime,t2.inWeight
+FROM
+	Hs_Material_Stock_State t
+LEFT JOIN hs_material t1 ON (
+	t1.produceCategory = t.produceCategory
+	AND t1.materialModel = t.materialModel
+)
+LEFT JOIN HS_Material_In_Record t2 ON t2.materialCode = t.materialCode
+LEFT JOIN hs_warehouse war ON war.WAREHOUSECODE=t.warehouseCode
+LEFT JOIN hs_material_in_record minr ON minr.materialCode=t.materialCode
+WHERE
+	t.stockState = 1 
+
+		<#if key["isLocked"]??>
+			<#if key["isLocked"]=="1">
+				and t.isLocked = (:isLocked)
+			</#if>
+			<#if key["isLocked"]=="0">
+				and (t.isLocked is null and :isLocked=:isLocked)
+			</#if>	
+		</#if>
+		
+		<#if key["code"]??>
+			and (t.materialCode = (:code))
+		</#if>
+		<#if key["intimea"]??>
+			and (minr.inTime > (:intimea))
+		</#if>
+		<#if key["intimeb"]??>
+			and (minr.inTime < (:intimeb))
+		</#if>
+		<#if key["materialModel"]??>
+			and (t1.materialModel LIKE (:materialModel))
+		</#if>
+		<#if key["state"]??>
+			and (t.state = :state) 
+		</#if>
+		<#if key["warehouseCode"]??>
+			and (war.WAREHOUSENAME like (:warehouseCode))
+		</#if>
+		
+		<#if key["warehousePosCode"]??>
+			and (t.warehousePosCode like (:warehousePosCode))
+		</#if>
+		<#if key["materialCode"]??>
+			and (t.materialCode like (:materialCode))
+		</#if>
+		<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+			</#if>
+			<#if !key["sort"]??&&!key["order"]??>
+				order by id desc
+			</#if>
+		]]>
+	</sql>
+	
+	<sql comment="生产领料汇总表" id="materialStockState-list1">
+		<![CDATA[
+			select t.id,t.produceCategory,t.materialModel,sum(inWeight) inweights from hs_material_stock_state t LEFT JOIN HS_Material_In_Record t2
+				ON t2.materialCode = t.materialCode 
+				LEFT JOIN hs_warehouse war ON war.WAREHOUSECODE = t.warehouseCode
+				where 1=1
+				<#if key["materialmodel"]??>
+					and t.MATERIALMODEL like (:materialmodel)
+				</#if>
+				<#if key["producecategory"]??>
+					and t.PRODUCECATEGORY like (:producecategory)
+				</#if>
+				<#if key["warehouseCode"]??>
+					and war.WAREHOUSECODE like (:warehouseCode)
+				</#if>
+				<#if key["produceDate"]??>
+					and t2.produceDate > (:produceDate)
+				</#if>
+				<#if key["produceDate1"]??>
+					and t2.produceDate < (:produceDate1)
+				</#if>
+					GROUP BY t.materialModel
+			]]>
+	</sql>
+</sqls>

@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="DeviceDaoImpl">
+	<sql comment="设备列表" id="device-list">
+		<![CDATA[
+		select c.*,d.name as deptName from  HS_DEVICE c
+		left join hs_devicetype t on t.id=c.deviceCatetoryId
+   		left join platform_department d on d.id=c.deviceDepartmentId where 1=1
+		<#if key["id"]??>
+			and (t.id in (:id))
+		</#if>
+		<#if key["deviceAssetCode"]??>
+			and c.deviceAssetCode like :deviceAssetCode
+		</#if>
+		<#if key["workShop"]??>
+			and d.name like :workShop
+		</#if>
+		<#if key["deviceCode"]??>
+			and c.deviceCode like :deviceCode
+		</#if>
+		<#if key["sort"]??&&key["order"]??>
+			order by ${key["sort"]} ${key["order"]}
+		</#if>
+		<#if !key["sort"]??&&!key["order"]??>
+			order by id desc
+		</#if>
+		]]>
+	</sql>
+	<sql comment="删除设备信息" id="device-delete">
+		<![CDATA[
+			delete from HS_DEVICE where id in (:id)
+		]]>
+	</sql>
+	<sql comment="查询编织日计划的设备" id="find-device">
+		<![CDATA[
+			select * from hs_Plan_Devices where deviceId in (:id)
+		]]>
+	</sql>
+	<sql comment="查询机台订单最早的发货日期" id="device-order-earliest">
+		<![CDATA[
+			SELECT d.id,x.deleveryDate,d.deviceName,d.deviceCode,dept.name,dept.code from hs_device d left join (
+				SELECT
+							pd.deviceId,
+							min(wp.deleveryDate) deleveryDate
+						FROM
+						hs_Weave_Plan_Devices pd
+						LEFT JOIN hs_weave_plan wp ON wp.id = pd.weavePlanId
+						LEFT JOIN hs_device d on d.id=pd.deviceId
+						WHERE
+							1 = 1
+							<#if key["start"]??&&key["end"]??>
+								and wp.deleveryDate between :start and :end
+							</#if>
+						GROUP BY
+							pd.deviceId
+			) x on x.deviceId=d.id
+			left join platform_department dept on dept.id=d.deviceDepartmentId
+			where 1=1 and dept.name not like '%裁剪%'
+			<#if key["did"]??>
+				and d.deviceDepartmentId=:did
+			</#if>
+			<#if key["dcodes"]??>
+				and d.deviceCode in (:dcodes)
+			</#if>
+			<#if key["sort"]??>
+					order by ${key["sort"]}  ${key["order"]}
+				<#else>
+					order by x.deleveryDate asc
+			</#if>
+		]]>
+	</sql>
+
+	<sql comment="查询机台订单最早的发货日期" id="device-department">
+		<![CDATA[
+			SELECT deviceDepartmentId id,dp.name,dp.code from hs_device d left join platform_department dp on dp.id=d.deviceDepartmentId where dp.name not like '裁剪%'  GROUP BY deviceDepartmentId
+		]]>
+	</sql>
+	<sql comment="查询机台订单最早的发货日期" id="cut-department">
+		<![CDATA[
+			select * from platform_department where type = 'cut'
+		]]>
+	</sql>
+
+
+	<sql comment="获取机台的编织计划" id="device-plans_bjinfo">
+		<![CDATA[
+		select t.* from (SELECT
+				p.factoryProductName yx,
+				CASE
+			WHEN ISNULL(t.bcBomCode) THEN
+				p.bcBomCode
+			ELSE
+				p.bcBomCode
+			END bc,
+			 CASE
+			WHEN ISNULL(t.bcBomVersion) THEN
+				p.bcBomVersion
+			ELSE
+				t.bcBomVersion
+			END bv,
+			case  WHEN ISNULL(rc.c) then 0 else rc.c end rc ,
+			case  WHEN ISNULL(tc.c) then 0 else tc.c end tc ,
+			t.*, sod.salesordersubcode,
+			sod.salesOrderSubCodePrint,
+			fp.factoryProductName,
+			p.consumerProductName,
+			fp.productIsTc,
+			c.consumerSimpleName,
+			wpd.isProducing,
+			wpd.prior,
+			p.requirementCount reqCount,
+			p.planTotalWeight,
+			p.planAssistCount,
+			p.planAssistUnit,
+			d.deviceCode AS DEVCODE,
+			p.packReq AS pReq,
+			p.`comment` AS com,
+			pp.workshop,
+			so.salesOrderMemo,
+			d.id as dvid
+		FROM
+			hs_Weave_Plan_Devices wpd
+		LEFT JOIN hs_device d ON d.id = wpd.deviceId
+		LEFT JOIN Hs_Weave_Plan t ON wpd.weavePlanId = t.id
+		LEFT JOIN hs_sales_order_detail sod ON sod.id = t.fromsalesorderdetailId
+		LEFT JOIN hs_sales_order so ON so.id=sod.salesOrderId
+		LEFT JOIN hs_consumer c ON c.id = t.consumerId
+		LEFT JOIN hs_produce_plan_detail p ON p.id = t.producePlanDetailId
+		LEFT JOIN hs_produce_plan pp ON pp.id = p.producePlanId
+		LEFT JOIN hs_finishproduct fp ON fp.id = t.productId
+		LEFT JOIN
+			(
+				SELECT
+					planId,count(1) c
+				FROM
+					hs_roll r
+				LEFT JOIN hs_roll_barcode rb ON rb.barcode = r.rollBarcode
+				LEFT JOIN hs_device d on d.deviceCode=r.rollDeviceCode
+				WHERE
+					1=1
+				and rb.planId in(:ids)
+				AND r.rollQualityGradeCode = 'A'
+				AND rb.isAbandon = 0
+				AND r.state <> 3
+				GROUP BY rb.planId
+			) rc on rc.planId=wpd.weavePlanId
+		LEFT JOIN
+			(
+				SELECT
+					planId,count(1) c
+				FROM
+					hs_tray t
+				LEFT JOIN hs_tray_barcode tb ON tb.barcode = t.trayBarcode
+				WHERE
+					tb.planId in (:ids)
+				AND t.rollQualityGradeCode = 'A'
+				AND tb.isOpened = 0
+				AND tb.partId IS NULL
+				GROUP BY tb.planId
+			) tc on tc.planId=wpd.weavePlanId
+			WHERE
+				wpd.weavePlanId in (:ids) and wpd.deviceId in (:dids)
+				order by wpd.isProducing desc , wpd.prior desc, t.deleveryDate ASC) t
+				where t.dvid =:dvid and t.yx=:yx and ifnull(t.partname,'')=:partname
+		]]>
+	</sql>
+
+
+	<sql comment="获取机台的编织计划" id="device-plans_bjhzinfo">
+		<![CDATA[
+		select DISTINCT t.dvid,t.DEVCODE,t.yx,t.PARTNAME
+
+		 from (SELECT
+				p.factoryProductName yx,
+				CASE
+			WHEN ISNULL(t.bcBomCode) THEN
+				p.bcBomCode
+			ELSE
+				p.bcBomCode
+			END bc,
+			 CASE
+			WHEN ISNULL(t.bcBomVersion) THEN
+				p.bcBomVersion
+			ELSE
+				t.bcBomVersion
+			END bv,
+			case  WHEN ISNULL(rc.c) then 0 else rc.c end rc ,
+			case  WHEN ISNULL(tc.c) then 0 else tc.c end tc ,
+			t.*, sod.salesordersubcode,
+			sod.salesOrderSubCodePrint,
+			fp.factoryProductName,
+			p.consumerProductName,
+			fp.productIsTc,
+			c.consumerSimpleName,
+			wpd.isProducing,
+			wpd.prior,
+			p.requirementCount reqCount,
+			p.planTotalWeight,
+			p.planAssistCount,
+			p.planAssistUnit,
+			d.deviceCode AS DEVCODE,
+			p.packReq AS pReq,
+			p.`comment` AS com,
+			pp.workshop,
+			so.salesOrderMemo,
+			d.id as dvid
+		FROM
+			hs_Weave_Plan_Devices wpd
+		LEFT JOIN hs_device d ON d.id = wpd.deviceId
+		LEFT JOIN Hs_Weave_Plan t ON wpd.weavePlanId = t.id
+		LEFT JOIN hs_sales_order_detail sod ON sod.id = t.fromsalesorderdetailId
+		LEFT JOIN hs_sales_order so ON so.id=sod.salesOrderId
+		LEFT JOIN hs_consumer c ON c.id = t.consumerId
+		LEFT JOIN hs_produce_plan_detail p ON p.id = t.producePlanDetailId
+		LEFT JOIN hs_produce_plan pp ON pp.id = p.producePlanId
+		LEFT JOIN hs_finishproduct fp ON fp.id = t.productId
+		LEFT JOIN
+			(
+				SELECT
+					planId,count(1) c
+				FROM
+					hs_roll r
+				LEFT JOIN hs_roll_barcode rb ON rb.barcode = r.rollBarcode
+				LEFT JOIN hs_device d on d.deviceCode=r.rollDeviceCode
+				WHERE
+					1=1
+				and rb.planId in(:ids)
+				AND r.rollQualityGradeCode = 'A'
+				AND rb.isAbandon = 0
+				AND r.state <> 3
+				GROUP BY rb.planId
+			) rc on rc.planId=wpd.weavePlanId
+		LEFT JOIN
+			(
+				SELECT
+					planId,count(1) c
+				FROM
+					hs_tray t
+				LEFT JOIN hs_tray_barcode tb ON tb.barcode = t.trayBarcode
+				WHERE
+					tb.planId in (:ids)
+				AND t.rollQualityGradeCode = 'A'
+				AND tb.isOpened = 0
+				AND tb.partId IS NULL
+				GROUP BY tb.planId
+			) tc on tc.planId=wpd.weavePlanId
+			WHERE
+				wpd.weavePlanId in (:ids) and wpd.deviceId in (:dids)
+				order by wpd.isProducing desc , wpd.prior desc, t.deleveryDate ASC) t
+		]]>
+	</sql>
+
+
+	<sql comment="获取机台的编织计划" id="device-plans">
+		<![CDATA[
+		SELECT
+				p.factoryProductName yx,
+				CASE
+			WHEN ISNULL(t.bcBomCode) THEN
+				p.bcBomCode
+			ELSE
+				p.bcBomCode
+			END bc,
+			 CASE
+			WHEN ISNULL(t.bcBomVersion) THEN
+				p.bcBomVersion
+			ELSE
+				t.bcBomVersion
+			END bv,
+			case  WHEN ISNULL(rc.c) then 0 else rc.c end rc ,
+			case  WHEN ISNULL(tc.c) then 0 else tc.c end tc ,
+			t.*, sod.salesordersubcode,
+			sod.salesOrderSubCodePrint,
+			fp.factoryProductName,
+			p.consumerProductName,
+			fp.productIsTc,
+			c.consumerSimpleName,
+			c.CONSUMERCODE,
+			wpd.isProducing,
+			wpd.prior,
+			p.requirementCount reqCount,
+			p.planTotalWeight,
+			p.planAssistCount,
+			p.planAssistUnit,
+			d.deviceCode AS DEVCODE,
+			p.packReq AS pReq,
+			p.`comment` AS com,
+			pp.workshop,
+			pp.workShopCode,
+			so.salesOrderMemo,
+			d.id as dvid
+		FROM
+			hs_Weave_Plan_Devices wpd
+		LEFT JOIN hs_device d ON d.id = wpd.deviceId
+		LEFT JOIN Hs_Weave_Plan t ON wpd.weavePlanId = t.id
+		LEFT JOIN hs_sales_order_detail sod ON sod.id = t.fromsalesorderdetailId
+		LEFT JOIN hs_sales_order so ON so.id=sod.salesOrderId
+		LEFT JOIN hs_consumer c ON c.id = t.consumerId
+		LEFT JOIN hs_produce_plan_detail p ON p.id = t.producePlanDetailId
+		LEFT JOIN hs_produce_plan pp ON pp.id = p.producePlanId
+		LEFT JOIN hs_finishproduct fp ON fp.id = t.productId
+		LEFT JOIN
+			(
+				SELECT
+					planId,count(1) c
+				FROM
+					hs_roll r
+				LEFT JOIN hs_roll_barcode rb ON rb.barcode = r.rollBarcode
+				LEFT JOIN hs_device d on d.deviceCode=r.rollDeviceCode
+				WHERE
+					1=1
+				and rb.planId in(:ids)
+				AND r.rollQualityGradeCode = 'A'
+				AND rb.isAbandon = 0
+				AND r.state <> 3
+				GROUP BY rb.planId
+			) rc on rc.planId=wpd.weavePlanId
+		LEFT JOIN
+			(
+				SELECT
+					planId,count(1) c
+				FROM
+					hs_tray t
+				LEFT JOIN hs_tray_barcode tb ON tb.barcode = t.trayBarcode
+				WHERE
+					tb.planId in (:ids)
+				AND t.rollQualityGradeCode = 'A'
+				AND tb.isOpened = 0
+				AND tb.partId IS NULL
+				GROUP BY tb.planId
+			) tc on tc.planId=wpd.weavePlanId
+			WHERE
+				wpd.weavePlanId in (:ids) and wpd.deviceId in (:dids)
+				order by wpd.isProducing desc , wpd.prior desc,t.sort desc,t.deleveryDate ASC
+		]]>
+	</sql>
+	<sql comment="机台显示屏内容" id="device-plans-jt-pre">
+        <![CDATA[
+            SELECT
+                distinct wpd.weavePlanId
+            FROM
+                hs_Weave_Plan_Devices wpd
+            LEFT JOIN Hs_Weave_Plan t ON wpd.weavePlanId = t.id
+            WHERE
+                1 = 1
+            AND wpd.deviceId =:did
+            ORDER BY
+                wpd.isProducing DESC,
+                wpd.prior desc,
+                t.deleveryDate ASC
+        ]]>
+    </sql>
+	<sql comment="机台显示屏内容" id="device-plans-jt">
+		<![CDATA[
+			SELECT
+				t.id,
+				t.batchCode,
+				sod.salesOrderSubCodePrint  SALESORDERCODE,
+				t.productName,
+				t.processBomCode,
+				t.processBomVersion,
+				t.bcBomCode,
+				t.productModel,
+				t.bomVersion,
+				t.productLength,
+				t.productWeight,
+				t.productWidth,
+				t.requirementCount,
+				sod.salesordersubcode,
+				sod.factoryProductName,
+				c.consumerSimpleName,
+				wpd.isProducing,
+				wpd.prior,
+				fp.consumerProductName,
+				t.PRODUCEROLLCOUNT,
+				t.TOTALROLLCOUNT,
+				sod.PRODUCTPACKAGINGCODE,
+				sod.PRODUCTPACKAGEVERSION,
+				case  WHEN ISNULL(rc.c) then 0 else rc.c end rc
+			FROM
+				hs_Weave_Plan_Devices wpd
+			LEFT JOIN Hs_Weave_Plan t ON wpd.weavePlanId = t.id
+			LEFT JOIN hs_sales_order_detail sod ON sod.id = t.fromsalesorderdetailId
+			LEFT JOIN hs_consumer c ON c.id = t.consumerId
+			left join HS_FINISHPRODUCT fp on fp.id=t.productId
+			LEFT JOIN
+				(
+					SELECT
+						planId,count(1) c
+					FROM
+						hs_roll r
+					LEFT JOIN hs_roll_barcode rb ON rb.barcode = r.rollBarcode
+					LEFT JOIN hs_device d on d.deviceCode=r.rollDeviceCode
+					WHERE
+						1=1
+					AND r.rollQualityGradeCode = 'A'
+					AND rb.isAbandon = 0
+					AND r.state <> 3
+					and rb.planId in (:ids)
+					GROUP BY rb.planId
+				) rc on rc.planId=wpd.weavePlanId
+			WHERE
+				1 = 1
+			AND t.id in (:ids)
+			AND wpd.deviceId =:did
+			ORDER BY
+				wpd.isProducing DESC,
+				wpd.prior desc,
+				t.deleveryDate ASC
+		]]>
+	</sql>
+	<sql comment="获取安排的所有的机台和计划" id="device-plans-all">
+		<![CDATA[
+			SELECT
+				wd.id,wd.weavePlanId
+			FROM
+				hs_weave_plan_devices wd
+			LEFT JOIN hs_device d ON d.id = wd.deviceId
+			LEFT JOIN hs_weave_plan w ON w.id = wd.weavePlanId
+			LEFT JOIN hs_consumer c ON c.id = w.consumerId
+			where 1=1
+			<#if key["dcodes"]??>
+				and d.deviceCode in (:dcodes)
+			</#if>
+			<#if key["cname"]??>
+				and c.consumerSimpleName like :cname
+			</#if>
+			<#if key["salesOrder"]??>
+				and w.salesOrderCode like :salesOrder
+			</#if>
+			<#if key["planCode"]??>
+				and w.planCode like :planCode
+			</#if>
+			<#if key["productModel"]??>
+				and w.PRODUCTMODEL like :productModel
+			</#if>
+			<#if key["productWidth"]??>
+				and w.productWidth like :productWidth
+			</#if>
+			<#if key["did"]??>
+				and d.deviceDepartmentId=:did
+			</#if>
+			<#if key["start"]??&&key["end"]??>
+				and (w.deleveryDate between :start and :end)
+			</#if>
+		]]>
+	</sql>
+	<sql comment="获取安排的所有的机台和计划" id="device-plans-all-count">
+		<![CDATA[
+			SELECT
+				(SELECT  so.salesOrderMemo FROM hs_sales_order so LEFT JOIN hs_sales_order_detail sod ON sod.salesOrderId= so.id
+                WHERE sod.id= p.fromSalesOrderDetailId  ) yx,
+				case  WHEN ISNULL(rc.c) then 0 else rc.c end rc ,
+				case  WHEN ISNULL(tc.c) then 0 else tc.c end tc ,
+				w.*, d.deviceCode _deviceCode,
+				d.deviceName,dept.name workshop,dept.code workshopcode,c.CONSUMERSIMPLENAME,f.consumerProductName,f.factoryProductName,p.packReq AS pReq,p.`comment` AS com,p.salesOrderSubcodePrint
+			FROM
+				hs_weave_plan w
+			LEFT JOIN hs_weave_plan_devices wd ON w.id = wd.weavePlanId
+			LEFT JOIN hs_device d ON d.id = wd.deviceId
+			LEFT JOIN platform_department dept on dept.id=d.deviceDepartmentId
+			LEFT JOIN hs_consumer c ON c.id = w.consumerId
+			LEFT JOIN hs_finishproduct f ON f.id = w.productId
+			LEFT JOIN hs_produce_plan_detail p ON p.id = w.producePlanDetailId
+			LEFT JOIN
+				(
+					SELECT
+						planId,count(1) c
+					FROM
+						hs_roll r
+					LEFT JOIN hs_roll_barcode rb ON rb.barcode = r.rollBarcode
+					LEFT JOIN hs_device d on d.deviceCode=r.rollDeviceCode
+					WHERE
+						1=1
+					and rb.planId in (${key["wids"]})
+					AND r.rollQualityGradeCode = 'A'
+					AND rb.isAbandon = 0
+					AND r.state <> 3
+					GROUP BY rb.planId
+				) rc on rc.planId=wd.weavePlanId
+			LEFT JOIN
+				(
+					SELECT
+						planId,count(1) c
+					FROM
+						hs_tray t
+					LEFT JOIN hs_tray_barcode tb ON tb.barcode = t.trayBarcode
+					WHERE
+						tb.planId in (${key["wids"]})
+					AND t.rollQualityGradeCode = 'A'
+					AND tb.isOpened = 0
+					AND tb.partId IS NULL
+					GROUP BY tb.planId
+				) tc on tc.planId=wd.weavePlanId
+			where wd.id in (${key["ids"]})
+			<#if key["sort"]??>
+					order by ${key["sort"]}  ${key["order"]}
+				<#else>
+					order by _deviceCode asc,w.deleveryDate asc
+			</#if>
+		]]>
+	</sql>
+</sqls>

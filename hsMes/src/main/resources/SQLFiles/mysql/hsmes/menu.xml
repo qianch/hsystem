@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="MenuDaoImpl">
+	<sql comment="菜单列表" id="menu-list">
+		<!-- String rule = "{and:{m1.parentId:equal,m1.name:like,m1.url:like},order:{m1.sortOrder:asc}}"; -->
+		<![CDATA[
+		select m1.id,m1.name,m1.code,m1.url as url_,m1.isButton,m1.buttonCode,m1.icon as icon_,m1.parentId,m2.name as pname from platform_menu m1 left join platform_menu m2 on m1.parentId=m2.id where 1=1
+		<#if key["m1.parentId"]??>
+			and (m1.parentId=:m1.parentId or m1.id=:m1.parentId )
+		</#if>
+		<#if key["m1.name"]??>
+			and lower(m1.name) like lower(:m1.name)
+		</#if>
+		<#if key["m1.url"]??>
+			and lower(m1.url) like lower(:m1.url)
+		</#if>
+		<#if key["sort"]??>
+			order by m1.:sort :order
+			<#else>
+			order by m1.sortorder asc
+		</#if>
+		]]>
+	</sql>
+	<sql comment="更新菜单层级" id="menu-batchUpdateMenuLevel">
+		<![CDATA[
+			update platform_menu set parentId=:parentId where id=:id
+		]]>
+	</sql>
+	<sql comment="批量删除菜单" id="menu-batchDelete">
+		<![CDATA[
+			delete from Menu where id in (:id)
+		]]>
+	</sql>
+	<sql comment="查询个人菜单" id="menu-mymenu">
+		<![CDATA[
+			select distinct m.* from platform_menu m 
+				<#if key["uid"]=="-1">
+					order by m.levelCount asc,m.sortOrder asc
+					<#else>
+					left join platform_permission p on p.mid=m.id where p.rid in (select roleId from platform_user_role  u where u.userId=:u.uid)
+					order by m.levelcount asc,m.sortOrder asc
+				</#if>
+		]]>
+	</sql>
+</sqls>

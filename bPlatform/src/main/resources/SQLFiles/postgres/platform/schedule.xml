@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="ScheduleDaoImpl">
+	<sql comment="查询调度任务列表" id="schedule-list">
+		<![CDATA[
+			select * from platform_schedule where 1=1
+			<#if key["clazz"]??>
+				and clazz like :clazz
+			</#if>
+			<#if key["method"]??>
+				and method like :method
+			</#if>
+			<#if key["startcreateTime"]?? && key["endcreateTime"]??>
+				and createTime between to_data(:startcreateTime,"yyyy-mm-dd hh24\:mi\:ss") and to_data(:endcreateTime,"yyyy-mm-dd hh24\:mi\:ss") 
+			</#if>
+			<#if key["sort"]?? && key["order"]??>
+				order by :sort :order
+			</#if>
+		]]>
+	</sql>
+	<sql comment="通过Class查找任务" id="schedule-getScheduleByClazz">
+		<![CDATA[
+			From Schedule where clazz=:clazz
+		]]>
+	</sql>
+	<sql comment="通过未完成的任务" id="schedule-findUncompleteSchedule">
+		<![CDATA[
+			From Schedule where status=0
+		]]>
+	</sql>
+</sqls>

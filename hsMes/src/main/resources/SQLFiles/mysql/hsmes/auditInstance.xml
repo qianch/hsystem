@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="AuditInstance">
+	<sql comment="审核列表" id="auditInstance-list">
+		<![CDATA[
+			SELECT * FROM hs_audit_instance where 1=1
+			<#if key["auditCode"]??>
+					and auditCode like :auditCode
+			</#if>
+			<#if key["formId"]??>
+					and formId=:formId
+			</#if>
+			<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+				<#else>
+				order by id desc
+			</#if>
+		]]>
+	</sql>
+	<sql comment="我提交的审核" id="auditTask-myAudit">
+		<![CDATA[
+			SELECT
+				i.*,u.userName as createUser ,u2.userName as firstAuditUser,u3.userName as secondAuditUser
+			FROM
+				hs_audit_instance i
+			LEFT JOIN platform_user u ON u.id = i.createUserId
+			LEFT JOIN platform_user u2 ON u2.id = i.firstRealAuditUserId
+			LEFT JOIN platform_user u3 ON u3.id = i.secondRealAuditUserId
+			where  i.createUserId =:uid
+			
+			<#if key["finalresult"]??>
+                  <#if key["finalresult"]=="-1">
+                       and i.finalresult=:finalresult  and (:finalresult=:finalresult)
+                  </#if>
+                  <#if key["finalresult"]=="2">
+                        and i.finalresult=:finalresult  and (:finalresult=:finalresult)
+                  </#if>
+                  <#if key["finalresult"]=="3">
+                        and ( :finalresult=:finalresult)
+                  </#if>
+             </#if>
+			<#if key["iscompleted"]??>
+                  <#if key["iscompleted"]=="1">
+                       and i.iscompleted=:iscompleted  and (:iscompleted=:iscompleted)
+                  </#if>
+                  <#if key["iscompleted"]=="2">
+                        and ISNULL(i.isCompleted) and ( :iscompleted=:iscompleted)
+                  </#if>
+                  <#if key["iscompleted"]=="3">
+                        and ( :iscompleted=:iscompleted)
+                  </#if>
+             </#if>
+			<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+				<#else>
+				order by i.id desc 
+			</#if>
+		]]>
+	</sql>
+	
+	<sql comment="已审核任务" id="auditTask-finished">
+		<![CDATA[
+			select * from (
+				select i.*,1 as auditLevel,u.userName,i.firstAuditTime as auditTime ,i.firstAuditResult as auditResult
+					from hs_audit_instance i 
+					left join platform_user u on u.id=i.firstRealAuditUserId  
+					LEFT JOIN platform_user u2 on u2.id=i.createUserId
+					where  i.firstRealAuditUserId=:uid
+				<#if key["auditTitle"]??>
+					and i.auditTitle like :auditTitle
+				</#if>
+				<#if key["userName"]??>
+					and u2.userName like :userName
+				</#if>
+				<#if key["createTime"]??>
+					and i.CREATETIME like :createTime
+				</#if>
+				UNION ALL
+				select i.*,2 as auditLevel,u.userName,i.secondAuditTime as auditTime ,i.secondAuditResult as auditResult
+					from hs_audit_instance i 
+					left join platform_user u on u.id=i.firstRealAuditUserId 
+					LEFT JOIN platform_user u2 on u2.id=i.createUserId
+					where  i.secondRealAuditUserId=:uid
+				<#if key["auditTitle"]??>
+					and i.auditTitle like :auditTitle
+				</#if>
+				<#if key["userName"]??>
+					and u2.userName like :userName
+				</#if>
+				<#if key["createTime"]??>
+					and i.CREATETIME like :createTime
+				</#if>
+			) x
+			<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+				<#else>
+				order by id desc 
+			</#if>
+		]]>
+	</sql>
+	<sql comment="待审核任务" id="auditTask-unfinished">
+		<![CDATA[
+			select i.ID,i.auditTitle,i.createTime,p.userName,i.currentAuditProcessNode from hs_audit_instance i 
+			LEFT JOIN hs_audit_users u on u.auditCode=i.auditCode 
+			LEFT JOIN platform_user p on p.id=i.createUserId
+			where u.auditLevel=i.currentAuditProcessNode and i.finalResult is null
+			<#if key["uid"]??>
+				and u.userId=:uid
+			</#if>
+			<#if key["auditTitle"]??>
+				and i.auditTitle like :auditTitle
+			</#if>
+			<#if key["userName"]??>
+				and p.userName like :userName
+			</#if>
+			<#if key["createTime"]??>
+					and i.createTime like :createTime
+				</#if>
+			<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+				<#else>
+				order by i.id desc
+			</#if>
+		]]>
+	</sql>
+</sqls>

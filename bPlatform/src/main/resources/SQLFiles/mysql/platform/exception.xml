@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="LogDaoImpl">
+<!-- occurDate:between,clazz:like,method:like -->
+	<sql comment="日志列表" id="exception-list">
+		<![CDATA[
+		select * from platform_exception_message where 1=1 
+		<#if key["clazz"]??>
+			and clazz like :clazz
+		</#if>
+		<#if key["method"]??>
+			and method like :method
+		</#if>
+		<#if key["startoccurDate"]?? && key["endoccurDate"]??>
+			and occurDate between :startoccurDate and :endoccurDate
+		</#if>
+		<#if key["startoccurDate"]?? && !key["endoccurDate"]??>
+			and occurDate >:startoccurDate
+		</#if>
+		
+		<#if !key["startoccurDate"]?? && key["endoccurDate"]??>
+			and occurDate <:endoccurDate
+		</#if>
+		<#if key["sort"]?? && key["order"]??>
+			 order by ${key["sort"]} ${key["order"]}
+		</#if>
+		]]>
+	</sql>
+</sqls>

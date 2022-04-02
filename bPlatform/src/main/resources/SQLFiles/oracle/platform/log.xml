@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="LogDaoImpl">
+	<sql comment="日志列表" id="log-list">
+		<![CDATA[
+		select id,userId,userName,loginName,operate,params,to_char(paramsValue) paramsValue,logDate,ip,requestIdentity from platform_log where 1=1 
+		<#if key["user"]??>
+			and userName like :user
+		</#if>
+		<#if key["name"]??>
+			and loginName like :name
+		</#if>
+		
+		<#if key["operate"]??>
+			and operate like :operate
+		</#if>
+		
+		<#if key["startlogDate"]?? && key["endlogDate"]??>
+			and logdate between to_date(:startlogDate,'yyyy-mm-dd hh24\:mi\:ss') and to_date(:endlogDate,'yyyy-mm-dd hh24\:mi\:ss')
+		</#if>
+		
+		<#if key["startlogDate"]?? && !key["endlogDate"]??>
+			and logdate >to_date(:startlogDate,'yyyy-mm-dd hh24\:mi\:ss')
+		</#if>
+		
+		<#if !key["startlogDate"]?? && key["endlogDate"]??>
+			and logdate <to_date(:endlogDate,'yyyy-mm-dd hh24\:mi\:ss')
+		</#if>
+		<#if key["sort"]?? && key["order"]??>
+			 order by ${key["sort"]} ${key["order"]}
+		</#if>
+		<#if !key["sort"]?? && !key["order"]??>
+			 order by logdate desc
+		</#if>
+		]]>
+	</sql>
+</sqls>

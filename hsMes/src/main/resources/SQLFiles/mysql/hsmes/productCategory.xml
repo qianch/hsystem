@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="FinishedProductCategoryDaoImpl">
+	<sql comment="产品类别管理列表" id="productCategory-list">
+		<![CDATA[
+			SELECT pc.* FROM HS_FINISHED_PRODUCT_CATEGORY pc where 1=1
+				
+			<#if key["categoryCode"]??>
+			 	and pc.categoryCode like :categoryCode
+			</#if>
+			
+			<#if key["categoryName"]??>
+			 	and pc.categoryName like :categoryName
+			</#if>
+			<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+			</#if>
+			<#if !key["sort"]??&&!key["order"]??>
+				 order by categoryCode
+			</#if>
+		]]>
+	</sql>
+</sqls>

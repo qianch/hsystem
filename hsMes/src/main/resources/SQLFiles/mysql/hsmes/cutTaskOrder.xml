@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="CutTaskOrder">
+	<sql comment="裁剪派工单列表" id="cutTaskOrder-list">
+		<![CDATA[
+			select t.* from hs_siemens_cut_task_order t where 1=1
+			<#if key["CTOCODE"]??> and CTOCODE like :CTOCODE</#if>
+			<#if key["TASKCODE"]??> and TASKCODE like :TASKCODE</#if>
+			<#if key["ORDERCODE"]??> and ORDERCODE like :ORDERCODE</#if>
+			<#if key["PARTNAME"]??> and PARTNAME like :PARTNAME</#if>
+			<#if key["BATCHCODE"]??> and BATCHCODE like :BATCHCODE</#if>
+			<#if key["CONSUMERSIMPLENAME"]??> and CONSUMERSIMPLENAME like :CONSUMERSIMPLENAME</#if>
+			<#if key["CONSUMERCATEGORY"]??> and CONSUMERCATEGORY like :CONSUMERCATEGORY</#if>
+			<#if key["DELIVERYDATE_S"]??&&key["DELIVERYDATE_E"]??>
+				and DELIVERYDATE between :DELIVERYDATE_S and :DELIVERYDATE_E
+			</#if>
+			<#if key["DELIVERYDATE_S"]??&&!key["DELIVERYDATE_E"]??>
+				and DELIVERYDATE > :DELIVERYDATE_S 
+			</#if>
+			<#if !key["DELIVERYDATE_S"]??&&key["DELIVERYDATE_E"]??>
+				and DELIVERYDATE < :DELIVERYDATE_E
+			</#if>
+			<#if key["SUITCOUNT"]??> and SUITCOUNT like :SUITCOUNT</#if>
+			<#if key["ASSIGNSUITCOUNT"]??> and ASSIGNSUITCOUNT like :ASSIGNSUITCOUNT</#if>
+			<#if key["PACKEDSUITCOUNT"]??> and PACKEDSUITCOUNT like :PACKEDSUITCOUNT</#if>
+			<#if key["ISCOMPLETE"]??> and ISCOMPLETE = :ISCOMPLETE</#if>
+			<#if key["ISCLOSED"]??> and ISCLOSED = :ISCLOSED</#if>
+			<#if key["CREATETIME"]??> and CREATETIME like :CREATETIME</#if>
+			<#if key["CREATEUSERNAME"]??> and CREATEUSERNAME like :CREATEUSERNAME</#if>
+			<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+				<#else>
+				order by id desc
+			</#if>
+		]]>
+	</sql>
+	<sql comment="获取裁剪任务单图纸BOM" id="cutTask-drawings-bom">
+		<![CDATA[
+			From CutTaskDrawings where ctId=:ctId GROUP BY fragmentDrawingNo 
+		]]>
+	</sql>
+	<sql comment="更新打印数量" id="cutTaskOrder-printedCount">
+		<![CDATA[
+			UPDATE ${key["tableName"]}
+			SET printedCount =printedCount+
+				CASE dwId
+					<#list key["map"]?keys as k>
+						WHEN ${k} THEN  ${key["map"]["${k}"]} 
+					</#list>
+				END
+			WHERE
+				<#if key["tableName"]=="hs_siemens_cut_task_drawings">
+						ctId=${key["id"]?c}
+					<#else>
+						ctoId=${key["id"]?c}
+				</#if>
+			and  
+				dwId IN (${key["dwIds"]})
+		]]>
+	</sql>
+	<sql comment="根据派工单ID获取打印的总量" id="cutTaskOrder-totalPrintedCount">
+		<![CDATA[
+			SELECT sum(printedCount)+sum(rePrintCount) count from hs_siemens_cut_task_order_drawings where ctoId=:ctoId
+		]]>
+	</sql>
+	<sql comment="根据派工单和图号获取获取套数" id="siemens-suitCoutPerDrawings-cutTaskOrder">
+		<![CDATA[
+			SELECT
+				suitCountPerDrawings
+			FROM
+				hs_siemens_cut_task_order_drawings ctod
+			WHERE
+				ctoId = :ctoId
+			AND ctod.fragmentDrawingNo IN (:drawingsNo)
+			GROUP BY
+				suitCountPerDrawings
+		]]>
+	</sql>
+</sqls>

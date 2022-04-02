@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="Complaint">
+	<sql comment="投诉列表" id="complaint-list">
+		<![CDATA[
+			select t.*,c.consumerSimpleName from HS_COMPLAINT t 
+			LEFT JOIN hs_consumer c ON t.complaintConsumerId = c.id
+			where 1=1
+			<#if key["complaintCode"]??>
+				and t.complaintCode like :complaintCode
+			</#if>
+			<#if key["consumerSimpleName"]??>
+			 and c.consumerSimpleName like :consumerSimpleName
+			</#if>
+			<#if key["productModel"]??>
+				and t.productModel like :productModel
+			</#if>
+			<#if key["consumerFrom"]??>
+				<#if key["consumerFrom"]=="国内"> 
+					and (t.consumerFrom = :consumerFrom and :consumerFrom = :consumerFrom )
+				</#if>
+				<#if key["consumerFrom"]=="国外"> 
+					and (t.consumerFrom = :consumerFrom and :consumerFrom = :consumerFrom )
+				</#if>
+				<#if key["consumerFrom"]=="3"> 
+					and (:consumerFrom = :consumerFrom )
+				</#if>
+			</#if>
+			<#if key["complaintDate"]??>
+				and t.complaintDate = :complaintDate
+			</#if>
+			<#if key["planFinishDate"]??>
+				and t.planFinishDate = :planFinishDate
+			</#if>
+			<#if key["realFinishDate"]??>
+				and t.realFinishDate = :realFinishDate
+			</#if>
+			<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+			</#if>
+		]]>
+	</sql>
+	
+	<sql comment="投诉列表" id="complaint-serial">
+		<![CDATA[
+			From Complaint c where c.complaintCode like :code order by c.complaintCode desc
+		]]>
+	</sql>
+</sqls>

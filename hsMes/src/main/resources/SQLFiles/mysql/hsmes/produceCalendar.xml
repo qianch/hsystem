@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="ProduceCalendar">
+	<sql comment="排产日历列表" id="produceCalendar-list">
+		<![CDATA[
+			SELECT
+				c.startTime,
+				c.endTime,
+				c.salesOrderCode,
+				co.CONSUMERNAME
+			FROM
+				hs_produce_calendar c
+			LEFT JOIN hs_sales_order o on o.salesOrderCode=c.salesOrderCode
+			LEFT join hs_consumer co on co.id=o.salesOrderConsumerId
+			WHERE
+				c.startTime BETWEEN :start AND :end
+			OR c.endTime BETWEEN :start and :end
+		]]>
+	</sql>
+</sqls>

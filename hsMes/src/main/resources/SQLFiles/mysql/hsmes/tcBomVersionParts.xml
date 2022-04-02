@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="TcBomVersionPartsDaoImpl">
+	<sql comment="部件列表" id="part-list">
+		<![CDATA[
+		select t.* from  HS_TC_PROC_BOM_VERSION_PARTS t where 1=1 and isDeleted<>1
+		<#if key["id"]??>
+			and t.TCPROCBOMVERSOINID in (:id) and isNull(tcProcBomVersionParentParts)
+		</#if>
+		<#if key["ids"]??>
+			and t.TCPROCBOMVERSIONPARENTPARTS in (:ids)
+		</#if>
+		<#if key["name"]??>
+			and t.TCPROCBOMVERSIONPARTSNAME in (:name)
+		</#if>
+		<#if key["code"]??>
+			and t.TCPROCBOMVERSIONPARTSCUTCODE in (:code)
+		</#if>
+		<#if key["idd"]??>
+			and t.id in (:idd)
+		</#if>
+		]]>
+	</sql>
+
+	<sql comment="部件列表" id="partMirror-list">
+		<![CDATA[
+		select t.* from  HS_TC_PROC_BOM_VERSION_PARTS_MIRROR t where 1=1
+		<#if key["id"]??>
+			and t.TCPROCBOMVERSOINID in (:id) and isNull(tcProcBomVersionParentParts)
+		</#if>
+		<#if key["ids"]??>
+			and t.TCPROCBOMVERSIONPARENTPARTS in (:ids)
+		</#if>
+		<#if key["name"]??>
+			and t.TCPROCBOMVERSIONPARTSNAME in (:name)
+		</#if>
+		<#if key["code"]??>
+			and t.TCPROCBOMVERSIONPARTSCUTCODE in (:code)
+		</#if>
+		<#if key["idd"]??>
+			and t.id in (:idd)
+		</#if>
+		]]>
+	</sql>
+</sqls>

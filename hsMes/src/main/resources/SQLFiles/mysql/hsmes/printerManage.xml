@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="PrinterManageDaoImpl">
+	<sql comment="查询所有打印机" id="printerManage-list">
+		<![CDATA[
+			SELECT
+				p1.id, 
+				p1.printerIp,
+				p1.printerName,
+				p1.printerTxtName,
+				p1.departmentId,
+				p2.NAME AS DEPARTMENT
+			FROM
+				hs_printer p1
+			LEFT JOIN platform_department p2 ON p1.departmentId = p2.id 
+		]]>
+	</sql>
+
+	<sql comment="查询所有部门" id="department-Combobox">
+		<![CDATA[
+			SELECT
+				p1.id,
+				p1. NAME AS DEPARTMENT
+			FROM
+				platform_department p1
+			 
+		]]>
+	</sql>
+
+</sqls>

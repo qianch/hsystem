@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="FeedingRecordDaoImpl">
+	<sql comment="编织投料记录" id="feedingRecord-list-weave">
+		<![CDATA[
+			SELECT
+                p.consumerName,
+                cs.consumerSimpleName,
+                p.salesOrderCode,
+                p.planCode,
+                p.batchCode,
+                p.productModel,
+                p.productName,
+                fr.materialCode,
+                fr.deviceCode,
+                fr.feedingDate,
+                u.userName,
+                m.materialModel,
+                mss.weight
+            FROM
+                hs_feeding_record fr,
+
+                platform_user u,
+                hs_material_stock_state mss,
+                hs_consumer cs,
+                hs_material m,
+                hs_weave_plan p
+                LEFT JOIN hs_produce_plan pp
+                ON pp.producePlanCode = p.planCode
+            WHERE
+                fr.weaveId = p.id  AND
+                u.id = fr.operateUserId
+            AND mss.palletCode=fr.materialCode
+            and mss.mid=m.id
+            AND cs.id = p.consumerId
+		<#if key["consumerSimpleName"]??>
+			 and cs.consumerSimpleName like :consumerSimpleName
+		</#if>
+		<#if key["salesorderCode"]??>
+			and (p.salesOrderCode like (:salesorderCode))
+		</#if>
+		<#if key["planCode"]??>
+			and (p.planCode like (:planCode))
+		</#if>
+		<#if key["productName"]??>
+			and (p.productName LIKE (:productName))
+		</#if>
+		<#if key["materialcode"]??>
+			and (fr.materialcode like :materialcode) 
+		</#if>
+		<#if key["workShop"]??>
+			and pp.workshop=:workShop
+		</#if>
+		<#if key["deviceCode"]??>
+				and fr.deviceCode in (:deviceCode)
+			</#if>
+		<#if key["start"]??>
+			and (fr.feedingDate > (:start))
+		</#if>
+		<#if key["end"]??>
+			and (fr.feedingDate < (:end))
+		</#if>
+		<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+			</#if>
+			<#if !key["sort"]??&&!key["order"]??>
+				order by fr.feedingDate desc
+			</#if>
+		]]>
+	</sql>
+
+
+	<sql comment="编织投料记录" id="feedingRecord-list-weave1">
+		<![CDATA[
+			SELECT
+                fr.materialCode,
+                fr.deviceCode,
+                fr.feedingDate,
+                u.userName,
+                m.materialModel,
+                mss.weight
+            FROM
+                hs_feeding_record fr
+                left join platform_user u on u.id = fr.operateUserId
+                left join hs_material_stock_state mss on mss.palletCode=fr.materialCode
+				left join  hs_material m on mss.mid=m.id
+            WHERE
+             fr.materialCode is not null
+
+
+		<#if key["materialcode"]??>
+			and (fr.materialcode like :materialcode)
+		</#if>
+
+		<#if key["deviceCode"]??>
+				and fr.deviceCode in (:deviceCode)
+			</#if>
+		<#if key["start"]??>
+			and (fr.feedingDate > (:start))
+		</#if>
+		<#if key["end"]??>
+			and (fr.feedingDate < (:end))
+		</#if>
+
+		]]>
+	</sql>
+
+		<sql comment="裁剪投料记录" id="feedingRecord-list-cut">
+		<![CDATA[
+SELECT
+	cp.consumerName,
+cp.salesOrderCode,
+cp.batchCode,
+cp.planCode,
+cp.productModel,
+cp.productName,
+fr.rollCode,
+ts.productName as FEEDPRODUCTNAME,
+fr.deviceCode,
+fr.feedingDate,
+u.userName,
+c.consumerSimpleName
+FROM
+	hs_feeding_record fr,
+	hs_cut_plan cp,
+platform_user u,
+	hs_totalstatistics ts,
+		hs_consumer c
+WHERE
+	fr.cutId = cp.id AND u.id=fr.operateUserId
+AND  c.id=cp.consumerId
+AND ts.rollBarcode = fr.rollCode
+	<#if key["consumerName"]??>
+			and (cp.consumerName like (:consumerName))
+		</#if>
+		<#if key["salesorderCode"]??>
+			and (cp.salesOrderCode like (:salesorderCode))
+		</#if>
+		<#if key["planCode"]??>
+			and (cp.planCode like (:planCode))
+		</#if>
+		<#if key["productName"]??>
+			and (cp.productName LIKE (:productName))
+		</#if>
+		<#if key["rollcode"]??>
+			and (fr.rollCode like :rollcode) 
+		</#if>
+		<#if key["start"]??>
+			and (fr.feedingDate > (:start))
+		</#if>
+		<#if key["end"]??>
+			and (fr.feedingDate < (:end))
+		</#if>
+		<#if key["sort"]??&&key["order"]??>
+			order by ${key["sort"]} ${key["order"]}
+		</#if>
+		<#if !key["sort"]??&&!key["order"]??>
+			order by fr.feedingDate desc
+		</#if>	
+		]]>
+	</sql>
+
+
+</sqls>

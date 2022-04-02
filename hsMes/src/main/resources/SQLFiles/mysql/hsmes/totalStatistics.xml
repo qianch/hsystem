@@ -1,0 +1,975 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="TotalStatisticsServiceImpl">
+	<sql comment="综合统计" id="totalStatistics-list">
+		<![CDATA[
+		SELECT
+			ht.*, t.endPack ,t.rollCountInTray rollCount,tb.isOpened,
+		 CASE
+		WHEN pb.isAbandon IS NOT NULL THEN
+			pb.isAbandon
+		WHEN rb.isAbandon IS NOT NULL THEN
+			rb.isAbandon
+		ELSE
+			pb.isAbandon
+		END AS isAbandon,
+		 CASE
+		WHEN rb.salesOrderDetailId IS NOT NULL THEN
+			(SELECT sod.salesOrderSubCodePrint from hs_sales_order_detail sod WHERE id=rb.salesOrderDetailId
+			<#if key["salesOrderSubCodePrint"]??>
+				 and sod.salesOrderSubCodePrint like :salesOrderSubCodePrint
+			</#if>
+			)
+		WHEN bb.salesOrderDetailId IS NOT NULL THEN
+			(SELECT sod.salesOrderSubCodePrint from hs_sales_order_detail sod WHERE id=bb.salesOrderDetailId
+			<#if key["salesOrderSubCodePrint"]??>
+				 and sod.salesOrderSubCodePrint like :salesOrderSubCodePrint
+			</#if>)
+		WHEN pb.salesOrderDetailId IS NOT NULL THEN
+			(SELECT sod.salesOrderSubCodePrint from hs_sales_order_detail sod WHERE id=pb.salesOrderDetailId
+			<#if key["salesOrderSubCodePrint"]??>
+				 and sod.salesOrderSubCodePrint like :salesOrderSubCodePrint
+			</#if>)
+		ELSE
+		(SELECT sod.salesOrderSubCodePrint from hs_sales_order_detail sod WHERE id=tb.salesOrderDetailId
+		<#if key["salesOrderSubCodePrint"]??>
+				 and sod.salesOrderSubCodePrint like :salesOrderSubCodePrint
+		</#if>)
+		END AS salesOrderSubCodePrint,
+		 CASE
+		WHEN r.memo IS NOT NULL THEN
+			r.memo
+		WHEN b.memo IS NOT NULL THEN
+			b.memo
+		ELSE
+			t.memo
+		END AS memo,
+		 CASE
+		WHEN r.rollRealLength IS NULL
+		OR r.rollRealLength = 0 THEN
+			ht.productLength
+		ELSE
+			r.rollRealLength
+		END AS rollRealLength,
+		hc.consumerSimpleName,hc.CONSUMERCODE,
+		department.name as departmentName
+		FROM
+			hs_totalstatistics ht
+		LEFT JOIN hs_roll r ON r.rollBarcode = ht.rollBarcode
+		LEFT JOIN hs_box b ON b.boxBarcode = ht.rollBarcode
+		LEFT JOIN hs_Box_Barcode bb on bb.barcode=ht.rollBarcode
+		LEFT JOIN hs_tray_barcode tb ON tb.barcode= ht.rollBarcode
+		LEFT JOIN hs_tray t ON t.trayBarcode = tb.barcode
+		LEFT JOIN hs_roll_barcode rb ON rb.barcode = ht.rollBarcode
+		LEFT JOIN hs_part_barcode pb ON pb.barcode = ht.rollBarcode
+		left join hs_consumer hc on hc.CONSUMERNAME=ht.CONSUMERNAME
+		LEFT JOIN hs_device device ON device.deviceCode=ht.deviceCode
+		LEFT JOIN platform_department department ON department.id=device.deviceDepartmentId
+		WHERE
+			1 = 1
+		<#if key["isNameLock"]??>
+			and ht.isNameLock like :isNameLock
+		</#if>
+		<#if key["rollBarcode"]??>
+			and (ht.rollBarcode like :rollBarcode)
+		</#if>
+		<#if key["CONSUMERNAME"]??>
+			and ht.CONSUMERNAME like :CONSUMERNAME
+		</#if>
+		<#if key["CONSUMERCODE"]??>
+			and hc.CONSUMERCODE like :CONSUMERCODE
+		</#if>
+		<#if key["CONSUMERSIMPLENAME"]??>
+			and hc.consumerSimpleName like :CONSUMERSIMPLENAME
+		</#if>
+		<#if key["loginName"]??>
+			and ht.loginName like :loginName
+		</#if>
+		<#if key["rollqualitygradecode"]??>
+			and ht.ROLLQUALITYGRADECODE like :rollqualitygradecode
+		</#if>
+		<#if key["deviceCode"]??>
+			and ht.deviceCode like :deviceCode
+		</#if>
+
+		<#if key["batchCode"]??>
+			and ht.batchCode like :batchCode
+		</#if>
+		<#if key["name"]??>
+				and (ht.`name` = :name or ht.name in (select name  from  platform_department where code =:name))
+		</#if>
+		<#if key["workshopcode"]??>
+				and department.code = :workshopcode
+		</#if>
+		<#if key["productModel"]??>
+			and ht.productModel like :productModel
+		</#if>
+		<#if key["salesOrderCode"]??>
+			and ht.salesOrderCode like :salesOrderCode
+		</#if>
+		<#if key["isPacked"]??>
+			and ht.isPacked = :isPacked
+		</#if>
+		<#if key["isOpened"]??>
+			and tb.isOpened = :isOpened
+		</#if>
+		<#if key["producePlanCode"]??>
+			and ht.producePlanCode like :producePlanCode
+		</#if>
+		<#if key["start"]??&&key["end"]??>
+			and ht.rollOutputTime between :start and :end
+		</#if>
+		<#if key["start"]??&&!key["end"]??>
+			and ht.rollOutputTime > :start
+		</#if>
+		<#if !key["start"]??&&key["end"]??>
+			and ht.rollOutputTime < :end
+		</#if>
+		<#if key["state"]??>
+			and ht.state = :state
+		</#if>
+		<#if key["isAbandon"]??>
+			and pb.isAbandon = :isAbandon
+		</#if>
+
+		<#if key["isLocked"]??>
+			<#if key["isLocked"]=="-1">
+				and (ht.isLocked = :isLocked or ht.isLocked=0)
+			<#else>
+				and ht.isLocked = :isLocked
+			</#if>
+		</#if>
+
+			<#if key["sort"]??&&key["order"]??>
+					order by ${key["sort"]} ${key["order"]}
+				<#else>
+					order by ht.id desc
+			</#if>
+
+
+		]]>
+	</sql>
+	<sql comment="根据箱条码查询" id="totalStatistics-list-box">
+		<![CDATA[
+		SELECT
+			ht.*, t.endPack ,tb.isOpened,
+		 CASE
+		WHEN pb.isAbandon IS NOT NULL THEN
+			pb.isAbandon
+		WHEN rb.isAbandon IS NOT NULL THEN
+			rb.isAbandon
+		ELSE
+			pb.isAbandon
+		END AS isAbandon,
+	     CASE
+		WHEN r.memo IS NOT NULL THEN
+			r.memo
+		WHEN b.memo IS NOT NULL THEN
+			b.memo
+		ELSE
+			t.memo
+		END AS memo,
+		 CASE
+		WHEN rb.salesOrderDetailId IS NOT NULL THEN
+			(SELECT sod.salesOrderSubCodePrint from hs_sales_order_detail sod WHERE id=rb.salesOrderDetailId
+			<#if key["salesOrderSubCodePrint"]??>
+				 and sod.salesOrderSubCodePrint like :salesOrderSubCodePrint
+			</#if>)
+		WHEN bb.salesOrderDetailId IS NOT NULL THEN
+			(SELECT sod.salesOrderSubCodePrint from hs_sales_order_detail sod WHERE id=bb.salesOrderDetailId
+			<#if key["salesOrderSubCodePrint"]??>
+				 and sod.salesOrderSubCodePrint like :salesOrderSubCodePrint
+			</#if>)
+		WHEN pb.salesOrderDetailId IS NOT NULL THEN
+			(SELECT sod.salesOrderSubCodePrint from hs_sales_order_detail sod WHERE id=pb.salesOrderDetailId
+			<#if key["salesOrderSubCodePrint"]??>
+				 and sod.salesOrderSubCodePrint like :salesOrderSubCodePrint
+			</#if>)
+		ELSE
+		(SELECT sod.salesOrderSubCodePrint from hs_sales_order_detail sod WHERE id=tb.salesOrderDetailId
+		<#if key["salesOrderSubCodePrint"]??>
+				 and sod.salesOrderSubCodePrint like :salesOrderSubCodePrint
+			</#if>)
+		END AS salesOrderSubCodePrint,
+		 CASE
+		WHEN r.rollRealLength IS NULL
+		OR r.rollRealLength = 0 THEN
+			ht.productLength
+		ELSE
+			r.rollRealLength
+		END AS rollRealLength,
+		department.name as departmentName
+		FROM
+			hs_totalstatistics ht
+		LEFT JOIN hs_roll r ON r.rollBarcode = ht.rollBarcode
+		LEFT JOIN hs_box b ON b.boxBarcode = ht.rollBarcode
+		LEFT JOIN hs_Box_Roll br ON br.boxBarcode = b.boxBarcode
+		LEFT JOIN hs_Box_Barcode bb on bb.barcode=ht.rollBarcode
+		LEFT JOIN hs_tray t ON t.trayBarcode = ht.rollBarcode
+		LEFT JOIN hs_tray_barcode tb ON t.trayBarcode=tb.barcode
+		LEFT JOIN hs_roll_barcode rb ON rb.barcode = ht.rollBarcode
+		LEFT JOIN hs_part_barcode pb ON pb.barcode = ht.rollBarcode
+		LEFT JOIN hs_device device ON device.deviceCode=ht.deviceCode
+		LEFT JOIN platform_department department ON department.id=device.deviceDepartmentId
+		where barcodeType = 'box'
+		<#if key["rollBarcode"]??>
+			and (ht.rollBarcode like :rollBarcode)
+		</#if>
+		<#if key["CONSUMERNAME"]??>
+			and ht.CONSUMERNAME like :CONSUMERNAME
+		</#if>
+		<#if key["loginName"]??>
+			and ht.loginName like :loginName
+		</#if>
+		<#if key["rollqualitygradecode"]??>
+			and ht.ROLLQUALITYGRADECODE like :rollqualitygradecode
+		</#if>
+		<#if key["deviceCode"]??>
+			and ht.deviceCode like :deviceCode
+		</#if>
+
+		<#if key["batchCode"]??>
+			and ht.batchCode like :batchCode
+		</#if>
+		<#if key["name"]??>
+				and (ht.`name` = :name or ht.name in (select name  from  platform_department where code =:name))
+		</#if>
+			<#if key["workshopcode"]??>
+				and department.code = :workshopcode
+		</#if>
+		<#if key["productModel"]??>
+			and ht.productModel like :productModel
+		</#if>
+		<#if key["salesOrderCode"]??>
+			and ht.salesOrderCode like :salesOrderCode
+		</#if>
+		<#if key["isOpened"]??>
+			and tb.isOpened = :isOpened
+		</#if>
+		<#if key["isPacked"]??>
+			and ht.isPacked = :isPacked
+		</#if>
+		<#if key["producePlanCode"]??>
+			and ht.producePlanCode like :producePlanCode
+		</#if>
+		<#if key["start"]??&&key["end"]??>
+			and ht.rollOutputTime between :start and :end
+		</#if>
+		<#if key["start"]??&&!key["end"]??>
+			and ht.rollOutputTime > :start
+		</#if>
+		<#if !key["start"]??&&key["end"]??>
+			and ht.rollOutputTime < :end
+		</#if>
+
+		<#if key["state"]??>
+			and ht.state = :state
+		</#if>
+		<#if key["isAbandon"]??>
+			and pb.isAbandon = :isAbandon
+		</#if>
+		<#if key["isLocked"]??>
+			<#if key["isLocked"]=="-1">
+				and (ht.isLocked = :isLocked or ht.isLocked=0)
+			<#else>
+				and ht.isLocked = :isLocked
+			</#if>
+		</#if>
+		<#if key["sort"]??&&key["order"]??>
+					order by ${key["sort"]} ${key["order"]}
+				<#else>
+					order by id desc
+		</#if>
+		]]>
+	</sql>
+	<sql comment="根据托条码查询" id="totalStatistics-list-tray">
+		<![CDATA[
+		SELECT
+			ht.*, t.endPack ,t.rollCountInTray rollCount,tb.isOpened,
+		 CASE
+		WHEN pb.isAbandon IS NOT NULL THEN
+			pb.isAbandon
+		WHEN rb.isAbandon IS NOT NULL THEN
+			rb.isAbandon
+		ELSE
+			pb.isAbandon
+		END AS isAbandon,
+	     CASE
+		WHEN r.memo IS NOT NULL THEN
+			r.memo
+		WHEN b.memo IS NOT NULL THEN
+			b.memo
+		ELSE
+			t.memo
+		END AS memo,
+		 CASE
+		WHEN rb.salesOrderDetailId IS NOT NULL THEN
+			(SELECT sod.salesOrderSubCodePrint from hs_sales_order_detail sod WHERE id=rb.salesOrderDetailId
+			<#if key["salesOrderSubCodePrint"]??>
+				 and sod.salesOrderSubCodePrint like :salesOrderSubCodePrint
+			</#if>)
+		WHEN bb.salesOrderDetailId IS NOT NULL THEN
+			(SELECT sod.salesOrderSubCodePrint from hs_sales_order_detail sod WHERE id=bb.salesOrderDetailId
+			<#if key["salesOrderSubCodePrint"]??>
+				 and sod.salesOrderSubCodePrint like :salesOrderSubCodePrint
+			</#if>)
+		WHEN pb.salesOrderDetailId IS NOT NULL THEN
+			(SELECT sod.salesOrderSubCodePrint from hs_sales_order_detail sod WHERE id=pb.salesOrderDetailId
+			<#if key["salesOrderSubCodePrint"]??>
+				 and sod.salesOrderSubCodePrint like :salesOrderSubCodePrint
+			</#if>)
+		ELSE
+		(SELECT sod.salesOrderSubCodePrint from hs_sales_order_detail sod WHERE id=tb.salesOrderDetailId
+		<#if key["salesOrderSubCodePrint"]??>
+				 and sod.salesOrderSubCodePrint like :salesOrderSubCodePrint
+			</#if>)
+		END AS salesOrderSubCodePrint,
+		 CASE
+		WHEN r.rollRealLength IS NULL
+		OR r.rollRealLength = 0 THEN
+			ht.productLength
+		ELSE
+			r.rollRealLength
+		END AS rollRealLength,
+		department.name as departmentName
+		FROM
+			hs_totalstatistics ht
+		LEFT JOIN hs_roll r ON r.rollBarcode = ht.rollBarcode
+		LEFT JOIN hs_box b ON b.boxBarcode = ht.rollBarcode
+		LEFT JOIN hs_Box_Barcode bb on bb.barcode=ht.rollBarcode
+		LEFT JOIN hs_tray_barcode tb ON tb.barcode= ht.rollBarcode
+		LEFT JOIN hs_tray t ON t.trayBarcode = tb.barcode
+		LEFT JOIN hs_roll_barcode rb ON rb.barcode = ht.rollBarcode
+		LEFT JOIN hs_part_barcode pb ON pb.barcode = ht.rollBarcode
+		LEFT JOIN hs_device device ON device.deviceCode=ht.deviceCode
+		LEFT JOIN platform_department department ON department.id=device.deviceDepartmentId
+		where barcodeType = 'tray'
+		<#if key["rollBarcode"]??>
+			and (ht.rollBarcode like :rollBarcode)
+		</#if>
+		<#if key["CONSUMERNAME"]??>
+			and ht.CONSUMERNAME like :CONSUMERNAME
+		</#if>
+		<#if key["loginName"]??>
+			and ht.loginName like :loginName
+		</#if>
+		<#if key["rollqualitygradecode"]??>
+			and ht.ROLLQUALITYGRADECODE like :rollqualitygradecode
+		</#if>
+		<#if key["deviceCode"]??>
+			and ht.deviceCode like :deviceCode
+		</#if>
+
+		<#if key["batchCode"]??>
+			and ht.batchCode like :batchCode
+		</#if>
+		<#if key["name"]??>
+				and (ht.`name` = :name or ht.name in (select name  from  platform_department where code =:name))
+		</#if>
+			<#if key["workshopcode"]??>
+				and department.code = :workshopcode
+		</#if>
+		<#if key["productModel"]??>
+			and ht.productModel like :productModel
+		</#if>
+		<#if key["salesOrderCode"]??>
+			and ht.salesOrderCode like :salesOrderCode
+		</#if>
+		<#if key["isOpened"]??>
+			and tb.isOpened = :isOpened
+		</#if>
+		<#if key["isPacked"]??>
+			and ht.isPacked = :isPacked
+		</#if>
+		<#if key["producePlanCode"]??>
+			and ht.producePlanCode like :producePlanCode
+		</#if>
+		<#if key["start"]??&&key["end"]??>
+			and ht.rollOutputTime between :start and :end
+		</#if>
+		<#if key["start"]??&&!key["end"]??>
+			and ht.rollOutputTime > :start
+		</#if>
+		<#if !key["start"]??&&key["end"]??>
+			and ht.rollOutputTime < :end
+		</#if>
+		<#if key["state"]??>
+			<#if key["state"]=="0">
+				and (ht.state = :state or ht.state is null)
+			<#else>
+				and ht.state = :state
+			</#if>
+		</#if>
+		<#if key["isAbandon"]??>
+			and pb.isAbandon = :isAbandon
+		</#if>
+		<#if key["isLocked"]??>
+			<#if key["isLocked"]=="-1">
+				and (ht.isLocked = :isLocked or ht.isLocked=0)
+			<#else>
+				and ht.isLocked = :isLocked
+			</#if>
+		</#if>
+		<#if key["sort"]??&&key["order"]??>
+					order by ${key["sort"]} ${key["order"]}
+				<#else>
+					order by id desc
+			</#if>
+		]]>
+	</sql>
+	<sql comment="根据部件条码查询" id="totalStatistics-list-roll">
+		<![CDATA[
+		SELECT
+			ht.*, t.endPack ,tb.isOpened,
+
+		 CASE
+		WHEN pb.isAbandon IS NOT NULL THEN
+			pb.isAbandon
+		WHEN rb.isAbandon IS NOT NULL THEN
+			rb.isAbandon
+		ELSE
+			pb.isAbandon
+		END AS isAbandon,
+		 CASE
+		WHEN r.memo IS NOT NULL THEN
+			r.memo
+		WHEN b.memo IS NOT NULL THEN
+			b.memo
+		ELSE
+			t.memo
+		END AS memo,
+		 CASE
+		WHEN rb.salesOrderDetailId IS NOT NULL THEN
+			(SELECT sod.salesOrderSubCodePrint from hs_sales_order_detail sod WHERE id=rb.salesOrderDetailId
+			<#if key["salesOrderSubCodePrint"]??>
+				 and sod.salesOrderSubCodePrint like :salesOrderSubCodePrint
+			</#if>)
+		WHEN bb.salesOrderDetailId IS NOT NULL THEN
+			(SELECT sod.salesOrderSubCodePrint from hs_sales_order_detail sod WHERE id=bb.salesOrderDetailId
+			<#if key["salesOrderSubCodePrint"]??>
+				 and sod.salesOrderSubCodePrint like :salesOrderSubCodePrint
+			</#if>)
+		WHEN pb.salesOrderDetailId IS NOT NULL THEN
+			(SELECT sod.salesOrderSubCodePrint from hs_sales_order_detail sod WHERE id=pb.salesOrderDetailId
+			<#if key["salesOrderSubCodePrint"]??>
+				 and sod.salesOrderSubCodePrint like :salesOrderSubCodePrint
+			</#if>)
+		ELSE
+		(SELECT sod.salesOrderSubCodePrint from hs_sales_order_detail sod WHERE id=tb.salesOrderDetailId
+		<#if key["salesOrderSubCodePrint"]??>
+				 and sod.salesOrderSubCodePrint like :salesOrderSubCodePrint
+			</#if>)
+		END AS salesOrderSubCodePrint,
+		 CASE
+		WHEN r.rollRealLength IS NULL
+		OR r.rollRealLength = 0 THEN
+			ht.productLength
+		ELSE
+			r.rollRealLength
+		END AS rollRealLength,
+		department.name as departmentName
+		FROM
+			hs_totalstatistics ht
+		LEFT JOIN hs_roll r ON r.rollBarcode = ht.rollBarcode
+		LEFT JOIN hs_box b ON b.boxBarcode = ht.rollBarcode
+		LEFT JOIN hs_Box_Barcode bb on bb.barcode=b.boxBarcode
+		LEFT JOIN hs_tray_barcode tb ON tb.barcode= ht.rollBarcode
+		LEFT JOIN hs_tray t ON t.trayBarcode = tb.barcode
+		LEFT JOIN hs_roll_barcode rb ON rb.barcode = ht.rollBarcode
+		LEFT JOIN hs_part_barcode pb ON pb.barcode = ht.rollBarcode
+		LEFT JOIN hs_device device ON device.deviceCode=ht.deviceCode
+		LEFT JOIN platform_department department ON department.id=device.deviceDepartmentId
+		where barcodeType = 'roll'
+		<#if key["rollBarcode"]??>
+			and (ht.rollBarcode like :rollBarcode)
+		</#if>
+		<#if key["CONSUMERNAME"]??>
+			and ht.CONSUMERNAME like :CONSUMERNAME
+		</#if>
+		<#if key["loginName"]??>
+			and ht.loginName like :loginName
+		</#if>
+		<#if key["rollqualitygradecode"]??>
+			and ht.ROLLQUALITYGRADECODE like :rollqualitygradecode
+		</#if>
+		<#if key["deviceCode"]??>
+			and ht.deviceCode like :deviceCode
+		</#if>
+
+		<#if key["batchCode"]??>
+			and ht.batchCode like :batchCode
+		</#if>
+		<#if key["name"]??>
+			and (ht.`name` = :name or ht.name in (select name  from  platform_department where code =:name))
+		</#if>
+			<#if key["workshopcode"]??>
+				and department.code = :workshopcode
+		</#if>
+		<#if key["productModel"]??>
+			and ht.productModel like :productModel
+		</#if>
+		<#if key["salesOrderCode"]??>
+			and ht.salesOrderCode like :salesOrderCode
+		</#if>
+		<#if key["isOpened"]??>
+			and tb.isOpened = :isOpened
+		</#if>
+		<#if key["isPacked"]??>
+			and ht.isPacked = :isPacked
+		</#if>
+		<#if key["producePlanCode"]??>
+			and ht.producePlanCode like :producePlanCode
+		</#if>
+		<#if key["start"]??&&key["end"]??>
+			and ht.rollOutputTime between :start and :end
+		</#if>
+		<#if key["start"]??&&!key["end"]??>
+			and ht.rollOutputTime > :start
+		</#if>
+		<#if !key["start"]??&&key["end"]??>
+			and ht.rollOutputTime < :end
+		</#if>
+
+		<#if key["state"]??>
+			and ht.state = :state
+		</#if>
+		<#if key["isAbandon"]??>
+			and pb.isAbandon = :isAbandon
+		</#if>
+		<#if key["isLocked"]??>
+			<#if key["isLocked"]=="-1">
+				and (ht.isLocked = :isLocked or ht.isLocked=0)
+			<#else>
+				and ht.isLocked = :isLocked
+			</#if>
+		</#if>
+		<#if key["sort"]??&&key["order"]??>
+					order by ${key["sort"]} ${key["order"]}
+				<#else>
+					order by id desc
+			</#if>
+		]]>
+	</sql>
+	<sql comment="根据部件条码查询" id="totalStatistics-list-part">
+		<![CDATA[
+		SELECT
+			ht.*, t.endPack ,tb.isOpened,
+		 CASE
+		WHEN pb.isAbandon IS NOT NULL THEN
+			pb.isAbandon
+		WHEN rb.isAbandon IS NOT NULL THEN
+			rb.isAbandon
+		ELSE
+			pb.isAbandon
+		END AS isAbandon,
+		 CASE
+		WHEN rb.salesOrderDetailId IS NOT NULL THEN
+			(SELECT sod.salesOrderSubCodePrint from hs_sales_order_detail sod WHERE id=rb.salesOrderDetailId
+			<#if key["salesOrderSubCodePrint"]??>
+				 and sod.salesOrderSubCodePrint like :salesOrderSubCodePrint
+			</#if>)
+		WHEN bb.salesOrderDetailId IS NOT NULL THEN
+			(SELECT sod.salesOrderSubCodePrint from hs_sales_order_detail sod WHERE id=bb.salesOrderDetailId
+			<#if key["salesOrderSubCodePrint"]??>
+				 and sod.salesOrderSubCodePrint like :salesOrderSubCodePrint
+			</#if>)
+		WHEN pb.salesOrderDetailId IS NOT NULL THEN
+			(SELECT sod.salesOrderSubCodePrint from hs_sales_order_detail sod WHERE id=pb.salesOrderDetailId
+			<#if key["salesOrderSubCodePrint"]??>
+				 and sod.salesOrderSubCodePrint like :salesOrderSubCodePrint
+			</#if>)
+		ELSE
+		(SELECT sod.salesOrderSubCodePrint from hs_sales_order_detail sod WHERE id=tb.salesOrderDetailId)
+		END AS salesOrderSubCodePrint,
+		<#if key["salesOrderSubCodePrint"]??>
+				 and sod.salesOrderSubCodePrint like :salesOrderSubCodePrint
+			</#if>
+	     CASE
+		WHEN r.memo IS NOT NULL THEN
+			r.memo
+		WHEN b.memo IS NOT NULL THEN
+			b.memo
+		ELSE
+			t.memo
+		END AS memo,
+		 CASE
+		WHEN r.rollRealLength IS NULL
+		OR r.rollRealLength = 0 THEN
+			ht.productLength
+		ELSE
+			r.rollRealLength
+		END AS rollRealLength,
+		department.name as departmentName
+		FROM
+			hs_totalstatistics ht
+		LEFT JOIN hs_roll r ON r.rollBarcode = ht.rollBarcode
+		LEFT JOIN hs_box b ON b.boxBarcode = ht.rollBarcode
+		LEFT JOIN hs_Box_Barcode bb on bb.barcode=b.boxBarcode
+		LEFT JOIN hs_tray_barcode tb ON tb.barcode= ht.rollBarcode
+		LEFT JOIN hs_tray t ON t.trayBarcode = tb.barcode
+		LEFT JOIN hs_roll_barcode rb ON rb.barcode = ht.rollBarcode
+		LEFT JOIN hs_part_barcode pb ON pb.barcode = ht.rollBarcode
+		LEFT JOIN hs_device device ON device.deviceCode=ht.deviceCode
+		LEFT JOIN platform_department department ON department.id=device.deviceDepartmentId
+		where barcodeType = 'part'
+		<#if key["rollBarcode"]??>
+			and (ht.rollBarcode like :rollBarcode)
+		</#if>
+		<#if key["CONSUMERNAME"]??>
+			and ht.CONSUMERNAME like :CONSUMERNAME
+		</#if>
+		<#if key["loginName"]??>
+			and ht.loginName like :loginName
+		</#if>
+		<#if key["rollqualitygradecode"]??>
+			and ht.ROLLQUALITYGRADECODE like :rollqualitygradecode
+		</#if>
+		<#if key["deviceCode"]??>
+			and ht.deviceCode like :deviceCode
+		</#if>
+
+		<#if key["batchCode"]??>
+			and ht.batchCode like :batchCode
+		</#if>
+		<#if key["name"]??>
+				and (ht.`name` = :name or ht.name in (select name  from  platform_department where code =:name))
+		</#if>
+		<#if key["workshopcode"]??>
+				and department.code = :workshopcode
+		</#if>
+		<#if key["productModel"]??>
+			and ht.productModel like :productModel
+		</#if>
+		<#if key["salesOrderCode"]??>
+			and ht.salesOrderCode like :salesOrderCode
+		</#if>
+		<#if key["isOpened"]??>
+			and tb.isOpened = :isOpened
+		</#if>
+		<#if key["isPacked"]??>
+			and ht.isPacked = :isPacked
+		</#if>
+		<#if key["producePlanCode"]??>
+			and ht.producePlanCode like :producePlanCode
+		</#if>
+		<#if key["start"]??&&key["end"]??>
+			and ht.rollOutputTime between :start and :end
+		</#if>
+		<#if key["start"]??&&!key["end"]??>
+			and ht.rollOutputTime > :start
+		</#if>
+		<#if !key["start"]??&&key["end"]??>
+			and ht.rollOutputTime < :end
+		</#if>
+		<#if key["state"]??>
+			and ht.state = :state
+		</#if>
+		<#if key["isAbandon"]??>
+				and pb.isAbandon = :isAbandon
+		</#if>
+		<#if key["isLocked"]??>
+			<#if key["isLocked"]=="-1">
+				and (ht.isLocked = :isLocked or ht.isLocked=0)
+			<#else>
+				and ht.isLocked = :isLocked
+			</#if>
+		</#if>
+
+		<#if key["sort"]??&&key["order"]??>
+			order by ${key["sort"]} ${key["order"]}
+			<#else>
+			order by ht.id desc
+		</#if>
+		]]>
+	</sql>
+
+
+	<sql comment="综合统计数量" id="totalStatistics-list-count">
+		<![CDATA[
+		SELECT
+			 count(1) count
+		FROM
+				hs_totalstatistics ht
+		LEFT JOIN hs_roll r ON r.rollBarcode = ht.rollBarcode
+		LEFT JOIN hs_box b ON b.boxBarcode = ht.rollBarcode
+		LEFT JOIN hs_Box_Barcode bb on bb.barcode=ht.rollBarcode
+		LEFT JOIN hs_tray_barcode tb ON tb.barcode= ht.rollBarcode
+		LEFT JOIN hs_tray t ON t.trayBarcode = tb.barcode
+		LEFT JOIN hs_roll_barcode rb ON rb.barcode = ht.rollBarcode
+		LEFT JOIN hs_part_barcode pb ON pb.barcode = ht.rollBarcode
+		left join hs_consumer hc on hc.CONSUMERNAME=ht.CONSUMERNAME
+		LEFT JOIN hs_device device ON device.deviceCode=ht.deviceCode
+		LEFT JOIN platform_department department ON department.id=device.deviceDepartmentId
+		WHERE
+			1 = 1
+		<#if key["isNameLock"]??>
+			and ht.isNameLock like :isNameLock
+		</#if>
+		<#if key["rollBarcode"]??>
+			and (ht.rollBarcode like :rollBarcode)
+		</#if>
+		<#if key["CONSUMERNAME"]??>
+			and ht.CONSUMERNAME like :CONSUMERNAME
+		</#if>
+		<#if key["CONSUMERCODE"]??>
+			and hc.CONSUMERCODE like :CONSUMERCODE
+		</#if>
+		<#if key["CONSUMERSIMPLENAME"]??>
+			and hc.consumerSimpleName like :CONSUMERSIMPLENAME
+		</#if>
+		<#if key["loginName"]??>
+			and ht.loginName like :loginName
+		</#if>
+		<#if key["rollqualitygradecode"]??>
+			and ht.ROLLQUALITYGRADECODE like :rollqualitygradecode
+		</#if>
+		<#if key["deviceCode"]??>
+			and ht.deviceCode like :deviceCode
+		</#if>
+
+		<#if key["batchCode"]??>
+			and ht.batchCode like :batchCode
+		</#if>
+		<#if key["name"]??>
+				and (ht.`name` = :name or ht.name in (select name  from  platform_department where code =:name))
+		</#if>
+			<#if key["workshopcode"]??>
+				and department.code = :workshopcode
+		</#if>
+		<#if key["productModel"]??>
+			and ht.productModel like :productModel
+		</#if>
+		<#if key["salesOrderCode"]??>
+			and ht.salesOrderCode like :salesOrderCode
+		</#if>
+		<#if key["isPacked"]??>
+			and ht.isPacked = :isPacked
+		</#if>
+		<#if key["isOpened"]??>
+			and tb.isOpened = :isOpened
+		</#if>
+		<#if key["producePlanCode"]??>
+			and ht.producePlanCode like :producePlanCode
+		</#if>
+		<#if key["start"]??&&key["end"]??>
+			and ht.rollOutputTime between :start and :end
+		</#if>
+		<#if key["start"]??&&!key["end"]??>
+			and ht.rollOutputTime > :start
+		</#if>
+		<#if !key["start"]??&&key["end"]??>
+			and ht.rollOutputTime < :end
+		</#if>
+		<#if key["state"]??>
+			and ht.state = :state
+		</#if>
+		<#if key["isAbandon"]??>
+			and pb.isAbandon = :isAbandon
+		</#if>
+		<#if key["isLocked"]??>
+			<#if key["isLocked"]=="-1">
+				and (ht.isLocked = :isLocked or ht.isLocked=0)
+			<#else>
+				and ht.isLocked = :isLocked
+			</#if>
+		</#if>
+
+		
+
+		]]>
+	</sql>
+	<sql comment="查询是否被打包" id="totalStatistics-packed">
+		<![CDATA[
+			SELECT
+		(
+			(
+				SELECT
+					count(1)
+				FROM
+					hs_box_roll
+				WHERE
+					(
+						rollBarcode = :barcode
+						OR partBarcode = :barcode
+					)
+			) + (
+				SELECT
+					count(1)
+				FROM
+					hs_tray_box_roll
+				WHERE
+					boxBarcode = :barcode
+				OR rollBarcode = :barcode
+				OR partBarcode = :barcode
+			)
+		) count
+		]]>
+	</sql>
+
+	<sql comment="车间生产统计(产品大类、订单号、次号、车间) " id="shop-summary-list">
+		<![CDATA[	
+		SELECT fp.factoryProductName,fp.consumerProductName,ht.id, ht.state as states,ht.batchCode, fpc.categoryName, 		fpc.categoryCode,ht.producePlanCode, ht.salesOrderCode, ht.CONSUMERNAME,fp.productModel, ht.rollQualityGradeCode, ht.name, 					ht.rollOutputTime,ht.id AS ids,ROUND(IFNULL(SUM(ht.PRODUCTWEIGHT),0),2) AS productWeight,IFNULL(COUNT(ht.id),0) AS tnum
+		FROM hs_totalstatistics ht
+		INNER JOIN hs_roll_barcode rb ON rb.barcode = ht.rollBarcode
+		INNER JOIN hs_finishproduct fp ON fp.id = rb.salesProductId
+		INNER JOIN hs_finished_product_category fpc ON fpc.id = fp.fpcid
+		WHERE ht.barcodeType = 'roll' and rb.isAbandon = 0
+		<#if key["start"]??&&key["end"]??>
+			and ht.rollOutputTime between :start and :end
+		</#if>
+		<#if key["start"]??&&!key["end"]??>
+			and ht.rollOutputTime > :start
+		</#if>
+		<#if !key["start"]??&&key["end"]??>
+			and ht.rollOutputTime < :end
+		</#if>
+		<#if key["startTime"]??&&key["endTime"]??>
+			and ht.rollOutputTime between :startTime and :endTime
+		</#if>
+		<#if key["startTime"]??&&!key["endTime"]??>
+			and ht.rollOutputTime > :startTime
+		</#if>
+		<#if !key["startTime"]??&&key["endTime"]??>
+			and ht.rollOutputTime < :endTime
+		</#if>
+		<#if key["categoryName"]??>
+				and (fpc.categoryName like :categoryName)
+			</#if>
+			<#if key["categoryCode"]??>
+				and (fpc.categoryCode like :categoryCode)
+			</#if>
+			<#if key["CONSUMERNAME"]??>
+				and ht.CONSUMERNAME like :CONSUMERNAME
+			</#if>
+			<#if key["loginName"]??>
+				and ht.loginName like :loginName
+			</#if>
+			<#if key["rollqualitygradecode"]??>
+				and ht.ROLLQUALITYGRADECODE like :rollqualitygradecode
+			</#if>
+			<#if key["deviceCode"]??>
+				and ht.deviceCode like :deviceCode
+			</#if>
+			<#if key["name"]??>
+					and (ht.`name` = :name or ht.name in (select name  from  platform_department where code =:name))
+			</#if>
+				<#if key["workshopcode"]??>
+				and ht.workshopcode = :workshopcode
+		</#if>
+			<#if key["productModel"]??>
+				and fp.productModel like :productModel
+			</#if>
+			<#if key["salesOrderCode"]??>
+				and ht.salesOrderCode like :salesOrderCode
+			</#if>
+			<#if key["factoryProductName"]??>
+				and fp.factoryProductName like :factoryProductName
+			</#if>
+			<#if key["batchCodes"]??>
+				and (ht.batchCode like :batchCodes)
+			</#if>
+		GROUP BY fpc.id,ht.salesOrderCode,ht.batchCode,fp.factoryProductName
+		]]>
+	</sql>
+
+	<sql comment="车间生产统计（产品大类、厂内名称） " id="shop-factoryName-summary-list">
+		<![CDATA[
+		SELECT
+			ht.id,
+			fp.factoryProductName,
+			fpc.categoryName,
+			fpc.categoryCode,
+			fp.consumerProductName,
+			fp.productModel,
+			ht.deviceCode,
+			ht.`name`,
+			ht.rollOutputTime,
+			ht.rollQualityGradeCode,
+			ht.id AS ids,
+			ROUND(IFNULL(SUM(ht.PRODUCTWEIGHT), 0),2) AS productWeight,
+			IFNULL(COUNT(ht.id), 0) AS tnum
+		FROM
+			hs_totalstatistics ht
+		INNER JOIN hs_roll_barcode rb ON rb.barcode = ht.rollBarcode
+		INNER JOIN hs_finishproduct fp ON fp.id = rb.salesProductId
+		INNER JOIN hs_finished_product_category fpc ON fpc.id = fp.fpcid
+		WHERE ht.barcodeType = 'roll' and rb.isAbandon = 0
+		<#if key["start"]??&&key["end"]??>
+			and ht.rollOutputTime between :start and :end
+		</#if>
+		<#if key["start"]??&&!key["end"]??>
+			and ht.rollOutputTime > :start
+		</#if>
+		<#if !key["start"]??&&key["end"]??>
+			and ht.rollOutputTime < :end
+		</#if>
+		<#if key["startTime"]??&&key["endTime"]??>
+			and ht.rollOutputTime between :startTime and :endTime
+		</#if>
+		<#if key["startTime"]??&&!key["endTime"]??>
+			and ht.rollOutputTime > :startTime
+		</#if>
+		<#if !key["startTime"]??&&key["endTime"]??>
+			and ht.rollOutputTime < :endTime
+		</#if>
+ 		<#if key["categoryName"]??>
+			and (fpc.categoryName like :categoryName)
+		</#if>
+		<#if key["categoryCode"]??>
+			and (fpc.categoryCode like :categoryCode)
+		</#if>
+		<#if key["name"]??>
+				and (ht.`name` = :name or ht.name in (select name  from  platform_department where code =:name))
+		</#if>
+		<#if key["workshopcode"]??>
+				and ht.workshopcode = :workshopcode
+		</#if>
+		<#if key["factoryProductName"]??>
+			and (fp.factoryProductName like :factoryProductName)
+		</#if>
+		<#if key["CONSUMERPRODUCTNAME"]??>
+			and (fp.CONSUMERPRODUCTNAME like :CONSUMERPRODUCTNAME)
+		</#if>
+		<#if key["productModel"]??>
+			and (fp.productModel like :productModel)
+		</#if>
+		<#if key["deviceCode"]??>
+			and (ht.deviceCode like :deviceCode)
+		</#if>
+		GROUP BY
+			fpc.id,
+			fp.factoryProductName
+		]]>
+	</sql>
+
+	<sql comment="生产领料汇总" id="produce-pickingStatistics-list">
+		<![CDATA[
+			SELECT
+				t.produceCategory,t.materialModel,t.outTime,t.workShop,
+				IFNULL(SUM(t.weight),0) AS outWeight
+			FROM
+				hs_material_out_record_view t
+			WHERE
+				1 = 1
+			<#if key["produceCategory"]??>
+				and (t.produceCategory like :produceCategory)
+			</#if>
+			<#if key["materialModel"]??>
+				and (t.materialModel like :materialModel)
+			</#if>
+			<#if key["workShop"]??>
+				and (t.workShop like :workShop)
+			</#if>
+			<#if key["start"]??&&key["end"]??>
+				 and t.outTime between :start and :end
+			</#if>
+			<#if key["start"]??&&!key["end"]??>
+				 and t.outTime > :start
+			</#if>
+			<#if !key["start"]??&&key["end"]??>
+				 and t.outTime < :end
+			</#if>
+			GROUP BY t.produceCategory,t.materialModel,t.workShop
+		]]>
+	</sql>
+</sqls>

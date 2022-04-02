@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="Material">
+	<sql comment="原料列表" id="material-list">
+		<![CDATA[
+			select t.* from hs_material t where 1=1 
+			<#if key["materialCode"]??>
+				and materialCode like :materialCode
+			</#if>
+			<#if key["materialModel"]??>
+				and materialModel like :materialModel
+			</#if>
+			<#if key["produceCategory"]??>
+				and produceCategory like :produceCategory
+			</#if>
+			<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+			</#if>
+		]]>
+	</sql>
+	<sql comment="查询原料信息" id="material-info">
+		<![CDATA[
+			SELECT DISTINCT
+				ms.id,
+				mi.inUserId,
+				mi.inWeight,
+				mi.materialCode,
+				mi.numberDeviation,
+				mi.produceCategory,
+				mi.materialModel,
+				mi.subWay,
+				mi.syncState,
+				ms.state,
+				ms.stockState,
+				ms.warehouseCode,
+				ms.warehousePosCode,
+				m.deviation,
+				m.lowerDeviation,
+				m.madeRate,
+				m.materialFullName,
+				m.materialMaxStock,
+				m.materialMinStock,
+				m.materialShelfLife,
+				m.materialMeasure,
+				m.materialMemo,
+				u.userName
+			FROM
+				hs_material_stock_state ms
+			LEFT JOIN hs_material_in_record mi ON ms.materialCode = mi.materialCode
+			LEFT JOIN hs_material m ON m.produceCategory = mi.produceCategory
+			AND m.materialModel = mi.materialModel
+			LEFT JOIN platform_user u ON u.id = mi.inUserId
+			WHERE
+				ms.materialCode = :code
+		]]>
+	</sql>
+</sqls>

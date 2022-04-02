@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="MaterialStockStateDaoImpl">
+	<sql comment="物料入库列表" id="materialInRecord-list">
+		<![CDATA[
+		select t.*,t2.WAREHOUSENAME,(t1.userName)name from HS_Material_In_Record t 
+		left join platform_user t1 on t.inUserId = t1.id
+		left join hs_warehouse t2 on t2.WAREHOUSECODE=t.warehouseCode
+		where 1=1
+		<#if key["code"]??>
+			and (t.materialCode like (:code))
+		</#if>
+		
+		<#if key["materialModel"]??>
+			and (t.materialModel like (:materialModel))
+		</#if>
+		
+		<#if key["warehouseCode"]??>
+			and (t.warehouseCode like (:warehouseCode))
+		</#if>
+		
+		<#if key["warehousePosCode"]??>
+			and (t.warehousePosCode like (:warehousePosCode))
+		</#if>
+		
+		<#if key["produceCategory"]??>
+			and (t.produceCategory like (:produceCategory))
+		</#if>
+		
+		<#if key["produceStart"]??&&key["produceEnd"]??>
+			and t.produceDate between :produceStart and :produceEnd
+		</#if>
+		<#if key["produceStart"]??&&!key["produceEnd"]??>
+			and t.produceDate > :produceStart
+		</#if>
+		<#if !key["produceStart"]??&&key["produceEnd"]??>
+			and t.produceDate < :produceEnd
+		</#if>
+		
+		<#if key["inStart"]??&&key["inEnd"]??>
+			and t.inTime between :inStart and :inEnd
+		</#if>
+		<#if key["inStart"]??&&!key["inEnd"]??>
+			and t.inTime > :inStart
+		</#if>
+		<#if !key["inStart"]??&&key["inEnd"]??>
+			and t.inTime < :inEnd
+		</#if>
+			
+		<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+			</#if>
+			<#if !key["sort"]??&&!key["order"]??>
+				order by id desc
+			</#if>
+		]]>
+	</sql>
+</sqls>

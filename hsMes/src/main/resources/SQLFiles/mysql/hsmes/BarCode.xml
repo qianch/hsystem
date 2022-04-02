@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="BarCodeDaoImpl">
+	<sql comment="查询托内卷数" id="count-rolls-in-tray">
+		<![CDATA[
+			SELECT
+				(
+					SELECT
+						count(1)
+					FROM
+						hs_tray_box_roll tbr
+					WHERE
+						tbr.trayBarcode = :code
+					AND boxBarcode IS NULL
+				) + (
+					SELECT
+						count(1)
+					FROM
+						hs_box_roll
+					WHERE
+						boxBarcode IN (
+							SELECT
+								boxBarcode
+							FROM
+								hs_tray_box_roll
+							WHERE
+								trayBarcode = :code
+							AND boxBarcode IS NOT NULL
+						)
+				) rolls
+		]]>
+	</sql>
+	
+</sqls>

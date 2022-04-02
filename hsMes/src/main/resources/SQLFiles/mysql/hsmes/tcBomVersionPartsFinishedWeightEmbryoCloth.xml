@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="TcBomVersionPartsFinishedWeightEmbryoClothDaoImpl">
+	<sql comment="部件成品重量胚布信息列表" id="partsFinishedWeightEmbryoCloth-list">
+		<![CDATA[
+		SELECT
+				t.*
+			FROM
+				hs_tc_proc_bom_version_parts_finished_weight_embryo_cloth t
+			WHERE
+				1 = 1
+			<#if key["ids"]??>
+				and t.TCPROCBOMPARTSID in (:ids)
+			</#if>
+			order by t.id asc
+			
+		]]>
+	</sql>
+	<sql comment="删除部件成品重量胚布信息" id="partsFinishedWeightEmbryoCloth-delete">
+		<![CDATA[
+			delete from hs_tc_proc_bom_version_parts_finished_weight_embryo_cloth where id in (:id)	
+		]]>
+	</sql>
+
+	<sql comment="部件成品重量胚布信息列表" id="partsFinishedWeightEmbryoCloth-mirrorList">
+		<![CDATA[
+		SELECT
+				t.*
+			FROM
+				hs_tc_proc_bom_version_parts_finished_weight_embryo_cloth_mirror t
+			WHERE
+				1 = 1
+			<#if key["ids"]??>
+				and t.TCPROCBOMPARTSID in (:ids)
+			</#if>
+			order by t.id asc
+
+		]]>
+	</sql>
+	
+</sqls>

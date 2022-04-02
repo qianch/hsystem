@@ -1,10 +1,8 @@
-﻿.gitignore  
-*.rar 
+ *.rar 
 *.pdb
 packages/
 .vs/
 LogFiles/
-Log/
 IndexData/
 BigFileUpLoadStorage/
 ButtonLog/
@@ -28,9 +26,10 @@ node_modules/
 *.pyc 
 *.pyo __pycache__ 
 *.db
-build/
-.gradle/
-.idea/
+build
+.gradle
+.idea
+out/
+target/
 *.iml
-*.apk
-*.json
+/build

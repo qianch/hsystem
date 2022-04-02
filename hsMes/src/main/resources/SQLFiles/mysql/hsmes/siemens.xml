@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="Siemens">
+	<sql comment="获取套材BOM列表" id="siemens-tc-list">
+		<![CDATA[
+				SELECT t.id,CONCAT_WS('/',c.consumerSimpleName,t.tcProcBomCode,t.tcProcBomName) text from hs_tc_proc_bom t LEFT JOIN hs_consumer c on c.id=t.tcProcBomConsumerId
+				where 1=1 
+				<#if key["siemens"]??>
+					and c.consumerName like '%西门子%' or c.consumerName like '%siemens%'
+				</#if>
+				<#if key["code"]??>
+					and
+					( 
+						c.consumerName like '%${key["code"]}%' 
+						or c.consumerSimpleName like '%${key["code"]}%' 
+						or t.tcProcBomCode like '%${key["code"]}%' 
+						or t.tcProcBomName like '%${key["code"]}%' 
+					)
+				</#if>
+				 ORDER BY c.consumerSimpleName	
+		]]>
+	</sql>
+	
+	<sql comment="获取套材所有的部件" id="siemens-tc-parts">
+		<![CDATA[
+			SELECT p.id,p.tcProcBomVersionPartsName name,needSort from hs_tc_proc_bom_version_parts p
+			where p.tcProcBomVersoinId in (
+				SELECT id from hs_tc_proc_bom_version v where v.tcProcBomId=:tcBomId
+			)
+			and p.isDeleted=0 and p.tcProcBomVersionPartsType<>'成品胚布'
+		]]>
+	</sql>
+	
+	<sql comment="获取套材的部件图纸" id="siemens-list-drawings">
+		<![CDATA[
+			SELECT
+				d.*
+			FROM
+				hs_siemens_drawings_bom d
+			where d.partId=:pid and d.isDeleted=0 order by d.printSort asc
+		]]>
+	</sql>
+	<sql comment="获取套材所有的部件" id="siemens-list-suit">
+		<![CDATA[
+			SELECT
+				d.*
+			FROM
+				hs_siemens_suit_bom d
+			LEFT JOIN hs_siemens_fragment f ON d.fragmentId = f.id
+			where d.partId=:pid order by d.suitSort asc
+		]]>
+	</sql>
+	<sql comment="获取套材所有的部件" id="siemens-suitCoutPerDrawings-drawings">
+		<![CDATA[
+			SELECT suitCountPerDrawings from hs_siemens_drawings_bom where partId=:partId group by suitCountPerDrawings
+		]]>
+	</sql>
+	
+	<sql comment="获取部件" id="siemens-list">
+		<![CDATA[
+			SELECT * from hs_siemens_fragment where tcBomId=:tcBomId and fragmentCode=:fragmentCode
+		]]>
+	</sql>
+	
+</sqls>

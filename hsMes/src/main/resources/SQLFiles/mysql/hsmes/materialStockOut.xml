@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="MaterialStockOutDaoImpl">
+	<sql comment="物料出库记录" id="materialStockOut-list">
+		<![CDATA[
+		select t.* from HS_Material_Stock_Out t 
+		
+		where 1=1
+		<#if key["code"]??>
+			and (t.outOrderCode like (:code))
+		</#if>
+		]]>
+	</sql>
+	<sql comment="查询物料出库明细" id="findOut-list">
+		<![CDATA[
+		select t.*,(t1.userName)name from HS_Material_Out_Order_Detail t 
+		left join platform_user t1 on t.outUserId = t1.id
+		where t.outOrderId=(:id)
+		
+		]]>
+	</sql>
+</sqls>

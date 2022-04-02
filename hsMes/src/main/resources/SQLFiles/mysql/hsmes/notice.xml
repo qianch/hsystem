@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="NoticeDaoImpl">
+	<sql comment="系统公告列表" id="notice-list">
+		<![CDATA[
+		select t.id ,t.content,t.inputtime,t.title,t.contenttxt as contenttxt,t.userid,aa.username as publisher1 from PLATFORM_NOTICE t left join platform_user aa on aa.id=t.userid where 1=1
+		<#if key["t.name"]??>
+			and t.title like :t.name
+		</#if>
+		<#if key["t.content"]??>
+			and t.contentTxt like :t.content
+		</#if>
+		<#if key["sort"]??>
+			order by ${key["sort"]} ${key["order"]}
+			<#else>
+			order by t.inputtime desc
+		</#if>
+		]]>
+	</sql>
+	<sql comment="删除系统公告" id="notice-delete">
+		<![CDATA[
+		delete from platform_notice where id in (:id)
+		]]>
+	</sql>
+	<sql comment="按时间查询系统公告信息" id="notice-findnotice">
+		<![CDATA[
+		select  * from PLATFORM_NOTICE t order by t.inputtime desc limit 7
+		]]>
+	</sql>
+
+	<sql comment="查看全部订阅的消息" id="message-all-list">
+		<![CDATA[
+			SELECT
+				pm.*
+			FROM
+				platform_message pm
+			LEFT JOIN platform_message_status ms ON ms.msgid=pm.id
+			WHERE
+				(
+					(pm.toUser =- 1 
+					<#if key["messageType"]??>
+					 and pm.messageType IN (:messageType) 
+					 </#if>
+					 OR pm.toUser =:toUser )
+					<#if key["mType"]??>
+						and pm.messageType = :mType
+					</#if>
+					 
+				)
+			
+			AND (ms.isDeleted=0 OR ms.isDeleted IS NULL) 
+			ORDER BY pm.createTime DESC
+		]]>
+	</sql>
+	<sql comment="查看已查看的消息" id="message-readed-list">
+		<![CDATA[
+			SELECT
+				pm.*
+			FROM
+				platform_message pm
+			LEFT JOIN platform_message_status ms ON ms.msgid=pm.id
+			WHERE
+				(
+					( pm.toUser =- 1 
+					 <#if key["messageType"]??>
+					 and pm.messageType IN (:messageType) 
+					 </#if>
+					 OR pm.toUser =:toUser )
+					 <#if key["mType"]??>
+						and pm.messageType = :mType
+					</#if>
+				)
+			
+			AND (ms.isDeleted=0 OR ms.isDeleted IS NULL)
+			and ms.id IS NOT NULL 
+			ORDER BY pm.createTime DESC
+		]]>
+	</sql>
+	<sql comment="查看未查看的消息" id="message-unread-list">
+		<![CDATA[
+			SELECT
+				pm.*
+			FROM
+				platform_message pm
+			LEFT JOIN platform_message_status ms ON ms.msgid=pm.id
+			WHERE
+				(
+					 (pm.toUser =-1  
+					 <#if key["messageType"]??>
+					 and pm.messageType IN (:messageType) 
+					 </#if>
+					 OR pm.toUser =:toUser )
+					 <#if key["mType"]??>
+						and pm.messageType = :mType
+					</#if>
+				)
+			
+			AND (ms.isDeleted=0 OR ms.isDeleted IS NULL)
+			and ms.id IS NULL 
+			ORDER BY pm.createTime DESC
+		]]>
+	</sql>
+</sqls>

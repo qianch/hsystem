@@ -1,0 +1,3218 @@
+.c1 {
+	background: linear-gradient(#4cae4c 0, #449d44 100%);
+	border-color: #3c8b3c;
+	color: #fff
+}
+
+.c1:hover {
+	background: linear-gradient(#4cae4c 0, #449d44 100%);
+	border-color: #3c8b3c;
+	color: #fff
+}
+
+a.c1:hover {
+	background: #449d44;
+	filter: none
+}
+
+.c2 {
+	background: linear-gradient(#747474 0, #676767 100%);
+	border-color: #5f5f5f;
+	color: #fff
+}
+
+.c2:hover {
+	background: linear-gradient(#747474 0, #676767 100%);
+	border-color: #5f5f5f;
+	color: #fff
+}
+
+a.c2:hover {
+	background: #676767;
+	filter: none
+}
+
+.c3 {
+	background: linear-gradient(#ffb3b3 0, #f99 100%);
+	border-color: #ff8080;
+	color: #333
+}
+
+.c3:hover {
+	background: linear-gradient(#ffb3b3 0, #f99 100%);
+	border-color: #ff8080;
+	color: #333
+}
+
+a.c3:hover {
+	background: #f99;
+	filter: none
+}
+
+.c4 {
+	background: linear-gradient(#b8eecf 0, #a4e9c1 100%);
+	border-color: #52d689;
+	color: #333
+}
+
+.c4:hover {
+	background: linear-gradient(#b8eecf 0, #a4e9c1 100%);
+	border-color: #52d689;
+	color: #333
+}
+
+a.c4:hover {
+	background: #a4e9c1;
+	filter: none
+}
+
+.c5 {
+	background: linear-gradient(#d84f4b 0, #c9302c 100%);
+	border-color: #b52b27;
+	color: #fff
+}
+
+.c5:hover {
+	background: linear-gradient(#d84f4b 0, #c9302c 100%);
+	border-color: #b52b27;
+	color: #fff
+}
+
+a.c5:hover {
+	background: #c9302c;
+	filter: none
+}
+
+.c6 {
+	background: linear-gradient(#2984a4 0, #24748f 100%);
+	border-color: #1f637b;
+	color: #fff
+}
+
+.c6:hover {
+	background: linear-gradient(#2984a4 0, #24748f 100%);
+	border-color: #1f637b;
+	color: #fff
+}
+
+a.c6:hover {
+	background: #24748f;
+	filter: none
+}
+
+.c7 {
+	background: linear-gradient(#ffab2e 0, #f90 100%);
+	border-color: #e68900;
+	color: #333
+}
+
+.c7:hover {
+	background: linear-gradient(#ffab2e 0, #f90 100%);
+	border-color: #e68900;
+	color: #333
+}
+
+a.c7:hover {
+	background: #f90;
+	filter: none
+}
+
+.c8 {
+	background: linear-gradient(#698cba 0, #577eb2 100%);
+	border-color: #4b72a4;
+	color: #fff
+}
+
+.c8:hover {
+	background: linear-gradient(#698cba 0, #577eb2 100%);
+	border-color: #4b72a4;
+	color: #fff
+}
+
+a.c8:hover {
+	background: #577eb2;
+	filter: none
+}
+
+.icon-folder {
+	background: url("icons/folder.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-link {
+	background: url("icons/link.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-button {
+	background: url("icons/button.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-blank {
+	background: url("icons/blank.gif") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-add {
+	background: url("icons/edit_add.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-edit {
+	background: url("icons/pencil.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-clear {
+	background: url("icons/clear.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-remove {
+	background: url("icons/edit_remove.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-save {
+	background: url("icons/filesave.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-cut {
+	background: url("icons/cut.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-ok {
+	background: url("icons/ok.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-no {
+	background: url("icons/no.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-disable {
+	background: url("icons/disable.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-cancel {
+	background: url("icons/del1.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-reload {
+	background: url("icons/reload.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-search {
+	background: url("icons/search.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-print {
+	background: url("icons/print.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-help {
+	background: url("icons/help.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-undo {
+	background: url("icons/undo.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-redo {
+	background: url("icons/redo.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-back {
+	background: url("icons/back.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-sum {
+	background: url("icons/sum.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-tip {
+	background: url("icons/tip.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-filter {
+	background: url("icons/filter.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-man {
+	background: url("icons/man.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-lock {
+	background: url("icons/lock_edit.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-more {
+	background: url("icons/more.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-grant-role {
+	background: url("icons/grant_role.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-sort {
+	background: url("icons/sort.gif") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-mini-add {
+	background: url("icons/mini_add.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-mini-edit {
+	background: url("icons/mini_edit.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-mini-refresh {
+	background: url("icons/mini_refresh.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-large-picture {
+	background: url("icons/large_picture.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-large-clipart {
+	background: url("icons/large_clipart.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-large-shapes {
+	background: url("icons/large_shapes.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-large-smartart {
+	background: url("icons/large_smartart.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-large-chart {
+	background: url("icons/large_chart.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-start {
+	background: url("icons/start.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-stop {
+	background: url("icons/stop.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-bmp {
+	background: url("icons/jpg.gif") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-doc {
+	background: url("icons/doc.gif") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-docx {
+	background: url("icons/docx.gif") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-gif {
+	background: url("icons/jpg.gif") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-jpg {
+	background: url("icons/jpg.gif") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-pdf {
+	background: url("icons/pdf.gif") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-ppt {
+	background: url("icons/ppt.gif") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-pptx {
+	background: url("icons/pptx.gif") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-txt {
+	background: url("icons/txt.gif") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-xls {
+	background: url("icons/xls.gif") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-xlsx {
+	background: url("icons/xlsx.gif") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-delete {
+	background: url("icons/delete.gif") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-file {
+	background: url("icons/file.gif") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-zip {
+	background: url("icons/zip.gif") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-rar {
+	background: url("icons/zip.gif") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-excel {
+	background: url("icons/excel.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-pause {
+	background: url("icons/pause.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-settings {
+	background: url("icons/settings.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-rss {
+	background: url("icons/rss.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-add {
+	background: url("icons/add.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-add2 {
+	background: url("icons/add2.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-against {
+	background: url("icons/against.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-agree {
+	background: url("icons/agree.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-app_columns {
+	background: url("icons/app_columns.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-app_list {
+	background: url("icons/app_list.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-arraw_return {
+	background: url("icons/arraw_return.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-arrow_branch {
+	background: url("icons/arrow_branch.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-arrow_divide {
+	background: url("icons/arrow_divide.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-arrow_down {
+	background: url("icons/arrow_down.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-arrow_left {
+	background: url("icons/arrow_left.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-arrow_merge {
+	background: url("icons/arrow_merge.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-arrow_redo {
+	background: url("icons/arrow_redo.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-arrow_right {
+	background: url("icons/arrow_right.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-arrow_switch {
+	background: url("icons/arrow_switch.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-arrow_undo {
+	background: url("icons/arrow_undo.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-arrow_up {
+	background: url("icons/arrow_up.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-basket {
+	background: url("icons/basket.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-book {
+	background: url("icons/book.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-book_user {
+	background: url("icons/book_user.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-bug {
+	background: url("icons/bug.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-bullet_blue {
+	background: url("icons/bullet_blue.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-chart_curve {
+	background: url("icons/chart_curve.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-chart_flipped {
+	background: url("icons/chart_flipped.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-chart_line {
+	background: url("icons/chart_line.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-chart_pie {
+	background: url("icons/chart_pie.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-close {
+	background: url("icons/close.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-config {
+	background: url("icons/config.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-config1 {
+	background: url("icons/config1.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-config3 {
+	background: url("icons/config3.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-connect {
+	background: url("icons/connect.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-copy {
+	background: url("icons/copy.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-cut {
+	background: url("icons/cut.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-cv {
+	background: url("icons/cv.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-c_key {
+	background: url("icons/c_key.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-database {
+	background: url("icons/database.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-database_add {
+	background: url("icons/database_add.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-del {
+	background: url("icons/del.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-del1 {
+	background: url("icons/del1.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-del2 {
+	background: url("icons/del2.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-del3 {
+	background: url("icons/del3.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-del_folder {
+	background: url("icons/del_folder.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-del_page {
+	background: url("icons/del_page.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-detail {
+	background: url("icons/detail.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-disconnect {
+	background: url("icons/disconnect.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-doc_ok {
+	background: url("icons/doc_ok.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-edit {
+	background: url("icons/edit.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-edit2 {
+	background: url("icons/edit2.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-email {
+	background: url("icons/email.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-email2 {
+	background: url("icons/email2.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-email3 {
+	background: url("icons/email3.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-email_go {
+	background: url("icons/email_go.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-email_open {
+	background: url("icons/email_open.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-exit {
+	background: url("icons/exit.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-exit2 {
+	background: url("icons/exit2.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-folder1 {
+	background: url("icons/folder1.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-folder10 {
+	background: url("icons/folder10.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-folder11 {
+	background: url("icons/folder11.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-folder12 {
+	background: url("icons/folder12.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-folder13 {
+	background: url("icons/folder13.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-folder14 {
+	background: url("icons/folder14.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-folder15 {
+	background: url("icons/folder15.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-folder16 {
+	background: url("icons/folder16.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-folder17 {
+	background: url("icons/folder17.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-folder18 {
+	background: url("icons/folder18.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-folder19 {
+	background: url("icons/folder19.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-folder2 {
+	background: url("icons/folder2.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-folder20 {
+	background: url("icons/folder20.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-folder21 {
+	background: url("icons/folder21.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-folder22 {
+	background: url("icons/folder22.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-folder23 {
+	background: url("icons/folder23.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-folder24 {
+	background: url("icons/folder24.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-folder25 {
+	background: url("icons/folder25.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-folder26 {
+	background: url("icons/folder26.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-folder27 {
+	background: url("icons/folder27.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-folder28 {
+	background: url("icons/folder28.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-folder4 {
+	background: url("icons/folder4.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-folder5 {
+	background: url("icons/folder5.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-folder6 {
+	background: url("icons/folder6.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-folder7 {
+	background: url("icons/folder7.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-folder8 {
+	background: url("icons/folder8.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-folder9 {
+	background: url("icons/folder9.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-forward {
+	background: url("icons/forward.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-freelance {
+	background: url("icons/freelance.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-go {
+	background: url("icons/go.gif") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-go {
+	background: url("icons/go.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-go1 {
+	background: url("icons/go1.gif") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-go1 {
+	background: url("icons/go1.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-help {
+	background: url("icons/help.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-home {
+	background: url("icons/home.gif") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-home {
+	background: url("icons/home.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon134 {
+	background: url("icons/icon134.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon137 {
+	background: url("icons/icon137.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon140 {
+	background: url("icons/icon140.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon141 {
+	background: url("icons/icon141.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon146 {
+	background: url("icons/icon146.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon15 {
+	background: url("icons/icon15.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon150 {
+	background: url("icons/icon150.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon152 {
+	background: url("icons/icon152.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon153 {
+	background: url("icons/icon153.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon154 {
+	background: url("icons/icon154.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon17 {
+	background: url("icons/icon17.gif") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon25 {
+	background: url("icons/icon25.gif") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon26 {
+	background: url("icons/icon26.gif") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon28 {
+	background: url("icons/icon28.gif") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon31 {
+	background: url("icons/icon31.gif") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon32 {
+	background: url("icons/icon32.gif") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon34 {
+	background: url("icons/icon34.gif") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon35 {
+	background: url("icons/icon35.gif") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon36 {
+	background: url("icons/icon36.gif") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon37 {
+	background: url("icons/icon37.gif") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon38 {
+	background: url("icons/icon38.gif") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon39 {
+	background: url("icons/icon39.gif") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon41 {
+	background: url("icons/icon41.gif") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon42 {
+	background: url("icons/icon42.gif") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon5 {
+	background: url("icons/icon5.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon56 {
+	background: url("icons/icon56.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon59 {
+	background: url("icons/icon59.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon63 {
+	background: url("icons/icon63.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon65 {
+	background: url("icons/icon65.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon66 {
+	background: url("icons/icon66.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon67 {
+	background: url("icons/icon67.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon68 {
+	background: url("icons/icon68.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon7 {
+	background: url("icons/icon7.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon70 {
+	background: url("icons/icon70.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon71 {
+	background: url("icons/icon71.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon72 {
+	background: url("icons/icon72.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon75 {
+	background: url("icons/icon75.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon76 {
+	background: url("icons/icon76.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon77 {
+	background: url("icons/icon77.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon78 {
+	background: url("icons/icon78.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon79 {
+	background: url("icons/icon79.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon8 {
+	background: url("icons/icon8.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon80 {
+	background: url("icons/icon80.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon82 {
+	background: url("icons/icon82.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon85 {
+	background: url("icons/icon85.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon86 {
+	background: url("icons/icon86.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon88 {
+	background: url("icons/icon88.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon9 {
+	background: url("icons/icon9.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon96 {
+	background: url("icons/icon96.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icon_19 {
+	background: url("icons/icon_19.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-icq {
+	background: url("icons/icq.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-id {
+	background: url("icons/id.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-jar {
+	background: url("icons/jar.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-key {
+	background: url("icons/key.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-layout {
+	background: url("icons/layout.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-layout2 {
+	background: url("icons/layout2.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-lightbulb {
+	background: url("icons/lightbulb.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-lock {
+	background: url("icons/lock.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-lock3 {
+	background: url("icons/lock3.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-monitor {
+	background: url("icons/monitor.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-node {
+	background: url("icons/node.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-ok {
+	background: url("icons/ok.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-ok1 {
+	background: url("icons/ok1.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-ok2 {
+	background: url("icons/ok2.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-ok3 {
+	background: url("icons/ok3.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-ok4 {
+	background: url("icons/ok4.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-ok5 {
+	background: url("icons/ok5.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-org {
+	background: url("icons/org.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-org2 {
+	background: url("icons/org2.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-own {
+	background: url("icons/own.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-page {
+	background: url("icons/page.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-page2 {
+	background: url("icons/page2.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-page3 {
+	background: url("icons/page3.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-page_code {
+	background: url("icons/page_code.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-page_font {
+	background: url("icons/page_font.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-page_next {
+	background: url("icons/page_next.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-page_office {
+	background: url("icons/page_office.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-page_paint {
+	background: url("icons/page_paint.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-page_picture {
+	background: url("icons/page_picture.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-page_vector {
+	background: url("icons/page_vector.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-paint2 {
+	background: url("icons/paint2.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-paste {
+	background: url("icons/paste.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-picture {
+	background: url("icons/picture.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-pictures {
+	background: url("icons/pictures.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-picture_empty {
+	background: url("icons/picture_empty.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-plugin {
+	background: url("icons/plugin.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-plugin1 {
+	background: url("icons/plugin1.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-plugin2 {
+	background: url("icons/plugin2.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-printer {
+	background: url("icons/printer.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-query {
+	background: url("icons/query.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-refresh {
+	background: url("icons/refresh.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-refresh1 {
+	background: url("icons/refresh1.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-refresh2 {
+	background: url("icons/refresh2.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-refresh3 {
+	background: url("icons/refresh3.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-refresh4 {
+	background: url("icons/refresh4.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-save {
+	background: url("icons/save.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-save_all {
+	background: url("icons/save_all.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-search {
+	background: url("icons/search.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-security {
+	background: url("icons/security.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-send_receive {
+	background: url("icons/send_receive.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-shape_align_bottom {
+	background: url("icons/shape_align_bottom.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-shape_align_center {
+	background: url("icons/shape_align_center.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-shape_align_middle {
+	background: url("icons/shape_align_middle.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-shape_group {
+	background: url("icons/shape_group.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-shape_handles {
+	background: url("icons/shape_handles.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-shape_move_back {
+	background: url("icons/shape_move_back.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-share {
+	background: url("icons/share.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-sitemap {
+	background: url("icons/sitemap.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-sql {
+	background: url("icons/sql.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-sql2 {
+	background: url("icons/sql2.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-sql3 {
+	background: url("icons/sql3.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-stop {
+	background: url("icons/stop.gif") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-stop2 {
+	background: url("icons/stop2.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-stop3 {
+	background: url("icons/stop3.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-system {
+	background: url("icons/system.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-table {
+	background: url("icons/table.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-table2 {
+	background: url("icons/table2.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-tables {
+	background: url("icons/tables.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-tables_relation {
+	background: url("icons/tables_relation.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-table_edit {
+	background: url("icons/table_edit.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-tag {
+	background: url("icons/tag.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-task {
+	background: url("icons/task.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-task1 {
+	background: url("icons/task1.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-task_finish {
+	background: url("icons/task_finish.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-task_list {
+	background: url("icons/task_list.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-terminal {
+	background: url("icons/terminal.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-textfield {
+	background: url("icons/textfield.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-text_cap {
+	background: url("icons/text_cap.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-text_col {
+	background: url("icons/text_col.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-text_list {
+	background: url("icons/text_list.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-text_upper {
+	background: url("icons/text_upper.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-theme {
+	background: url("icons/theme.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-time {
+	background: url("icons/time.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-timeline {
+	background: url("icons/timeline.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-user1 {
+	background: url("icons/user1.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-user20 {
+	background: url("icons/user20.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-user3 {
+	background: url("icons/user3.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-user6 {
+	background: url("icons/user6.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-user8 {
+	background: url("icons/user8.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-vcard {
+	background: url("icons/vcard.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-vector {
+	background: url("icons/vector.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-wand {
+	background: url("icons/wand.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-webcam {
+	background: url("icons/webcam.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-zoom_in {
+	background: url("icons/zoom_in.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.platform-zoom_out {
+	background: url("icons/zoom_out.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-settings-large {
+	background: url("icons/settings.png") no-repeat top
+}
+
+.icon-hengshi-large {
+	background: url("icons/logo_z.png") no-repeat top
+}
+
+.icon-ok3 {
+	background: url("icons/ok1.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-question {
+	background: url("icons/question.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-commit {
+	background: url("icons/commit.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+.icon-del {
+	background: url("icons/del.png") no-repeat center;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+	vertical-align: top;
+	display: inline-block
+}
+
+pre {
+	white-space: pre-wrap;
+	-ms-word-wrap: break-word
+}
+
+html {
+	margin: 0
+}
+
+body {
+	margin: 0
+}
+
+table {
+	font-size: 12px;
+	border-collapse: collapse
+}
+
+th {
+	border: 1px solid #ccc;
+	border-image: none
+}
+
+td {
+	border: 1px solid #ccc;
+	border-image: none
+}
+
+a {
+	color: black;
+	text-decoration: none
+}
+
+hr {
+	border-bottom-color: currentColor;
+	border-bottom-width: medium;
+	border-bottom-style: none
+}
+
+.title {
+	background: #fafafa;
+	width: 100px;
+	text-align: right;
+	color: #232222;
+	font-size: 12px;
+	font-weight: bold;
+	opacity: .8
+}
+
+.textbox {
+	border: 1px solid #a99d9d;
+	border-image: none;
+	height: 30px;
+	padding-left: 5px;
+	margin-left: 6px
+}
+
+.error {
+	color: red
+}
+
+.datebox-button td {
+	padding: 3px !important;
+	border: currentColor;
+	border-image: none;
+	text-align: center
+}
+
+/* .datagrid-sort-asc .datagrid-sort-icon {
+	padding: 0 !important
+}
+
+.datagrid-sort-desc .datagrid-sort-icon {
+	padding: 0 !important
+} */
+.datagrid-view .textbox {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%
+}
+
+.datagrid-view .textbox input {
+	width: 100% !important;
+	height: 100%
+}
+
+.datagrid-editable input {
+	margin: 0 !important;
+	padding: 0 !important;
+	width: 100% !important;
+	height: 100% !important
+}
+
+.datagrid-row-selected {
+	background: #3669c1 !important
+}
+
+.datalist .datagrid-wrap {
+	border-color: #e6eef8
+}
+
+.calendar-body th {
+	border: currentColor;
+	border-image: none
+}
+
+.datagrid-group {
+	background: #f9f9f9
+}
+
+::selection {
+	background: #05793a;
+	color: white
+}
+
+form .textbox {
+	margin: 1px
+}
+
+.easyui-linkbutton .l-btn-text {
+	line-height: 19px
+}
+
+.l-btn {
+	border-radius: 0
+}
+
+.window {
+	border-radius: 0
+}
+
+.window-mask {
+	background: #fff
+}
+
+.window-proxy {
+	background: rgba(36, 158, 142, 0.2);
+	border-radius: 5px
+}
+
+.messager-body {
+	height: auto !important
+}
+
+.dg_tooltip {
+	color: red;
+	font-family: sans-serif;
+	font-size: 13px;
+	font-weight: bold
+}
+
+.validatebox-invalid {
+	background: #fee
+}
+
+.textbox-invalid {
+	background: rgba(255, 183, 183, 0.24);
+	border: 1px double rgba(255, 0, 0, 0.53);
+	border-image: none
+}
+
+input[type='checkbox'] {
+	vertical-align: top
+}
+
+input[type='radio'] {
+	vertical-align: top
+}
+
+.datagrid-filter-c input {
+	width: 100% !important;
+	height: 22px !important
+}
+
+.column_selection {
+	width: 500px;
+	position: fixed;
+	top: 100px;
+	left: 50%;
+	margin-left: -250px;
+	background: white;
+	z-index: 9999;
+	border: 1px solid gray;
+	border-radius: 5px;
+	padding: 5px;
+	display: none;
+}
+
+.column_selection table {
+	width: 100%;
+}
+
+.column_selection table th {
+	background: rgb(17, 106, 134);
+	font-size: 16px;
+	height: 35px;
+	color: white;
+}
+
+.column_selection table td {
+	vertical-align: top;
+}
+
+.column_selection table div {
+	margin: 2px;
+	padding: 2px;
+	border: 1px solid #c7c7c7;
+	background: #e2e2e2;
+	border-radius: 3px;
+}
+
+#_columns_display_opt_ input {
+	border: none;
+	margin: 2px;
+	padding: 5px;
+	border: 1px solid gray;
+	border-radius: 5px;
+	outline: none;
+	background: #f3f3f3;
+	width: 150px;
+}
+
+#_columns_display_opt_ input:active {
+	background: #3669c1;
+	color: white;
+}
+
+.l-btn-focus {
+	outline: none;
+}
+
+input,textarea,button {
+	outline: none;
+}
+
+/**
+ * jQuery toast plugin created by Kamran Ahmed copyright MIT license 2014
+ */
+.jq-toast-wrap {
+	display: block;
+	position: fixed;
+	width: 250px;
+	pointer-events: none !important;
+	margin: 0;
+	padding: 0;
+	letter-spacing: normal;
+	z-index: 9999 !important;
+}
+
+.jq-toast-wrap * {
+	margin: 0;
+	padding: 0;
+}
+
+.jq-toast-wrap.bottom-left {
+	bottom: 20px;
+	left: 20px;
+}
+
+.jq-toast-wrap.bottom-right {
+	bottom: 20px;
+	right: 40px;
+}
+
+.jq-toast-wrap.top-left {
+	top: 20px;
+	left: 20px;
+}
+
+.jq-toast-wrap.top-right {
+	top: 20px;
+	right: 40px;
+}
+
+.jq-toast-single {
+	display: block;
+	width: 100%;
+	padding: 10px;
+	margin: 0px 0px 5px;
+	border-radius: 4px;
+	font-size: 12px;
+	font-family: arial, sans-serif;
+	line-height: 17px;
+	position: relative;
+	pointer-events: all !important;
+	background-color: #444444;
+	color: white;
+}
+
+.jq-toast-single h2 {
+	font-family: arial, sans-serif;
+	font-size: 14px;
+	margin: 0px 0px 7px;
+	background: none;
+	color: inherit;
+	line-height: inherit;
+	letter-spacing: normal;
+}
+
+.jq-toast-single a {
+	color: #eee;
+	text-decoration: none;
+	font-weight: bold;
+	border-bottom: 1px solid white;
+	padding-bottom: 3px;
+	font-size: 12px;
+}
+
+.jq-toast-single ul {
+	margin: 0px 0px 0px 15px;
+	background: none;
+	padding: 0px;
+}
+
+.jq-toast-single ul li {
+	list-style-type: disc !important;
+	line-height: 17px;
+	background: none;
+	margin: 0;
+	padding: 0;
+	letter-spacing: normal;
+}
+
+.close-jq-toast-single {
+	position: absolute;
+	top: 3px;
+	right: 7px;
+	font-size: 14px;
+	cursor: pointer;
+}
+
+.jq-toast-loader {
+	display: block;
+	position: absolute;
+	top: -2px;
+	height: 5px;
+	width: 0%;
+	left: 0;
+	border-radius: 5px;
+	background: red;
+	display: none;
+}
+
+.jq-toast-loaded {
+	width: 100%;
+}
+
+.jq-has-icon {
+	padding: 10px 10px 10px 50px;
+	background-repeat: no-repeat;
+	background-position: 10px;
+	bottom: 100px;
+	color: #ffffff !important;
+	font-size: 14px;
+}
+
+.jq-icon-info {
+	background-image:
+		url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGwSURBVEhLtZa9SgNBEMc9sUxxRcoUKSzSWIhXpFMhhYWFhaBg4yPYiWCXZxBLERsLRS3EQkEfwCKdjWJAwSKCgoKCcudv4O5YLrt7EzgXhiU3/4+b2ckmwVjJSpKkQ6wAi4gwhT+z3wRBcEz0yjSseUTrcRyfsHsXmD0AmbHOC9Ii8VImnuXBPglHpQ5wwSVM7sNnTG7Za4JwDdCjxyAiH3nyA2mtaTJufiDZ5dCaqlItILh1NHatfN5skvjx9Z38m69CgzuXmZgVrPIGE763Jx9qKsRozWYw6xOHdER+nn2KkO+Bb+UV5CBN6WC6QtBgbRVozrahAbmm6HtUsgtPC19tFdxXZYBOfkbmFJ1VaHA1VAHjd0pp70oTZzvR+EVrx2Ygfdsq6eu55BHYR8hlcki+n+kERUFG8BrA0BwjeAv2M8WLQBtcy+SD6fNsmnB3AlBLrgTtVW1c2QN4bVWLATaIS60J2Du5y1TiJgjSBvFVZgTmwCU+dAZFoPxGEEs8nyHC9Bwe2GvEJv2WXZb0vjdyFT4Cxk3e/kIqlOGoVLwwPevpYHT+00T+hWwXDf4AJAOUqWcDhbwAAAAASUVORK5CYII=');
+	background-color: #007fbd;
+	color: #d9edf7;
+	border-color: #bce8f1;
+}
+
+.jq-icon-warning {
+	background-image:
+		url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAGYSURBVEhL5ZSvTsNQFMbXZGICMYGYmJhAQIJAICYQPAACiSDB8AiICQQJT4CqQEwgJvYASAQCiZiYmJhAIBATCARJy+9rTsldd8sKu1M0+dLb057v6/lbq/2rK0mS/TRNj9cWNAKPYIJII7gIxCcQ51cvqID+GIEX8ASG4B1bK5gIZFeQfoJdEXOfgX4QAQg7kH2A65yQ87lyxb27sggkAzAuFhbbg1K2kgCkB1bVwyIR9m2L7PRPIhDUIXgGtyKw575yz3lTNs6X4JXnjV+LKM/m3MydnTbtOKIjtz6VhCBq4vSm3ncdrD2lk0VgUXSVKjVDJXJzijW1RQdsU7F77He8u68koNZTz8Oz5yGa6J3H3lZ0xYgXBK2QymlWWA+RWnYhskLBv2vmE+hBMCtbA7KX5drWyRT/2JsqZ2IvfB9Y4bWDNMFbJRFmC9E74SoS0CqulwjkC0+5bpcV1CZ8NMej4pjy0U+doDQsGyo1hzVJttIjhQ7GnBtRFN1UarUlH8F3xict+HY07rEzoUGPlWcjRFRr4/gChZgc3ZL2d8oAAAAASUVORK5CYII=');
+	background-color: rgb(243, 154, 0);
+	color: #fcf8e3;
+	border-color: #faebcc;
+}
+
+.jq-icon-error {
+	background-image:
+		url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHOSURBVEhLrZa/SgNBEMZzh0WKCClSCKaIYOED+AAKeQQLG8HWztLCImBrYadgIdY+gIKNYkBFSwu7CAoqCgkkoGBI/E28PdbLZmeDLgzZzcx83/zZ2SSXC1j9fr+I1Hq93g2yxH4iwM1vkoBWAdxCmpzTxfkN2RcyZNaHFIkSo10+8kgxkXIURV5HGxTmFuc75B2RfQkpxHG8aAgaAFa0tAHqYFfQ7Iwe2yhODk8+J4C7yAoRTWI3w/4klGRgR4lO7Rpn9+gvMyWp+uxFh8+H+ARlgN1nJuJuQAYvNkEnwGFck18Er4q3egEc/oO+mhLdKgRyhdNFiacC0rlOCbhNVz4H9FnAYgDBvU3QIioZlJFLJtsoHYRDfiZoUyIxqCtRpVlANq0EU4dApjrtgezPFad5S19Wgjkc0hNVnuF4HjVA6C7QrSIbylB+oZe3aHgBsqlNqKYH48jXyJKMuAbiyVJ8KzaB3eRc0pg9VwQ4niFryI68qiOi3AbjwdsfnAtk0bCjTLJKr6mrD9g8iq/S/B81hguOMlQTnVyG40wAcjnmgsCNESDrjme7wfftP4P7SP4N3CJZdvzoNyGq2c/HWOXJGsvVg+RA/k2MC/wN6I2YA2Pt8GkAAAAASUVORK5CYII=');
+	background-color: #d80400;
+	color: #f2dede;
+	border-color: #ebccd1;
+}
+
+.jq-icon-success {
+	background-image:
+		url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADsSURBVEhLY2AYBfQMgf///3P8+/evAIgvA/FsIF+BavYDDWMBGroaSMMBiE8VC7AZDrIFaMFnii3AZTjUgsUUWUDA8OdAH6iQbQEhw4HyGsPEcKBXBIC4ARhex4G4BsjmweU1soIFaGg/WtoFZRIZdEvIMhxkCCjXIVsATV6gFGACs4Rsw0EGgIIH3QJYJgHSARQZDrWAB+jawzgs+Q2UO49D7jnRSRGoEFRILcdmEMWGI0cm0JJ2QpYA1RDvcmzJEWhABhD/pqrL0S0CWuABKgnRki9lLseS7g2AlqwHWQSKH4oKLrILpRGhEQCw2LiRUIa4lwAAAABJRU5ErkJggg==');
+	color: #dff0d8;
+	background-color: #0aa90d;
+	border-color: #d6e9c6;
+}
+
+.datagrid-row-expander {
+	margin: 0 !important;
+}

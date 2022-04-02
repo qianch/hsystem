@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="CutTcBomMainDaoImpl">
+    <sql comment="裁剪图纸bom主表" id="cutTcBomMainDao-list">
+        <![CDATA[
+		select bommain.*,hc.consumerName,(select name_zh_CN from  platform_dict where rootCode='State' and code=bommain.state limit 1) as StateName from hs_cut_tc_proc_bom_main  bommain
+		left join  hs_consumer hc on bommain.customerCode=hc.consumerCode
+
+		where 1=1
+		 <#if key["tcProcBomCodeVersion"]??>
+			and bommain.tcProcBomCodeVersion like :tcProcBomCodeVersion
+		</#if>
+		<#if key["bladeTypeName"]??>
+			and bommain.bladeTypeName like :bladeTypeName
+		</#if>
+		<#if key["customerCode"]??>
+			and bommain.customerCode = :customerCode
+		</#if>
+
+		<#if key["data"]!="">
+			and (
+			bommain.tcProcBomCodeVersion like "%${key["data"]}%"
+ 			or bommain.bladeTypeName like "%${key["data"]}%"
+ 			or bommain.customerName like "%${key["data"]}%")
+		</#if>
+
+		<#if key["start"]??&&key["end"]??>
+					 and bommain.createTime between :start and :end
+				</#if>
+				<#if key["start"]??&&!key["end"]??>
+					 and bommain.createTime > :start
+				</#if>
+				<#if !key["start"]??&&key["end"]??>
+					 and bommain.createTime < :end
+		</#if>
+
+		<#if key["sort"]??&&key["order"]??>
+			order by ${key["sort"]} ${key["order"]}
+		</#if>
+
+		<#if !key["sort"]??&&!key["order"]??>
+			order by createTime desc
+		</#if>
+
+		]]>
+    </sql>
+
+
+
+    <sql comment="根据裁剪bom主表id查询裁剪bom明细" id="findCutTcBomDetailByMainId">
+        <![CDATA[
+          select * from hs_cut_tc_proc_bom_detail where mainId=(:mainId)
+		]]>
+    </sql>
+
+
+
+
+
+
+
+</sqls>

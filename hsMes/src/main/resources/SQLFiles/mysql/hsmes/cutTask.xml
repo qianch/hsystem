@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="CutTask">
+	<sql comment="西门子裁剪任务单列表" id="cutTask-list">
+		<![CDATA[
+			select t.* from hs_siemens_cut_task t where 1=1
+			<#if key["TASKCODE"]??> and TASKCODE like :TASKCODE</#if>
+			<#if key["ORDERCODE"]??> and ORDERCODE like :ORDERCODE</#if>
+			<#if key["PARTNAME"]??> and PARTNAME like :PARTNAME</#if>
+			<#if key["BATCHCODE"]??> and BATCHCODE like :BATCHCODE</#if>
+			<#if key["CONSUMERSIMPLENAME"]??> and CONSUMERSIMPLENAME like :CONSUMERSIMPLENAME</#if>
+			<#if key["CONSUMERCATEGORY"]??> and CONSUMERCATEGORY like :CONSUMERCATEGORY</#if>
+			<#if key["DELIVERYDATE_S"]??&&key["DELIVERYDATE_E"]??>
+				and DELIVERYDATE between :DELIVERYDATE_S and :DELIVERYDATE_E
+			</#if>
+			<#if key["DELIVERYDATE_S"]??&&!key["DELIVERYDATE_E"]??>
+				and DELIVERYDATE > :DELIVERYDATE_S 
+			</#if>
+			<#if !key["DELIVERYDATE_S"]??&&key["DELIVERYDATE_E"]??>
+				and DELIVERYDATE < :DELIVERYDATE_E
+			</#if>
+			<#if key["SUITCOUNT"]??> and SUITCOUNT like :SUITCOUNT</#if>
+			<#if key["ASSIGNSUITCOUNT"]??> and ASSIGNSUITCOUNT like :ASSIGNSUITCOUNT</#if>
+			<#if key["PACKEDSUITCOUNT"]??> and PACKEDSUITCOUNT like :PACKEDSUITCOUNT</#if>
+			<#if key["ISCOMPLETE"]??> and ISCOMPLETE = :ISCOMPLETE</#if>
+			<#if key["ISCLOSED"]??> and ISCLOSED = :ISCLOSED</#if>
+			<#if key["CREATETIME"]??> and CREATETIME like :CREATETIME</#if>
+			<#if key["CREATEUSERNAME"]??> and CREATEUSERNAME like :CREATEUSERNAME</#if>
+			<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+				<#else>
+				order by id desc
+			</#if>
+		]]>
+	</sql>
+	<sql comment="启用/关闭裁剪任务单" id="cutTask-enable">
+		<![CDATA[
+			update hs_siemens_cut_task set isClosed=:closed where id in (:ids)
+		]]>
+	</sql>
+	<sql comment="获取套材所有的部件" id="siemens-suitCoutPerDrawings-cutTask">
+		<![CDATA[
+			SELECT suitCountPerDrawings from hs_siemens_cut_task_drawings where partId=:partId and ctId=:ctId group by suitCountPerDrawings
+		]]>
+	</sql>
+</sqls>

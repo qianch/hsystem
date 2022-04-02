@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="MaterialRequirementPlanDaoImpl">
+	<sql comment="删除旧的生产计划明细的套材物料需求计划" id="mrp-delete-tc">
+		<![CDATA[
+			delete from hs_tc_material_requirement_plan where producePlanId=${key["pid"]}
+		]]>
+	</sql>
+	<sql comment="删除旧的生产计划明细的非套材物料需求计划" id="mrp-delete-ftc">
+		<![CDATA[
+			delete from hs_ftc_material_requirement_plan where producePlanId=${key["pid"]}
+		]]>
+	</sql>
+	<sql comment="删除旧的生产计划明细的包材物料需求计划" id="mrp-delete-bc">
+		<![CDATA[
+			delete from hs_bc_material_requirement_plan where producePlanId=${key["pid"]}
+		]]>
+	</sql>
+</sqls>

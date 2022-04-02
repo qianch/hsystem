@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="TrayDaoImpl">
+	<sql comment="托" id="weaveTray-list">
+		<![CDATA[
+		select t.* from  hs_weave_tray t
+		where 1=1 
+		]]>
+	</sql>
+	<sql comment="根据托条码查询箱，卷信息" id="findBoxRoll-list">
+		<![CDATA[
+			select IFNULL(t2.weight,0) AS boxWeight,IFNULL(t3.rollweight,0) AS rollWeight from  hs_tray t
+			left join hs_tray_box_roll t1 on t.trayBarcode = t1.trayBarcode
+			left join hs_box t2 on t1.boxBarcode = t2.boxBarcode
+			left join hs_roll t3 on t1.rollBarcode = t3.rollBarcode
+			where t.trayBarcode in(:code)
+			]]>
+		</sql>
+
+	<sql comment="根据箱条码查询卷信息" id="findRoll-list">
+		<![CDATA[
+			select t2.* from hs_box t 
+			left join hs_box_roll t1 on t.boxBarcode =t1.boxBarcode
+			left join hs_roll t2 on t1.rollBarcode =t2.rollBarcode	
+			where t.boxBarcode in(:code)
+		]]>
+	</sql>
+
+</sqls>

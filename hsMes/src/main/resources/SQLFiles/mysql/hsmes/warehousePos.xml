@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="WarehousePosDaoImpl">
+	<sql comment="库位列表" id="warehousePos-list">
+		<![CDATA[
+		select t.*,t1.WAREHOUSECODE,t1.WAREHOUSENAME from  hs_warehouse_pos t
+		left join hs_warehouse  t1 on t.WAREHOUSEID = t1.id
+		where t.isCancellation is null
+		<#if key["code"]??>
+			and WAREHOUSEPOSCODE like :code
+		</#if>
+		<#if key["name"]??>
+			and WAREHOUSEPOSNAME like :name
+		</#if>
+        <#if key["wareHouseName"]??>
+			and t1.wareHouseName like :wareHouseName
+		</#if>
+		<#if key["wareType"]??>
+			and t1.wareType like :wareType
+		</#if>
+		]]>
+	</sql>
+	<sql comment="删除库位信息" id="warehousePos-delete">
+		<![CDATA[
+			delete from hs_warehouse_pos where id in (:id)	
+		]]>
+	</sql>
+	<sql comment="作废库位信息" id="warehousePos-update">
+		<![CDATA[
+			update hs_warehouse_pos set isCancellation=1 where id in (:id)
+		]]>
+	</sql>
+	
+</sqls>

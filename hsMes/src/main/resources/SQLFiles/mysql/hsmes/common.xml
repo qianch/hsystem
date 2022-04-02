@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="CommonDaoImpl">
+	<sql comment="根据代码和版本获取所有叶子部件节点" id="bom-leaf-node">
+		<![CDATA[
+			SELECT
+				id as partId,
+				tcProcBomVersionPartsName,
+				tcProcBomVersionPartsCount 
+			FROM
+				hs_tc_proc_bom_version_parts p
+			WHERE
+				p.tcProcBomVersoinId = (
+					SELECT
+						id
+					FROM
+						hs_tc_proc_bom_version
+					WHERE
+						tcProcBomVersionCode = :ver
+					AND TCPROCBOMID = (
+						SELECT
+							id
+						FROM
+							hs_tc_proc_bom
+						WHERE
+							tcProcBomCode = :code
+					)
+				)
+			AND p.id NOT IN (
+				SELECT
+					p2.tcProcBomVersionParentParts
+				FROM
+					hs_tc_proc_bom_version_parts p2
+				WHERE
+					p2.tcProcBomVersionParentParts IS NOT NULL
+				AND p2.tcProcBomVersoinId = (
+					SELECT
+						id
+					FROM
+						hs_tc_proc_bom_version
+					WHERE
+						tcProcBomVersionCode = :ver
+					AND TCPROCBOMID = (
+						SELECT
+							id
+						FROM
+							hs_tc_proc_bom
+						WHERE
+							tcProcBomCode = :code
+					)
+				)
+			)
+		]]>
+	</sql>
+	<sql comment="根据生产计划查询各部件生产出的数量" id="produced-part-count">
+		SELECT
+				count(1) count,b.partName
+			FROM
+				hs_roll r
+			LEFT JOIN hs_part_barcode b ON r.partBarcode = b.barcode
+			WHERE b.producePlanDetailId=:id
+			group by b.partName
+		UNION ALL
+		SELECT
+				count(1) count,tb.partName
+			FROM
+				hs_tray t
+			LEFT JOIN hs_tray_barcode tb ON t.trayBarcode=tb.barcode
+			LEFT JOIN hs_tc_proc_bom_version_parts p on p.id=tb.partId
+			WHERE tb.producePlanDetailId=:id
+			and p.tcProcBomVersionPartsType='成品胚布'
+			group by tb.partId
+	</sql>
+	
+	
+	
+</sqls>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="PackageTask">
+	<sql comment="包装任务列表列表" id="packageTask-list">
+		<![CDATA[
+			SELECT
+				t.*,b.id bid
+			FROM
+				hs_produce_package_task t
+			LEFT JOIN hs_bc_bom b ON b.id = t.packageBomId
+			WHERE
+				t.producePlanDetailId =:id
+		]]>
+	</sql>
+</sqls>

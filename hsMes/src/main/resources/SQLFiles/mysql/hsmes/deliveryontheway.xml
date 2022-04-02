@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="DeliveryOnTheWayPlanDaoImpl">
+	<sql comment="成品出库单记录" id="productDeliveryOnTheWayRecord-list">
+		<![CDATA[
+		select plan.*,u.userName,house.WAREHOUSENAME,(select count(1)  from hs_delivery_ontheway_plan_detail detail where detail.deliveryId=plan.id ) as totalCount ,(select sum(weight)  from hs_delivery_ontheway_plan_detail detail where detail.deliveryId=plan.id ) as totalWeight from hs_delivery_ontheway_plan as plan
+		LEFT JOIN  platform_user u  on u.id=plan.deliveryBizUserId
+		LEFT JOIN  hs_warehouse house  on house.WareHouseCode=plan.WareHouseCode
+		where 1=1
+		 <#if key["deliveryCode"]??>
+			and plan.deliveryCode like :deliveryCode
+		</#if>
+		<#if key["plate"]??>
+			and plan.plate like :plate
+		</#if>
+
+		<#if key["start"]??&&key["end"]??>
+					 and plan.deliveryDate between :start and :end
+				</#if>
+				<#if key["start"]??&&!key["end"]??>
+					 and plan.deliveryDate > :start
+				</#if>
+				<#if !key["start"]??&&key["end"]??>
+					 and plan.deliveryDate < :end
+		</#if>
+
+		 and plan.id in ( select deliveryId from  hs_delivery_ontheway_plan_detail where 1=1
+		<#if key["salesOrderSubCode"]??>
+			and salesOrderSubCode like :salesOrderSubCode
+		</#if>
+		<#if key["batchCode"]??>
+			and batchCode like :batchCode
+		</#if>
+		<#if key["factoryProductName"]??>
+			and factoryProductName like :factoryProductName
+		</#if>
+		<#if key["consumerProductName"]??>
+			and consumerProductName like :consumerProductName
+		</#if>
+
+		<#if key["barcode"]??>
+			and barcode like :barcode
+		</#if>
+
+		)
+
+		<#if key["sort"]??&&key["order"]??>
+			order by ${key["sort"]} ${key["order"]}
+		</#if>
+		<#if !key["sort"]??&&!key["order"]??>
+			order by deliveryDate desc
+		</#if>
+		]]>
+	</sql>
+
+	<sql comment="在途调拨单总重量" id="productDeliveryOnTheWayRecord-totalweight">
+		<![CDATA[
+			select IFNULL(FORMAT(SUM(totalWeight),1),0) as totalWeight,IFNULL(SUM(totalCount),0) as totalCount  from
+
+       (select plan.*,u.userName,(select count(1)  from hs_delivery_ontheway_plan_detail detail where detail.deliveryId=plan.id ) as totalCount,
+       (select sum(weight)  from hs_delivery_ontheway_plan_detail detail where detail.deliveryId=plan.id ) as totalWeight from hs_delivery_ontheway_plan as plan
+		LEFT JOIN  platform_user u  on u.id=plan.deliveryBizUserId
+		LEFT JOIN  hs_warehouse house  on house.WareHouseCode=plan.WareHouseCode
+		where 1=1
+		 <#if key["deliveryCode"]??>
+			and plan.deliveryCode like :deliveryCode
+		</#if>
+		<#if key["plate"]??>
+			and plan.plate like :plate
+		</#if>
+
+		<#if key["start"]??&&key["end"]??>
+					 and plan.deliveryDate between :start and :end
+				</#if>
+				<#if key["start"]??&&!key["end"]??>
+					 and plan.deliveryDate > :start
+				</#if>
+				<#if !key["start"]??&&key["end"]??>
+					 and plan.deliveryDate < :end
+		</#if>
+
+		 and plan.id in ( select deliveryId from  hs_delivery_ontheway_plan_detail where 1=1
+		<#if key["salesOrderSubCode"]??>
+			and salesOrderSubCode like :salesOrderSubCode
+		</#if>
+		<#if key["batchCode"]??>
+			and batchCode like :batchCode
+		</#if>
+		<#if key["factoryProductName"]??>
+			and factoryProductName like :factoryProductName
+		</#if>
+		<#if key["consumerProductName"]??>
+			and consumerProductName like :consumerProductName
+		</#if>
+
+		<#if key["barcode"]??>
+			and barcode like :barcode
+		</#if>
+
+		)
+
+		<#if key["sort"]??&&key["order"]??>
+			order by ${key["sort"]} ${key["order"]}
+		</#if>
+		<#if !key["sort"]??&&!key["order"]??>
+			order by deliveryDate desc
+		</#if>
+		]]>
+		) as plan
+
+	</sql>
+
+	<sql comment="获取发货单号" id="onthewaydelivery-code">
+		<![CDATA[
+			from DeliveryOnTheWayPlan p where p.deliveryCode like :code order by id desc
+		]]>
+	</sql>
+
+	<sql comment="根据成品出库单查询成品出库记录" id="findDeliveryOnTheWayPlanDetailsByDeliveryId">
+		<![CDATA[
+
+		select * from   hs_delivery_ontheway_plan_detail where deliveryId=(:deliveryId)
+		]]>
+	</sql>
+
+
+
+
+	<sql comment="根据成品出库单查询成品出库记录" id="findProductDeliveryOnTheWayPlanDetailsByDeliveryId">
+		<![CDATA[
+
+	select salesOrderSubCode,batchCode,factoryProductName,consumerProductName,partName,SUM(weight) AS totalweight,COUNT(1) AS totaltrayNum from   hs_delivery_ontheway_plan_detail where deliveryId=(:deliveryId)
+
+	GROUP BY salesOrderSubCode,batchCode,factoryProductName,consumerProductName,partName
+		]]>
+	</sql>
+
+
+
+	<sql comment="在途调拨单明细记录" id="findProductDeliveryOnTheWayPlanDetails">
+		<![CDATA[
+ select detailplan.*,plan.deliveryCode,plan.deliveryDate,plan.WareHouseCode,house.WAREHOUSENAME	from hs_delivery_ontheway_plan plan
+ inner join	 hs_delivery_ontheway_plan_detail detailplan  on  plan.id=detailplan.deliveryId
+ LEFT JOIN  hs_warehouse house  on house.WareHouseCode=plan.WareHouseCode
+		where 1=1
+		 <#if key["deliveryCode"]??>
+			and plan.deliveryCode like :deliveryCode
+		</#if>
+		<#if key["plate"]??>
+			and plan.plate like :plate
+		</#if>
+
+		<#if key["start"]??&&key["end"]??>
+					 and plan.deliveryDate between :start and :end
+		</#if>
+		<#if key["start"]??&&!key["end"]??>
+					 and plan.deliveryDate > :start
+		</#if>
+		<#if !key["start"]??&&key["end"]??>
+					 and plan.deliveryDate < :end
+		</#if>
+
+		<#if key["salesOrderSubCode"]??>
+			and detailplan.salesOrderSubCode like :salesOrderSubCode
+		</#if>
+		<#if key["batchCode"]??>
+			and detailplan.batchCode like :batchCode
+		</#if>
+		<#if key["factoryProductName"]??>
+			and detailplan.factoryProductName like :factoryProductName
+		</#if>
+		<#if key["consumerProductName"]??>
+			and detailplan.consumerProductName like :consumerProductName
+		</#if>
+
+		<#if key["barcode"]??>
+			and detailplan.barcode like :barcode
+		</#if>
+
+		<#if key["sort"]??&&key["order"]??>
+			order by ${key["sort"]} ${key["order"]}
+		</#if>
+
+		<#if !key["sort"]??&&!key["order"]??>
+			order by plan.deliveryDate desc
+		</#if>
+
+		]]>
+
+
+	</sql>
+
+
+
+</sqls>

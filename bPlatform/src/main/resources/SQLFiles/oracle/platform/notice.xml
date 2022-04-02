@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="NoticeDaoImpl">
+	<sql comment="系统公告列表" id="notice-list">
+		<![CDATA[
+		select t.id ,t.content,t.inputtime,t.title,to_char(t.contenttxt) as contenttxt,t.userid,aa.username as publisher1 from PLATFORM_NOTICE t left join platform_user aa on aa.id=t.userid where 1=1
+		<#if key["t.name"]??>
+			and t.title like :t.name
+		</#if>
+		<#if key["t.content"]??>
+			and t.contentTxt like :t.content
+		</#if>
+		<#if key["sort"]??>
+			order by ${key["sort"]} ${key["order"]}
+			<#else>
+			order by t.inputtime desc
+		</#if>
+		]]>
+	</sql>
+	<sql comment="删除系统公告" id="notice-delete">
+		<![CDATA[
+		delete from platform_notice where id in (:id)
+		]]>
+	</sql>
+	<sql comment="按时间查询系统公告信息" id="notice-findnotice">
+		<![CDATA[
+		select * from (select * from PLATFORM_NOTICE t order by t.inputtime desc) where rownum<=7 order by rownum
+		]]>
+	</sql>
+</sqls>

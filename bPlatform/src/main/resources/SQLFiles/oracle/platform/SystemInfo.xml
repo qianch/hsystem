@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="SystemInfoDaoImpl">
+	<sql comment="系统用户列表" id="userCount">
+		<![CDATA[
+		select count(1) from PLATFORM_USER t
+		]]>
+	</sql>
+</sqls>

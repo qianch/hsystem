@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="LanguageImpl">
+    <sql comment="国际化配置列表" id="language-list">
+        <![CDATA[
+		select * from Platform_Language where  1=1
+			<#if key["languageCode"]??>
+			   and (languageCode like :languageCode)
+			</#if>
+			<#if key["chinese"]??>
+			   and (chinese like :chinese)
+			</#if>
+			<#if key["english"]??>
+			   and (english like :english)
+			</#if>
+			<#if key["arabic"]??>
+			   and (arabic like :arabic)
+			</#if>
+			order by id desc
+		]]>
+    </sql>
+</sqls>

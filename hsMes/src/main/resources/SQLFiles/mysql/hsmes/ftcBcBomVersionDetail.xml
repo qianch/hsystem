@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="FtcBcBomVersionDetailDaoImpl">
+	<sql comment="非套材包材BOM版本明细" id="ftcBcBomVersionDetail-list">
+		<![CDATA[
+		select * from hs_ftc_bc_bom_version_detail t where 1=1
+		<#if key["id"]??>
+			and (t.packVersionId in (:id))
+		</#if>
+		<#if key["PACKMATERIALNAME"]??>
+			and (t.PACKMATERIALNAME like (:PACKMATERIALNAME))
+		</#if>
+		<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+			</#if>
+			<#if !key["sort"]??&&!key["order"]??>
+				order by id desc
+			</#if>
+		]]>
+	</sql>
+		<sql comment="删除非套材包材BOM版本明细" id="ftcBcBomVersionDetail-delete-pid">
+		<![CDATA[
+		
+		
+		DELETE from hs_ftc_bc_bom_version_detail  where 1=1 and packVersionId not in (select t.id from hs_ftc_bc_bom_version t )
+
+
+
+		]]>
+	</sql>
+	
+</sqls>

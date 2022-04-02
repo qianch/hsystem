@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="DeviceTypeDaoImpl">
+	<sql comment="客户列表" id="deviceType-list">
+		<![CDATA[
+		select * from  HS_DEVICETYPE where 1=1 
+		<#if key["pid"]??>
+			and  ( categoryParentId in (:pid)  )
+		</#if>
+		<#if key["name"]??>
+			and categoryName like :name
+		</#if>
+		<#if key["sort"]??&&key["order"]??>
+			order by ${key["sort"]} ${key["order"]}
+		</#if>
+		<#if !key["sort"]??&&!key["order"]??>
+			order by id desc
+		</#if>
+		]]>
+	</sql>
+	<sql comment="删除客户信息" id="deviceType-delete">
+		<![CDATA[
+			delete from HS_DEVICETYPE where id in (:id)	
+		]]>
+	</sql>
+	
+</sqls>

@@ -1,0 +1,537 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="TurnBagPlan">
+	<sql comment="翻包计划列表" id="turnBagPlan-list">
+		<![CDATA[
+			SELECT
+				t.*, sod.salesOrderSubCode,
+				c.CONSUMERNAME
+			FROM
+				hs_turnbag_plan t
+			LEFT JOIN hs_sales_order_detail sod ON sod.id = t.newSalesOrderDetailsId
+			LEFT JOIN hs_sales_order so ON so.id = sod.salesOrderId
+			LEFT JOIN hs_consumer c ON c.id = so.salesOrderConsumerId
+			where 1=1 
+			<#if key["start"]??&&key["end"]??>
+			and t.finishTime between :start and :end
+			</#if>
+			<#if key["start"]??&&!key["end"]??>
+				and t.finishTime > :start
+			</#if>
+			<#if !key["start"]??&&key["end"]??>
+				and t.finishTime < :end
+			</#if>
+			<#if key["orderCode"]??>
+			 and ( t.newSalesOrderCode like :orderCode or t.oldSalesOrderCode like :orderCode )
+			</#if>
+			<#if key["orderCode"]??>
+			 and ( t.newSalesOrderCode like :orderCode or t.oldSalesOrderCode like :orderCode )
+			</#if>
+			<#if key["trunBagCode"]??>
+			 and t.trunBagCode like :trunBagCode 
+			</#if>
+			<#if key["userName"]??>
+			 and t.userName like :userName 
+			</#if>
+			<#if key["departmentName"]??>
+			 and t.departmentName like :departmentName 
+			</#if>
+			<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+				<#else>
+				order by id desc
+			</#if>
+		]]>
+	</sql>
+	<sql comment="根据订单查询批次号数量" id="turnbag-batchcode-count">
+		<![CDATA[
+			SELECT
+                ppd.batchCode,case when isnull(c) then 0 else  c end count
+            FROM
+                hs_produce_plan_detail ppd
+            LEFT JOIN hs_produce_plan p ON p.id = producePlanId
+            LEFT JOIN (
+                SELECT
+                    tb.batchCode,count(1) c
+                FROM
+                    hs_tray t
+                LEFT JOIN hs_tray_barcode tb ON tb.barcode = t.trayBarcode
+                LEFT JOIN hs_product_stock_state s ON s.barCode = t.trayBarcode
+                WHERE
+                    t.rollQualityGradeCode = 'A'
+                AND tb.isOpened = 0
+                AND t.state = 0
+                AND tb.salesOrderDetailId =:orderId
+                <#if key["partId"]??>
+                    AND tb.partId = :partId
+                </#if>
+                AND s.stockState = 1
+                GROUP BY tb.batchCode
+            ) x ON x.batchCode = ppd.batchCode
+            LEFT JOIN hs_produce_plan_detail_part_count cc on cc.planDetailId=ppd.id
+            WHERE
+                fromSalesOrderDetailId = :orderId
+            
+             <#if key["partId"]??>
+                    AND cc.partId=:partId
+                    AND cc.planPartCount>0
+             </#if>
+            
+            AND auditState = 2
+		]]>
+	</sql>
+	<sql comment="根据订单查询批次号数量" id="turnbag-batchcode-count-new">
+		<![CDATA[
+			SELECT
+				t.batchCode,
+				count(1) AS count
+			FROM
+				hs_tray_barcode t
+			LEFT JOIN hs_product_stock_state s ON s.barCode = t.barcode
+			WHERE
+				t.salesProductId=:productId
+				and t.belongToSalesOrderId is null
+				AND t.salesOrderCode = :code
+			GROUP BY
+				t.batchCode
+		]]>
+	</sql>
+	<sql comment="翻包订单选择" id="turnbag-order">
+		<![CDATA[
+			SELECT
+				so.salesOrderCode,
+				so.salesOrderDate,
+				so.salesOrderConsumerId,
+				so.salesOrderBizUserId,
+				so.salesOrderIsExport,
+				so.salesOrderReviewState,
+				so.salesOrderType, 
+				so.salesOrderTotalMoney,
+				so.salesOrderDeliveryTime,
+				so.salesOrderProduceProgress,
+				so.salesOrderPackagingProgress,
+				so.salesOrderMemo,
+				so.auditState,
+				so.hasCreatedPlans,
+				so.isClosed,
+				sod.*,
+				c.consumerName,
+				c.id as CONSUMERID,
+				u.userName,
+				u.id as BIZUSERID,
+				ppd.batchCode,
+				ppd.id as fromProducePlanDetailId,
+				ppd.packReq
+			FROM
+				hs_sales_order_detail sod
+			LEFT JOIN hs_sales_order so ON so.id = sod.salesOrderId
+			LEFT JOIN HS_Produce_Plan_Detail ppd on ppd.fromSalesOrderDetailId=sod.id
+			LEFT JOIN hs_consumer c ON c.id = so.salesOrderConsumerId
+			LEFT JOIN platform_user u ON u.id = so.salesOrderBizUserId
+			WHERE 1=1 and sod.PRODUCTISTC in (1,2,-1) and so.auditState=2
+			<#if key["SALESORDERSUBCODE"]??> and sod.SALESORDERSUBCODE like :SALESORDERSUBCODE </#if>
+			<#if key["CONSUMERNAME"]??> and c.CONSUMERNAME like :CONSUMERNAME </#if>
+			<#if key["CONSUMERPRODUCTNAME"]??> and sod.CONSUMERPRODUCTNAME like :CONSUMERPRODUCTNAME </#if>
+			<#if key["FACTORYPRODUCTNAME"]??> and sod.FACTORYPRODUCTNAME like :FACTORYPRODUCTNAME </#if>
+			<#if key["PRODUCTMODEL"]??> and sod.PRODUCTMODEL like :PRODUCTMODEL </#if>
+			<#if key["PRODUCTWIDTH"]??> and sod.PRODUCTWIDTH like :PRODUCTWIDTH </#if>
+			<#if key["PRODUCTROLLLENGTH"]??> and sod.PRODUCTROLLLENGTH like :PRODUCTROLLLENGTH </#if>
+			<#if key["PRODUCTROLLWEIGHT"]??> and sod.PRODUCTROLLWEIGHT like :PRODUCTROLLWEIGHT </#if>
+			<#if key["USERNAME"]??> and u.USERNAME like :USERNAME </#if>
+			<#if key["BATCHCODE"]??> and ppd.batchCode like :BATCHCODE </#if>
+			<#if key["SALESORDERISEXPORT"]??> and so.SALESORDERISEXPORT like :SALESORDERISEXPORT </#if>
+			<#if key["SALESORDERTYPE"]??> and so.SALESORDERTYPE like :SALESORDERTYPE </#if>
+			<#if key["PRODUCTPROCESSCODE"]??> and sod.PRODUCTPROCESSCODE like :PRODUCTPROCESSCODE </#if>
+			<#if key["PRODUCTPACKAGINGCODE"]??> and sod.PRODUCTPACKAGINGCODE like :PRODUCTPACKAGINGCODE </#if>
+			<#if key["PRODUCTROLLCODE"]??> and sod.PRODUCTROLLCODE like :PRODUCTROLLCODE </#if>
+			<#if key["PRODUCTBOXCODE"]??> and sod.PRODUCTBOXCODE like :PRODUCTBOXCODE </#if>
+			<#if key["PRODUCTTRAYCODE"]??> and sod.PRODUCTTRAYCODE like :PRODUCTTRAYCODE </#if>
+			<#if key["PRODUCTMEMO"]??> and sod.PRODUCTMEMO like :PRODUCTMEMO </#if>
+		]]>
+	</sql>
+	<sql comment="根据条码查询下面的卷数" id="turnbag-rolls">
+		<![CDATA[
+			select * from hs_roll rr where rr.rollBarcode in(
+
+				select barcode from (
+			
+					(select t.rollBarcode as barcode from hs_tray_box_roll t where t.trayBarcode=:code and t.rollBarcode is not null) UNION 
+			
+					(select b.rollBarcode as barcode from hs_box_roll b where b.boxBarcode in (select t.boxBarcode from hs_tray_box_roll t where t.trayBarcode=:code ) or b.boxBarcode =:code)  union 
+			
+					(select r.barcode as barcode from hs_roll_barcode r where r.barcode=:code)
+			
+				) tmp_table
+			
+			)
+		]]>
+	</sql>
+	
+	<sql comment="获取翻包明细" id="turnbag-details">
+		<![CDATA[
+			SELECT
+				d.*, sod.productId,
+				sod.productBatchCode,
+				sod.salesOrderSubCode,
+				sod.consumerProductName,
+				sod.factoryProductName,
+				sod.productWidth,
+				sod.productRollLength,
+				sod.productRollWeight,
+				sod.productProcessCode,
+				sod.productProcessBomVersion,
+				sod.productPackagingCode,
+				sod.productPackageVersion,
+				sod.productModel,
+				sod.deliveryTime,
+				c.consumerSimpleName,
+				ppd.packReq,
+				ppd.packBomId,
+				ppd.procBomId
+			FROM
+				hs_turnbag_plan_details d
+			LEFT JOIN hs_produce_plan_detail ppd on ppd.id=d.fromProducePlanDetailId
+			LEFT JOIN hs_sales_order_detail sod ON d.salesOrderDetailId = sod.id
+			left join hs_sales_order so on so.id=sod.salesOrderId
+			left join hs_consumer c on c.id=so.salesOrderConsumerId
+			where d.producePlanDetailId=:id
+		]]>
+	</sql>
+	
+<!-- 通过托条码级联更新-->	
+	<sql comment="通过托标签更新卷标签信息" id="turnbag-updateRollInfoByTrayCode">
+		<![CDATA[
+			update hs_roll_barcode rb set rb.salesOrderCode=:orderCode,rb.salesProductId=:productId,rb.batchcode=:batchCode,rb.planId=:planId  where barcode in(
+				select barcode from (
+			
+					(select t.rollBarcode as barcode from hs_tray_box_roll t where t.trayBarcode=:trayCode and t.rollBarcode is not null) UNION 
+
+					(select b.rollBarcode as barcode from hs_box_roll b where b.boxBarcode in (select t.boxBarcode as barcode from hs_tray_box_roll t where t.trayBarcode=:trayCode and t.rollBarcode is  null) )  
+
+				) tmp_table
+			)
+		]]>
+	</sql>
+	
+	<sql comment="通过托标签更新盒标签信息" id="turnbag-updateBoxInfoByTrayCode">
+		<![CDATA[
+			update  hs_box_barcode set salesOrderCode=:orderCode,salesProductId=:productId,batchCode=:batchCode,planId=:planId  where barcode in(
+				select barcode from (
+					(select t.boxBarcode as barcode from hs_tray_box_roll t where t.trayBarcode=:trayCode and t.boxBarcode is not null) 
+				) tmp_table
+			)
+		]]>
+	</sql>
+	
+	<sql comment="通过托标签更新托标签信息" id="turnbag-updateTrayInfoByTrayCode">
+		<![CDATA[
+			update hs_tray_barcode set salesOrderCode=:orderCode,salesProductId=:productId,batchCode=:batchCode,planId=:planId where barcode=:trayCode
+		]]>
+	</sql>
+<!-- 通过托条码级联更新结束-->	
+
+
+<!-- 通过盒条码级联更新-->	
+	<sql comment="通过盒标签更新盒标签信息" id="turnbag-updateBoxInfoByBoxCode">
+		<![CDATA[
+			update  hs_box_barcode set salesOrderCode=:orderCode,salesProductId=:productId,batchCode=:batchCode,planId=:planId  where barcode=:boxCode
+		]]>
+	</sql>
+	<sql comment="通过盒标签更新卷标签信息" id="turnbag-updateRollInfoByBoxCode">
+		<![CDATA[
+			update hs_roll_barcode set salesOrderCode=:orderCode,salesProductId=:productId,batchCode=:batchCode,planId=:planId  where barcode in (select b.rollBarcode from hs_box_roll b where b.boxBarcode=:boxCode)
+		]]>
+	</sql>
+<!-- 通过盒条码级联更新结束-->	
+
+
+<!-- 通过卷条码级联更新-->
+	<sql comment="通过盒标签更新卷标签信息" id="turnbag-updateRollInfoByRollCode">
+		<![CDATA[
+			update hs_roll_barcode set salesOrderCode=:orderCode,salesProductId=:productId,batchCode=:batchCode,planId=:planId  where barcode=:rollCode
+		]]>
+	</sql>
+<!-- 通过卷条码级联更新结束-->
+
+	
+	<sql comment="根据卷条码 获取所在托" id="burnbag-getTrayByRoll">
+		<![CDATA[
+			select * from hs_tray where trayBarcode=(SELECT tbr.trayBarcode from hs_tray_box_roll tbr where tbr.rollBarcode=:barcode or tbr.boxBarcode=(SELECT br.boxBarcode from hs_box_roll br where br.rollBarcode=:barcode))
+			
+		]]>
+	</sql>
+	
+	<sql comment="根据盒条码获取所在托" id="burnbag-getTrayByBox">
+		<![CDATA[
+			select * from hs_tray where trayBarcode=(SELECT tbr.trayBarcode from hs_tray_box_roll tbr where tbr.boxBarcode=:barcode)
+		]]>
+	</sql>
+<!-- 托换信息 -->
+
+	<sql comment="根据托条码更换托信息" id="turnbag-change_tray-bytraycode">
+		<![CDATA[
+			update hs_tray t set t.trayBarcode=:newCode where t.trayBarcode=:oldCode
+		]]>
+	</sql>
+	<sql comment="根据托条码更换条码信息" id="turnbag-change_tray_barcode-bytraycode">
+		<![CDATA[
+			update hs_tray_barcode t set t.barcode=:newCode where t.barcode=:oldCode
+		]]>
+	</sql>
+	<sql comment="根据托条码更换托箱卷信息" id="turnbag-change_tray_box_roll-bytraycode">
+		<![CDATA[
+			update hs_tray_box_roll t set t.trayBarcode=:newCode where t.trayBarcode=:oldCode
+		]]>
+	</sql>
+	
+	
+	
+	
+	
+	
+	<sql comment="根据盒条码更换盒信息" id="turnbag-change_box-bytraycode">
+		<![CDATA[
+			update hs_box b set b.boxBarcode=:newCode where b.boxBarcode=:oldCode
+		]]>
+	</sql>
+	<sql comment="根据盒条码更盒条码信息" id="turnbag-change_box_barcode-bytraycode">
+		<![CDATA[
+			update hs_box_barcode b set b.barcode=:newCode where b.barcode=:oldCode
+		]]>
+	</sql>
+	<sql comment="根据盒条码更换箱卷信息" id="turnbag-change_box_roll-bytraycode">
+		<![CDATA[
+			update hs_box_roll b set b.boxBarcode=:newCode where b.boxBarcode=:oldCode
+		]]>
+	</sql>
+	
+	
+	<sql comment="根据卷条码更换卷信息" id="turnbag-change_roll-bytraycode">
+		<![CDATA[
+			update hs_roll r set r.rollBarcode=:newCode where r.rollBarcode=:oldCode
+		]]>
+	</sql>
+	<sql comment="根据盒条码更盒条码信息" id="turnbag-change_roll_barcode-bytraycode">
+		<![CDATA[
+			update hs_roll_barcode r set r.barcode=:newCode where r.barcode=:oldCode
+		]]>
+	</sql>
+	
+	<sql comment="查询最大的翻包序号" id="turnBagPlan-serial">
+		<![CDATA[
+			From ProducePlanDetail where turnBagCode like :code order by turnBagCode desc
+		]]>
+	</sql>
+	<sql comment="翻包领出货物的位置" id="turnbag-position">
+		<![CDATA[
+			SELECT DISTINCT
+				t.salesOrderCode,
+				t.batchCode,
+				upper(warehouseCode) warehouseCode,
+				upper(warehousePosCode) warehousePosCode
+			FROM
+				hs_product_stock_state pss
+			LEFT JOIN hs_tray_barcode t ON t.barcode = pss.barCode
+			WHERE
+				t.salesOrderDetailId=:orderId
+			and
+				t.batchCode=:batchCode
+			AND stockState = 1
+		]]>
+	</sql>
+	
+	<sql comment="获取托盒中的条码和计划ID" id="children-plan">
+		<![CDATA[
+			SELECT 
+				*
+			FROM
+				(
+					SELECT
+						rb.barcode,
+						rb.planId,
+						br.id 
+					FROM
+						hs_box_roll br
+					LEFT JOIN hs_roll_barcode rb ON br.rollBarcode = rb.barcode
+					WHERE
+						br.boxBarcode = :code
+					UNION ALL
+						SELECT
+							bb.barcode,
+							bb.planId,
+							tbr.id
+						FROM
+							hs_tray_box_roll tbr
+						LEFT JOIN hs_box_barcode bb ON tbr.boxBarcode = bb.barcode
+						WHERE
+							tbr.trayBarcode = :code
+						UNION ALL
+							SELECT
+								rb.barcode,
+								rb.planId,
+								tbr.id
+							FROM
+								hs_tray_box_roll tbr
+							LEFT JOIN hs_roll_barcode rb ON tbr.rollBarcode = rb.barcode
+							WHERE
+								tbr.trayBarcode = :code
+				) x where barcode is not null
+		]]>
+	</sql>
+	
+	<sql comment="查询托中的卷所有机台" id="tray-device">
+		<![CDATA[
+			SELECT GROUP_CONCAT(rollDeviceCode SEPARATOR ',') FROM
+			(
+				SELECT DISTINCT
+					r.rollDeviceCode
+				FROM
+					hs_tray_box_roll tbr
+				LEFT JOIN hs_roll r ON r.rollBarcode = tbr.rollBarcode
+				WHERE
+					tbr.trayBarcode = :code and tbr.rollBarcode is not null
+				UNION 
+				SELECT DISTINCT
+					r.rollDeviceCode
+				FROM
+					hs_tray_box_roll tbr
+				LEFT JOIN hs_roll r ON r.partBarcode = tbr.partBarcode
+				WHERE
+					tbr.trayBarcode = :code and tbr.partBarcode is not null
+				UNION
+				SELECT DISTINCT
+					r.rollDeviceCode
+				FROM
+					hs_box_roll br
+				LEFT JOIN hs_roll r ON r.rollBarcode = br.rollBarcode
+				WHERE
+					br.rollBarcode is not null and br.boxBarcode in (
+						SELECT boxBarcode from hs_tray_box_roll where trayBarcode=:code
+				)
+				UNION
+				SELECT DISTINCT
+					r.rollDeviceCode
+				FROM 
+					hs_box_roll br
+				LEFT JOIN hs_roll r ON r.partBarcode = br.partBarcode
+				WHERE
+					br.partBarcode is not null and br.boxBarcode in (
+						SELECT boxBarcode from hs_tray_box_roll where trayBarcode=:code
+				)
+			) x
+		]]>
+	</sql>
+	<sql comment="获取翻包时候的库存，订单，包装等信息" id="turnbag-batch-info">
+		<![CDATA[
+			SELECT
+				ppd.planTotalWeight,
+				ppd.totalTrayCount,
+				ppd.requirementCount,
+				(
+					SELECT
+						count(1)
+					FROM
+						hs_product_stock_state pss
+					LEFT JOIN hs_tray t ON t.trayBarcode = pss.barCode
+					LEFT JOIN hs_tray_barcode tb ON tb.barcode = pss.barCode
+					WHERE
+						tb.producePlanDetailId = ppd.id
+					AND t.rollQualityGradeCode = 'A'
+					AND tb.isOpened = 0
+					AND pss.stockState = 1
+				) inCount,
+				(
+					SELECT
+						count(1)
+					FROM
+						hs_tray t
+					LEFT JOIN hs_tray_barcode tb ON tb.barcode = t.trayBarcode
+					LEFT JOIN hs_product_stock_state pss ON pss.barCode = tb.barcode
+					WHERE
+						tb.producePlanDetailId = ppd.id
+					AND t.rollQualityGradeCode = 'A'
+					AND tb.isOpened = 0
+					AND pss.stockState IS NULL
+				) notInCount,
+				(
+					SELECT
+						sum(tpd.turnBagCount)
+					FROM
+						hs_turnbag_plan_details tpd
+					WHERE
+						tpd.fromProducePlanDetailId = ppd.id and tpd.producePlanDetailId<>:targetProducePlanDetailId
+					AND tpd.batchCode = ppd.batchCode
+				) history,
+				(
+					SELECT
+						GROUP_CONCAT(tpd.memo SEPARATOR '<br>')
+					FROM
+						hs_turnbag_plan_details tpd
+					WHERE
+						tpd.fromProducePlanDetailId = ppd.id and tpd.producePlanDetailId<>:targetProducePlanDetailId
+					AND tpd.batchCode = ppd.batchCode
+				) memo,
+				(
+					SELECT
+						GROUP_CONCAT(
+							CONCAT(
+								rc,
+								'卷每托，共',
+								c,
+								'托'
+							) SEPARATOR '<br>'
+						)
+					FROM
+						(
+							SELECT
+								t.rollCountInTray rc,
+								count(t.rollCountInTray) c
+							FROM
+								hs_product_stock_state pss
+							LEFT JOIN hs_tray t ON t.trayBarcode = pss.barCode
+							LEFT JOIN hs_tray_barcode tb ON tb.barcode = pss.barCode
+							WHERE
+								tb.producePlanDetailId =:fromProducePlanDetailId
+							AND t.rollQualityGradeCode = 'A'
+							AND tb.isOpened = 0
+							AND pss.stockState = 1
+							GROUP BY
+								t.rollCountInTray
+						) x
+				) inCountGroup,
+				(
+					SELECT
+						GROUP_CONCAT(
+							CONCAT(
+								rc,
+								'卷每托，共',
+								c,
+								'托'
+							) SEPARATOR '<br>'
+						)
+					FROM
+						(
+							SELECT
+								t.rollCountInTray rc,
+								count(t.rollCountInTray) c
+							FROM
+								hs_tray t
+							LEFT JOIN hs_tray_barcode tb ON tb.barcode = t.trayBarcode
+							LEFT JOIN hs_product_stock_state pss ON pss.barCode = tb.barcode
+							WHERE
+								tb.producePlanDetailId =:fromProducePlanDetailId
+							AND t.rollQualityGradeCode = 'A'
+							AND tb.isOpened = 0
+							AND pss.stockState IS NULL
+							GROUP BY
+								t.rollCountInTray
+						) x
+				) notInCountGroup
+			FROM
+				hs_produce_plan_detail ppd
+			WHERE
+				ppd.id =:fromProducePlanDetailId
+		]]>
+	</sql>
+	
+</sqls>

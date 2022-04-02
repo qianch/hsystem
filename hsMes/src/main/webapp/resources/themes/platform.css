@@ -1,0 +1,164 @@
+html,body {
+	margin: 0;
+}
+
+table {
+	border-collapse: collapse;
+	font-size: 12px;
+}
+
+th,td {
+	border: solid 1px #CCCCCC;
+}
+
+a {
+	color: black;
+	text-decoration: none;
+}
+
+hr {
+	border-bottom: none;
+}
+
+.title {
+	width: 100px;
+	text-align: right;
+	font-size: 12px;
+	width: 100px;
+    color: #232222;
+    font-weight: bold;
+    filter: alpha(opacity=80);
+    opacity: 0.80;
+    background: #fafafa;
+}
+
+.textbox {
+	border: 1px solid rgb(169, 157, 157);
+	outline: none;
+	height: 30px;
+	margin-left: 6px;
+	padding-left: 5px;
+}
+
+.error {
+	color: red;
+}
+/* 修复平台的table样式对easyui datebox下面的按钮位置的影响 */
+.datebox-button td {
+	text-align: center;
+	padding: 3 !important;
+	border: none;
+}
+/* 修复升序图标样式 */
+.datagrid-sort-asc .datagrid-sort-icon {
+	padding: 0 !important;
+}
+/* 修复降序图标样式 */
+.datagrid-sort-desc .datagrid-sort-icon {
+	padding: 0 !important;
+}
+
+input,button,select,textarea,checkbox {
+	outline: none;
+}
+
+/* 修复平台的textbox样式，对datagrid中的editor样式的影响 */
+.datagrid-view .textbox {
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.datagrid-view .textbox input {
+	width: 100% !important;
+	height: 100%;
+}
+
+.datagrid-editable input {
+	padding: 0 !important;
+	margin: 0 !important;
+	width: 100% !important;
+	height: 100% !important;
+}
+
+.datagrid-row-selected {
+	background: rgb(54, 105, 193) !important;
+}
+
+.datalist .datagrid-wrap {
+	border-color: rgb(230, 238, 248);
+}
+/*修复easyui datebox的周一，至周六的表格样式*/
+.calendar-body th {
+	border: none;
+}
+
+.datagrid-group {
+	background: #f9f9f9;
+}
+
+::selection {
+	background: rgb(5, 121, 58);
+	color: white;
+}
+
+form .textbox {
+	margin: 1px;
+}
+
+.easyui-linkbutton .l-btn-text {
+	line-height: 19px;
+}
+
+.l-btn {
+	/* box-shadow: 0 1px 1px rgb(36, 88, 134), 0 1px 1px rgba(158, 27, 27, 0.05); */
+	border-radius: 0px;
+	outline: none;
+}
+
+.window {
+	border-radius: 0px;
+}
+
+.window,.window .window-body {
+	
+}
+
+.window-mask {
+	background: #fff;
+}
+
+.window-proxy {
+	border-radius: 5px;
+	background: rgba(36, 158, 142, 0.2);
+}
+
+.messager-body {
+	height: auto !important;
+}
+
+.dg_tooltip{
+	color: red;
+    font-weight: bold;
+    font-size: 13px;
+	font-family: sans-serif;
+}
+
+.validatebox-invalid{
+	background:rgb(255, 238, 238);
+}
+
+.textbox-invalid{
+	background:rgba(255, 183, 183, 0.24);
+	border:1px double rgba(255, 0, 0, 0.53);
+}
+
+input[type="checkbox"],input[type="radio"]{
+	vertical-align:top;
+}
+
+.datagrid-filter-c input{
+	height:22px!important;
+	width:100%!important;
+}

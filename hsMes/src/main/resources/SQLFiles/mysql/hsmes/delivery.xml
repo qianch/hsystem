@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="DeliveryPlanDaoImpl">
+	<sql comment="出货计划列表" id="deliveryPlan-list">
+		<![CDATA[
+		select t.*,IF(t.isComplete=1,'完成','未完成') as isCompletes,
+		u.username,c.consumerSimpleName from HS_Delivery_Plan t
+		left join platform_user u on u.id=t.deliveryBizUserId
+		left join hs_consumer c ON t.consumerId = c.id
+		 where 1=1
+		<#if key["deliveryCode"]??>
+			and deliveryCode like :deliveryCode
+		</#if>
+		<#if key["deliveryTargetCompany"]??>
+			and deliveryTargetCompany like :deliveryTargetCompany
+		</#if>
+		<#if key["basePlace"]??>
+			and basePlace like :basePlace
+		</#if>
+		<#if key["start"]??>
+			and t.deliveryDate > :start
+		</#if>
+		<#if key["end"]??>
+			and t.deliveryDate < :end
+		</#if>
+		<#if key["batchCode"]??>
+		 and t.id in (SELECT d.deliveryId FROM hs_delivery_plan_details d WHERE d.batchCode like :batchCode)
+		</#if>
+		<#if key["salesOrderSubCode"]??>
+		 and t.id in (SELECT d.deliveryId FROM hs_delivery_plan_details d WHERE d.salesOrderSubCode like :salesOrderSubCode)
+		</#if>
+		<#if key["consumerProductName"]??>
+		 and t.id in (SELECT d.deliveryId FROM hs_delivery_plan_details d WHERE d.consumerProductName like :consumerProductName)
+		</#if>
+		<#if key["factoryProductName"]??>
+		 and t.id in (SELECT d.deliveryId FROM hs_delivery_plan_details d WHERE d.factoryProductName like :factoryProductName)
+		</#if>
+		<#if key["boxNumber"]??>
+		 and t.id in (SELECT ps.deliveryId FROM hs_delivery_plan_salesorders ps where ps.boxNumber like :boxNumber)
+		 </#if>
+
+		 <#if key["ladingCode"]??>
+		 and t.id in (SELECT ps.deliveryId FROM hs_delivery_plan_salesorders ps where ps.ladingCode like :ladingCode)
+		 </#if>
+		<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+			</#if>
+
+
+			<#if !key["sort"]??&&!key["order"]??>
+				order by id desc
+			</#if>
+		]]>
+	</sql>
+	<sql comment="出货库存套材列表" id="deliveryPlan-list-product-stock-tc">
+		<![CDATA[
+		SELECT
+			pss.*, tb.salesOrderCode,
+			tb.batchCode,
+			fp.consumerProductName,
+			fp.factoryProductName,
+			fp.productModel,
+			tb.partName
+		FROM
+			hs_product_stock_state pss
+		LEFT JOIN hs_tray_barcode tb ON pss.barCode = tb.barcode
+		LEFT JOIN hs_finishproduct fp ON tb.salesProductId = fp.id
+		WHERE
+			pss.stockState = 1
+			AND tb.salesOrderCode=:salesOrderCode
+			AND tb.batchCode=:batchCode
+			AND tb.partId=:partId
+			AND tb.salesProductId=:salesProductId
+		ORDER BY
+			tb.salesOrderCode
+		]]>
+	</sql>
+	<sql comment="出货库存非套材列表" id="deliveryPlan-list-product-stock">
+		<![CDATA[
+		SELECT
+			pss.*, tb.salesOrderCode,
+			tb.batchCode,
+			fp.consumerProductName,
+			fp.factoryProductName,
+			fp.productModel,
+			tb.partName
+		FROM
+			hs_product_stock_state pss
+		LEFT JOIN hs_tray_barcode tb ON pss.barCode = tb.barcode
+		LEFT JOIN hs_finishproduct fp ON tb.salesProductId = fp.id
+		WHERE
+			pss.stockState = 1
+			AND tb.salesOrderCode=:salesOrderCode
+			AND tb.batchCode=:batchCode
+			AND tb.partId is null
+			AND tb.salesProductId=:salesProductId
+		ORDER BY
+			tb.salesOrderCode
+		]]>
+	</sql>
+
+
+	<sql comment="出货计划列表" id="tcDeliveryPlan-list">
+		<![CDATA[
+		select t.*,u.username from HS_TcDelivery_Plan t
+		left join platform_user u on u.id=t.deliveryBizUserId
+		 where 1=1 and t.isClosed is null
+		<#if key["deliveryCode"]??>
+			and deliveryCode like :deliveryCode
+		</#if>
+		<#if key["deliveryTargetCompany"]??>
+			and deliveryTargetCompany like :deliveryTargetCompany
+		</#if>
+		<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+			</#if>
+			<#if !key["sort"]??&&!key["order"]??>
+				order by id desc
+			</#if>
+		]]>
+	</sql>
+
+	<sql comment="查询出货编号列表" id="findDeliveryCode-list">
+		<![CDATA[
+		select * from HS_Delivery_Plan t where 1=1 and isComplete=-1 and auditState=2
+		]]>
+	</sql>
+	<sql comment="根据出货计划id查询出货明细" id="findDeliveryPlanDetailsById">
+		<![CDATA[
+		SELECT
+				s.*,
+				so.salesOrderCode,
+				p.productPackageVersion,
+				p.productPackagingCode,
+				p.productProcessBomVersion,
+				p.productProcessCode,
+				p.productRollLength,
+				p.productRollWeight,
+				p.productShelfLife,
+				p.productWidth
+			FROM
+				HS_Delivery_Plan_Details s
+			LEFT JOIN hs_finishproduct p ON p.id = s.productId
+			left join hs_sales_order_detail sod on s.salesOrderDetailId=sod.id
+			left join hs_sales_order so on so.id=sod.salesOrderId
+			where s.deliveryId=:id
+		]]>
+	</sql>
+
+
+
+	<sql comment="根据搜索项目和内容查询生产计划明细" id="findDeliveryPlanDetails">
+		<![CDATA[
+		SELECT
+ 			p.id,p.deliveryTargetCompany,ps.plate,p.deliveryDate,p.deliveryCode,p.isClosed,ps.ladingCode,ps.boxNumber,ps.pn
+		FROM
+			 hs_delivery_plan p
+		LEFT JOIN hs_delivery_plan_salesorders ps on p.id=ps.deliveryId
+		WHERE  p.isComplete=-1 and p.auditState=2 and  p.isClosed is null and (ps.isFinished is null or ps.isFinished=0)
+			<#if key["project"]?? && key["project"]=="deliveryTargetCompany">
+        		and deliveryTargetCompany like :content
+        	</#if>
+        	<#if key["project"]?? && key["project"]=="ladingCode">
+        		and ladingCode like :content
+        	</#if>
+        	<#if key["project"]?? && key["project"]=="boxNumber">
+        		and boxNumber like :content
+        	</#if>
+        	<#if key["project"]?? && key["project"]=="deliveryCode">
+        		and deliveryCode like :content
+        	</#if>
+        	order by p.id desc
+		]]>
+	</sql>
+
+
+	<sql comment="根据出库计划单id得到一个出库单信息" id="findDeliveryPlanById">
+		<![CDATA[
+		SELECT
+ 			ps.id,p.deliveryTargetCompany,ps.plate,p.deliveryDate,p.deliveryCode,ps.ladingCode,ps.boxNumber,
+ 			ps.pn,ps.count,ps.weight,p.logisticsCompany,p.packagingType,p.attention,ps.size,ps.pdaID,ps.optUser,
+ 			(select sum(count) from  hs_product_out_order as outorder where  outorder.deliveryId=p.id) as outCount
+		FROM
+			 hs_delivery_plan p
+		LEFT JOIN hs_delivery_plan_salesorders ps on p.id=ps.deliveryId
+		WHERE  p.isComplete=-1 and p.auditState=2 and p.id=:id and ps.pn=:pn
+		]]>
+	</sql>
+
+
+	<sql comment="根据出库计划单id得到产品信息" id="findDeliveryPlanProductById">
+		<![CDATA[
+		 SELECT
+			s.salesOrderSubCode,sod.salesOrderSubCodePrint,s.batchCode,s.consumerProductName,s.factoryProductName,
+			s.deliveryCount,s.deliverySuitCount,s.memo,s.id,s.productId,s.partID,s.partName,ps.packingNumber
+			,(select count(1) from  HS_Product_Out_Record as outorder where  outorder.deliveryId=p.id and outorder.packingNumber=s.packingNumber
+			and outorder.barcode in (select  barCode from  hs_product_stock_state  where stockState=-1)
+			and outorder.barcode in ( select barcode from hs_tray_barCode  as tb where tb.salesOrderDetailId=s.salesOrderDetailId  and IFNULL(tb.partId, 0) =IFNULL(s.partId, 0)  and tb.batchCode=s.batchCode
+		                              union select barcode from hs_part_barCode  as pb where pb.salesOrderDetailId=s.salesOrderDetailId and IFNULL(pb.partId, 0) =IFNULL(s.partId, 0) and pb.batchCode=s.batchCode)) as outDetailCount
+		FROM
+			hs_delivery_plan p
+		LEFT JOIN hs_delivery_plan_salesorders ps on p.id=ps.deliveryId
+		LEFT JOIN HS_Delivery_Plan_Details s ON p.id=s.deliveryId and s.packingNumber=ps.packingNumber
+		LEFT JOIN HS_Sales_Order_Detail sod on sod.id=s.salesOrderDetailId
+		WHERE p.isComplete=-1 and p.auditState=2 and p.id=:id and ps.pn=:pn and s.pn=:pn
+		]]>
+	</sql>
+
+	<sql comment="通过托条码查询到托信息和托是否超期" id="findTrayByBarCode">
+		<![CDATA[
+		SELECT  ir.inTime,fp.productShelfLife
+		FROM
+			 hs_tray t
+		LEFT JOIN hs_tray_barcode tb ON tb.barcode = t.trayBarcode
+		LEFT JOIN hs_finishproduct fp ON fp.id = tb.salesProductId
+		LEFT JOIN hs_product_stock_state ss ON ss.barCode = t.trayBarcode
+		LEFT JOIN hs_product_in_record ir ON ir.barCode = t.trayBarcode
+		WHERE  (  ss.stockState = 1   OR ss.stockState IS NULL  ) AND (  tb.isOpened = 0  OR tb.isOpened = NULL ) AND ss.warehouseCode IS NOT NULL
+			and tb.barcode=:barcode
+		]]>
+	</sql>
+
+	<sql comment="通过部件条码查询到部件信息和部件是否超期" id="findPartByBarCode">
+		<![CDATA[
+		SELECT  ir.inTime,fp.productShelfLife
+		FROM
+			 hs_roll r
+		LEFT JOIN hs_part_barcode p ON p.barcode = r.PartBarcode
+		LEFT JOIN hs_finishproduct fp ON fp.id = p.salesProductId
+		LEFT JOIN hs_product_stock_state ss ON ss.barCode = r.PartBarcode
+		LEFT JOIN hs_product_in_record ir ON ir.barCode = r.PartBarcode
+		WHERE  (  ss.stockState = 1   OR ss.stockState IS NULL  ) AND ss.warehouseCode IS NOT NULL
+			and p.barcode=:barcode
+		]]>
+	</sql>
+
+	<sql comment="根据订单查询出货库存" id="find-stock-code">
+		<![CDATA[
+			SELECT
+				s.*, p.productModel,
+				p.productPackageVersion,
+				p.productPackagingCode,
+				p.productProcessBomVersion,
+				p.productProcessCode,
+				p.productRollLength,
+				p.productRollWeight,
+				p.productShelfLife,
+				p.productWidth
+			FROM
+				hs_sales_order_stock s
+			LEFT JOIN hs_finishproduct p ON p.id = s.productId
+			where s.salesOrderSubCode=:code
+		]]>
+	</sql>
+
+	<sql comment="获取发货单号" id="delivery-code">
+		<![CDATA[
+			from DeliveryPlan p where p.deliveryCode like :code order by id desc
+		]]>
+	</sql>
+	<sql comment="根据订单查询批次号数量" id="delivery-batchcode-count-all">
+		<![CDATA[
+			SELECT
+				t.batchCode,count(1) as count
+			FROM
+				hs_tray_barcode t
+			WHERE
+				t.salesProductId=:productId
+				and t.belongToSalesOrderId is null
+				AND t.salesOrderCode =:code
+				and (t.partId=:partId )
+			group by t.batchCode
+		]]>
+	</sql>
+	<sql comment="根据订单查询批次号数量" id="delivery-batchcode-count-out">
+		<![CDATA[
+			SELECT
+				t.batchCode,count(1) as count
+			FROM
+				hs_tray_barcode t
+			LEFT JOIN hs_product_stock_state s on s.barcode=t.barcode
+			WHERE
+				t.salesProductId=:productId
+				and t.belongToSalesOrderId is null
+				AND t.salesOrderCode =:code
+				and s.stockState=-1
+				and (t.partId=:partId )
+			group by t.batchCode
+		]]>
+	</sql>
+
+	<sql comment="根据出货单packingNumber得到成品出库记录" id="findProductOutRecordByPackingNumber">
+		<![CDATA[
+	(SELECT
+				 GROUP_CONCAT(por.barcode) barCodes, tb.salesOrderCode,tb.batchCode,tb.partName,por.productFactoryName,por.productConsumerName,por.operateUserId,count(por.barCode) trayNum,sum(por.weight) weights,sod.salesOrderSubCodePrint
+				 ,u.userName
+			FROM
+				HS_Product_Out_Record por
+			INNER JOIN hs_tray_barCode tb on por.barcode=tb.barcode
+			LEFT JOIN HS_Sales_Order_Detail sod on tb.salesOrderDetailId=sod.id
+			LEFT JOIN platform_user u ON u.id = por.OPERATEUSERID
+			left join hs_product_stock_state pss on pss.barCode=por.barcode
+			WHERE
+				por.packingNumber=:packingNumber and pss.stockState=-1
+			group by tb.salesOrderCode,tb.batchCode,tb.partName)
+
+	UNION
+				(SELECT
+				 GROUP_CONCAT(por.barcode) barCodes, tb.salesOrderCode,tb.batchCode,tb.partName,por.productFactoryName,por.productConsumerName,por.operateUserId,count(por.barCode) trayNum,sum(por.weight) weights,sod.salesOrderSubCodePrint
+				 ,u.userName
+			FROM
+				HS_Product_Out_Record por
+			INNER JOIN hs_part_barCode tb on por.barcode=tb.barcode
+			LEFT JOIN HS_Sales_Order_Detail sod on tb.salesOrderDetailId=sod.id
+			LEFT JOIN platform_user u ON u.id = por.OPERATEUSERID
+			left join hs_product_stock_state pss on pss.barCode=por.barcode
+			WHERE
+				por.packingNumber=:packingNumber and pss.stockState=-1
+			group by tb.salesOrderCode,tb.batchCode,tb.partName)
+		]]>
+	</sql>
+
+
+	<sql comment="根据订单号和批次号得到订单套数和托数" id="findDeliveryPlanCountByIdPch">
+		<![CDATA[
+			SELECT SUM(ppd.totalTrayCount) AS sl,SUM(a.partCount) AS slp
+			FROM HS_Produce_Plan_Detail ppd
+			LEFT JOIN (
+			SELECT ppdp.partCount,ppdp.planDetailId
+			FROM hs_produce_plan_detail_part_count ppdp
+			GROUP BY ppdp.planDetailId)a ON a.planDetailId = ppd.id
+			WHERE ppd.salesOrderCode =:salesOrderCode
+			AND ppd.batchCode =:pch
+			AND IFNULL(ppd.closed,0) = 0
+			AND ppd.isTurnBagPlan='生产'
+		]]>
+	</sql>
+
+</sqls>

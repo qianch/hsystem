@@ -1,0 +1,2697 @@
+.icon-icon {
+
+}
+
+.icon-folder{
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/folder.png') no-repeat center center;
+}
+
+.icon-link{
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/link.png') no-repeat center center;
+}
+
+.icon-button{
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/button.png') no-repeat center center;
+}
+
+.icon-blank {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/blank.gif') no-repeat center center;
+}
+
+.icon-add {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/edit_add.png') no-repeat center center;
+}
+
+.icon-edit {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/pencil.png') no-repeat center center;
+}
+
+.icon-clear {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/clear.png') no-repeat center center;
+}
+
+.icon-remove {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/edit_remove.png') no-repeat center center;
+}
+
+.icon-save {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/filesave.png') no-repeat center center;
+}
+
+.icon-cut {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/cut.png') no-repeat center center;
+}
+
+.icon-ok {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/ok.png') no-repeat center center;
+}
+
+.icon-no {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/no.png') no-repeat center center;
+}
+
+.icon-disable {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/disable.png') no-repeat center center;
+}
+
+.icon-cancel {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/del1.png') no-repeat center center;
+}
+
+.icon-reload {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/reload.png') no-repeat center center;
+}
+
+.icon-search {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/search.png') no-repeat center center;
+}
+
+.icon-print {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/print.png') no-repeat center center;
+}
+
+.icon-help {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/help.png') no-repeat center center;
+}
+
+.icon-undo {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/undo.png') no-repeat center center;
+}
+
+.icon-redo {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/redo.png') no-repeat center center;
+}
+
+.icon-back {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/back.png') no-repeat center center;
+}
+
+.icon-sum {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/sum.png') no-repeat center center;
+}
+
+.icon-tip {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/tip.png') no-repeat center center;
+}
+
+.icon-filter {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/filter.png') no-repeat center center;
+}
+
+.icon-man {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/man.png') no-repeat center center;
+}
+
+.icon-lock {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/lock_edit.png') no-repeat center center;
+}
+
+.icon-more {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/more.png') no-repeat center center;
+}
+
+.icon-grant-role {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/grant_role.png') no-repeat center center;
+}
+
+.icon-sort {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/sort.gif') no-repeat center center;
+}
+
+.icon-mini-add {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/mini_add.png') no-repeat center center;
+}
+
+.icon-mini-edit {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/mini_edit.png') no-repeat center center;
+}
+
+.icon-mini-refresh {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/mini_refresh.png') no-repeat center center;
+}
+
+.icon-large-picture {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/large_picture.png') no-repeat center center;
+}
+
+.icon-large-clipart {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/large_clipart.png') no-repeat center center;
+}
+
+.icon-large-shapes {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/large_shapes.png') no-repeat center center;
+}
+
+.icon-large-smartart {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/large_smartart.png') no-repeat center center;
+}
+
+.icon-large-chart {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/large_chart.png') no-repeat center center;
+}
+
+.icon-start {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/start.png') no-repeat center center;
+}
+
+.icon-stop {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/stop.png') no-repeat center center;
+}
+
+.icon-bmp {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/jpg.gif') no-repeat center center;
+}
+
+.icon-doc {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/doc.gif') no-repeat center center;
+}
+
+.icon-docx {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/docx.gif') no-repeat center center;
+}
+
+.icon-gif {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/jpg.gif') no-repeat center center;
+}
+
+.icon-jpg {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/jpg.gif') no-repeat center center;
+}
+
+.icon-pdf {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/pdf.gif') no-repeat center center;
+}
+
+.icon-ppt {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/ppt.gif') no-repeat center center;
+}
+
+.icon-pptx {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/pptx.gif') no-repeat center center;
+}
+
+.icon-txt {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/txt.gif') no-repeat center center;
+}
+
+.icon-xls {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/xls.gif') no-repeat center center;
+}
+
+.icon-xlsx {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/xlsx.gif') no-repeat center center;
+}
+
+.icon-delete {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/delete.gif') no-repeat center center;
+}
+
+.icon-file {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/file.gif') no-repeat center center;
+}
+
+.icon-zip {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/zip.gif') no-repeat center center;
+}
+
+.icon-rar {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/zip.gif') no-repeat center center;
+}
+
+.icon-excel {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/excel.png') no-repeat center center;
+}
+
+.icon-pause {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/pause.png') no-repeat center center;
+}
+
+.platform-settings {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/settings.png') no-repeat center center;
+}
+
+.platform-rss {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/rss.png') no-repeat center center;
+}
+
+.platform-add {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/add.png') no-repeat center center;
+}
+
+.platform-add2 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/add2.png') no-repeat center center;
+}
+
+.platform-against {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/against.png') no-repeat center center;
+}
+
+.platform-agree {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/agree.png') no-repeat center center;
+}
+
+.platform-app_columns {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/app_columns.png') no-repeat center center;
+}
+
+.platform-app_list {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/app_list.png') no-repeat center center;
+}
+
+.platform-arraw_return {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/arraw_return.png') no-repeat center center;
+}
+
+.platform-arrow_branch {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/arrow_branch.png') no-repeat center center;
+}
+
+.platform-arrow_divide {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/arrow_divide.png') no-repeat center center;
+}
+
+.platform-arrow_down {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/arrow_down.png') no-repeat center center;
+}
+
+.platform-arrow_left {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/arrow_left.png') no-repeat center center;
+}
+
+.platform-arrow_merge {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/arrow_merge.png') no-repeat center center;
+}
+
+.platform-arrow_redo {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/arrow_redo.png') no-repeat center center;
+}
+
+.platform-arrow_right {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/arrow_right.png') no-repeat center center;
+}
+
+.platform-arrow_switch {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/arrow_switch.png') no-repeat center center;
+}
+
+.platform-arrow_undo {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/arrow_undo.png') no-repeat center center;
+}
+
+.platform-arrow_up {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/arrow_up.png') no-repeat center center;
+}
+
+.platform-basket {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/basket.png') no-repeat center center;
+}
+
+.platform-book {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/book.png') no-repeat center center;
+}
+
+.platform-book_user {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/book_user.png') no-repeat center center;
+}
+
+.platform-bug {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/bug.png') no-repeat center center;
+}
+
+.platform-bullet_blue {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/bullet_blue.png') no-repeat center center;
+}
+
+.platform-chart_curve {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/chart_curve.png') no-repeat center center;
+}
+
+.platform-chart_flipped {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/chart_flipped.png') no-repeat center center;
+}
+
+.platform-chart_line {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/chart_line.png') no-repeat center center;
+}
+
+.platform-chart_pie {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/chart_pie.png') no-repeat center center;
+}
+
+.platform-close {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/close.png') no-repeat center center;
+}
+
+.platform-config {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/config.png') no-repeat center center;
+}
+
+.platform-config1 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/config1.png') no-repeat center center;
+}
+
+.platform-config3 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/config3.png') no-repeat center center;
+}
+
+.platform-connect {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/connect.png') no-repeat center center;
+}
+
+.platform-copy {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/copy.png') no-repeat center center;
+}
+
+.platform-cut {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/cut.png') no-repeat center center;
+}
+
+.platform-cv {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/cv.png') no-repeat center center;
+}
+
+.platform-c_key {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/c_key.png') no-repeat center center;
+}
+
+.platform-database {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/database.png') no-repeat center center;
+}
+
+.platform-database_add {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/database_add.png') no-repeat center center;
+}
+
+.platform-del {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/del.png') no-repeat center center;
+}
+
+.platform-del1 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/del1.png') no-repeat center center;
+}
+
+.platform-del2 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/del2.png') no-repeat center center;
+}
+
+.platform-del3 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/del3.png') no-repeat center center;
+}
+
+.platform-del_folder {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/del_folder.png') no-repeat center center;
+}
+
+.platform-del_page {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/del_page.png') no-repeat center center;
+}
+
+.platform-detail {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/detail.png') no-repeat center center;
+}
+
+.platform-disconnect {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/disconnect.png') no-repeat center center;
+}
+
+.platform-doc_ok {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/doc_ok.png') no-repeat center center;
+}
+
+.platform-edit {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/edit.png') no-repeat center center;
+}
+
+.platform-edit2 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/edit2.png') no-repeat center center;
+}
+
+.platform-email {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/email.png') no-repeat center center;
+}
+
+.platform-email2 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/email2.png') no-repeat center center;
+}
+
+.platform-email3 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/email3.png') no-repeat center center;
+}
+
+.platform-email_go {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/email_go.png') no-repeat center center;
+}
+
+.platform-email_open {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/email_open.png') no-repeat center center;
+}
+
+.platform-exit {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/exit.png') no-repeat center center;
+}
+
+.platform-exit2 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/exit2.png') no-repeat center center;
+}
+
+.platform-folder1 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/folder1.png') no-repeat center center;
+}
+
+.platform-folder10 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/folder10.png') no-repeat center center;
+}
+
+.platform-folder11 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/folder11.png') no-repeat center center;
+}
+
+.platform-folder12 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/folder12.png') no-repeat center center;
+}
+
+.platform-folder13 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/folder13.png') no-repeat center center;
+}
+
+.platform-folder14 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/folder14.png') no-repeat center center;
+}
+
+.platform-folder15 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/folder15.png') no-repeat center center;
+}
+
+.platform-folder16 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/folder16.png') no-repeat center center;
+}
+
+.platform-folder17 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/folder17.png') no-repeat center center;
+}
+
+.platform-folder18 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/folder18.png') no-repeat center center;
+}
+
+.platform-folder19 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/folder19.png') no-repeat center center;
+}
+
+.platform-folder2 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/folder2.png') no-repeat center center;
+}
+
+.platform-folder20 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/folder20.png') no-repeat center center;
+}
+
+.platform-folder21 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/folder21.png') no-repeat center center;
+}
+
+.platform-folder22 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/folder22.png') no-repeat center center;
+}
+
+.platform-folder23 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/folder23.png') no-repeat center center;
+}
+
+.platform-folder24 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/folder24.png') no-repeat center center;
+}
+
+.platform-folder25 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/folder25.png') no-repeat center center;
+}
+
+.platform-folder26 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/folder26.png') no-repeat center center;
+}
+
+.platform-folder27 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/folder27.png') no-repeat center center;
+}
+
+.platform-folder28 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/folder28.png') no-repeat center center;
+}
+
+.platform-folder4 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/folder4.png') no-repeat center center;
+}
+
+.platform-folder5 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/folder5.png') no-repeat center center;
+}
+
+.platform-folder6 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/folder6.png') no-repeat center center;
+}
+
+.platform-folder7 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/folder7.png') no-repeat center center;
+}
+
+.platform-folder8 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/folder8.png') no-repeat center center;
+}
+
+.platform-folder9 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/folder9.png') no-repeat center center;
+}
+
+.platform-forward {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/forward.png') no-repeat center center;
+}
+
+.platform-freelance {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/freelance.png') no-repeat center center;
+}
+
+.platform-go {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/go.gif') no-repeat center center;
+}
+
+.platform-go {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/go.png') no-repeat center center;
+}
+
+.platform-go1 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/go1.gif') no-repeat center center;
+}
+
+.platform-go1 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/go1.png') no-repeat center center;
+}
+
+.platform-help {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/help.png') no-repeat center center;
+}
+
+.platform-home {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/home.gif') no-repeat center center;
+}
+
+.platform-home {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/home.png') no-repeat center center;
+}
+
+.platform-icon134 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon134.png') no-repeat center center;
+}
+
+.platform-icon137 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon137.png') no-repeat center center;
+}
+
+.platform-icon140 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon140.png') no-repeat center center;
+}
+
+.platform-icon141 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon141.png') no-repeat center center;
+}
+
+.platform-icon146 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon146.png') no-repeat center center;
+}
+
+.platform-icon15 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon15.png') no-repeat center center;
+}
+
+.platform-icon150 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon150.png') no-repeat center center;
+}
+
+.platform-icon152 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon152.png') no-repeat center center;
+}
+
+.platform-icon153 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon153.png') no-repeat center center;
+}
+
+.platform-icon154 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon154.png') no-repeat center center;
+}
+
+.platform-icon17 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon17.gif') no-repeat center center;
+}
+
+.platform-icon25 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon25.gif') no-repeat center center;
+}
+
+.platform-icon26 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon26.gif') no-repeat center center;
+}
+
+.platform-icon28 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon28.gif') no-repeat center center;
+}
+
+.platform-icon31 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon31.gif') no-repeat center center;
+}
+
+.platform-icon32 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon32.gif') no-repeat center center;
+}
+
+.platform-icon34 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon34.gif') no-repeat center center;
+}
+
+.platform-icon35 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon35.gif') no-repeat center center;
+}
+
+.platform-icon36 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon36.gif') no-repeat center center;
+}
+
+.platform-icon37 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon37.gif') no-repeat center center;
+}
+
+.platform-icon38 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon38.gif') no-repeat center center;
+}
+
+.platform-icon39 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon39.gif') no-repeat center center;
+}
+
+.platform-icon41 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon41.gif') no-repeat center center;
+}
+
+.platform-icon42 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon42.gif') no-repeat center center;
+}
+
+.platform-icon5 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon5.png') no-repeat center center;
+}
+
+.platform-icon56 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon56.png') no-repeat center center;
+}
+
+.platform-icon59 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon59.png') no-repeat center center;
+}
+
+.platform-icon63 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon63.png') no-repeat center center;
+}
+
+.platform-icon65 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon65.png') no-repeat center center;
+}
+
+.platform-icon66 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon66.png') no-repeat center center;
+}
+
+.platform-icon67 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon67.png') no-repeat center center;
+}
+
+.platform-icon68 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon68.png') no-repeat center center;
+}
+
+.platform-icon7 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon7.png') no-repeat center center;
+}
+
+.platform-icon70 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon70.png') no-repeat center center;
+}
+
+.platform-icon71 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon71.png') no-repeat center center;
+}
+
+.platform-icon72 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon72.png') no-repeat center center;
+}
+
+.platform-icon75 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon75.png') no-repeat center center;
+}
+
+.platform-icon76 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon76.png') no-repeat center center;
+}
+
+.platform-icon77 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon77.png') no-repeat center center;
+}
+
+.platform-icon78 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon78.png') no-repeat center center;
+}
+
+.platform-icon79 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon79.png') no-repeat center center;
+}
+
+.platform-icon8 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon8.png') no-repeat center center;
+}
+
+.platform-icon80 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon80.png') no-repeat center center;
+}
+
+.platform-icon82 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon82.png') no-repeat center center;
+}
+
+.platform-icon85 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon85.png') no-repeat center center;
+}
+
+.platform-icon86 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon86.png') no-repeat center center;
+}
+
+.platform-icon88 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon88.png') no-repeat center center;
+}
+
+.platform-icon9 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon9.png') no-repeat center center;
+}
+
+.platform-icon96 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon96.png') no-repeat center center;
+}
+
+.platform-icon_19 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icon_19.png') no-repeat center center;
+}
+
+.platform-icq {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/icq.png') no-repeat center center;
+}
+
+.platform-id {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/id.png') no-repeat center center;
+}
+
+.platform-jar {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/jar.png') no-repeat center center;
+}
+
+.platform-key {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/key.png') no-repeat center center;
+}
+
+.platform-layout {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/layout.png') no-repeat center center;
+}
+
+.platform-layout2 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/layout2.png') no-repeat center center;
+}
+
+.platform-lightbulb {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/lightbulb.png') no-repeat center center;
+}
+
+.platform-lock {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/lock.png') no-repeat center center;
+}
+
+.platform-lock3 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/lock3.png') no-repeat center center;
+}
+
+.platform-monitor {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/monitor.png') no-repeat center center;
+}
+
+.platform-node {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/node.png') no-repeat center center;
+}
+
+.platform-ok {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/ok.png') no-repeat center center;
+}
+
+.platform-ok1 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/ok1.png') no-repeat center center;
+}
+
+.platform-ok2 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/ok2.png') no-repeat center center;
+}
+
+.platform-ok3 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/ok3.png') no-repeat center center;
+}
+
+.platform-ok4 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/ok4.png') no-repeat center center;
+}
+
+.platform-ok5 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/ok5.png') no-repeat center center;
+}
+
+.platform-org {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/org.png') no-repeat center center;
+}
+
+.platform-org2 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/org2.png') no-repeat center center;
+}
+
+.platform-own {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/own.png') no-repeat center center;
+}
+
+.platform-page {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/page.png') no-repeat center center;
+}
+
+.platform-page2 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/page2.png') no-repeat center center;
+}
+
+.platform-page3 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/page3.png') no-repeat center center;
+}
+
+.platform-page_code {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/page_code.png') no-repeat center center;
+}
+
+.platform-page_font {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/page_font.png') no-repeat center center;
+}
+
+.platform-page_next {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/page_next.png') no-repeat center center;
+}
+
+.platform-page_office {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/page_office.png') no-repeat center center;
+}
+
+.platform-page_paint {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/page_paint.png') no-repeat center center;
+}
+
+.platform-page_picture {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/page_picture.png') no-repeat center center;
+}
+
+.platform-page_vector {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/page_vector.png') no-repeat center center;
+}
+
+.platform-paint2 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/paint2.png') no-repeat center center;
+}
+
+.platform-paste {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/paste.png') no-repeat center center;
+}
+
+.platform-picture {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/picture.png') no-repeat center center;
+}
+
+.platform-pictures {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/pictures.png') no-repeat center center;
+}
+
+.platform-picture_empty {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/picture_empty.png') no-repeat center center;
+}
+
+.platform-plugin {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/plugin.png') no-repeat center center;
+}
+
+.platform-plugin1 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/plugin1.png') no-repeat center center;
+}
+
+.platform-plugin2 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/plugin2.png') no-repeat center center;
+}
+
+.platform-printer {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/printer.png') no-repeat center center;
+}
+
+.platform-query {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/query.png') no-repeat center center;
+}
+
+.platform-refresh {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/refresh.png') no-repeat center center;
+}
+
+.platform-refresh1 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/refresh1.png') no-repeat center center;
+}
+
+.platform-refresh2 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/refresh2.png') no-repeat center center;
+}
+
+.platform-refresh3 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/refresh3.png') no-repeat center center;
+}
+
+.platform-refresh4 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/refresh4.png') no-repeat center center;
+}
+
+.platform-save {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/save.png') no-repeat center center;
+}
+
+.platform-save_all {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/save_all.png') no-repeat center center;
+}
+
+.platform-search {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/search.png') no-repeat center center;
+}
+
+.platform-security {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/security.png') no-repeat center center;
+}
+
+.platform-send_receive {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/send_receive.png') no-repeat center center;
+}
+
+.platform-shape_align_bottom {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/shape_align_bottom.png') no-repeat center center;
+}
+
+.platform-shape_align_center {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/shape_align_center.png') no-repeat center center;
+}
+
+.platform-shape_align_middle {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/shape_align_middle.png') no-repeat center center;
+}
+
+.platform-shape_group {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/shape_group.png') no-repeat center center;
+}
+
+.platform-shape_handles {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/shape_handles.png') no-repeat center center;
+}
+
+.platform-shape_move_back {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/shape_move_back.png') no-repeat center center;
+}
+
+.platform-share {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/share.png') no-repeat center center;
+}
+
+.platform-sitemap {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/sitemap.png') no-repeat center center;
+}
+
+.platform-sql {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/sql.png') no-repeat center center;
+}
+
+.platform-sql2 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/sql2.png') no-repeat center center;
+}
+
+.platform-sql3 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/sql3.png') no-repeat center center;
+}
+
+.platform-stop {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/stop.gif') no-repeat center center;
+}
+
+.platform-stop2 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/stop2.png') no-repeat center center;
+}
+
+.platform-stop3 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/stop3.png') no-repeat center center;
+}
+
+.platform-system {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/system.png') no-repeat center center;
+}
+
+.platform-table {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/table.png') no-repeat center center;
+}
+
+.platform-table2 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/table2.png') no-repeat center center;
+}
+
+.platform-tables {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/tables.png') no-repeat center center;
+}
+
+.platform-tables_relation {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/tables_relation.png') no-repeat center center;
+}
+
+.platform-table_edit {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/table_edit.png') no-repeat center center;
+}
+
+.platform-tag {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/tag.png') no-repeat center center;
+}
+
+.platform-task {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/task.png') no-repeat center center;
+}
+
+.platform-task1 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/task1.png') no-repeat center center;
+}
+
+.platform-task_finish {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/task_finish.png') no-repeat center center;
+}
+
+.platform-task_list {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/task_list.png') no-repeat center center;
+}
+
+.platform-terminal {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/terminal.png') no-repeat center center;
+}
+
+.platform-textfield {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/textfield.png') no-repeat center center;
+}
+
+.platform-text_cap {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/text_cap.png') no-repeat center center;
+}
+
+.platform-text_col {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/text_col.png') no-repeat center center;
+}
+
+.platform-text_list {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/text_list.png') no-repeat center center;
+}
+
+.platform-text_upper {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/text_upper.png') no-repeat center center;
+}
+
+.platform-theme {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/theme.png') no-repeat center center;
+}
+
+.platform-time {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/time.png') no-repeat center center;
+}
+
+.platform-timeline {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/timeline.png') no-repeat center center;
+}
+
+.platform-user1 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/user1.png') no-repeat center center;
+}
+
+.platform-user20 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/user20.png') no-repeat center center;
+}
+
+.platform-user3 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/user3.png') no-repeat center center;
+}
+
+.platform-user6 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/user6.png') no-repeat center center;
+}
+
+.platform-user8 {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/user8.png') no-repeat center center;
+}
+
+.platform-vcard {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/vcard.png') no-repeat center center;
+}
+
+.platform-vector {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/vector.png') no-repeat center center;
+}
+
+.platform-wand {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/wand.png') no-repeat center center;
+}
+
+.platform-webcam {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/webcam.png') no-repeat center center;
+}
+
+.platform-zoom_in {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/zoom_in.png') no-repeat center center;
+}
+
+.platform-zoom_out {
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/zoom_out.png') no-repeat center center;
+}
+
+.icon-settings-large{
+	background: url(icons/settings.png) top center no-repeat;
+}
+
+.icon-hengshi-large{
+	background: url(icons/logo_z.png) top center no-repeat;
+}
+.icon-ok3{
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/ok1.png') no-repeat center center;
+}
+
+.icon-question{
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/question.png') no-repeat center center;
+}
+
+.icon-commit{
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/commit.png') no-repeat center center;
+}
+
+.icon-del{
+	width: 16px;
+	height: 16px;
+	vertical-align: top;
+	display: inline-block;
+	margin-right: 5px;
+	background: url('icons/del.png') no-repeat center center;
+}
+
+pre {
+	white-space: pre-wrap;
+	word-wrap: break-word;
+}

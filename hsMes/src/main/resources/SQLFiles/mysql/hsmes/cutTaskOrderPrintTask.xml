@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="CutTaskOrderPrintTask">
+	<sql comment="西门子裁剪车间机台打印任务列表" id="cutTaskOrderPrintTask-list">
+		<![CDATA[
+			select t.* from hs_siemens_cut_task_order_print_task t where 1=1
+			<#if key["ip"]??>
+			 and ip like :ip
+			</#if>
+			<#if key["ctoCode"]??>
+             and ctoCode like :ctoCode
+            </#if>
+			<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+			</#if>
+		]]>
+	</sql>
+</sqls>

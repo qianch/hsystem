@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="BtwFilePrintDaoImpl">
+	<sql comment="计划明细下的个性化打印信息" id="findBtwFilePrints">
+		<![CDATA[
+		   select * from   hs_btwfile_print where btwFileId=(:btwFileId)
+		]]>
+	</sql>
+
+</sqls>

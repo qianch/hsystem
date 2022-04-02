@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="MobileDaoImpl">
+	
+	<sql comment="抽称条数" id="mobile-count">
+		<![CDATA[
+		select count(*) from hs_totalstatistics t
+			LEFT JOIN hs_roll_barcode b ON t.batchCode=b.batchcode	
+			LEFT JOIN hs_finishproduct f ON f.id=b.salesProductId
+				 where b.barcode = :barCode and productWeigh = :productWeigh
+				 ]]>
+	</sql>
+	<sql comment="抽称平均值" id="mobile-avg">
+		select AVG(rollWeight) from hs_totalstatistics h where  h.id in
+				(select a.id from
+							(select t.id from hs_totalstatistics t
+								LEFT JOIN hs_roll_barcode b ON t.batchCode=b.salesOrderCode	
+									LEFT JOIN hs_finishproduct f ON f.id=b.salesProductId
+										where b.barcode = :barCode
+											and f.productWeigh = :productWeigh limit 0,10) as a
+				)
+		and h.rollQualityGradeCode='A' 
+	</sql>
+	<sql comment="抽称条数" id="mobile-count1">
+		<![CDATA[
+		select count(*) from hs_roll r
+			LEFT JOIN hs_roll_barcode  rb ON rb.barcode=r.rollBarcode
+			LEFT JOIN hs_produce_plan_detail d ON rb.producePlanDetailId=d.id
+			LEFT JOIN hs_produce_plan  pp ON pp.id=d.producePlanId	
+				where d.batchcode= :batchcode and pp.producePlanCode= :producePlanCode
+				AND d.factoryProductName= :factoryproductname
+		]]>
+	</sql>
+</sqls>

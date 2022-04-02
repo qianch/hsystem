@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="ScreenDisplayDaoImpl">
+	<sql comment="查询成品信息" id="findProductInfo-list">
+		<![CDATA[
+			select p.*,d.deviceId from hs_weave_plan p
+				LEFT JOIN hs_plan_devices d ON p.id= d.weavePlanId
+			WHERE d.deviceId = ( SELECT id FROM hs_device WHERE machineScreenIp = (:ip) )
+		]]>
+	</sql>
+	<sql comment="查询优先成品信息" id="findFirstProductInfo-list">
+		<![CDATA[
+			select p.*,d.deviceId from hs_weave_plan p
+				LEFT JOIN hs_plan_devices d ON p.id= d.weavePlanId
+			WHERE d.deviceId = ( SELECT id FROM hs_device WHERE machineScreenIp = (:ip) ) AND p.isFinished=-1  and d.produceDate=(:today)
+			order by p.sort desc
+		]]>
+	</sql>
+	<sql comment="根据产品查询机台生产数量" id="findProduceNum">
+		<![CDATA[
+			select rb.salesProductId,r.rollDeviceCode,count(1)num from hs_roll r
+			left join hs_roll_barcode rb on rb.barcode=r.rollBarcode
+			where r.rollDeviceCode=(select d.deviceCode from hs_device d where d.id=(:deviceId)) and rb.salesProductId=(:productId)
+			
+		]]>
+	</sql>
+	<sql comment="加载combox" id="initCombox-list">
+		<![CDATA[
+			select d.id,d.machineScreenIp,d.machineScreenName from hs_device d where d.machineScreenIp is not null
+		]]>
+	</sql>
+</sqls>

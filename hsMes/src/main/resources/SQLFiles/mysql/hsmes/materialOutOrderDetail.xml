@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="MaterialOutOrderDetailDaoImpl">
+	<sql comment="物料出库单明细" id="materialOutOrderDetail-list">
+		<![CDATA[
+		select t.*,t3.WAREHOUSENAME,(t1.userName)name,t2.outOrderCode from HS_Material_Out_Order_Detail t 
+		left join platform_user t1 on t.outUserId = t1.id
+		left join HS_Material_Stock_Out t2 on t2.id=t.outOrderId
+		left join hs_warehouse t3 on t3.WAREHOUSECODE=t.warehouseCode
+		where 1=1
+		<#if key["code"]??>
+			and (t.materialCode like (:code))
+		</#if>
+		
+		<#if key["warehouseCode"]??>
+			and (t.warehouseCode like (:warehouseCode))
+		</#if>
+		
+		<#if key["warehousePosCode"]??>
+			and (t.warehousePosCode like (:warehousePosCode))
+		</#if>
+		<#if key["produceStart"]??&&key["produceEnd"]??>
+			and t.produceDate between :produceStart and :produceEnd
+		</#if>
+		<#if key["produceStart"]??&&!key["produceEnd"]??>
+			and t.produceDate > :produceStart
+		</#if>
+		<#if !key["produceStart"]??&&key["produceEnd"]??>
+			and t.produceDate < :produceEnd
+		</#if>
+		
+		<#if key["outStart"]??&&key["outEnd"]??>
+			and t.outTime between :outStart and :outEnd
+		</#if>
+		<#if key["outStart"]??&&!key["outEnd"]??>
+			and t.outTime > :outStart
+		</#if>
+		<#if !key["outStart"]??&&key["outEnd"]??>
+			and t.outTime < :outEnd
+		</#if>
+			
+		<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+			</#if>
+			<#if !key["sort"]??&&!key["order"]??>
+				order by id desc
+			</#if>
+		]]>
+	</sql>
+</sqls>

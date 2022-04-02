@@ -1,0 +1,107 @@
+html,body{
+	margin:0;
+}
+table {
+	border-collapse: collapse;
+	font-size: 12px;
+}
+
+
+th,td {
+	border: solid 1px #CCCCCC;
+	
+}
+
+
+hr{
+	border-bottom: none;
+}
+
+
+.title {
+	width: 100px;
+	text-align: right;
+	background: rgb(234, 233, 233);
+	font-size: 12px;
+}
+
+.textbox {
+	border: 1px solid rgb(169, 157, 157);
+	outline: none;
+	height: 30px;
+	margin-left: 6px;
+	padding-left: 5px;
+}
+
+.error {
+	color: red;
+}
+/* 修复平台的table样式对easyui datebox下面的按钮位置的影响 */
+.datebox-button td{
+	text-align: center;
+	padding:3!important;
+	border:none;
+}
+/* 修复升序图标样式 */
+.datagrid-sort-asc .datagrid-sort-icon{
+	padding:0!important;
+}
+/* 修复降序图标样式 */
+.datagrid-sort-desc .datagrid-sort-icon{
+	padding:0!important;
+}
+
+input,button,select,textarea,checkbox{ outline:red;}
+
+/* 修复平台的textbox样式，对datagrid中的editor样式的影响 */
+.datagrid-view .textbox{
+	padding:0;
+	margin:0;
+	width:100%;
+	height:100%;
+}
+.datagrid-view .textbox input{
+	width:100%!important;
+	height:100%;
+}
+
+.datagrid-editable input{
+	padding:0!important;
+	margin:0!important;
+	width:100%!important;
+	height:100%!important;
+}
+
+.datagrid-row-selected{
+	background:rgb(54, 105, 193)!important;
+}
+
+.datalist .datagrid-wrap{
+	border-color: rgb(230, 238, 248);
+}
+/*修复easyui datebox的周一，至周六的表格样式*/
+.calendar-body th {
+    border: none;
+}
+
+.datagrid-group{
+	background:#f9f9f9;
+}
+
+::selection {background:#065054; color:white;} 
+
+form .textbox {
+	margin:1px;
+}
+.easyui-linkbutton .l-btn-text{
+	line-height: 19px;
+}
+
+.window-mask {
+    background: #fff;
+}
+.window-proxy{
+    border:1px solid #e6e6e6;
+    border-radius:5px;
+    background:rgba(255, 255, 255, 0.55);
+}

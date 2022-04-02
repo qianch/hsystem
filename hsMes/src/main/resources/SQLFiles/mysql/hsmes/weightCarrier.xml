@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="WeightCarrier">
+	<sql comment="称重载具列表" id="weightCarrier-list">
+		<![CDATA[
+			select t.*,d.name as workShopName from HS_WEIGHTCARRIER t
+			left join platform_department d on d.code=t.workShopCode
+			where 1=1
+			<#if key["carrierCode"]??>
+			 and carrierCode like :carrierCode
+			</#if>
+			<#if key["carrierName"]??>
+			 and carrierName like :carrierName
+			</#if>
+			<#if key["workShopCode"]??>
+			 and workShopCode like :workShopCode
+			</#if>
+			<#if !key["sort"]??&&!key["order"]??>
+				order by t.id desc
+			</#if>
+		]]>
+	</sql>
+
+	<sql comment="称重载具编码集合" id="carrierCodes">
+		<![CDATA[
+			select t.carrierCode from HS_WEIGHTCARRIER t
+
+		]]>
+	</sql>
+
+	<sql comment="称重载具" id="weightCarrier">
+		<![CDATA[
+			select t.* from HS_WEIGHTCARRIER where id :id
+
+		]]>
+	</sql>
+
+</sqls>

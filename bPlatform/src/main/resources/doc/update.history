@@ -1,0 +1,122 @@
+
+平台更新日志
+==20212-04-01==
+1. jdk17
+
+==2021-12-20==
+1. log4j2升级到2.17.0
+
+==2021-08-06==
+1. 支持postgres数据库
+
+==2021-06-13==
+1. 登录、首页图片设置为repeat
+2. 登录页面打开多语言选择
+
+==2021-01-30==
+1. Java版本升级到Java11
+
+==2020-06-30==
+1. 增加platform_languange表，支持多语言
+
+==2020-05-20==
+1. springframework升级到5.2.6.RELEASE,Hibernate升级到：5.4.16.Final
+2. log4j升级到log4j2
+3. Java版本升级到Java8
+
+==2015-11-20==
+1. 废除规则表达式
+2. 分离源码和SQL语句，SQL语句写入到xml配置文件中
+3. 统一数据库Map类型的返回值的大小写，改为全大写
+
+==2015-08-18==
+正式添加多语言的支持
+
+==2015.07.31==
+1.修改规则表达式，"参考数据库查询rule规则表达式.txt"
+2.修复notin无效的问题
+3.新增国际化多语言支持，中英泰
+4.更新了SQLHelper更名为SQLBuilder类，修改处理逻辑
+	4.1.如果Filter中含有order和sort属性，那么则不理会rule表达式中的排序规则,相当于一个默认排序
+	4.2.如果Filter中没有order和sort属性，那么使用rule表达式中的排序规则，指定排序规则
+
+
+==2015.07.30==
+1.支持oracle数据库
+2.修改jdbc.properties和spring-contenxt.xml,将配置参数全部提出到配置文件中
+3.将所有的列名改成大写
+4.记录匿名用户访问的日志
+
+
+==2015-07-23==
+1.平台左侧菜单新增图标按钮，编辑菜单的时候可以选择图标
+2.新增了约256个图标
+3.新增下拉框插件，支持option图标
+4.扩展系统处理能力，对bat进行支持（通过调度任务去调用指定目录下的 bat批处理文件）
+
+==2015-07-22==
+1.新增登录接口，处理不同的登录业务的一组抽象类和接口，另外，在系统system.properties中新增了login_path属性，表示当前的系统或者平台的登录入口
+2.分开管理员帐户和普通帐户的页面，管理员页面只有管理员administrator可以访问
+
+==2015-07-02==
+1.Bug fix:
+	 新建菜单的时候前面多了0000
+2.新增sqlite支持
+	由于系统中使用了druid数据库连接池，对sqlite支持不好，所以使用了c3p0
+	如果需要使用sqlite，请将src/main/resources/下的sqlite.jdbc.properties重命名为jdbc.properties放在具体的项目的src/main/resources/下
+	同理，把spring-context.sqlite.xml复制并改名为spring-context.xml放到src/main/resources/下
+3.在src/main/resouces/下新增init文件夹，下面包含了sql/bat两个文件夹，分别放置sql文件和bat文件，在系统启动的时候会执行一次，新的项目需要按照目录结构去放
+
+==2015-06-20==
+1. 数据库配置文件中的密码改成密文
+	即加密后的密文
+	加密方法:
+	1.1 切换的druid-0.2.9.jar包所在目录
+	1.2 java -cp druid-1.0.14.jar com.alibaba.druid.filter.config.ConfigTools 你的密码
+
+2. 扩展ajax方法，在提交前新增loading效果，结束后关闭loading，自动处理异常处理
+
+==2015-06-18==
+
+1.	新增405，415两种错误类型
+	新增定义了一些错误类型的解释
+	400: 参数错误
+	403: 禁止访问
+	404: 请求地址未找到
+	405: 请确认GET还是POST请求
+	415: 请求的类型不支持
+2.platform.js新增了处理Ajax错误的方法
+	function dealError(data);
+	例如：
+	$.ajax({
+		...
+		success:function(data){
+			if(hasError(data)){
+				return;
+			}
+			...//后续操作
+		},
+		error:function(data){
+			dealError(data);
+		}
+	
+	});
+
+==2015-06-17==
+bug fix:
+	1.更新layer.js至1.9.3版本，解决动画无效问题
+
+==2015-06-12==
+1.新增Websocket支持，作为消息服务
+2.新增消息模块
+
+
+==2015-06-10==
+1.数据库查询规则表达式
+	新增ne操作符，也可以用notequal，表示不等于
+	变更equal为eq，兼容之前的equal
+	{and:{equal:id}}等效于{and:{eq:id}}
+	{and:{notequal:id}}等效于{and:{ne:id}}
+	主要是简写
+
+2.菜单新增拖拽排序功能

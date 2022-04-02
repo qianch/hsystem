@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="UserDaoImpl">
+	<sql comment="登录" id="user-login">
+	<!-- String rule = "{and:{u.did:in,u.userName:like,u.loginName:like,d.name:like}}"; -->
+		<![CDATA[
+		select u.*,d.name from platform_user u left join platform_department d on d.id=u.did where 1=1 
+		<#if key["u.did"]??>
+			and u.did in :u.did 
+		</#if>
+		<#if key["u.userName"]??>
+			and u.userName like :u.userName 
+		</#if>
+		<#if key["u.loginName"]??>
+			and u.loginName like :u.loginName
+		</#if>
+		<#if key["d.name"]??>
+			and d.name like :d.name
+		</#if>
+		]]>
+	</sql>
+	<sql comment="人员列表" id="user-list" >
+		<![CDATA[
+				select u.*,d.name from platform_user u left join platform_department d on d.id=u.did where 1=1 
+				<#if key["u.did"]??>
+					and u.did in (:u.did)
+				</#if>
+				<#if key["u.userName"]??>
+					and u.userName like :u.userName 
+				</#if>
+				<#if key["u.loginName"]??>
+					and u.loginName like :u.loginName
+				</#if>
+				<#if key["d.name"]??>
+					and d.name like :d.name
+				</#if>
+		]]>
+	</sql>
+	<sql comment="根据部门查询人员" id="user-getUsersByDepartments">
+		<![CDATA[
+		select id,userName from platform_user where 1=1
+		<#if key["did"]??>
+			and did in (:did) 
+		</#if>
+		]]>
+	</sql>
+	<sql comment="根据用户查询角色" id="user-getRolesByUser">
+		<![CDATA[
+			select * from platform_user_role where userId=:uid
+		]]>
+	</sql>
+	<sql comment="删除用户角色" id="user-deleteRoles">
+		<![CDATA[
+			delete From UserRole where userId=:uid
+		]]>
+	</sql>
+	
+	<sql comment="获取菜单权限" id="user-getMenuPermissions">
+		<![CDATA[
+			select m.* from platform_permission p left join platform_menu m on p.mid=m.id where p.rid in (select ur.roleId from platform_user_role ur left join platform_user u on u.id=ur.userId where u.id=:u.id) and m.isButton=0
+		]]>
+	</sql>
+	<sql comment="获取按钮权限" id="user-getButtonPermissions">
+		<![CDATA[
+			select m.* from platform_permission p left join platform_menu m on p.mid=m.id where p.rid in (select ur.roleId from platform_user_role ur left join platform_user u on u.id=ur.userId where u.id=:u.id) and m.isButton=1
+		]]>
+	</sql>
+	<sql comment="获取按钮权限" id="user-getUrlPermissions">
+		<![CDATA[
+			select m.url from platform_permission p left join platform_menu m on p.mid=m.id where p.rid in (select ur.roleId from platform_user_role ur left join platform_user u on u.id=ur.userId where u.id=:u.id)
+		]]>
+	</sql>
+	<sql comment="获取ID权限" id="user-getIdPermissions">
+		<![CDATA[
+			select m.id from platform_permission p left join platform_menu m on p.mid=m.id where p.rid in (select ur.roleId from platform_user_role ur left join platform_user u on u.id=ur.userId where u.id=:u.id) 
+		]]>
+	</sql>
+</sqls>

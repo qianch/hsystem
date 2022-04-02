@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="BaoCaiDaoImpl">
+    <sql comment="查询包材信息" id="baoCaiKu-list">
+        <![CDATA[
+			select * from hs_cut_baocaiku bck where 1=1
+		<#if key["type"]??>
+				and bck.type like :type
+			</#if>
+			<#if key["size"]??>
+			 and bck.size like :size
+			</#if>
+			<#if key["specs"]??>
+				and bck.specs like :specs
+			</#if>
+		]]>
+    </sql>
+    <sql comment="查询包材信息" id="findPackingDetailByPackingID">
+        <![CDATA[
+			select * from hs_cut_baocaiku_packing bckp where 1=1
+				and bckp.packingID = :packingID
+
+		]]>
+    </sql>
+
+</sqls>

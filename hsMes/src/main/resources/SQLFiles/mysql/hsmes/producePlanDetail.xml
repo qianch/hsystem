@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="ProducePlanDetailDaoImpl">
+    <sql comment="生产计划明细信息" id="producePlanDetail-list">
+        <![CDATA[
+		select planDetail.*,plan.producePlanCode from hs_produce_plan_detail as planDetail
+		LEFT JOIN  hs_produce_plan as plan  on plan.id=planDetail.producePlanId
+		where 1=1
+			<#if key["salesOrderCode"]??>
+			 		  	and  planDetail.salesOrderCode like :salesOrderCode
+			 		  	</#if>
+			 		  	<#if key["batchCode"]??>
+			 		  	and planDetail.batchCode like :batchCode
+			 		  	</#if>
+
+			 		  	 <#if key["factoryProductName"]??>
+			 		  	 and planDetail.factoryProductName like :factoryProductName
+			 		    </#if>
+
+			  <#if key["consumerName"]??>
+			 		  	 and planDetail.consumerName like :consumerName
+			   </#if>
+
+            <#if key["producePlanCode"]??>
+			 and plan.producePlanCode like :producePlanCode
+			</#if>
+
+			<#if key["workShopCode"]??>
+			 and plan.workShopCode like :workShopCode
+			</#if>
+
+		<#if key["sort"]??&&key["order"]??>
+			order by ${key["sort"]} ${key["order"]}
+		</#if>
+		<#if !key["sort"]??&&!key["order"]??>
+			order by id desc
+		</#if>
+		]]>
+    </sql>
+
+
+    <sql comment="生产计划明细信息" id="producePlanDetail-list2">
+        <![CDATA[
+		select planDetail.*,plan.producePlanCode from hs_produce_plan_detail as planDetail
+		LEFT JOIN  hs_produce_plan as plan  on plan.id=planDetail.producePlanId
+		where 1=1
+			<#if key["salesOrderCode"]??>
+			 		  	and  planDetail.salesOrderCode like :salesOrderCode
+			</#if>
+
+			<#if key["batchCode"]??>
+			 		  	and planDetail.batchCode like :batchCode
+			</#if>
+
+		    <#if key["factoryProductName"]??>
+			 		  	 and planDetail.factoryProductName like :factoryProductName
+		    </#if>
+
+			<#if key["consumerName"]??>
+			 		  	 and planDetail.consumerName like :consumerName
+			 </#if>
+
+            <#if key["producePlanCode"]??>
+			 and plan.producePlanCode like :producePlanCode
+			</#if>
+
+		and planDetail.id in (
+			select producePlanDetailId from  hs_stock_move sm
+			where 1=1
+			<#if key["start"]??>
+			and sm.moveTime > :start
+	       </#if>
+		   <#if key["end"]??>
+		    and sm.moveTime < :end
+		   </#if>
+		   )
+
+		<#if key["sort"]??&&key["order"]??>
+			order by ${key["sort"]} ${key["order"]}
+		</#if>
+		<#if !key["sort"]??&&!key["order"]??>
+			order by id desc
+		</#if>
+		]]>
+    </sql>
+
+    <sql comment="计划明细下的个性化打印信息" id="findProducePlanDetailPrints">
+        <![CDATA[
+		  select print.*,btwfile.tagName, (select name_zh_CN from platform_dict where rootCode='TagType' and code=btwfile.tagtype limit 1) as tagTypeText
+		    from   hs_produce_plan_detail_print as print
+		    left join  hs_btwfile as btwfile  on btwfile.id=print.btwFileId
+		    where 1=1 and print.producePlanDetailId=(:producePlanDetailId)
+		]]>
+    </sql>
+
+    <sql comment="计划明细下的个性化打印信息" id="findPlanDetailPrintsBybtwFileId">
+        <![CDATA[
+		  select print.*,btwfile.tagName, (select name_zh_CN from platform_dict where rootCode='TagType' and code=btwfile.tagtype limit 1) as tagTypeText
+		    from   hs_produce_plan_detail_print as print
+		    left join  hs_btwfile as btwfile  on btwfile.id=print.btwFileId where 1=1
+		    and print.producePlanDetailId=(:producePlanDetailId)
+
+		    and print.btwFileId=(:btwFileId)
+		]]>
+    </sql>
+
+
+</sqls>

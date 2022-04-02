@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="ProductStockDaoImpl">
+	<sql comment="车间入库汇总报表（产品大类、订单号、批次号、厂内名称）" id="ShopStatistics-list">
+		<![CDATA[
+		SELECT
+			tt.*,IFNULL(a.tnum,0) AS tnum,ROUND(IFNULL(a.weight,0),2) AS weight
+		FROM(
+		SELECT t.id, t.inTime, t1.CONSUMERNAME, t1.producePlanCode, t1.salesOrderCode,sod.salesOrderSubCodePrint, t1.barcodeType, fpc.categoryName, fpc.categoryCode, fp.consumerProductName, fp.factoryProductName, fp.productModel, t1.batchCode, t1.rollQualityGradeCode, t1.`name` AS workshopName FROM HS_Product_In_Record t
+			LEFT JOIN hs_TotalStatistics t1 ON t1.rollBarcode = t.barCode
+			LEFT JOIN HS_Sales_Order_Detail sod on sod.salesOrderSubCode=t1.salesOrderCode
+			LEFT JOIN hs_tray_barcode tb ON tb.barcode = t.barCode
+			LEFT JOIN hs_finishproduct fp ON fp.id = tb.salesProductId
+			LEFT JOIN hs_finished_product_category fpc ON fpc.id = fp.fpcid
+				WHERE 1 = 1
+					AND t.barCode like '%T%'
+					AND UNIX_TIMESTAMP(t.inTime) >= UNIX_TIMESTAMP(:start)
+					AND UNIX_TIMESTAMP(t.inTime) <= UNIX_TIMESTAMP(:end)
+			GROUP BY t1.salesOrderCode,t1.batchCode,fp.factoryProductName
+		)tt LEFT JOIN(
+			SELECT t.id as ids,COUNT(t.barCode) AS tnum, SUM(t.weight) AS weight FROM HS_Product_In_Record t
+					LEFT JOIN hs_TotalStatistics t1 ON t1.rollBarcode = t.barCode
+					LEFT JOIN hs_tray_barcode tb ON tb.barcode = t.barCode
+					LEFT JOIN hs_finishproduct fp ON fp.id = tb.salesProductId
+					LEFT JOIN hs_finished_product_category fpc ON fpc.id = fp.fpcid
+			WHERE 1 = 1
+			AND t.barCode like '%T%'
+			AND UNIX_TIMESTAMP(t.inTime) >= UNIX_TIMESTAMP(:startTime)
+			AND UNIX_TIMESTAMP(t.inTime) <= UNIX_TIMESTAMP(:endTime)
+			GROUP BY t1.salesOrderCode,t1.batchCode,fp.factoryProductName
+		)a ON a.ids= tt.id
+		where 1=1
+		<#if key["factoryProductName"]??>
+			and tt.factoryProductName like :factoryProductName
+		</#if>
+		<#if key["categoryName"]??>
+			and tt.categoryName like :categoryName
+		</#if>
+		<#if key["categoryCode"]??>
+			and tt.categoryCode like :categoryCode
+		</#if>
+		<#if key["CONSUMERNAME"]??>
+			and tt.CONSUMERNAME like :CONSUMERNAME
+		</#if>
+		<#if key["salesOrderSubCodePrint"]??>
+			and tt.salesOrderSubCodePrint like :salesOrderSubCodePrint
+		</#if>
+		<#if key["batchCode"]??>
+			and tt.batchCode like :batchCode
+		</#if>
+		<#if key["consumerProductName"]??>
+			and tt.consumerProductName like :consumerProductName
+		</#if>
+		<#if key["workShop"]??>
+			and tt.tt.workshopName like :workShop
+		</#if>
+		]]>
+	</sql>
+
+	<sql comment="车间入库汇总报表（产品大类、厂内名称汇总重量）" id="shop-storage-category-list">
+		<![CDATA[
+		SELECT
+			t.id,
+			fpc.categoryName,
+			fpc.categoryCode,
+			fp.consumerProductName,
+			fp.factoryProductName,
+			fp.productModel,
+			t1.`name` AS workshopName,
+			ROUND(SUM(t.weight),2) AS weight
+		FROM
+			HS_Product_In_Record t
+		LEFT JOIN hs_TotalStatistics t1 ON t1.rollBarcode = t.barCode
+		LEFT JOIN hs_tray_barcode tb ON tb.barcode = t.barCode
+		LEFT JOIN hs_finishproduct fp ON fp.id = tb.salesProductId
+		LEFT JOIN hs_finished_product_category fpc ON fpc.id = fp.fpcid
+		WHERE
+			1 = 1
+		AND UNIX_TIMESTAMP(t.inTime) >= UNIX_TIMESTAMP(:start)
+		AND UNIX_TIMESTAMP(t.inTime) <= UNIX_TIMESTAMP(:end)
+		AND fp.factoryProductName IS NOT NULL
+		GROUP BY t1.`name`, fp.factoryProductName
+
+
+		<#if key["factoryProductName"]??>
+			and fp.factoryProductName like :factoryProductName
+		</#if>
+		<#if key["categoryName"]??>
+			and fpc.categoryName like :categoryName
+		</#if>
+		<#if key["categoryCode"]??>
+			and fpc.categoryCode like :categoryCode
+		</#if>
+		<#if key["consumerProductName"]??>
+			and fp.consumerProductName like :consumerProductName
+		</#if>
+		<#if key["workShop"]??>
+			and t1.`name` like :workShop
+		</#if>
+		<#if key["workShopCode"]??>
+				 AND t1.workshopCode = :workShopCode
+		</#if>
+		<#if key["productModel"]??>
+			and fp.productModel like :productModel
+		</#if>
+		]]>
+	</sql>
+</sqls>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="BcBomDaoImpl">
+	<sql comment="包材BOM" id="bcBom-list">
+		<![CDATA[
+		select t.* from HS_BC_BOM t 
+		left join hs_consumer c on c.id=t.packBomConsumerId
+		where 1=1 and t.isTestPro = 0
+		<#if key["data"]!="">
+			and (t.packBomGenericName like "%${key["data"]}%"
+ 			or t.packBomCode like "%${key["data"]}%"
+ 			or c.CONSUMERNAME like "%${key["data"]}%")
+		</#if>
+		order by t.packBomGenericName
+		]]>
+	</sql>
+	
+	<sql comment="变更试样包材BOM" id="bcBom-list1">
+		<![CDATA[
+		select t.* from HS_BC_BOM t 
+		left join hs_consumer c on c.id=t.packBomConsumerId
+		where 1=1 and t.isTestPro = 1
+		<#if key["data"]!="">
+			and (t.packBomGenericName like "%${key["data"]}%"
+ 			or t.packBomCode like "%${key["data"]}%"
+ 			or c.CONSUMERNAME like "%${key["data"]}%")
+		</#if>
+		order by t.packBomGenericName
+		]]>
+	</sql>
+	
+	<sql comment="新品试样包材BOM" id="bcBom-list2">
+		<![CDATA[
+		select t.* from HS_BC_BOM t 
+		left join hs_consumer c on c.id=t.packBomConsumerId
+		where 1=1 and t.isTestPro = 2
+		<#if key["data"]!="">
+			and (t.packBomGenericName like "%${key["data"]}%"
+ 			or t.packBomCode like "%${key["data"]}%"
+ 			or c.CONSUMERNAME like "%${key["data"]}%")
+		</#if>
+		order by t.packBomGenericName
+		]]>
+	</sql>
+</sqls>

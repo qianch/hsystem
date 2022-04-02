@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="FtcBcBom">
+	<sql comment="包装版本信息列表" id="ftcBcBom-code">
+		<![CDATA[
+			select t.* from hs_ftc_bc_bom_version t where 1=1
+			<#if key["查询字段名"]??>
+			 and 查询字段名 like :查询字段名
+			</#if>
+			<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+			</#if>
+		]]>
+	</sql>
+</sqls>

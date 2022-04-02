@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="WarehouseDaoImpl">
+	<sql comment="仓库列表" id="warehouse-list">
+		<![CDATA[
+		select * from  hs_warehouse where isCancellation is null
+		<#if key["code"]??>
+			and WAREHOUSECODE like :code
+		</#if>
+		<#if key["name"]??>
+			and WAREHOUSENAME like :name
+		</#if>
+		]]>
+	</sql>
+	<sql comment="删除仓库信息" id="warehouse-delete">
+		<![CDATA[
+			delete from hs_warehouse where id in (:id)	
+		]]>
+	</sql>
+	<sql comment="作废仓库信息" id="warehouse-updateS">
+		<![CDATA[
+			update hs_warehouse set isCancellation=1 where id in (:id)
+		]]>
+	</sql>
+	<sql comment="关联仓库信息" id="warehouse-warehouse">
+		<![CDATA[
+			select * from  hs_warehouse where isCancellation is null
+		]]>
+	</sql>
+
+	<sql comment="根据waretype查询列表.COMBOBOX等于" id="warehouse-combobox">
+		<![CDATA[
+			select * from hs_warehouse where isCancellation IS NULL
+			    <#if key["waretype"]??>
+			    and  waretype in (${key["waretype"]})
+			    </#if>
+			 order by id asc
+		]]>
+	</sql>
+	
+</sqls>

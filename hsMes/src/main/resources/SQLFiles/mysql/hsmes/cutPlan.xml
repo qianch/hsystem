@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="CutPlanDaoImpl">
+	<sql comment="裁剪计划列表" id="cutPlan-list">
+		<![CDATA[
+		SELECT
+			c.*,
+			cs.consumerSimpleName,
+			cs.consumerCategory,
+			p.productIsTc,
+			p.packReq,
+			p.procReq,
+			p.factoryProductName,
+			fm.consumerProductName
+		FROM
+			HS_Cut_Plan c
+			LEFT JOIN hs_consumer cs ON cs.id = c.consumerId
+			LEFT JOIN hs_produce_plan_detail p ON p.id = c.producePlanDetailId
+			LEFT JOIN hs_finishproduct_mirror fm on fm.productId = c.productId
+		WHERE
+			fm.salesOrderDetailId = c.fromSalesOrderDetailId   and  c.planCode like :planCode
+			order by c.sort desc
+		]]>
+	</sql>
+	<sql comment="根据生产明细ID找人员信息" id="userListBydetailId">
+		<![CDATA[
+		select u.*,d.name from hs_plan_users pu 
+		left join platform_user u on u.id=pu.userId
+		left join platform_department d on d.id=u.did
+		where pu.producePlanDetailId in (:id)
+		]]>
+	</sql>
+	<sql comment="删除人员信息" id="deleteUsers-list">
+		<![CDATA[
+			delete from hs_plan_users where tcBomPartId in (:id)	
+		]]>
+	</sql>
+	<sql comment="删除裁剪计划" id="deleteCutPlans-list">
+		<![CDATA[
+			delete from HS_Cut_Plan where producePlanDetailId in (:id)
+		]]>
+	</sql>
+	<sql comment="加载生产计划单号combobox" id="planCode-combobox">
+		<![CDATA[
+			select c.id,pp.producePlanCode
+			from  HS_Cut_Plan c 
+			left JOIN HS_Produce_Plan_Detail pd on c.producePlanDetailId=pd.id
+			left join hs_produce_plan pp on c.id=pd.producePlanId
+		]]>
+	</sql>
+	<sql comment="裁剪计划单号列表" id="cutPlan-datalist">
+		<![CDATA[
+		select distinct t.* from HS_Produce_Plan t
+		left join hs_produce_plan_detail d on d.producePlanId=t.id
+		LEFT JOIN hs_consumer c ON c.id=d.consumerId
+		LEFT JOIN hs_cut_plan cp ON cp.producePlanDetailId = d.id
+		where d.productIsTc=1 and t.auditState=2
+	    and t.workShopCode in(select pd.code from platform_department pd where pd.type='cut')
+		<#if key["code"]??>
+			and (t.PRODUCEPLANCODE like :code)
+		</#if>
+		<#if key["simplename"]??>
+			and (c.CONSUMERSIMPLENAME like :simplename)
+		</#if>
+		<#if key["productname"]??>
+			and (cp.productname like :productname)
+		</#if>
+		<#if key["batchcode"]??>
+			and (cp.batchcode like :batchcode)
+		</#if>
+		<#if key["salesOrderCode"]??>
+			and (cp.salesOrderCode like :salesOrderCode)
+		</#if>
+		<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+			</#if>
+			<#if !key["sort"]??&&!key["order"]??>
+				order by t.ID desc
+			</#if>
+		]]>
+	</sql>
+
+	<sql comment="根据人员id查询裁剪人员" id="findCutPlanUserByUserID">
+		<![CDATA[
+		SELECT b.* from hs_plan_users a,hs_cut_plan b where a.userId = (:userId) and a.producePlanDetailId =b.producePlanDetailId and b.isFinished=-1
+		]]>
+	</sql>
+	<sql comment="查询所有未完成裁剪计划详细" id="cp-list">
+		<![CDATA[
+		SELECT * from (
+		SELECT
+			so.salesOrderMemo as YX,
+			sod.isplaned,
+			t.*,t1.id ppd_id,t1.salesOrderSubcodePrint, sod.salesordersubcode,p.workshop,cs.consumerSimpleName,fin.consumerProductName,fin.factoryProductName,t1.packReq AS pReq,t1.`comment` AS com,t1.isTurnBagPlan
+			FROM
+				hs_cut_plan t
+			LEFT JOIN HS_Produce_Plan_Detail t1 ON t1.id = t.producePlanDetailId
+			LEFT JOIN hs_sales_order_detail sod ON sod.id = t.fromsalesorderdetailId
+			LEFT JOIN hs_produce_plan p ON t.planCode=p.producePlanCode
+			LEFT JOIN hs_consumer cs ON cs.id = t.consumerId
+			LEFT JOIN hs_finishproduct fin ON t.productId=fin.id
+			LEFT JOIN hs_sales_order so ON so.id=sod.salesOrderId
+			WHERE
+			1=1
+			<#if key["code"]??>
+			 AND t.planCode like :code
+			</#if>
+			<#if key["id"]??>
+			 AND t.id = :id
+			</#if>
+
+			<#if key["start"]??&&key["end"]??>
+				and t.deleveryDate between :start and :end
+			</#if>
+			<#if key["start"]??&&!key["end"]??>
+				and t.deleveryDate > :start
+			</#if>
+			<#if !key["start"]??&&key["end"]??>
+				and t.deleveryDate < :end
+			</#if>
+			<#if key["isTurnBagPlan"]??>
+				 AND t1.isTurnBagPlan =:isTurnBagPlan
+			</#if>
+			<#if key["workShop"]??>
+				 AND p.workshop = :workShop
+			</#if>
+			<#if key["workShopCode"]??>
+				 AND p.workshopCode = :workShopCode
+			</#if>
+			<#if key["saleCode"]??>
+				 AND t.salesOrderCode like :saleCode
+			</#if>
+			<#if key["model"]??>
+				 AND t.productModel like :model
+			</#if>
+			<#if key["batchCode"]??>
+				 AND t.batchCode like :batchCode
+			</#if>
+			<#if key["productWidth"]??>
+				 AND t.productWidth like :productWidth
+			</#if>
+			<#if key["productLength"]??>
+				 AND t.productLength like :productLength
+			</#if>
+			<#if key["processBomCode"]??>
+				 AND t.processBomCode like :processBomCode
+			</#if>
+			<#if key["processBomVersion"]??>
+				 AND t.processBomVersion like :processBomVersion
+			</#if>
+			<#if key["consumerName"]??>
+				 AND t.consumerName like :consumerName
+			</#if>
+			<#if key["isFinish"]??>
+				<#if key["isFinish"]=="-1">
+					and ( t.isFinished = :isFinish  or t.isFinished is null and :isFinish = :isFinish )
+				</#if>
+				<#if key["isFinish"]=="1">
+					and (t.isFinished = :isFinish and :isFinish = :isFinish)
+				</#if><#if key["isFinish"]=="3">
+					and (:isFinish = :isFinish )
+				</#if>
+			</#if>
+			<#if key["closed"]??>
+				<#if key["closed"]=="0">
+					and ( t.closed = :closed  or t.closed is null and :closed = :closed  )
+				</#if>
+				<#if key["closed"]=="1">
+					and (t.closed = :closed and :closed = :closed )
+				</#if>
+				<#if key["closed"]=="3">
+					and (:closed = :closed )
+				</#if>
+			</#if>
+
+			<#if key["isplaned"]??>
+				<#if key["isplaned"]=="0">
+					and ( sod.isplaned is null or sod.isplaned=0 and :isplaned=:isplaned)
+				</#if>
+				<#if key["isplaned"]=="1">
+					and (sod.isplaned = 1 and :isplaned=:isplaned )
+				</#if>
+				<#if key["isplaned"]=="3">
+					and ( :isplaned=:isplaned)
+				</#if>
+			</#if>
+
+
+			<#if key["sort"]??&&key["order"]??>
+			) as tt
+				order by ${key["sort"]} ${key["order"]}
+			</#if>
+			<#if key["sort"]??&& !key["order"]??>
+			) as tt
+				order by ${key["sort"]} desc
+			</#if>
+			<#if !key["sort"]??>
+			) as tt
+				order by deleveryDate ASC
+			</#if>
+
+		]]>
+	</sql>
+
+
+</sqls>

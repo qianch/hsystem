@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="WeaveDailyPlanDaoImpl">
+	<sql comment="日计划列表" id="weaveDailyPlan-list">
+		<![CDATA[
+		select t.*,t1.userName,DATE_FORMAT(t.planDate,'%Y-%m-%d')Date from  hs_Weave_Daily_Plan t
+		left join platform_user t1 on t1.id=t.operator 
+		where 1=1 
+		<#if key["produceDate"]??>
+			and t.planDate=:produceDate
+		</#if>
+		<#if key["workshop"]??>
+			and workshop=:workshop
+		</#if>
+		<#if key["workShopCode"]??>
+			and workShopCode=:workShopCode
+		</#if>
+			order by planDate desc 
+		]]>
+	</sql>
+	<sql comment="未完成的编制计划" id="findW-list">
+		<![CDATA[ 
+		    SELECT DISTINCT
+				d.isPlaned,
+				t.*, d.salesOrderSubCode,
+				pp.workshop,
+				pp.workShopCode,
+				con.consumerSimpleName,
+				t1.packReq AS pReq,
+				t1.`comment` AS com,
+				t1.requirementCount REQCOUNT,
+				t1.planTotalWeight,
+				t1.planAssistCount,
+				t1.planAssistUnit
+			FROM
+				Hs_Weave_Plan t
+			LEFT JOIN hs_sales_order_detail d ON d.id = t.fromSalesOrderDetailId
+			LEFT JOIN hs_produce_plan pp ON pp.producePlanCode = t.planCode
+			LEFT JOIN hs_produce_plan_detail t1 ON t.producePlanDetailId = t1.id
+			LEFT JOIN hs_consumer con ON t.consumerId = con.id
+			WHERE
+				t.isFinished =- 1
+			AND (t.closed = 0 OR t.closed IS NULL)
+			AND (d.closed = 0 OR d.closed IS NULL)
+			AND (
+				t1.closed = 0
+				OR t1.closed IS NULL
+			)
+			<#if key["productname"]??>
+				and t.productname like :productname
+			</#if>
+			<#if key["isTurnBagPlan"]??>
+				and t1.isTurnBagPlan=:isTurnBagPlan
+			</#if>
+			<#if key["pcode"]??>
+				and t.planCode like :pcode
+			</#if>
+			<#if key["productmodel"]??>
+				and t.productmodel like :productmodel
+			</#if>
+			<#if key["productwidth"]??>
+				and t.productwidth like :productwidth
+			</#if>
+			<#if key["productlength"]??>
+				and t.productlength like :productlength
+			</#if>
+			<#if key["workShop"]??>
+				and pp.workshop=:workShop
+			</#if>
+			<#if key["workShopCode"]??>
+			and pp.workShopCode=:workShopCode
+			</#if>
+			<#if key["scode"]??>
+				and t.salesOrderCode like :scode
+			</#if>
+			<#if key["batch"]??>
+				and t.batchCode like :batch
+			</#if>
+			<#if key["settled"]??&&key["settled"]=="1">
+				and d.ISPLANED=:settled
+			</#if>
+			<#if key["settled"]??&&key["settled"]=="0">
+				and (d.ISPLANED is null or d.ISPLANED=:settled)
+			</#if>
+			<#if key["sort"]??&&key["order"]??>
+				order by isSettled asc,${key["sort"]} ${key["order"]}
+				<#else>
+				order by isSettled asc,id desc
+			</#if>
+		]]>
+	</sql>
+	<sql comment="删除中间表数据" id="deleteR-list">
+		<![CDATA[
+		delete from hs_Weave_Daily_Plan_Detail where  DailyId=(:id) 
+		]]>
+	</sql>
+	<sql comment="查询日计划下的编织计划" id="findWeavePlan-list">
+		<![CDATA[
+		SELECT
+		 sod.isPlaned,
+		o.*,t.deviceCodes,t.DailyId,sod.salesOrderSubCode,ppd.packREQ as packREQ2,ppd.procREQ as procREQ2
+		FROM HS_Weave_Plan o
+		LEFT JOIN hs_sales_order_detail sod on sod.id=o.fromSalesOrderDetailId
+		LEFT JOIN hs_Weave_Daily_Plan_Detail t ON o.id = t.weavePlanId 
+		LEFT JOIN HS_Produce_Plan_Detail ppd on ppd.id = o.producePlanDetailId
+		where t.DailyId=(:id) 
+		]]>
+	</sql>
+	<sql comment="根据编织日计划id查询明细和机台" id="findWeavePlandetailsAndweavePlan-list">
+		<![CDATA[	
+			select t.*,wd.planDate,wd.workShop,wd.workShopCode,u.userName from	(
+			SELECT wdp.DailyId,wdp.deviceCodes,
+			wp.batchCode,
+			wp.consumerName,
+			wp.productType,
+			wp.planCode,
+			wp.salesOrderCode,
+			wp.productModel,
+			wp.totalTrayCount
+			,wp.totalRollCount,
+			wp.productWeight
+			,wp.productLength
+			,wp.bcBomCode,
+			wp.bcBomVersion,
+			wp.processBomCode,
+			wp.processBomVersion,
+			wp.comment ,
+			wp.productWidth,
+			wp.packReq,
+			wp.procReq 
+			from hs_weave_daily_plan_detail wdp 
+			LEFT JOIN hs_weave_plan wp 
+			ON wdp.weavePlanId=wp.id 
+			where wdp.DailyId= (:id)) as t LEFT JOIN hs_weave_daily_plan wd on wd.id=t.DailyId 
+			LEFT JOIN platform_user u ON u.id=wd.operator  ORDER BY t.productType
+		]]>
+	</sql>
+
+</sqls>

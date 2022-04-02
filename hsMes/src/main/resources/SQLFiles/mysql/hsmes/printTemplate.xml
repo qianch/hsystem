@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="PrintTemplateDaoImpl">
+	<sql comment="查询所有打印模版信息" id="PrintTemplate-list">
+		<![CDATA[
+		select * from  HS_PrintTemplate
+
+       where 1=1
+
+		<#if key["printAttributeName"]??>
+			and printAttributeName like :printAttributeName
+		</#if>
+
+		<#if key["printAttribute"]??>
+			and printAttribute like :printAttribute
+		</#if>
+
+		<#if key["type"]??>
+			and type = :type
+		</#if>
+
+		]]>
+	</sql>
+
+
+
+
+
+
+</sqls>

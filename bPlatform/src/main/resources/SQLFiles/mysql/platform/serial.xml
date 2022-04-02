@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="SerialDaoImpl">
+	<sql comment="查询最大的序列号" id="serial-getSerialNumber">
+		<![CDATA[
+			select * from platform_serial where preffix=:preffix
+		]]>
+	</sql>
+</sqls>

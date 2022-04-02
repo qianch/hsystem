@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="FTc_BomDaoImpl">
+	<sql comment="非套材bom工艺列表" id="ftc-Bom-list">
+		<![CDATA[
+		select t.* from HS_FTC_PROC_BOM t
+		left join hs_consumer c on c.id=t.ftcProcBomConsumerId
+		where 1=1 and t.isTestPro = 1 
+		<#if key["data"]!="">
+			and (t.ftcProcBomName like "%${key["data"]}%"
+ 			or t.ftcProcBomCode like "%${key["data"]}%"
+ 			or c.CONSUMERNAME like "%${key["data"]}%")
+		</#if>
+		order by t.ftcProcBomName
+		]]>
+	</sql>
+		<sql comment="非套材bom变更试样工艺列表" id="ftc-Bom-list1">
+		<![CDATA[
+		select t.* from HS_FTC_PROC_BOM t
+		left join hs_consumer c on c.id=t.ftcProcBomConsumerId
+		where 1=1 and t.isTestPro=-1 
+		<#if key["data"]!="">
+			and (t.ftcProcBomName like "%${key["data"]}%"
+ 			or t.ftcProcBomCode like "%${key["data"]}%"
+ 			or c.CONSUMERNAME like "%${key["data"]}%")
+		</#if>
+		order by t.ftcProcBomName
+		]]>
+	</sql>
+	<sql comment="非套材bom新品试样工艺列表" id="ftc-Bom-list2">
+		<![CDATA[
+		select t.* from HS_FTC_PROC_BOM t
+		left join hs_consumer c on c.id=t.ftcProcBomConsumerId
+		where 1=1 and t.isTestPro=2
+		<#if key["data"]!="">
+			and (t.ftcProcBomName like "%${key["data"]}%"
+ 			or t.ftcProcBomCode like "%${key["data"]}%"
+ 			or c.CONSUMERNAME like "%${key["data"]}%")
+		</#if>
+		order by t.ftcProcBomName
+		]]>
+	</sql>
+	<sql comment="非套材bom版本列表" id="ftc-Bom-VersionList">
+		<![CDATA[
+		select * from HS_FTC_PROC_BOM_VERSION where 1=1
+		<#if key["id"]??>
+			and (ftcProcBomId = (${key["id"]}))
+		</#if>
+		order by ftcProcBomVersionCode asc
+		]]>
+	</sql>
+	<sql comment="非套材bom明细" id="ftc-bom-detailList">
+		<![CDATA[
+		select * from  HS_FTC_PROC_BOM_DETAIL t where 1=1 
+		<#if key["id"]??>
+			and (t.ftcBomVersionId in (:id))
+		</#if>
+		<#if key["detailName"]??>
+			and t.ftcBomDetailName like :detailName
+		</#if>
+		<#if key["detailModel"]??>
+			and t.ftcBomDetailModel like :detailModel
+		</#if>
+		<#if key["sort"]??&&key["order"]??>
+			order by ${key["sort"]} ${key["order"]}
+		</#if>
+		<#if !key["sort"]??&&!key["order"]??>
+			order by id desc
+		</#if>
+		]]>
+	</sql>
+	<sql comment="删除非套材bom明细" id="ftc-bom-detailDelete">
+		<![CDATA[
+			delete from HS_FTC_PROC_BOM_DETAIL where id in (:id)	
+		]]>
+	</sql>
+	<sql comment="删除非套材工艺bom" id="ftc-bom-Delete">
+		<![CDATA[
+			delete from HS_FTC_PROC_BOM where id in (:id)	
+		]]>
+	</sql>
+	<sql comment="删除非套材bom版本" id="ftc-bom-versionDelete">
+		<![CDATA[
+			delete from HS_FTC_PROC_BOM_VERSION where id in (:id)	
+		]]>
+	</sql>
+	<sql comment="删除非套材bom版本及它子节点明细" id="ftc-bom-versionDeleteAndDetail">
+		<![CDATA[
+			DELETE from HS_FTC_PROC_BOM_DETAIL  where 1=1 and ftcBomVersionId not in (select t.id from HS_FTC_PROC_BOM_VERSION t )
+		]]>
+	</sql>
+	<sql comment="删除非套材bom及它子节点版本" id="ftc-bom-DeleteAndVersion">
+		<![CDATA[
+			delete from HS_FTC_PROC_BOM_VERSION where ftcProcBomId in (:id)	
+		]]>
+	</sql>
+
+
+	<sql comment="非套材bom镜像明细" id="ftc-bom-mirrorDetailList">
+		<![CDATA[
+		select * from  HS_FTC_PROC_BOM_DETAIL_MIRROR t where 1=1
+		<#if key["id"]??>
+			and (t.ftcBomVersionId in (:id))
+		</#if>
+		<#if key["detailName"]??>
+			and t.ftcBomDetailName like :detailName
+		</#if>
+		<#if key["detailModel"]??>
+			and t.ftcBomDetailModel like :detailModel
+		</#if>
+		<#if key["sort"]??&&key["order"]??>
+			order by ${key["sort"]} ${key["order"]}
+		</#if>
+		<#if !key["sort"]??&&!key["order"]??>
+			order by id desc
+		</#if>
+		]]>
+	</sql>
+</sqls>

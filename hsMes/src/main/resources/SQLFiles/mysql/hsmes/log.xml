@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="LogDaoImpl">
+	<sql comment="日志列表" id="log-list">
+		<![CDATA[
+		select * from platform_log where 1=1 
+		<#if key["user"]??>
+			and userName like :user
+		</#if>
+		<#if key["name"]??>
+			and loginName like :name
+		</#if>
+		
+		<#if key["operate"]??>
+			and operate like :operate
+		</#if>
+
+		<#if key["paramsValue"]??>
+			and paramsValue like :paramsValue
+		</#if>
+		
+		<#if key["startlogDate"]?? && key["endlogDate"]??>
+			and logdate between :startlogDate and :endlogDate
+		</#if>
+		
+		<#if key["startlogDate"]?? && !key["endlogDate"]??>
+			and logdate >:startlogDate
+		</#if>
+		
+		<#if !key["startlogDate"]?? && key["endlogDate"]??>
+			and logdate <:endlogDate
+		</#if>
+		<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+				<#else>
+				order by logdate desc 
+			</#if>
+		]]>
+	</sql>
+</sqls>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="MobilePackageDaoImpl">
+	<sql comment="盒打包判断卷是否被打包" id="isPacked-roll">
+		<![CDATA[
+			select * from hs_box_roll where rollBarcode in (:rolls) or partBarcode in(:rolls)
+		]]>
+	</sql>
+	<sql comment="托打包判断卷是否被打包" id="isPacked-BoxRoll">
+		<![CDATA[
+			select * from hs_tray_box_roll where rollBarcode in (:rolls) or partBarcode in (:rolls) 
+			or boxBarcode in(:boxs)
+		]]>
+	</sql>
+</sqls>

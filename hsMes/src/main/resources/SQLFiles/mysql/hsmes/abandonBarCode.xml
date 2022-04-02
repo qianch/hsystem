@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="OpenPackBarCodeDaoImpl">
+
+	<sql comment="根据托条码查询销售订单" id="abandonBarCode">
+		<![CDATA[
+		select t.createDate,u.userName  from hs_abandon_barcode t
+		left join platform_user u on u.id=t.userId
+		  where t.barCode in (:code)
+		]]>
+	</sql>
+
+</sqls>

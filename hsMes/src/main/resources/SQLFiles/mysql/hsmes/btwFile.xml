@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="BtwFileDaoImpl">
+	<sql comment="标签列表明细" id="btwFile-list">
+		<![CDATA[
+
+	    SELECT t.*,(select name_zh_CN from platform_dict where rootCode='TagType' and code=t.tagtype limit 1) as tagTypeText,u.username as uploadUserName
+	    from hs_btwfile t
+	    LEFT JOIN hs_consumer b ON t.consumerId=b.id
+	    LEFT JOIN platform_user u ON u.id = t.uploadUser
+	    where 1=1
+			<#if key["uploadUser"]??>
+			 and	t.uploadUser  like  :uploadUser
+			</#if>
+
+			<#if key["consumerId"]??>
+			 and t.consumerId = :consumerId
+			</#if>
+
+			<#if key["consumerName"]??>
+		    	and	t.consumerName like :consumerName
+			</#if>
+
+			<#if key["consumerCode"]??>
+		    	and	t.consumerCode like :consumerCode
+			</#if>
+
+			<#if key["tagType"]??>
+			  and t.tagType = :tagType
+			</#if>
+
+			<#if key["tagName"]??>
+			  and	t.tagName like  :tagName
+			</#if>
+		]]>
+	</sql>
+	<sql comment="标签列表select选项" id="btwFile-listOfSelect">
+		<![CDATA[
+
+	    SELECT t.*,(select name_zh_CN from platform_dict where rootCode='TagType' and code=t.tagtype limit 1) as tagTypeText,u.username as uploadUserName
+	    from hs_btwfile t
+	    LEFT JOIN hs_consumer b ON t.consumerId=b.id
+	    LEFT JOIN platform_user u ON u.id = t.uploadUser
+	    where 1=1 and t.State=1
+			<#if key["uploadUser"]??>
+			 and	t.uploadUser  like  :uploadUser
+			</#if>
+
+			<#if key["consumerId"]??>
+			 and t.consumerId = :consumerId
+			</#if>
+
+			<#if key["consumerName"]??>
+		    	and	t.consumerName like :consumerName
+			</#if>
+
+			<#if key["consumerCode"]??>
+		    	and	t.consumerCode like :consumerCode
+			</#if>
+
+			<#if key["tagType"]??>
+			  and t.tagType = :tagType
+			</#if>
+
+			<#if key["tagName"]??>
+			  and	t.tagName like  :tagName
+			</#if>
+		]]>
+	</sql>
+	<sql comment="标签列表select选项noTagType" id="btwFile-listOfNoTagtypeSelect">
+		<![CDATA[
+
+	    SELECT t.*,(select name_zh_CN from platform_dict where rootCode='TagType' and code=t.tagtype limit 1) as tagTypeText,u.username as uploadUserName
+	    from hs_btwfile t
+	    LEFT JOIN hs_consumer b ON t.consumerId=b.id
+	    LEFT JOIN platform_user u ON u.id = t.uploadUser
+	    where 1=1 and t.State=1
+			<#if key["uploadUser"]??>
+			 and	t.uploadUser  like  :uploadUser
+			</#if>
+
+			<#if key["consumerId"]??>
+			 and t.consumerId = :consumerId
+			</#if>
+
+			<#if key["consumerName"]??>
+		    	and	t.consumerName like :consumerName
+			</#if>
+
+			<#if key["consumerCode"]??>
+		    	and	t.consumerCode like :consumerCode
+			</#if>
+
+			<#if key["tagName"]??>
+			  and	t.tagName like  :tagName
+			</#if>
+		]]>
+	</sql>
+</sqls>

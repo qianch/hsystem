@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 查找最新的schemaLocation 访问 http://www.springframework.org/schema/ -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-4.0.xsd   
+        http://www.springframework.org/schema/beans   
+        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd   
+        http://www.springframework.org/schema/context   
+        http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        http://www.springframework.org/schema/tx   
+        http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+    <!-- 配置扫描路径 -->
+    <context:component-scan base-package="com.bluebirdme.mes">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <!-- spring加载资源文件 -->
+    <bean id="propertiesConfig" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:jdbc.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- SQL监控 -->
+    <bean id="stat-filter" class="com.alibaba.druid.filter.stat.StatFilter">
+        <!-- 记录执行时间大于10S的SQL语句 -->
+        <property name="slowSqlMillis" value="${druid.slowSqlMillis}"/>
+        <!-- 记录到日志 -->
+        <property name="logSlowSql" value="${druid.logSlowSql}"/>
+        <!-- 合并重复无参数SQL -->
+        <property name="mergeSql" value="${druid.mergeSql}"/>
+    </bean>
+    <!-- 防止SQL注入 -->
+    <bean id="wall-filter" class="com.alibaba.druid.wall.WallFilter">
+        <property name="logViolation" value="${druid.logViolation}"></property>
+        <property name="throwException" value="${druid.throwException}"></property>
+    </bean>
+    <bean id="log-filter" class="com.alibaba.druid.filter.logging.Log4j2Filter">
+        <property name="resultSetLogEnabled" value="${druid.resultSetLogEnabled}"/>
+        <property name="statementExecutableSqlLogEnable" value="${druid.statementExecutableSqlLogEnable}"></property>
+    </bean>
+    <!-- 池数据源 -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.user}"/>
+        <!-- 注意，这里是密码的密文 -->
+        <property name="password" value="${jdbc.password}"/>
+        <!-- 配置加密 -->
+        <property name="connectionProperties" value="${druid.connectionProperties}"/>
+        <property name="filters" value="${druid.filters}"/>
+        <property name="proxyFilters">
+            <list>
+                <!-- 监控 -->
+                <ref bean="stat-filter"/>
+                <!-- 防止SQL注入 -->
+                <ref bean="wall-filter"/>
+                <!-- 日志 -->
+                <ref bean="log-filter"/>
+            </list>
+        </property>
+        <property name="maxActive" value="${druid.maxActive}"/>
+        <property name="initialSize" value="${druid.initialSize}"/>
+        <property name="maxWait" value="${druid.maxWait}"/>
+        <property name="minIdle" value="${druid.minIdle}"/>
+        <property name="logAbandoned" value="${druid.logAbandoned}"></property>
+        <property name="timeBetweenEvictionRunsMillis" value="${druid.timeBetweenEvictionRunsMillis}"/>
+        <property name="minEvictableIdleTimeMillis" value="${druid.minEvictableIdleTimeMillis}"/>
+        <property name="testWhileIdle" value="${druid.testWhileIdle}"/>
+        <property name="testOnBorrow" value="${druid.testOnBorrow}"/>
+        <property name="testOnReturn" value="${druid.testOnReturn}"/>
+        <property name="poolPreparedStatements" value="${druid.poolPreparedStatements}"/>
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="${druid.maxPoolPreparedStatementPerConnectionSize}"/>
+    </bean>
+
+    <bean id="druid-stat-interceptor" class="com.alibaba.druid.support.spring.stat.DruidStatInterceptor"/>
+
+    <!-- sessionfactory 配置 -->
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+        <!-- connection -->
+        <property name="dataSource">
+            <ref bean="dataSource"/>
+        </property>
+        <!-- hibernate属性配置 -->
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+                <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+                <prop key="hibernate.temp.use_jdbc_metadata_defaults">${hibernate.temp.use_jdbc_metadata_defaults}</prop>
+                <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+                <prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
+                <prop key="hibernate.max_fetch_depth">${hibernate.max_fetch_depth}</prop>
+                <prop key="hibernate.jdbc.fetch_size">${hibernate.jdbc.fetch_size}</prop>
+                <prop key="hibernate.jdbc.batch_size">${hibernate.jdbc.batch_size}</prop>
+                <prop key="hibernate.use_sql_comments">${hibernate.use_sql_comments}</prop>
+                <prop key="hibernate.current_session_context_class">org.springframework.orm.hibernate5.SpringSessionContext</prop>
+            </props>
+        </property>
+
+        <!-- packagesToScan搜索所有标注了Entity的Class -->
+        <property name="packagesToScan">
+            <list>
+                <!-- 添加各自业务的entity -->
+                <value>com.bluebirdme.mes.*</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- Hibernate事务管理器 -->
+    <bean id="transactionManager"
+          class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <property name="sessionFactory">
+            <ref bean="sessionFactory"/>
+        </property>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <bean class="com.bluebirdme.mes.core.spring.SpringCtx" lazy-init="false" scope="singleton">
+        <property name="sessionFactory" ref="sessionFactory"></property>
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+    <!-- 校验注解配置 -->
+    <!-- <import resource="spring-valid.xml"/> -->
+    <!-- Quartz调度任务 -->
+    <import resource="spring-quartz.xml"/>
+    <!-- 验证码 -->
+    <!-- <import resource="spring-kaptcha.xml" /> -->
+    <!-- 国际化 -->
+    <import resource="spring-i18n.xml"/>
+
+</beans>  

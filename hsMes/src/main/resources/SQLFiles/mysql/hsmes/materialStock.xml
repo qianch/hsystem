@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="MaterialStockDaoImpl">
+    <sql comment="原料库存表" id="materialStock-list">
+        <![CDATA[
+		select * from hs_material_stock 
+		where 1=1
+		<#if key["materialModel"]??>
+			and materialModel like :materialModel
+		</#if>
+		<#if key["produceCategory"]??>
+			and produceCategory like :produceCategory
+		</#if>
+		]]>
+    </sql>
+    <sql comment="更新库房状态" id="updateState-list">
+        <![CDATA[
+		update HS_Material_Stock set outTime=:date, stockState=-1,state=1 where materialCode in(:code)
+		]]>
+    </sql>
+    <sql comment="入库查询原料信息" id="findMaterial-list">
+        <![CDATA[
+		select subWay,deviation,lowerDeviation,materialShelfLife from hs_material
+		where materialModel=:materialModel and produceCategory=:produceCategory
+		]]>
+    </sql>
+    <sql comment="通过仓库库位代码查询库存信息列表" id="findAll-list">
+        <![CDATA[
+		select t.*,t1.inWeight,DATE_FORMAT(t1.inTime,'%Y-%m-%d') intimes from Hs_Material_Stock_State t 
+		left join HS_Material_In_Record t1 on t1.materialCode = t.materialCode
+		where 1=1 
+		and t.warehouseCode=(:warehouseCode) and t.warehousePosCode=(:warehousePosCode)
+		and stockState=1
+		]]>
+    </sql>
+    <sql comment="入库查询库存表" id="findWeight-list">
+        <![CDATA[
+		select * from HS_Material_Stock
+		where materialModel=:materialModel and produceCategory=:produceCategory
+		]]>
+    </sql>
+    <sql comment="入库查询库存表" id="findMaterial-in-record">
+        <![CDATA[
+			SELECT * from hs_material_in_record t where t.materialCode=:materialCode
+		]]>
+    </sql>
+    <sql comment="查询原料信息" id="findMaterialInfo-list">
+        <![CDATA[
+		select m.* from hs_material m
+			left join HS_Material_In_Record ir on ir.materialModel=m.materialModel and ir.produceCategory=m.produceCategory
+		where ir.materialModel=:materialModel and ir.produceCategory=:produceCategory
+		]]>
+    </sql>
+    <sql comment="生成序号" id="materialOutCode-serial">
+        <![CDATA[
+			select mso.outOrderCode from hs_material_stock_out mso 
+			where mso.outOrderCode like (:code)
+			order by mso.outOrderTime desc LIMIT 1
+		]]>
+    </sql>
+
+    <sql comment="原料强制出库记录" id="materialForceOutRecord-list">
+        <![CDATA[
+		SELECT
+			m.*,t.WAREHOUSENAME,ir.inWeight,ir.subWay,ir.numberDeviation,ir.produceDate
+		FROM
+			hs_material_forceout_record m
+		LEFT JOIN hs_warehouse t ON m.warehouseCode=t.WAREHOUSECODE 
+		LEFT JOIN HS_Material_In_Record ir ON ir.materialCode=m.materialCode
+		where 1=1
+		<#if key["code"]??>
+			and (m.materialCode like (:code))
+		</#if>
+		
+		<#if key["materialModel"]??>
+			and (m.materialModel like (:materialModel))
+		</#if>
+		
+		<#if key["warehouseCode"]??>
+			and (m.warehouseCode like (:warehouseCode))
+		</#if>
+		
+		<#if key["warehousePosCode"]??>
+			and (m.warehousePosCode like (:warehousePosCode))
+		</#if>
+		
+		<#if key["produceCategory"]??>
+			and (ir.produceCategory like (:produceCategory))
+		</#if>
+		
+		<#if key["produceStart"]??&&key["produceEnd"]??>
+			and ir.produceDate between :produceStart and :produceEnd
+		</#if>
+		<#if key["produceStart"]??&&!key["produceEnd"]??>
+			and ir.produceDate > :produceStart
+		</#if>
+		<#if !key["produceStart"]??&&key["produceEnd"]??>
+			and ir.produceDate < :produceEnd
+		</#if>
+		
+		<#if key["outStart"]??&&key["outEnd"]??>
+			and m.outTime between :outStart and :outEnd
+		</#if>
+		<#if key["outStart"]??&&!key["outEnd"]??>
+			and m.outTime > :outStart
+		</#if>
+		<#if !key["outStart"]??&&key["outEnd"]??>
+			and m.outTime < :outEnd
+		</#if>
+			
+		<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+			</#if>
+			<#if !key["sort"]??&&!key["order"]??>
+				order by id desc
+			</#if>
+		]]>
+    </sql>
+    <sql comment="成品强制出库记录" id="productForceOutRecord-list">
+        <![CDATA[
+			select * from ((SELECT t.barcode,fp.factoryProductName factoryName,fp.productModel,fp.productWidth,pss.warehouseCode,pss.warehousePosCode,t.outAddress,t.outUser,t1.isLocked, t.outTime,w.WAREHOUSENAME,
+			t1.batchCode,
+			t1.CONSUMERNAME,
+			ROUND(IFNULL(t1.productWeight,t1.rollWeight),2) as productWeight,
+			t1.salesOrderCode,
+			t1.rollQualityGradeCode,
+			t1.productLength,
+			t1.productName,
+			t1.producePlanCode AS scrw,
+			fp.consumerProductName,
+			fpc.categoryName,
+			fpc.categoryCode,
+			tp.tcProcBomVersionPartsName
+			FROM
+				hs_product_forceout_record t
+			
+			LEFT JOIN hs_product_stock_state pss ON t.barcode=pss.barCode
+			LEFT JOIN hs_warehouse w ON w.WAREHOUSECODE = pss.warehouseCode
+			LEFT JOIN hs_TotalStatistics t1 ON t1.rollBarcode = t.barcode
+			LEFT JOIN hs_tray_barcode tb ON tb.barcode = t.barCode
+			LEFT JOIN hs_finishproduct fp ON fp.id = tb.salesProductId
+			LEFT JOIN HS_TC_PROC_BOM_VERSION_PARTS tp ON tb.partId = tp.id
+			LEFT JOIN hs_finished_product_category fpc ON fpc.id = fp.fpcid
+			where (t.barcode like 'TBZ%' or  t.barcode like 'PHS%')
+		
+		
+			)
+			
+			union all
+			(SELECT 
+			t.barcode,fp.factoryProductName factoryName,fp.productModel,fp.productWidth,pss.warehouseCode,pss.warehousePosCode,t.outAddress,t.outUser,t1.isLocked, t.outTime,w.WAREHOUSENAME,
+			t1.batchCode,
+			t1.CONSUMERNAME,
+			ROUND(IFNULL(t1.productWeight,t1.rollWeight),2) as productWeight,
+			t1.salesOrderCode,
+			t1.rollQualityGradeCode,
+			t1.productLength,
+			t1.productName,
+			t1.producePlanCode AS scrw,
+			fp.consumerProductName,
+			fpc.categoryName,
+			fpc.categoryCode,
+			tp.tcProcBomVersionPartsName
+			FROM
+				hs_product_forceout_record t
+			LEFT JOIN hs_product_stock_state pss ON t.barcode=pss.barCode
+			LEFT JOIN hs_warehouse w ON w.WAREHOUSECODE = pss.warehouseCode
+			LEFT JOIN hs_TotalStatistics t1 ON t1.rollBarcode = t.barcode
+			LEFT JOIN hs_roll_barcode tb ON tb.barcode = t.barCode
+			LEFT JOIN hs_finishproduct fp ON fp.id = tb.salesProductId
+			LEFT JOIN HS_TC_PROC_BOM_VERSION_PARTS tp ON tb.partId = tp.id
+			LEFT JOIN hs_finished_product_category fpc ON fpc.id = fp.fpcid
+			where t.barcode like 'RBZ%')) pf  where 1=1 
+				
+		<#if key["factoryName"]??>
+			and pf.factoryName like :factoryName
+		</#if>
+		<#if key["categoryCode"]??>
+			and pf.categoryCode like :categoryCode
+		</#if>
+		<#if key["categoryName"]??>
+			and pf.categoryName like :categoryName
+		</#if>
+		<#if key["code"]??>
+			and pf.barCode like :code
+		</#if>
+		<#if key["model"]??>
+			and pf.productModel like :model
+		</#if>
+		<#if key["outAddress"]??>
+			and pf.outAddress like :outAddress
+		</#if>
+		<#if key["salesCode"]??>
+			and pf.salesOrderCode like :salesCode
+		</#if>
+		<#if key["batchCode"]??>
+			and pf.batchCode like :batchCode
+		</#if>
+		<#if key["consumer"]??>
+			and pf.CONSUMERNAME like :consumer
+		</#if>
+		<#if key["warehouseCode"]??>
+			and pf.warehouseCode like :warehouseCode
+		</#if>
+		<#if key["warehousePosCode"]??>
+			and pf.warehousePosCode like :warehousePosCode
+		</#if>
+		<#if key["start"]??&&key["end"]??>
+					 and pf.outTime between :start and :end
+				</#if>
+				<#if key["start"]??&&!key["end"]??>
+					 and pf.outTime> :start
+				</#if>
+				<#if !key["start"]??&&key["end"]??>
+					 and pf.outTime < :end
+		</#if>
+	 
+		<#if key["sort"]??&&key["order"]??>
+			order by ${key["sort"]} ${key["order"]}
+		</#if>
+		
+		 
+		<#if !key["sort"]??&&!key["order"]??>
+			order by pf.outTime desc
+		</#if>
+				]]>
+    </sql>
+
+    <sql comment="成品回库明细查询" id="productReturnDetail-list">
+        <![CDATA[
+			SELECT *
+            FROM (
+            (SELECT
+            PST.barCode,
+            PST.newWarehousePosCode,
+            pst.newWarehouseCode,
+            w.WAREHOUSENAME,
+            PST.inTime,
+            U.userName,
+            T.salesOrderCode,
+            T.CONSUMERNAME,
+            T.batchCode,
+            T.productLength,
+            T.productWidth,
+            ROUND(IFNULL(T.productWeight,T.rollWeight),2) as productWeight,
+            T.isLocked,
+            T.producePlanCode AS scrw,
+            fpc.categoryName,
+            fpc.categoryCode,
+            fp.factoryProductName factoryName,
+            fp.consumerProductName,
+            tp.tcProcBomVersionPartsName,
+            fp.productModel
+
+            FROM
+            hs_product_stock_tran PST
+            LEFT JOIN hs_warehouse w ON w.WAREHOUSECODE = PST.newWarehouseCode
+            LEFT JOIN platform_user U ON PST.operateUserId=u.id
+            LEFT JOIN hs_TotalStatistics T ON T.rollBarcode=PST.barCode
+            LEFT JOIN hs_tray_barcode tb ON tb.barcode=PST.barCode
+            LEFT JOIN hs_finishproduct fp ON fp.id = tb.salesProductId
+            LEFT JOIN HS_TC_PROC_BOM_VERSION_PARTS tp ON tb.partId = tp.id
+            LEFT JOIN hs_finished_product_category fpc ON fpc.id = fp.fpcid
+            WHERE PST.status = 1
+            AND
+            (PST.barcode like 'TBZ%' or  PST.barcode like 'PHS%')
+            )
+            union all
+            (SELECT
+            PST.barCode,
+            PST.newWarehousePosCode,
+            pst.newWarehouseCode,
+            w.WAREHOUSENAME,
+            PST.inTime,
+            U.userName,
+            T.salesOrderCode,
+            T.CONSUMERNAME,
+            T.batchCode,
+            T.productLength,
+            T.productWidth,
+            ROUND(IFNULL(T.productWeight,T.rollWeight),2) as productWeight,
+            T.isLocked,
+            T.producePlanCode AS scrw,
+            fpc.categoryName,
+            fpc.categoryCode,
+            fp.factoryProductName factoryName,
+            fp.consumerProductName,
+            tp.tcProcBomVersionPartsName,
+            fp.productModel
+
+            FROM
+            hs_product_stock_tran PST
+            LEFT JOIN hs_warehouse w ON w.WAREHOUSECODE = PST.newWarehouseCode
+            LEFT JOIN platform_user U ON PST.operateUserId=u.id
+            LEFT JOIN hs_TotalStatistics T ON T.rollBarcode=PST.barCode
+            LEFT JOIN hs_PART_barcode tb ON tb.barcode = PST.barCode
+            LEFT JOIN hs_sales_order_detail sod ON sod.id=tb.salesOrderDetailId
+            LEFT JOIN hs_finishproduct fp ON fp.id = sod.productId
+            LEFT JOIN HS_TC_PROC_BOM_VERSION_PARTS tp ON tb.partId = tp.id
+            LEFT JOIN hs_finished_product_category fpc ON fpc.id = fp.fpcid
+            WHERE PST.status = 1
+            AND
+            PST.barcode like 'PCJ%'
+            ))AS PF
+        WHERE 1=1
+		<#if key["factoryName"]??>
+			and pf.factoryName like :factoryName
+		</#if>
+		<#if key["categoryCode"]??>
+			and pf.categoryCode like :categoryCode
+		</#if>
+		<#if key["categoryName"]??>
+			and pf.categoryName like :categoryName
+		</#if>
+		<#if key["code"]??>
+			and pf.barCode like :code
+		</#if>
+		<#if key["model"]??>
+			and pf.productModel like :model
+		</#if>
+		<#if key["salesCode"]??>
+			and pf.salesOrderCode like :salesCode
+		</#if>
+		<#if key["batchCode"]??>
+			and pf.batchCode like :batchCode
+		</#if>
+		<#if key["consumer"]??>
+			and pf.CONSUMERNAME like :consumer
+		</#if>
+		<#if key["newWarehouseCode"]??>
+			and pf.newWarehouseCode like :newWarehouseCode
+		</#if>
+		<#if key["newWarehousePosCode"]??>
+			and pf.newWarehousePosCode like :newWarehousePosCode
+		</#if>
+		<#if key["start"]??&&key["end"]??>
+					 and pf.inTime between :start and :end
+				</#if>
+				<#if key["start"]??&&!key["end"]??>
+					 and pf.inTime> :start
+				</#if>
+				<#if !key["start"]??&&key["end"]??>
+					 and pf.inTime < :end
+		</#if>
+
+		<#if key["sort"]??&&key["order"]??>
+			order by ${key["sort"]} ${key["order"]}
+		</#if>
+
+
+		<#if !key["sort"]??&&!key["order"]??>
+			order by pf.inTime desc
+		</#if>
+
+
+				]]>
+    </sql>
+
+</sqls>

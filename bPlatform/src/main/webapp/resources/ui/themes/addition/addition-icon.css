@@ -1,0 +1,36 @@
+.icon-menu{
+	background: url(icons/menu.png) top center no-repeat;
+	width: 50px;
+	text-align: center;
+	padding-top:45px;
+	float: left;
+	margin-right:20px; 
+	cursor: pointer;
+}
+.icon-arrow-left{
+	background: url(icons/arrow_left.png) top center no-repeat;
+	display: inline-block;
+	height:50px;
+	line-height: 50px;
+	width:50px;
+	cursor: pointer;
+}
+.icon-arrow-left:active{
+	background: url(icons/arrow_left_active.png) top center no-repeat!important;
+}
+
+.icon-arrow-right{
+	background: url(icons/arrow_right.png) top center no-repeat;
+	display: inline-block;
+	height:50px;
+	line-height: 50px;
+	width:50px;
+	cursor: pointer;
+}
+.icon-arrow-right:active{
+	background: url(icons/arrow_right_active.png) top center no-repeat!important;
+}
+
+.icon-setup{
+	background: url(icons/setup.png) top center no-repeat;
+}

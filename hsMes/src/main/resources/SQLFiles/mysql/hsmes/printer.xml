@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="PrinterDaoImpl">
+	<sql comment="查询所有打印机" id="printer-list">
+		<![CDATA[
+		select t.*,p.name as departmentName from  HS_Printer t
+		 left join platform_department p on p.id=t.departmentId
+		 where 1=1
+
+		<#if key["printerName"]??>
+			and printerName like :printerName
+		</#if>
+		<#if key["printerTxtName"]??>
+			and printerTxtName like :printerTxtName
+		</#if>
+
+        <#if key["departmentId"]??>
+			and departmentId = :departmentId
+		</#if>
+
+		]]>
+	</sql>
+
+	<sql comment="查询卷条码最小数和最大数" id="printer-daliy-roll">
+		<![CDATA[
+		SELECT t.barcode as barc  FROM hs_roll_barcode as t where t.barcode  like :barc order by t.barcode desc
+		]]>
+	</sql>
+	<sql comment="查询箱条码最小数和最大数" id="printer-daliy-box">
+		<![CDATA[
+		SELECT t.barcode as barc FROM hs_box_barcode as t where t.barcode like :barc order by t.barcode desc
+		]]>
+	</sql>
+	<sql comment="查询托条码最小数和最大数" id="printer-daliy-tray">
+		<![CDATA[
+		SELECT t.barcode as barc FROM hs_tray_barcode as t where t.barcode like :barc order by t.barcode desc
+				]]>
+	</sql>
+	<sql comment="查询部件条码最小数和最大数" id="printer-daliy-part">
+		<![CDATA[
+		SELECT t.barcode as barc FROM hs_part_barcode as t where t.barcode like :barc order by t.barcode desc
+		]]>
+	</sql>
+	<sql comment="查询卷条码" id="rollBarcode-list">
+		<![CDATA[
+		SELECT t.*,c.consumerSimpleName,c.CONSUMERCODE from hs_roll_barcode as t
+        left join  hs_produce_plan_detail plandetail on plandetail.id=t.producePlanDetailId
+        left join  hs_consumer c on c.id=plandetail.consumerId
+		where 1=1
+		        <#if key["BARCODE"]??>
+					and t.barcode like :BARCODE
+				</#if>
+
+				<#if key["startTime"]??>
+					and t.printDate > :startTime
+				</#if>
+
+                <#if key["endTime"]??>
+					and t.printDate <= :endTime
+				</#if>
+
+                <#if key["producePlanCode"]??>
+					and  plandetail.planCode=:producePlanCode
+				</#if>
+
+                 <#if key["consumerId"]??>
+				    and plandetail.consumerId = :consumerId
+				</#if>
+
+				<#if key["CONSUMERSIMPLENAME"]??>
+					and c.consumerSimpleName like :CONSUMERSIMPLENAME
+				</#if>
+
+				<#if key["CONSUMERCODE"]??>
+					and c.CONSUMERCODE like :CONSUMERCODE
+				</#if>
+
+		
+				<#if key["sort"]??&&key["order"]??>
+					order by ${key["sort"]} ${key["order"]}
+				<#else>
+					order by t.id desc
+			    </#if>
+		]]>
+	</sql>
+	<sql comment="查询箱条码" id="boxBarcode-list">
+		<![CDATA[
+		SELECT t.*,c.consumerSimpleName,c.CONSUMERCODE from hs_box_barcode as t
+		left join  hs_produce_plan_detail plandetail on plandetail.id=t.producePlanDetailId
+		left join  hs_consumer c on c.id=plandetail.consumerId
+		where 1=1
+		        <#if key["BARCODE"]??>
+					and t.barcode like :BARCODE
+				</#if>
+
+				<#if key["startTime"]??>
+					and t.printDate > :startTime
+				</#if>
+
+                <#if key["endTime"]??>
+					and t.printDate <= :endTime
+				</#if>
+
+                <#if key["producePlanCode"]??>
+					and  plandetail.planCode=:producePlanCode
+				</#if>
+
+				<#if key["CONSUMERSIMPLENAME"]??>
+					and c.consumerSimpleName like :CONSUMERSIMPLENAME
+				</#if>
+
+				<#if key["CONSUMERCODE"]??>
+					and c.CONSUMERCODE like :CONSUMERCODE
+				</#if>
+
+                 <#if key["consumerId"]??>
+				    and plandetail.consumerId = :consumerId
+				</#if>
+
+				<#if key["sort"]??&&key["order"]??>
+					order by ${key["sort"]} ${key["order"]}
+				<#else>
+					order by id desc
+			</#if>
+		]]>
+	</sql>
+	<sql comment="查询部件条码" id="partBarcode-list">
+		<![CDATA[
+		SELECT t.*,c.consumerSimpleName,c.CONSUMERCODE from hs_part_barcode as t
+		left join  hs_produce_plan_detail plandetail on plandetail.id=t.producePlanDetailId
+		left join  hs_consumer c on c.id=plandetail.consumerId
+		where 1=1
+				<#if key["BARCODE"]??>
+					and t.barcode like :BARCODE
+				</#if>
+
+				<#if key["batchCode"]??>
+					and t.batchCode like :batchCode
+				</#if>
+
+				<#if key["startTime"]??>
+					and t.printDate > :startTime
+				</#if>
+
+                <#if key["endTime"]??>
+					and t.printDate <= :endTime
+				</#if>
+
+				<#if key["CONSUMERSIMPLENAME"]??>
+					and c.consumerSimpleName like :CONSUMERSIMPLENAME
+				</#if>
+
+				<#if key["CONSUMERCODE"]??>
+					and c.CONSUMERCODE like :CONSUMERCODE
+				</#if>
+
+                <#if key["producePlanCode"]??>
+					and  plandetail.planCode=:producePlanCode
+				</#if>
+
+                 <#if key["consumerId"]??>
+				    and plandetail.consumerId = :consumerId
+				</#if>
+				<#if key["barcode"]??>
+					and barcode like :barcode 
+				</#if>
+				<#if key["sort"]??&&key["order"]??>
+					order by ${key["sort"]} ${key["order"]}
+				<#else>
+					order by id desc
+			</#if>
+		]]>
+	</sql>
+	<sql comment="查询托条码" id="trayBarcode-list">
+		<![CDATA[
+		SELECT t.*,IFNULL(c.consumerSimpleName,'0') as consumerSimpleName,IFNULL(c.CONSUMERCODE,'0') as CONSUMERCODE  from hs_tray_barcode as t
+		left join  hs_produce_plan_detail plandetail on plandetail.id=t.producePlanDetailId
+		left join  hs_consumer c on c.id=plandetail.consumerId
+		where 1=1
+				<#if key["BARCODE"]??>
+					and t.barcode like :BARCODE
+				</#if>
+
+				<#if key["CONSUMERSIMPLENAME"]??>
+					and c.consumerSimpleName like :CONSUMERSIMPLENAME
+				</#if>
+
+				<#if key["CONSUMERCODE"]??>
+					and c.CONSUMERCODE like :CONSUMERCODE
+				</#if>
+
+				<#if key["startTime"]??>
+					and t.printDate > :startTime
+				</#if>
+
+                <#if key["endTime"]??>
+					and t.printDate <= :endTime
+				</#if>
+
+                <#if key["producePlanCode"]??>
+					and  plandetail.planCode=:producePlanCode
+				</#if>
+
+                 <#if key["consumerId"]??>
+				    and plandetail.consumerId = :consumerId
+				</#if>
+
+				<#if key["sort"]??&&key["order"]??>
+					order by ${key["sort"]} ${key["order"]}
+				<#else>
+					order by id desc
+			</#if>
+		]]>
+	</sql>
+
+
+
+
+</sqls>

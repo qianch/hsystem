@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="CutSalesOrderDaoImpl">
+    <sql comment="仓库列表" id="cutSalesOrder-list">
+        <![CDATA[
+		select * from  hs_cut_sales_order as cutorder where 1=1
+		<#if key["batchCode"]??>
+			and cutorder.batchCode like :batchCode
+		</#if>
+		<#if key["bladeTypeName"]??>
+			and cutorder.bladeTypeName like :bladeTypeName
+		</#if>
+    	<#if key["start"]??&&key["end"]??>
+					 and cutorder.createTime between :start and :end
+				</#if>
+				<#if key["start"]??&&!key["end"]??>
+					 and cutorder.createTime > :start
+				</#if>
+				<#if !key["start"]??&&key["end"]??>
+					 and cutorder.createTime < :end
+		</#if>
+
+		<#if key["sort"]??&&key["order"]??>
+			order by ${key["sort"]} ${key["order"]}
+		</#if>
+
+		<#if !key["sort"]??&&!key["order"]??>
+			order by cutorder.createTime desc
+		</#if>
+		]]>
+    </sql>
+
+
+</sqls>

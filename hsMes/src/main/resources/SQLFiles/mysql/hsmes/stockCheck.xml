@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="StockCheckDaoImpl">
+	<sql comment="盘库记录" id="stockCheck-list">
+		<![CDATA[
+		select * from hs_stock_check t where 1=1
+		<#if key["start"]??&&key["end"]??>
+			and t.checkTime between :start and :end
+		</#if>
+		<#if key["start"]??&&!key["end"]??>
+			and t.checkTime > :start
+		</#if>
+		<#if !key["start"]??&&key["end"]??>
+			and t.checkTime < :end
+		</#if>
+		<#if key["sort"]??&&key["order"]??>
+			order by ${key["sort"]} ${key["order"]}
+			<#else>
+			order by id desc
+		</#if>
+		]]>
+	</sql>
+	<sql comment="根据记录查询结果" id="findR-list">
+		<![CDATA[
+		select * from hs_Stock_Check_Result 
+		where cid=(:id)
+		]]>
+	</sql>
+</sqls>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="StockCheckResultDaoImpl">
+	<sql comment="盘库结果" id="stockCheckResult-list">
+		<![CDATA[
+			select * from hs_Stock_Check_Result where 1=1
+			<#if key["wCode"]??>
+				and barCode like :wCode
+			</#if>
+			<#if key["jCode"]??>
+				and rollCode like :jCode
+			</#if>
+			<#if key["tCode"]??>
+				and trayCode like :tCode
+			</#if>
+		]]>
+	</sql>
+</sqls>

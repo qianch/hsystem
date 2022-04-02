@@ -1,0 +1,6 @@
+<!ELEMENT sqls (sql+)>
+<!ATTLIST sqls class CDATA #REQUIRED>
+
+<!ELEMENT sql (#PCDATA)>
+<!ATTLIST sql id ID #REQUIRED>
+<!ATTLIST sql comment CDATA #REQUIRED>

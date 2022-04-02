@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="QualityGrade">
+	<sql comment=" 质量等级列表" id="qualityGrade-list">
+		<![CDATA[
+			select t.* from hs_quality_grade t where 1=1
+			<#if key["gradeName"]??>
+				and gradeName like :gradeName
+			</#if>
+			<#if key["gradeDesc"]??>
+				and gradeDesc like :gradeDesc
+			</#if>
+			<#if key["gradeMemo"]??>
+				and gradeMemo like :gradeMemo
+			</#if>
+			<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+			</#if>
+		]]>
+	</sql>
+</sqls>

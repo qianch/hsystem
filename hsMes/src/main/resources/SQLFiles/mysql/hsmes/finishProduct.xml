@@ -1,0 +1,861 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="FinishProductDaoImpl">
+    <sql comment="成品信息列表" id="finishProduct-list">
+        <![CDATA[
+		select t.*,c.CONSUMERNAME,c.CONSUMERCODE,fpc.categoryCode,fpc.categoryName ,bcv.packCanceled bcBomCanceled,hwc.carrierWeight,ftcbcbom.packCanceled ftcBcBomCanceled
+		from hs_finishproduct t
+		LEFT JOIN hs_consumer c on c.ID=t.PRODUCTCONSUMERID
+		LEFT JOIN HS_FINISHED_PRODUCT_CATEGORY fpc ON t.fpcid = fpc.id
+		LEFT JOIN (select a.packCanceled,b.packBomId,b.id from HS_Bc_Bom_Version b left join HS_BC_BOM a on a.id=b.packBomId) bcv on t.packBomId=bcv.id
+		LEFT JOIN hs_ftc_bc_bom ftcbcbom on ftcbcbom.code=t.productPackagingCode
+		LEFT JOIN HS_WEIGHTCARRIER hwc ON t.carrierCode = hwc.carrierCode
+		where  1=1
+		<#if key["old"]??>
+			and t.obsolete = :old
+			<#else>
+			and t.obsolete is null
+		</#if>
+		<#if key["id"]??>
+			and t.id=:id
+		</#if>
+		<#if key["materielCode"]??>
+			and t.materielCode like :materielCode
+		</#if>
+		<#if key["productProcessName"]??>
+			and t.productProcessName like :productProcessName
+		</#if>
+		<#if key["isCommon"]??>
+			and (t.isCommon = (:isCommon))
+		</#if>
+
+		<#if key["ftcBomDetailModel"]??>
+			and  t.procBomId in (select ftcBomVersionId from HS_FTC_PROC_BOM_DETAIL where ftcBomDetailModel like :ftcBomDetailModel)
+		</#if>
+
+
+		<#if key["productIsTc"]??>
+				and t.productIsTc in (:productIsTc)
+		</#if>
+		<#if key["salesCode"]??>
+			and ( t.id in (select detail.productId
+			from hs_sales_order_detail as detail
+			WHERE
+
+			detail.salesOrderSubCode IN (:salesCode)))
+		</#if>
+
+		<#if key["consumerProductName"]??>
+			and t.consumerProductName like :consumerProductName
+		</#if>
+		<#if key["consumerId"]??>
+			and c.id=:consumerId
+		</#if>
+		<#if key["productModel"]??>
+			and t.productModel like :productModel
+		</#if>
+		<#if key["consumerCode"]??>
+			and c.CONSUMERCODE like :consumerCode
+		</#if>
+		<#if key["consumerName"]??>
+			and c.CONSUMERNAME like :consumerName
+		</#if>
+
+		<#if key["auditState"]??>
+			and t.auditState = :auditState
+		</#if>
+
+		<#if key["factoryName"]??>
+			and t.FACTORYPRODUCTNAME like :factoryName
+		</#if>
+		<#if key["productProcessCode"]??>
+			and t.productProcessCode like :productProcessCode
+		</#if>
+		<#if key["productProcessBomVersion"]??>
+			and t.productProcessBomVersion like :productProcessBomVersion
+		</#if>
+
+		<#if key["productPackagingCode"]??>
+			and t.productPackagingCode like :productPackagingCode
+		</#if>
+		<#if key["productWidth"]??>
+			and t.productWidth like :productWidth
+		</#if>
+		<#if key["productRollLength"]??>
+			and t.productRollLength like :productRollLength
+		</#if>
+		<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+			</#if>
+			<#if !key["sort"]??&&!key["order"]??>
+				order by id desc
+			</#if>
+		]]>
+    </sql>
+    <sql comment="未作废的成品信息列表" id="finishProductAll-list">
+        <![CDATA[
+			SELECT * from hs_finishproduct WHERE (obsolete is null or obsolete=0)
+		]]>
+    </sql>
+    <sql comment="未作废的成品信息列表" id="product-mirror-list">
+        <![CDATA[
+			SELECT fm.*,c.CONSUMERNAME,c.CONSUMERCODE from hs_finishproduct_mirror fm
+			LEFT JOIN hs_consumer c on c.ID=fm.PRODUCTCONSUMERID
+			WHERE 1=1
+			 <#if key["id"]??>
+		 and fm.salesOrderId = (:id)
+		</#if>
+			<#if key["mid"]??>
+			and (fm.id in (:mid))
+		</#if>
+		]]>
+    </sql>
+
+    <sql comment="成品信息列表" id="finishProduct-list-all">
+        <![CDATA[
+		select bcv.auditState as ba,bcv.packVersion as bv,tcv.AUDITSTATE as ta,tcv.TCPROCBOMVERSIONCODE as tv,ftcv.auditState as fa,ftcv.ftcProcBomVersionCode as fv,t.*,c.CONSUMERNAME,c.CONSUMERCODE,fpc.categoryCode,fpc.categoryName from hs_finishproduct t
+		LEFT JOIN hs_consumer c on c.ID=t.PRODUCTCONSUMERID
+	  	Left JOIN hs_bc_bom_version bcv on bcv.id=t.packBomId
+		left join hs_tc_proc_bom_version tcv on tcv.id=t.procBomId
+		left join hs_ftc_proc_bom_version ftcv on ftcv.id=t.procBomId
+		LEFT JOIN HS_FINISHED_PRODUCT_CATEGORY fpc ON t.fpcid = fpc.id
+		where  1=1
+		<#if key["old"]??>
+			and t.obsolete = :old
+			<#else>
+			and t.obsolete is null
+		</#if>
+		<#if key["id"]??>
+			and (t.id in (:id))
+		</#if>
+		<#if key["isCommon"]??>
+			and (t.isCommon = (:isCommon))
+		</#if>
+		<#if key["productIsTc"]??>
+				and t.productIsTc in (:productIsTc)
+		</#if>
+		<#if key["salesCode"]??>
+			and ( t.id in (select detail.productId
+			from hs_sales_order_detail as detail
+			WHERE
+
+			detail.salesOrderSubCode IN (:salesCode)))
+		</#if>
+
+		<#if key["consumerProductName"]??>
+			and t.consumerProductName like :consumerProductName
+		</#if>
+		<#if key["consumerId"]??>
+			and c.id=:consumerId
+		</#if>
+		<#if key["productModel"]??>
+			and t.productModel like :productModel
+		</#if>
+		<#if key["consumerCode"]??>
+			and c.CONSUMERCODE like :consumerCode
+		</#if>
+		<#if key["consumerName"]??>
+			and c.CONSUMERNAME like :consumerName
+		</#if>
+
+		<#if key["auditState"]??>
+			and t.auditState = :auditState
+		</#if>
+
+		<#if key["factoryName"]??>
+			and t.FACTORYPRODUCTNAME like :factoryName
+		</#if>
+		<#if key["productProcessCode"]??>
+			and t.productProcessCode like :productProcessCode
+		</#if>
+		<#if key["productProcessBomVersion"]??>
+			and t.productProcessBomVersion like :productProcessBomVersion
+		</#if>
+
+		<#if key["productPackagingCode"]??>
+			and t.productPackagingCode like :productPackagingCode
+		</#if>
+		<#if key["productWidth"]??>
+			and t.productWidth like :productWidth
+		</#if>
+		<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+			</#if>
+			<#if !key["sort"]??&&!key["order"]??>
+				order by id desc
+			</#if>
+		]]>
+    </sql>
+    <sql comment="出货计划成品信息列表" id="finishProduct-list-delivery">
+        <![CDATA[
+		SELECT
+			sd.salesOrderSubCode,
+			t.*, c.CONSUMERNAME,
+			c.CONSUMERCODE
+		FROM
+			hs_finishproduct t
+
+		LEFT JOIN hs_consumer c ON c.ID = t.productConsumerId
+		LEFT JOIN hs_sales_order_detail sd ON sd.productId = t.id
+		WHERE  1=1
+		<#if key["id"]??>
+			and (sd.id in (:id))
+		</#if>
+		<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+			</#if>
+			<#if !key["sort"]??&&!key["order"]??>
+				order by id desc
+			</#if>
+		]]>
+    </sql>
+
+    <sql comment="出货计划成品信息列表" id="finishProduct-list-delivery-tc">
+        <![CDATA[
+		SELECT
+	c.*
+FROM
+	(SELECT
+	a.*,
+	b.batchCode
+FROM
+	(SELECT
+	s.salesOrderCode,
+	sod.id,
+	sod.deliveryTime,
+	sod.factoryProductName,
+	sod.productBoxCode,
+	sod.productCount,
+	sod.productId,
+	sod.productMemo,
+	sod.productModel,
+	sod.productPackageVersion,
+	sod.productProcessBomVersion,
+	sod.productRollCode,
+	sod.productRollLength,
+	sod.productRollWeight,
+	sod.productTrayCode,
+	sod.productWidth,
+	sod.salesOrderId,
+	sod.salesOrderSubCode,
+	sod.consumerProductName,
+	sod.productPackagingCode,
+	sod.productProcessCode,
+	sod.productIsTc,
+	sod.packagingCount,
+	sod.produceCount,
+	sod.allocateCount,
+	sod.producedRolls,
+	sod.producedTrays,
+	sod.assignedCount,
+	sod.packBomId,
+	sod.procBomId,
+	sod.closed,
+	sod.editTimes,
+	sod.isComplete,
+	sod.salesOrderSubCodePrint,
+	sod.isPlaned,
+	sodp.partId,
+	sodp.partName,
+	sodp.partType,
+	sodp.partCount,
+    fm.customerMaterialCodeOfFP
+FROM
+	hs_sales_order_detail sod
+	LEFT JOIN hs_sales_order s ON s.id = sod.salesOrderId
+	LEFT JOIN hs_sales_order_detail_parts_count sodp ON sod.id = sodp.salesOrderDetailId
+	LEFT JOIN hs_finishproduct_mirror fm on fm.id=sod.mirrorProductId
+WHERE
+	s.isClosed = 0
+	AND s.salesOrderConsumerId = :consumerId ) a,
+	(
+SELECT
+	cc.partId,
+	ppd.batchCode,
+	ppd.fromSalesOrderDetailId
+FROM
+	hs_produce_plan_detail ppd
+	LEFT JOIN hs_produce_plan_detail_part_count cc ON cc.planDetailId = ppd.id
+	AND cc.planPartCount <> 0
+	) b
+WHERE
+	a.id = b.fromSalesOrderDetailId
+	AND ( a.partId = b.partId OR a.partId IS NULL )
+	) c
+WHERE
+	1 =1
+		<#if key["FACTORYPRODUCTNAME"]??>
+			and (c.factoryProductName like :FACTORYPRODUCTNAME)
+		</#if>
+		<#if key["SALESORDERSUBCODE"]??>
+			and (c.salesOrderSubCode like :SALESORDERSUBCODE)
+		</#if>
+		<#if key["SALESORDERCODE"]??>
+			and (c.salesOrderCode like :SALESORDERCODE)
+		</#if>
+		<#if key["PARTNAME"]??>
+			and (c.partName like (:PARTNAME))
+		</#if>
+		<#if key["PARTTYPE"]??>
+			and (c.partType like (:PARTTYPE))
+		</#if>
+		<#if key["CONSUMERPRODUCTNAME"]??>
+			and (c.consumerProductName like (:CONSUMERPRODUCTNAME))
+		</#if>
+		<#if key["BATCHCODE"]??>
+			and (c.batchCode like (:BATCHCODE))
+		</#if>
+		<#if key["PRODUCTMODEL"]??>
+			and (c.productModel like (:PRODUCTMODEL))
+		</#if>
+		<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+			</#if>
+			<#if !key["sort"]??&&!key["order"]??>
+				order by id desc
+			</#if>
+		]]>
+    </sql>
+
+    <sql comment="删除成品信息" id="finishProduct-delete">
+        <![CDATA[
+			delete from hs_finishproduct where id in (:id)
+		]]>
+    </sql>
+    <sql comment="查寻所有的tcBom" id="bomTc-list">
+        <![CDATA[
+			SELECT * FROM HS_TC_PROC_BOM  where 1=1
+			<#if key["data"]!="">
+				and tcProcBomName like "%${key["data"]}%"
+	 			or tcProcBomCode like "%${key["data"]}%"
+			</#if>
+		]]>
+    </sql>
+    <sql comment="查寻所有ftcBom下的版本" id="bomV-list">
+        <![CDATA[
+			SELECT
+				*
+			FROM
+				HS_FTC_PROC_BOM_VERSION  where ftcProcBomId in (:id) and ftcProcBomVersionEnabled <> -1
+		]]>
+    </sql>
+    <sql comment="查寻所有tcBom下的版本" id="bomTV-list">
+        <![CDATA[
+			SELECT
+				*
+			FROM
+				HS_TC_PROC_BOM_VERSION  where tcProcBomId in (:id) and tcProcBomVersionEnabled <> -1
+		]]>
+    </sql>
+    <sql comment="查寻所有bcBom下的版本" id="bomBV-list">
+        <![CDATA[
+			SELECT
+				t.*,t1.packBomCode
+			FROM
+				HS_Bc_Bom_Version t
+				left join HS_BC_BOM t1 on t1.id = t.packBomId
+				where t.packBomId in (:id) and packEnabled <> -1
+		]]>
+    </sql>
+    <sql comment="查寻所有的ftcBom" id="bomFtc-list">
+        <![CDATA[
+			SELECT * FROM HS_FTC_PROC_BOM  where 1=1
+			<#if key["data"]!="">
+				and ftcProcBomName like "%${key["data"]}%"
+	 			or ftcProcBomCode like "%${key["data"]}%"
+			</#if>
+
+		]]>
+    </sql>
+    <sql comment="查寻所有的bcBom" id="bomBc-list">
+        <![CDATA[
+			SELECT * FROM HS_BC_BOM  where 1=1
+			<#if key["data"]!="">
+				and packBomGenericName like "%${key["data"]}%"
+	 			or packBomCode like "%${key["data"]}%"
+			</#if>
+		]]>
+    </sql>
+    <sql comment="更新废弃状态" id="update-list">
+        <![CDATA[
+			update  HS_FINISHPRODUCT set obsolete=1 where id =:id
+		]]>
+    </sql>
+
+    <sql comment="产成品汇总（成品类别）" id="products-category-list">
+        <![CDATA[
+			SELECT
+				cry.id,cry.categoryName,cry.categoryCode,
+				ROUND(IFNULL(a.startWeight,0),2) as startWeight,
+				ROUND(IFNULL(b.inWeight,0),2) as inWeight,
+				ROUND(IFNULL(d.usesum,0),2) as usenum,
+				ROUND(IFNULL(c.outWeights,0),2) as outWeights,
+				ROUND((IFNULL(a.startWeight, 0) + IFNULL(b.inWeight, 0)) - ( IFNULL(c.outWeights, 0) + IFNULL(d.usesum, 0)),2) AS atum
+			FROM(
+				SELECT
+				fpc.id,fpc.categoryCode,fpc.categoryName FROM hs_finished_product_category fpc
+			)cry LEFT JOIN(
+				SELECT sum(t.weight) AS startWeight,fpc.id as startid FROM hs_tray t
+					LEFT JOIN hs_tray_barcode tb ON tb.barcode = t.trayBarcode
+					LEFT JOIN hs_finishproduct fp ON fp.id = tb.salesProductId
+					LEFT JOIN hs_product_stock_state ss ON ss.barCode = t.trayBarcode
+					LEFT JOIN hs_finished_product_category fpc ON fpc.id = fp.fpcid
+					LEFT JOIN hs_product_in_record ir ON ir.barCode = t.trayBarcode
+				WHERE(ss.stockState = 1 OR ss.stockState IS NULL)
+					AND (tb.isOpened = 0 OR tb.isOpened = NULL)
+					AND ss.warehouseCode IS NOT NULL
+					AND fpc.id IS NOT NULL
+					AND UNIX_TIMESTAMP(ir.inTime) <= UNIX_TIMESTAMP(:startTime)
+				GROUP BY fpc.id
+			) a ON a.startid = cry.id
+			LEFT JOIN(
+				SELECT ir.inTime,sum(t.weight) AS inWeight,fpc.id AS fpcid FROM hs_tray t
+					LEFT JOIN hs_tray_barcode tb ON tb.barcode = t.trayBarcode
+					LEFT JOIN hs_finishproduct fp ON fp.id = tb.salesProductId
+					LEFT JOIN hs_product_stock_state ss ON ss.barCode = t.trayBarcode
+					LEFT JOIN HS_TC_PROC_BOM_VERSION_PARTS tp ON tb.partId = tp.id
+					LEFT JOIN hs_finished_product_category fpc ON fpc.id = fp.fpcid
+					LEFT JOIN hs_product_in_record ir ON ir.barCode = t.trayBarcode
+				WHERE(ss.stockState = 1 OR ss.stockState IS NULL)
+					AND (tb.isOpened = 0 OR tb.isOpened = NULL)
+					AND UNIX_TIMESTAMP(ir.inTime) >= UNIX_TIMESTAMP(:start)
+					AND UNIX_TIMESTAMP(ir.inTime) <= UNIX_TIMESTAMP(:end)
+					AND ss.warehouseCode IS NOT NULL
+					AND fpc.id IS NOT NULL GROUP BY fpc.id
+			)b ON b.fpcid = cry.id
+			LEFT JOIN(
+				SELECT t1.outTime,sum(t1.weight) AS outWeights,fpc.id as pcid FROM HS_Product_Out_Record t1
+					LEFT JOIN hs_Tray_BarCode tb ON tb.barcode = t1.barCode
+					LEFT JOIN hs_finishproduct fp ON fp.id = tb.salesProductId
+					LEFT JOIN hs_finished_product_category fpc ON fpc.id = fp.fpcid
+				WHERE 1 = 1
+				AND UNIX_TIMESTAMP(t1.outTime) >= UNIX_TIMESTAMP(:start1)
+				AND UNIX_TIMESTAMP(t1.outTime) <= UNIX_TIMESTAMP(:end1)
+				AND fpc.id IS NOT NULL
+				GROUP BY fpc.id
+			)c ON c.pcid = cry.id
+			LEFT JOIN(
+				SELECT tor.outDate as useTime,SUM(ht.productWeight) as usesum,fpc.id as usefpcid FROM hs_turnbag_out_record tor
+					LEFT JOIN hs_totalstatistics ht ON ht.rollBarcode = tor.trayCode
+					LEFT JOIN hs_tray t ON t.trayBarcode = ht.rollBarcode
+					LEFT JOIN hs_Tray_BarCode tb ON tb.barcode = t.trayBarcode
+					LEFT JOIN hs_finishproduct fp ON fp.id = tb.salesProductId
+					LEFT JOIN hs_finished_product_category fpc ON fpc.id = fp.fpcid
+				WHERE 1 = 1
+					AND UNIX_TIMESTAMP(tor.outDate) >= UNIX_TIMESTAMP(:start2)
+					AND UNIX_TIMESTAMP(tor.outDate) <= UNIX_TIMESTAMP(:end2)
+					AND fpc.id IS NOT NULL GROUP BY fpc.id
+			)d ON d.usefpcid = cry.id
+			where 1=1
+			<#if key["name"]??>
+				and (cry.categoryName like :name)
+			</#if>
+			<#if key["code"]??>
+				and (cry.categoryCode like :code)
+			</#if>
+		]]>
+    </sql>
+    <sql comment="产成品汇总（成品类别）数量" id="products-category-list-count">
+        <![CDATA[
+			SELECT
+				count(1) count
+			FROM(
+				SELECT
+				fpc.id,fpc.categoryCode,fpc.categoryName FROM hs_finished_product_category fpc
+			)cry LEFT JOIN(
+				SELECT sum(t.weight) AS startWeight,fpc.id as startid FROM hs_tray t
+					LEFT JOIN hs_tray_barcode tb ON tb.barcode = t.trayBarcode
+					LEFT JOIN hs_finishproduct fp ON fp.id = tb.salesProductId
+					LEFT JOIN hs_product_stock_state ss ON ss.barCode = t.trayBarcode
+					LEFT JOIN hs_finished_product_category fpc ON fpc.id = fp.fpcid
+					LEFT JOIN hs_product_in_record ir ON ir.barCode = t.trayBarcode
+				WHERE(ss.stockState = 1 OR ss.stockState IS NULL)
+					AND (tb.isOpened = 0 OR tb.isOpened = NULL)
+					AND ss.warehouseCode IS NOT NULL
+					AND fpc.id IS NOT NULL
+					AND UNIX_TIMESTAMP(ir.inTime) <= UNIX_TIMESTAMP(:startTime)
+				GROUP BY fpc.id
+			) a ON a.startid = cry.id
+			LEFT JOIN(
+				SELECT ir.inTime,sum(t.weight) AS inWeight,fpc.id AS fpcid FROM hs_tray t
+					LEFT JOIN hs_tray_barcode tb ON tb.barcode = t.trayBarcode
+					LEFT JOIN hs_finishproduct fp ON fp.id = tb.salesProductId
+					LEFT JOIN hs_product_stock_state ss ON ss.barCode = t.trayBarcode
+					LEFT JOIN HS_TC_PROC_BOM_VERSION_PARTS tp ON tb.partId = tp.id
+					LEFT JOIN hs_finished_product_category fpc ON fpc.id = fp.fpcid
+					LEFT JOIN hs_product_in_record ir ON ir.barCode = t.trayBarcode
+				WHERE(ss.stockState = 1 OR ss.stockState IS NULL)
+					AND (tb.isOpened = 0 OR tb.isOpened = NULL)
+					AND UNIX_TIMESTAMP(ir.inTime) >= UNIX_TIMESTAMP(:start)
+					AND UNIX_TIMESTAMP(ir.inTime) <= UNIX_TIMESTAMP(:end)
+					AND ss.warehouseCode IS NOT NULL
+					AND fpc.id IS NOT NULL GROUP BY fpc.id
+			)b ON b.fpcid = cry.id
+			LEFT JOIN(
+				SELECT t1.outTime,sum(t1.weight) AS outWeights,fpc.id as pcid FROM HS_Product_Out_Record t1
+					LEFT JOIN hs_Tray_BarCode tb ON tb.barcode = t1.barCode
+					LEFT JOIN hs_finishproduct fp ON fp.id = tb.salesProductId
+					LEFT JOIN hs_finished_product_category fpc ON fpc.id = fp.fpcid
+				WHERE 1 = 1
+				AND UNIX_TIMESTAMP(t1.outTime) >= UNIX_TIMESTAMP(:start1)
+				AND UNIX_TIMESTAMP(t1.outTime) <= UNIX_TIMESTAMP(:end1)
+				AND fpc.id IS NOT NULL
+				GROUP BY fpc.id
+			)c ON c.pcid = cry.id
+			LEFT JOIN(
+				SELECT tor.outDate as useTime,SUM(ht.productWeight) as usesum,fpc.id as usefpcid FROM hs_turnbag_out_record tor
+					LEFT JOIN hs_totalstatistics ht ON ht.rollBarcode = tor.trayCode
+					LEFT JOIN hs_tray t ON t.trayBarcode = ht.rollBarcode
+					LEFT JOIN hs_Tray_BarCode tb ON tb.barcode = t.trayBarcode
+					LEFT JOIN hs_finishproduct fp ON fp.id = tb.salesProductId
+					LEFT JOIN hs_finished_product_category fpc ON fpc.id = fp.fpcid
+				WHERE 1 = 1
+					AND UNIX_TIMESTAMP(tor.outDate) >= UNIX_TIMESTAMP(:start2)
+					AND UNIX_TIMESTAMP(tor.outDate) <= UNIX_TIMESTAMP(:end2)
+					AND fpc.id IS NOT NULL GROUP BY fpc.id
+			)d ON d.usefpcid = cry.id
+			where 1=1
+			<#if key["name"]??>
+				and (cry.categoryName like :name)
+			</#if>
+			<#if key["code"]??>
+				and (cry.categoryCode like :code)
+			</#if>
+		]]>
+    </sql>
+    <sql comment="产成品汇总（厂内名称）" id="productsSummary-factory-list">
+        <![CDATA[
+			SELECT
+				cry.id,
+				cry.categoryName,
+				cry.categoryCode,
+				cry.factoryProductName,
+				cry.consumerProductName,
+				ROUND(IFNULL(a.startWeight,0),2) AS startWeight,
+				ROUND(IFNULL(b.inWeight,0),2) AS inWeight,
+				ROUND(IFNULL(c.outweight,0),2) AS outweight,
+				ROUND(IFNULL(d.usenum,0),2) AS usenum,
+				ROUND((IFNULL(a.startWeight, 0) + IFNULL(b.inWeight, 0)) - ( IFNULL(c.outweight, 0) + IFNULL(d.usenum, 0)),2) AS atum
+			 FROM (
+				SELECT fpc.id,fpc.categoryCode,fpc.categoryName,ft.factoryProductName,ft.consumerProductName FROM hs_finished_product_category fpc
+				LEFT JOIN hs_finishproduct ft ON ft.fpcid = fpc.id
+				GROUP BY ft.factoryProductName
+			)cry LEFT JOIN(
+				SELECT sum(t.weight) AS startWeight,fp.factoryProductName as startfactoryProductName FROM hs_tray t
+					LEFT JOIN hs_tray_barcode tb ON tb.barcode = t.trayBarcode
+					LEFT JOIN hs_finishproduct fp ON fp.id = tb.salesProductId
+					LEFT JOIN hs_product_stock_state ss ON ss.barCode = t.trayBarcode
+					LEFT JOIN hs_finished_product_category fpc ON fpc.id = fp.fpcid
+					LEFT JOIN hs_product_in_record ir ON ir.barCode = t.trayBarcode
+				WHERE(ss.stockState = 1 OR ss.stockState IS NULL)
+					AND (tb.isOpened = 0 OR tb.isOpened = NULL)
+					AND ss.warehouseCode IS NOT NULL
+					AND UNIX_TIMESTAMP(ir.inTime) <= UNIX_TIMESTAMP(:startTime)
+				GROUP BY fp.factoryProductName
+			)a ON a.startfactoryProductName = cry.factoryProductName
+			LEFT JOIN(
+				SELECT fp.factoryProductName as infactoryProductName,sum(t.weight) AS inWeight FROM hs_tray t
+					LEFT JOIN hs_tray_barcode tb ON tb.barcode = t.trayBarcode
+					LEFT JOIN hs_finishproduct fp ON fp.id = tb.salesProductId
+					LEFT JOIN hs_product_stock_state ss ON ss.barCode = t.trayBarcode
+					LEFT JOIN HS_TC_PROC_BOM_VERSION_PARTS tp ON tb.partId = tp.id
+					LEFT JOIN hs_finished_product_category fpc ON fpc.id = fp.fpcid
+					LEFT JOIN hs_product_in_record ir ON ir.barCode = t.trayBarcode
+				WHERE(ss.stockState = 1 OR ss.stockState IS NULL)
+					AND (tb.isOpened = 0 OR tb.isOpened = NULL)
+					AND UNIX_TIMESTAMP(ir.inTime) >= UNIX_TIMESTAMP(:start)
+					AND UNIX_TIMESTAMP(ir.inTime) <= UNIX_TIMESTAMP(:end)
+					AND ss.warehouseCode IS NOT NULL
+					GROUP BY fp.factoryProductName
+			)b ON b.infactoryProductName = cry.factoryProductName
+			LEFT JOIN(
+				SELECT fp.factoryProductName as outfactoryProductName,t.weight AS outweight FROM HS_Product_Out_Record t
+					LEFT JOIN hs_Tray_BarCode tb ON tb.barcode = t.barCode
+					LEFT JOIN hs_finishproduct fp ON fp.id = tb.salesProductId
+				WHERE 1 = 1
+					AND UNIX_TIMESTAMP(t.outTime) >= UNIX_TIMESTAMP(:start1)
+					AND UNIX_TIMESTAMP(t.outTime) <= UNIX_TIMESTAMP(:end1)
+				GROUP BY fp.factoryProductName
+			)c ON c.outfactoryProductName = cry.factoryProductName
+			LEFT JOIN(
+				SELECT fp.factoryProductName as usefactoryProductName,tor.outDate as useTime,SUM(ht.productWeight) as usenum FROM hs_turnbag_out_record tor
+					LEFT JOIN hs_totalstatistics ht ON ht.rollBarcode = tor.trayCode
+					LEFT JOIN hs_tray t ON t.trayBarcode = ht.rollBarcode
+					LEFT JOIN hs_Tray_BarCode tb ON tb.barcode = t.trayBarcode
+					LEFT JOIN hs_finishproduct fp ON fp.id = tb.salesProductId
+					LEFT JOIN hs_finished_product_category fpc ON fpc.id = fp.fpcid
+				WHERE 1 = 1
+					AND UNIX_TIMESTAMP(tor.outDate) >= UNIX_TIMESTAMP(:start2)
+					AND UNIX_TIMESTAMP(tor.outDate) <= UNIX_TIMESTAMP(:end2)
+				GROUP BY fp.factoryProductName
+			)d ON d.usefactoryProductName = cry.factoryProductName
+			where 1=1
+			<#if key["name"]??>
+				and (cry.categoryName like :name)
+			</#if>
+			<#if key["code"]??>
+				and (cry.categoryCode like :code)
+			</#if>
+			<#if key["factoryProductName"]??>
+				and (cry.factoryProductName like :factoryProductName)
+			</#if>
+			<#if key["consumerProductName"]??>
+				and (cry.consumerProductName like :consumerProductName)
+			</#if>
+		]]>
+    </sql>
+    <sql comment="产成品汇总（订单号、批次号、厂内名称）" id="products-sundr-list">
+        <![CDATA[
+			SELECT
+				t.id,
+				t.salesOrderCode,
+				t.batchCode,
+				t.factoryProductName,
+				t.consumerProductName,
+				t.productIsTc,
+				t.categoryName,
+				t.categoryCode,
+				ROUND(IFNULL(a.startWeight,0),2) as startWeight,
+				ROUND(IFNULL(b.inWeight,0),2) as inWeight,
+				ROUND(IFNULL(c.usenum,0),2) as usenum,
+				ROUND(IFNULL(d.outWeight,0),2) as outWeight,
+			    ROUND((IFNULL(a.startWeight, 0) + IFNULL(b.inWeight, 0)) - ( IFNULL(c.usenum, 0) + IFNULL(d.outWeight, 0)),2) AS atum
+			 FROM(
+					SELECT tb.id, tb.salesOrderCode, tb.batchCode, fp.factoryProductName,fp.consumerProductName, fpc.categoryName, fpc.categoryCode, fp.productIsTc
+				FROM hs_tray t
+					LEFT JOIN hs_tray_barcode tb ON tb.barcode = t.trayBarcode
+					LEFT JOIN hs_finishproduct fp ON fp.id = tb.salesProductId
+					LEFT JOIN hs_finished_product_category fpc ON fpc.id = fp.fpcid
+				GROUP BY fp.factoryProductName ORDER BY tb.id
+			)t
+			LEFT JOIN(
+					SELECT tb.id AS startid, SUM(ir.weight) AS startWeight,fp.factoryProductName as startfactoryProductName
+				FROM hs_tray t
+					LEFT JOIN hs_tray_barcode tb ON tb.barcode = t.trayBarcode
+					LEFT JOIN hs_finishproduct fp ON fp.id = tb.salesProductId
+					LEFT JOIN hs_product_stock_state ss ON ss.barCode = t.trayBarcode
+					LEFT JOIN hs_product_in_record ir ON ir.barCode = t.trayBarcode
+					LEFT JOIN hs_finished_product_category fpc ON fpc.id = fp.fpcid
+				WHERE ( ss.stockState = 1 OR ss.stockState IS NULL )
+					AND ( tb.isOpened = 0 OR tb.isOpened = NULL )
+					AND ss.warehouseCode IS NOT NULL
+					AND UNIX_TIMESTAMP(ir.inTime) <= UNIX_TIMESTAMP(:startTime)
+					GROUP BY fp.factoryProductName ORDER BY tb.id
+			)a ON a.startfactoryProductName = t.factoryProductName
+			LEFT JOIN(
+					SELECT SUM(ir.weight) AS inWeight,fp.factoryProductName AS infactoryProductName
+				FROM hs_tray t
+					LEFT JOIN hs_tray_barcode tb ON tb.barcode = t.trayBarcode
+					LEFT JOIN hs_finishproduct fp ON fp.id = tb.salesProductId
+					LEFT JOIN hs_product_stock_state ss ON ss.barCode = t.trayBarcode
+					LEFT JOIN hs_product_in_record ir ON ir.barCode = t.trayBarcode
+				WHERE ( ss.stockState = 1 OR ss.stockState IS NULL )
+					AND ( tb.isOpened = 0 OR tb.isOpened = NULL )
+					AND ss.warehouseCode IS NOT NULL
+					AND UNIX_TIMESTAMP(ir.inTime) >= UNIX_TIMESTAMP(:start)
+					AND UNIX_TIMESTAMP(ir.inTime) <= UNIX_TIMESTAMP(:end)
+					GROUP BY fp.factoryProductName ORDER BY tb.id
+			)b ON b.infactoryProductName = t.factoryProductName
+			LEFT JOIN(
+				SELECT
+					fp.factoryProductName as usefactoryProductName,SUM(ht.productWeight) AS usenum
+				FROM hs_turnbag_out_record tor
+					LEFT JOIN hs_totalstatistics ht ON ht.rollBarcode = tor.trayCode
+					LEFT JOIN hs_tray t ON t.trayBarcode = ht.rollBarcode
+					LEFT JOIN hs_Tray_BarCode tb ON tb.barcode = t.trayBarcode
+					LEFT JOIN hs_finishproduct fp ON fp.id = tb.salesProductId
+				WHERE 1 = 1
+					AND UNIX_TIMESTAMP(tor.outDate) >= UNIX_TIMESTAMP(:start1)
+					AND UNIX_TIMESTAMP(tor.outDate) <= UNIX_TIMESTAMP(:end1)
+				GROUP BY fp.factoryProductName
+			)c ON c.usefactoryProductName = t.factoryProductName
+			LEFT JOIN(
+				SELECT fp.factoryProductName AS outfactoryProductName, t.outTime, t.weight AS outWeight FROM HS_Product_Out_Record t
+					LEFT JOIN hs_Tray_BarCode tb ON tb.barcode = t.barCode
+					LEFT JOIN hs_finishproduct fp ON fp.id = tb.salesProductId
+				WHERE
+					1 = 1
+				AND UNIX_TIMESTAMP(t.outTime) >= UNIX_TIMESTAMP(:start2)
+				AND UNIX_TIMESTAMP(t.outTime) <= UNIX_TIMESTAMP(:end2)
+				GROUP BY fp.factoryProductName
+			)d ON d.outfactoryProductName = t.factoryProductName
+			where 1=1
+			<#if key["name"]??>
+				and (t.categoryName like :name)
+			</#if>
+			<#if key["code"]??>
+				and (t.categoryCode like :code)
+			</#if>
+			<#if key["factoryProductName"]??>
+				and (t.factoryProductName like :factoryProductName)
+			</#if>
+			<#if key["productIsTc"]??>
+				and t.productIsTc in (:productIsTc)
+			</#if>
+			<#if key["salesOrderCode"]??>
+				and (t.salesOrderCode like :salesOrderCode)
+			</#if>
+			<#if key["batchCode"]??>
+				and (t.batchCode like :batchCode)
+			</#if>
+		]]>
+    </sql>
+    <sql comment="产成品汇总（订单号、批次号、厂内名称）" id="products-sundr-list-count">
+        <![CDATA[
+			SELECT
+				count(1) count
+			 FROM(
+					SELECT tb.id, tb.salesOrderCode, tb.batchCode, fp.factoryProductName, fpc.categoryName, fpc.categoryCode, fp.productIsTc
+				FROM hs_tray t
+					LEFT JOIN hs_tray_barcode tb ON tb.barcode = t.trayBarcode
+					LEFT JOIN hs_finishproduct fp ON fp.id = tb.salesProductId
+					LEFT JOIN hs_finished_product_category fpc ON fpc.id = fp.fpcid
+				GROUP BY fp.factoryProductName ORDER BY tb.id
+			)t
+			LEFT JOIN(
+					SELECT tb.id AS startid, SUM(ir.weight) AS startWeight,fp.factoryProductName as startfactoryProductName
+				FROM hs_tray t
+					LEFT JOIN hs_tray_barcode tb ON tb.barcode = t.trayBarcode
+					LEFT JOIN hs_finishproduct fp ON fp.id = tb.salesProductId
+					LEFT JOIN hs_product_stock_state ss ON ss.barCode = t.trayBarcode
+					LEFT JOIN hs_product_in_record ir ON ir.barCode = t.trayBarcode
+					LEFT JOIN hs_finished_product_category fpc ON fpc.id = fp.fpcid
+				WHERE ( ss.stockState = 1 OR ss.stockState IS NULL )
+					AND ( tb.isOpened = 0 OR tb.isOpened = NULL )
+					AND ss.warehouseCode IS NOT NULL
+					AND UNIX_TIMESTAMP(ir.inTime) <= UNIX_TIMESTAMP(:startTime)
+					GROUP BY fp.factoryProductName ORDER BY tb.id
+			)a ON a.startfactoryProductName = t.factoryProductName
+			LEFT JOIN(
+					SELECT SUM(ir.weight) AS inWeight,fp.factoryProductName AS infactoryProductName
+				FROM hs_tray t
+					LEFT JOIN hs_tray_barcode tb ON tb.barcode = t.trayBarcode
+					LEFT JOIN hs_finishproduct fp ON fp.id = tb.salesProductId
+					LEFT JOIN hs_product_stock_state ss ON ss.barCode = t.trayBarcode
+					LEFT JOIN hs_product_in_record ir ON ir.barCode = t.trayBarcode
+				WHERE ( ss.stockState = 1 OR ss.stockState IS NULL )
+					AND ( tb.isOpened = 0 OR tb.isOpened = NULL )
+					AND ss.warehouseCode IS NOT NULL
+					AND UNIX_TIMESTAMP(ir.inTime) >= UNIX_TIMESTAMP(:start)
+					AND UNIX_TIMESTAMP(ir.inTime) <= UNIX_TIMESTAMP(:end)
+					GROUP BY fp.factoryProductName ORDER BY tb.id
+			)b ON b.infactoryProductName = t.factoryProductName
+			LEFT JOIN(
+				SELECT
+					fp.factoryProductName as usefactoryProductName,SUM(ht.productWeight) AS usenum
+				FROM hs_turnbag_out_record tor
+					LEFT JOIN hs_totalstatistics ht ON ht.rollBarcode = tor.trayCode
+					LEFT JOIN hs_tray t ON t.trayBarcode = ht.rollBarcode
+					LEFT JOIN hs_Tray_BarCode tb ON tb.barcode = t.trayBarcode
+					LEFT JOIN hs_finishproduct fp ON fp.id = tb.salesProductId
+				WHERE 1 = 1
+					AND UNIX_TIMESTAMP(tor.outDate) >= UNIX_TIMESTAMP(:start1)
+					AND UNIX_TIMESTAMP(tor.outDate) <= UNIX_TIMESTAMP(:end1)
+				GROUP BY fp.factoryProductName
+			)c ON c.usefactoryProductName = t.factoryProductName
+			LEFT JOIN(
+				SELECT fp.factoryProductName AS outfactoryProductName, t.outTime, t.weight AS outWeight FROM HS_Product_Out_Record t
+					LEFT JOIN hs_Tray_BarCode tb ON tb.barcode = t.barCode
+					LEFT JOIN hs_finishproduct fp ON fp.id = tb.salesProductId
+				WHERE
+					1 = 1
+				AND UNIX_TIMESTAMP(t.outTime) >= UNIX_TIMESTAMP(:start2)
+				AND UNIX_TIMESTAMP(t.outTime) <= UNIX_TIMESTAMP(:end2)
+				GROUP BY fp.factoryProductName
+			)d ON d.outfactoryProductName = t.factoryProductName
+			where 1=1
+			<#if key["name"]??>
+				and (t.categoryName like :name)
+			</#if>
+			<#if key["code"]??>
+				and (t.categoryCode like :code)
+			</#if>
+			<#if key["factoryProductName"]??>
+				and (t.factoryProductName like :factoryProductName)
+			</#if>
+			<#if key["productIsTc"]??>
+				and t.productIsTc in (:productIsTc)
+			</#if>
+			<#if key["salesOrderCode"]??>
+				and (t.salesOrderCode like :salesOrderCode)
+			</#if>
+			<#if key["batchCode"]??>
+				and (t.batchCode like :batchCode)
+			</#if>
+		]]>
+    </sql>
+    <sql comment="产成品汇总(按客户统计)" id="products-customer-stock-summary">
+        <![CDATA[
+		SELECT
+			ss.stockState,t1.rollQualityGradeCode,tb.id, ROUND(IFNULL(SUM(t.weight), 0), 2) AS weight, tb.salesOrderCode, tb.barcode, tb.batchCode, tb.planDeliveryDate, ir.inTime, ss.warehouseCode, ss.warehousePosCode, t1.consumername, fp.productModel, tbp.deliveryDate, tbp.newSalesOrderCode, tbp.newBatchCode, tbp.newProductModel, tbp.newConsumer, fp.productShelfLife, fp.factoryProductName, fp.consumerProductName, tp.tcProcBomVersionPartsName, fpc.categoryName, fpc.categoryCode
+		FROM hs_tray t
+			LEFT JOIN hs_tray_barcode tb ON tb.barcode = t.trayBarcode
+			LEFT JOIN hs_finishproduct fp ON fp.id = tb.salesProductId
+			LEFT JOIN hs_product_stock_state ss ON ss.barCode = t.trayBarcode
+			LEFT JOIN hs_turnbag_plan tbp on tbp.id=tb.turnBagPlanId
+			LEFT JOIN hs_product_in_record ir ON ir.barCode = t.trayBarcode
+			LEFT JOIN hs_TotalStatistics t1 ON t1.rollBarcode = t.trayBarcode
+			LEFT JOIN HS_TC_PROC_BOM_VERSION_PARTS tp ON tb.partId = tp.id
+			LEFT JOIN hs_finished_product_category fpc ON fpc.id = fp.fpcid
+		where (ss.stockState=1 or ss.stockState is null ) and (tb.isOpened=0 or tb.isOpened=null) and ss.warehouseCode is not null
+		<#if key["code"]??>
+			and (tb.barCode=:code)
+		</#if>
+		<#if key["model"]??>
+			and ((fp.productModel like :model and tb.belongToSalesOrderId is null) or tbp.newProductModel like :model)
+		</#if>
+		<#if key["salesCode"]??>
+			and ((tb.salesOrderCode like :salesCode and tb.belongToSalesOrderId is null) or tbp.newSalesOrderCode like :salesCode)
+		</#if>
+		<#if key["warehouseCode"]??>
+			and (ss.warehouseCode like :warehouseCode)
+		</#if>
+		<#if key["warehousePosCode"]??>
+			and (ss.warehousePosCode like :warehousePosCode)
+		</#if>
+		<#if key["batchCode"]??>
+			and ((tb.batchCode like :batchCode and tb.belongToSalesOrderId is null) or tbp.newBatchCode like :batchCode)
+		</#if>
+		<#if key["consumer"]??>
+			and ((t1.consumername like :consumer and tb.belongToSalesOrderId is null) or tbp.newConsumer like :consumer)
+		</#if>
+		<#if key["start"]??&&key["end"]??>
+			and ir.inTime between :start and :end
+		</#if>
+		<#if key["start"]??&&!key["end"]??>
+			and ir.inTime > :start
+		</#if>
+		<#if !key["start"]??&&key["end"]??>
+			and ir.inTime < :end
+		</#if>
+		GROUP BY tb.salesOrderCode,tb.batchCode,fp.factoryProductName
+		<#if key["sort"]??&&key["order"]??>
+			order by ${key["sort"]} ${key["order"]}
+		</#if>
+		<#if !key["sort"]??&&!key["order"]??>
+			order by ss.warehousePosCode desc
+		</#if>
+		]]>
+    </sql>
+
+    <sql comment="根据产品id搜索用到此产品的叶型" id="queryYxInfo">
+        <![CDATA[
+		        select distinct bom.* from hs_tc_proc_bom  bom
+
+				left join hs_tc_proc_bom_version version on bom.id=version.TCPROCBOMID
+
+				left join hs_tc_proc_bom_version_parts part on version.id =part.tcProcBomVersoinId
+
+				left join HS_Tc_Proc_Bom_Version_Parts_Detail detail on part.id=detail.tcProcBomPartsId
+
+				where detail.tcFinishedProductId=:finishedProductId
+		]]>
+    </sql>
+
+    <sql comment="计划明细下的个性化打印信息" id="findFinishedProductPrintRecords">
+        <![CDATA[
+		   select * from   hs_finishproduct_print_record where productId=(:productId)
+		]]>
+    </sql>
+
+</sqls>

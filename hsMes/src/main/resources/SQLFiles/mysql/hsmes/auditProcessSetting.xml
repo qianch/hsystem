@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="AuditProcessSetting">
+	<sql comment="流程设置列表" id="auditProcessSetting-list">
+		<![CDATA[
+			select t.* from HS_Audit_Process_Setting t where 1=1
+			<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+				<#else>
+				order by id asc
+			</#if>
+		]]>
+	</sql>
+</sqls>

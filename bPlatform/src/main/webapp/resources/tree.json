@@ -1,0 +1,131 @@
+{
+    "total": 18,
+    "rows": [
+        {
+            "ID": 132,
+            "SORT": null,
+            "NAME": "蓝鸟集团",
+            "PID": null,
+            "CODE": "LNJT"
+        },
+        {
+            "ID": 172,
+            "SORT": null,
+            "NAME": "华东工程中心2",
+            "PID": 132,
+            "CODE": "HDGCZX"
+        },
+        {
+            "ID": 204,
+            "SORT": null,
+            "NAME": "开发",
+            "PID": 188,
+            "CODE": "KF"
+        },
+        {
+            "ID": 207,
+            "SORT": null,
+            "NAME": "测试2",
+            "PID": 188,
+            "CODE": "CS2"
+        },
+        {
+            "ID": 178,
+            "SORT": null,
+            "NAME": "行政",
+            "PID": 172,
+            "CODE": "XZ"
+        },
+        {
+            "ID": 180,
+            "SORT": null,
+            "NAME": "前端",
+            "PID": 172,
+            "CODE": "QD1"
+        },
+        {
+            "ID": 1064,
+            "SORT": null,
+            "NAME": "test部门",
+            "PID": null,
+            "CODE": "test"
+        },
+        {
+            "ID": 1066,
+            "SORT": null,
+            "NAME": "test1",
+            "PID": 1064,
+            "CODE": "TEST1"
+        },
+        {
+            "ID": 188,
+            "SORT": null,
+            "NAME": "北方工程中心",
+            "PID": 132,
+            "CODE": "BFGCZX"
+        },
+        {
+            "ID": 243,
+            "SORT": null,
+            "NAME": "信息",
+            "PID": 172,
+            "CODE": "XX"
+        },
+        {
+            "ID": 1072,
+            "SORT": null,
+            "NAME": "生产部门",
+            "PID": null,
+            "CODE": "0120"
+        },
+        {
+            "ID": 1221,
+            "SORT": null,
+            "NAME": "ffffffffffffffffffffffff",
+            "PID": 188,
+            "CODE": "ffffffffffff"
+        },
+        {
+            "ID": 1228,
+            "SORT": null,
+            "NAME": "fdsaaaaaaaaaaaaa",
+            "PID": 188,
+            "CODE": "aaaaaaaaaa"
+        },
+        {
+            "ID": 1231,
+            "SORT": null,
+            "NAME": "dfgrewgrew",
+            "PID": 188,
+            "CODE": "grewgrew"
+        },
+        {
+            "ID": 1289,
+            "SORT": null,
+            "NAME": "xxxx",
+            "PID": null,
+            "CODE": "XXXX"
+        },
+        {
+            "ID": 1294,
+            "SORT": null,
+            "NAME": "vvxsa",
+            "PID": null,
+            "CODE": "VVXSA"
+        },
+        {
+            "ID": 1304,
+            "SORT": null,
+            "NAME": "阿萨德撒",
+            "PID": null,
+            "CODE": "ASDS"
+        },
+        {
+            "ID": 1296,
+            "SORT": null,
+            "NAME": "xxxd",
+            "PID": 172,
+            "CODE": "XXXD"
+        }
+    ]
+}

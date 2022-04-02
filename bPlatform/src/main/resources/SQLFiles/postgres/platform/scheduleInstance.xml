@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="ScheduleInstanceDaoImpl">
+	<sql comment="查询所有的任务调度模板" id="scheduleInstance-list">
+		<![CDATA[
+		select i.id,t.templateName,i.cron,i.status,i.instanceDesc,i.editable from platform_schedule_instance i
+		left join platform_schedule_template t on i.templateId=t.id
+		where 1=1 
+		<#if key["t.templateName"]??>
+			and t.templateName like :t.templateName
+		</#if>
+		<#if key["i.instanceDesc"]??>
+			and i.instanceDesc like :i.instanceDesc
+		</#if>
+		<#if key["sort"]?? && key["order"]??>
+			 order by ${key["sort"]} ${key["order"]}
+		</#if>
+		<#if !key["sort"]?? && !key["order"]??>
+			 order by i.id desc
+		</#if>
+		]]>
+	</sql>
+</sqls>

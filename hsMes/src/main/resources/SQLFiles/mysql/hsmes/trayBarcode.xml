@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="TrayBarCodeDaoImpl">
+    <sql comment="根据卷条码查询销售订单" id="salesOrderbyRollBarcode">
+        <![CDATA[
+		select t1.* from hs_roll_barcode t
+		left join hs_sales_order t1 on t1.salesOrderCode=t.salesOrderCode
+		where t.barcode in (:code)
+		]]>
+    </sql>
+
+    <sql comment="根据箱条码查询销售订单" id="salesOrderByBoxBarcode">
+        <![CDATA[
+		select t1.* from hs_box_barcode t
+		left join hs_sales_order t1 on t1.salesOrderCode=t.salesOrderCode
+		where t.barcode in (:code)
+		]]>
+    </sql>
+
+    <sql comment="根据托条码查询销售订单" id="salesOrder-byTrayBarcode">
+        <![CDATA[
+		select t1.* from hs_tray_BarCode t
+		left join hs_sales_order t1 on t1.salesOrderCode=t.salesOrderCode
+		where t.trayBarcode in (:code)
+		]]>
+    </sql>
+
+    <sql comment="根据卷条码查询产品信息" id="product-byRollBarcode">
+        <![CDATA[
+		select fp.* from hs_roll_barcode rb
+		left join hs_sales_order so on so.salesOrderCode=rb.salesOrderCode
+		left join hs_sales_order_detail sod on sod.salesOrderId=so.id
+		left join hs_finishproduct fp on fp.id=sod.productId
+		where rb.barcode in (:code)
+		]]>
+    </sql>
+
+    <sql comment="根据箱条码查询产品信息" id="product-byBoxBarcode">
+        <![CDATA[
+		select fp.* from hs_box_barcode bb
+		left join hs_sales_order so on so.salesOrderCode=bb.salesOrderCode
+		left join hs_sales_order_detail sod on sod.salesOrderId=so.id
+		left join hs_finishproduct fp on fp.id=sod.productId
+		where bb.barcode in (:code)
+		]]>
+    </sql>
+
+    <sql comment="根据托条码查询产品信息" id="product-byBarcode">
+        <![CDATA[
+			select   salesOrderCode, barcode,  batchCode,producePlanDetailId,partName,salesProductId,salesOrderDetailId  from  hs_tray_barcode where barcode=(:code)
+      UNION select   salesOrderCode, barcode,  batchCode,producePlanDetailId,partName,salesProductId,salesOrderDetailId  from  hs_part_barcode where barcode=(:code)
+		]]>
+    </sql>
+
+    <sql comment="根据条码查询卷或者部件条码信息" id="ibarcode-byBarcode">
+        <![CDATA[
+		select  partId,batchcode,salesOrderCode,SalesOrderDetailId,type from (
+
+	select   partId,batchcode,salesOrderCode,SalesOrderDetailId, 'rollbarcode' as type from hs_roll_barcode where barcode in (:code)
+
+	union
+
+	select   partId,batchCode,salesOrderCode,SalesOrderDetailId, 'partbarcode' as type from hs_part_barcode where barcode in (:code)
+
+
+	) ibarcode group by  partId,batchcode,salesOrderCode,SalesOrderDetailId,type
+		]]>
+    </sql>
+
+    <sql comment="条码号重复" id="iTraybarcode-byBarcode">
+        <![CDATA[
+		select trayBarcode,rollBarcode,partBarcode from hs_tray_box_roll  where  (rollBarcode in (:code) or partBarcode in (:code))
+		]]>
+    </sql>
+
+
+    <sql comment="查询托内个性化条码最大值" id="findMaxTrayBarCode">
+        <![CDATA[
+			select  max(customerBarCode) as maxCustomerBarCode,max(agentBarCode) as maxAgentBarCode from  hs_tray_barcode
+           where btwfileId=(:btwfileId)
+		]]>
+    </sql>
+
+    <sql comment="查询卷内个性化条码最大值" id="findMaxTrayBarCodeCount">
+        <![CDATA[
+			 SELECT IFNULL(MAX(substring(barcode,LENGTH(barcode)-4, 5)),0) as BarCodeCount FROM hs_tray_barcode  where printDate>date_format(NOW(),'%Y-%m-%d') and LENGTH(barcode)>5
+			 and  substring(barcode,1, 1)='T'
+
+		]]>
+    </sql>
+
+    <sql comment="查询卷内个性化条码最大值" id="findMaxTrayPartBarCodeCount">
+        <![CDATA[
+			 SELECT IFNULL(MAX(substring(barcode,LENGTH(barcode)-4, 5)),0) as BarCodeCount FROM hs_tray_barcode  where printDate>date_format(NOW(),'%Y-%m-%d') and LENGTH(barcode)>5
+			 and  substring(barcode,1, 1)='P'
+
+		]]>
+    </sql>
+
+
+
+</sqls>

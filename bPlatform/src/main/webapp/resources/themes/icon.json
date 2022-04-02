@@ -1,0 +1,1177 @@
+[
+    {
+        "style": "icon-blank",
+        "img": "/resources/themes/icons/blank.gif"
+    },
+    {
+    	 "style": "icon-ok3",
+        "img": "/resources/themes/icons/ok3.png"
+    },
+    {
+        "style": "icon-add",
+        "img": "/resources/themes/icons/edit_add.png"
+    },
+    {
+        "style": "icon-edit",
+        "img": "/resources/themes/icons/pencil.png"
+    },
+    {
+        "style": "icon-clear",
+        "img": "/resources/themes/icons/clear.png"
+    },
+    {
+        "style": "icon-remove",
+        "img": "/resources/themes/icons/edit_remove.png"
+    },
+    {
+        "style": "icon-save",
+        "img": "/resources/themes/icons/filesave.png"
+    },
+    {
+        "style": "icon-cut",
+        "img": "/resources/themes/icons/cut.png"
+    },
+    {
+        "style": "icon-ok",
+        "img": "/resources/themes/icons/ok.png"
+    },
+    {
+        "style": "icon-no",
+        "img": "/resources/themes/icons/no.png"
+    },
+    {
+        "style": "icon-disable",
+        "img": "/resources/themes/icons/disable.png"
+    },
+    {
+        "style": "icon-cancel",
+        "img": "/resources/themes/icons/cancel.png"
+    },
+    {
+        "style": "icon-reload",
+        "img": "/resources/themes/icons/reload.png"
+    },
+    {
+        "style": "icon-search",
+        "img": "/resources/themes/icons/search.png"
+    },
+    {
+        "style": "icon-print",
+        "img": "/resources/themes/icons/print.png"
+    },
+    {
+        "style": "icon-help",
+        "img": "/resources/themes/icons/help.png"
+    },
+    {
+        "style": "icon-undo",
+        "img": "/resources/themes/icons/undo.png"
+    },
+    {
+        "style": "icon-redo",
+        "img": "/resources/themes/icons/redo.png"
+    },
+    {
+        "style": "icon-back",
+        "img": "/resources/themes/icons/back.png"
+    },
+    {
+        "style": "icon-sum",
+        "img": "/resources/themes/icons/sum.png"
+    },
+    {
+        "style": "icon-tip",
+        "img": "/resources/themes/icons/tip.png"
+    },
+    {
+        "style": "icon-filter",
+        "img": "/resources/themes/icons/filter.png"
+    },
+    {
+        "style": "icon-man",
+        "img": "/resources/themes/icons/man.png"
+    },
+    {
+        "style": "icon-lock",
+        "img": "/resources/themes/icons/lock_edit.png"
+    },
+    {
+        "style": "icon-more",
+        "img": "/resources/themes/icons/more.png"
+    },
+    {
+        "style": "icon-grant-role",
+        "img": "/resources/themes/icons/grant_role.png"
+    },
+    {
+        "style": "icon-sort",
+        "img": "/resources/themes/icons/sort.gif"
+    },
+    {
+        "style": "icon-mini-add",
+        "img": "/resources/themes/icons/mini_add.png"
+    },
+    {
+        "style": "icon-mini-edit",
+        "img": "/resources/themes/icons/mini_edit.png"
+    },
+    {
+        "style": "icon-mini-refresh",
+        "img": "/resources/themes/icons/mini_refresh.png"
+    },
+    {
+        "style": "icon-large-picture",
+        "img": "/resources/themes/icons/large_picture.png"
+    },
+    {
+        "style": "icon-large-clipart",
+        "img": "/resources/themes/icons/large_clipart.png"
+    },
+    {
+        "style": "icon-large-shapes",
+        "img": "/resources/themes/icons/large_shapes.png"
+    },
+    {
+        "style": "icon-large-smartart",
+        "img": "/resources/themes/icons/large_smartart.png"
+    },
+    {
+        "style": "icon-large-chart",
+        "img": "/resources/themes/icons/large_chart.png"
+    },
+    {
+        "style": "icon-start",
+        "img": "/resources/themes/icons/start.png"
+    },
+    {
+        "style": "icon-stop",
+        "img": "/resources/themes/icons/stop.png"
+    },
+    {
+        "style": "icon-bmp",
+        "img": "/resources/themes/icons/jpg.gif"
+    },
+    {
+        "style": "icon-doc",
+        "img": "/resources/themes/icons/doc.gif"
+    },
+    {
+        "style": "icon-docx",
+        "img": "/resources/themes/icons/docx.gif"
+    },
+    {
+        "style": "icon-gif",
+        "img": "/resources/themes/icons/jpg.gif"
+    },
+    {
+        "style": "icon-jpg",
+        "img": "/resources/themes/icons/jpg.gif"
+    },
+    {
+        "style": "icon-pdf",
+        "img": "/resources/themes/icons/pdf.gif"
+    },
+    {
+        "style": "icon-ppt",
+        "img": "/resources/themes/icons/ppt.gif"
+    },
+    {
+        "style": "icon-pptx",
+        "img": "/resources/themes/icons/pptx.gif"
+    },
+    {
+        "style": "icon-txt",
+        "img": "/resources/themes/icons/txt.gif"
+    },
+    {
+        "style": "icon-xls",
+        "img": "/resources/themes/icons/xls.gif"
+    },
+    {
+        "style": "icon-xlsx",
+        "img": "/resources/themes/icons/xlsx.gif"
+    },
+    {
+        "style": "icon-delete",
+        "img": "/resources/themes/icons/delete.gif"
+    },
+    {
+        "style": "icon-file",
+        "img": "/resources/themes/icons/file.gif"
+    },
+    {
+        "style": "icon-zip",
+        "img": "/resources/themes/icons/zip.gif"
+    },
+    {
+        "style": "icon-rar",
+        "img": "/resources/themes/icons/zip.gif"
+    },
+    {
+        "style": "icon-excel",
+        "img": "/resources/themes/icons/excel.png"
+    },
+    {
+        "style": "icon-pause",
+        "img": "/resources/themes/icons/pause.png"
+    },
+    {
+        "style": "platform-settings",
+        "img": "/resources/themes/icons/settings.png"
+    },
+    {
+        "style": "platform-rss",
+        "img": "/resources/themes/icons/rss.png"
+    },
+    {
+        "style": "platform-add",
+        "img": "/resources/themes/icons/add.png"
+    },
+    {
+        "style": "platform-add2",
+        "img": "/resources/themes/icons/add2.png"
+    },
+    {
+        "style": "platform-against",
+        "img": "/resources/themes/icons/against.png"
+    },
+    {
+        "style": "platform-agree",
+        "img": "/resources/themes/icons/agree.png"
+    },
+    {
+        "style": "platform-app_columns",
+        "img": "/resources/themes/icons/app_columns.png"
+    },
+    {
+        "style": "platform-app_list",
+        "img": "/resources/themes/icons/app_list.png"
+    },
+    {
+        "style": "platform-arraw_return",
+        "img": "/resources/themes/icons/arraw_return.png"
+    },
+    {
+        "style": "platform-arrow_branch",
+        "img": "/resources/themes/icons/arrow_branch.png"
+    },
+    {
+        "style": "platform-arrow_divide",
+        "img": "/resources/themes/icons/arrow_divide.png"
+    },
+    {
+        "style": "platform-arrow_down",
+        "img": "/resources/themes/icons/arrow_down.png"
+    },
+    {
+        "style": "platform-arrow_left",
+        "img": "/resources/themes/icons/arrow_left.png"
+    },
+    {
+        "style": "platform-arrow_merge",
+        "img": "/resources/themes/icons/arrow_merge.png"
+    },
+    {
+        "style": "platform-arrow_redo",
+        "img": "/resources/themes/icons/arrow_redo.png"
+    },
+    {
+        "style": "platform-arrow_right",
+        "img": "/resources/themes/icons/arrow_right.png"
+    },
+    {
+        "style": "platform-arrow_switch",
+        "img": "/resources/themes/icons/arrow_switch.png"
+    },
+    {
+        "style": "platform-arrow_undo",
+        "img": "/resources/themes/icons/arrow_undo.png"
+    },
+    {
+        "style": "platform-arrow_up",
+        "img": "/resources/themes/icons/arrow_up.png"
+    },
+    {
+        "style": "platform-basket",
+        "img": "/resources/themes/icons/basket.png"
+    },
+    {
+        "style": "platform-book",
+        "img": "/resources/themes/icons/book.png"
+    },
+    {
+        "style": "platform-book_user",
+        "img": "/resources/themes/icons/book_user.png"
+    },
+    {
+        "style": "platform-bug",
+        "img": "/resources/themes/icons/bug.png"
+    },
+    {
+        "style": "platform-bullet_blue",
+        "img": "/resources/themes/icons/bullet_blue.png"
+    },
+    {
+        "style": "platform-chart_curve",
+        "img": "/resources/themes/icons/chart_curve.png"
+    },
+    {
+        "style": "platform-chart_flipped",
+        "img": "/resources/themes/icons/chart_flipped.png"
+    },
+    {
+        "style": "platform-chart_line",
+        "img": "/resources/themes/icons/chart_line.png"
+    },
+    {
+        "style": "platform-chart_pie",
+        "img": "/resources/themes/icons/chart_pie.png"
+    },
+    {
+        "style": "platform-close",
+        "img": "/resources/themes/icons/close.png"
+    },
+    {
+        "style": "platform-config",
+        "img": "/resources/themes/icons/config.png"
+    },
+    {
+        "style": "platform-config1",
+        "img": "/resources/themes/icons/config1.png"
+    },
+    {
+        "style": "platform-config3",
+        "img": "/resources/themes/icons/config3.png"
+    },
+    {
+        "style": "platform-connect",
+        "img": "/resources/themes/icons/connect.png"
+    },
+    {
+        "style": "platform-copy",
+        "img": "/resources/themes/icons/copy.png"
+    },
+    {
+        "style": "platform-cut",
+        "img": "/resources/themes/icons/cut.png"
+    },
+    {
+        "style": "platform-cv",
+        "img": "/resources/themes/icons/cv.png"
+    },
+    {
+        "style": "platform-c_key",
+        "img": "/resources/themes/icons/c_key.png"
+    },
+    {
+        "style": "platform-database",
+        "img": "/resources/themes/icons/database.png"
+    },
+    {
+        "style": "platform-database_add",
+        "img": "/resources/themes/icons/database_add.png"
+    },
+    {
+        "style": "platform-del",
+        "img": "/resources/themes/icons/del.png"
+    },
+    {
+        "style": "platform-del1",
+        "img": "/resources/themes/icons/del1.png"
+    },
+    {
+        "style": "platform-del2",
+        "img": "/resources/themes/icons/del2.png"
+    },
+    {
+        "style": "platform-del3",
+        "img": "/resources/themes/icons/del3.png"
+    },
+    {
+        "style": "platform-del_folder",
+        "img": "/resources/themes/icons/del_folder.png"
+    },
+    {
+        "style": "platform-del_page",
+        "img": "/resources/themes/icons/del_page.png"
+    },
+    {
+        "style": "platform-detail",
+        "img": "/resources/themes/icons/detail.png"
+    },
+    {
+        "style": "platform-disconnect",
+        "img": "/resources/themes/icons/disconnect.png"
+    },
+    {
+        "style": "platform-doc_ok",
+        "img": "/resources/themes/icons/doc_ok.png"
+    },
+    {
+        "style": "platform-edit",
+        "img": "/resources/themes/icons/edit.png"
+    },
+    {
+        "style": "platform-edit2",
+        "img": "/resources/themes/icons/edit2.png"
+    },
+    {
+        "style": "platform-email",
+        "img": "/resources/themes/icons/email.png"
+    },
+    {
+        "style": "platform-email2",
+        "img": "/resources/themes/icons/email2.png"
+    },
+    {
+        "style": "platform-email3",
+        "img": "/resources/themes/icons/email3.png"
+    },
+    {
+        "style": "platform-email_go",
+        "img": "/resources/themes/icons/email_go.png"
+    },
+    {
+        "style": "platform-email_open",
+        "img": "/resources/themes/icons/email_open.png"
+    },
+    {
+        "style": "platform-exit",
+        "img": "/resources/themes/icons/exit.png"
+    },
+    {
+        "style": "platform-exit2",
+        "img": "/resources/themes/icons/exit2.png"
+    },
+    {
+        "style": "platform-folder1",
+        "img": "/resources/themes/icons/folder1.png"
+    },
+    {
+        "style": "platform-folder10",
+        "img": "/resources/themes/icons/folder10.png"
+    },
+    {
+        "style": "platform-folder11",
+        "img": "/resources/themes/icons/folder11.png"
+    },
+    {
+        "style": "platform-folder12",
+        "img": "/resources/themes/icons/folder12.png"
+    },
+    {
+        "style": "platform-folder13",
+        "img": "/resources/themes/icons/folder13.png"
+    },
+    {
+        "style": "platform-folder14",
+        "img": "/resources/themes/icons/folder14.png"
+    },
+    {
+        "style": "platform-folder15",
+        "img": "/resources/themes/icons/folder15.png"
+    },
+    {
+        "style": "platform-folder16",
+        "img": "/resources/themes/icons/folder16.png"
+    },
+    {
+        "style": "platform-folder17",
+        "img": "/resources/themes/icons/folder17.png"
+    },
+    {
+        "style": "platform-folder18",
+        "img": "/resources/themes/icons/folder18.png"
+    },
+    {
+        "style": "platform-folder19",
+        "img": "/resources/themes/icons/folder19.png"
+    },
+    {
+        "style": "platform-folder2",
+        "img": "/resources/themes/icons/folder2.png"
+    },
+    {
+        "style": "platform-folder20",
+        "img": "/resources/themes/icons/folder20.png"
+    },
+    {
+        "style": "platform-folder21",
+        "img": "/resources/themes/icons/folder21.png"
+    },
+    {
+        "style": "platform-folder22",
+        "img": "/resources/themes/icons/folder22.png"
+    },
+    {
+        "style": "platform-folder23",
+        "img": "/resources/themes/icons/folder23.png"
+    },
+    {
+        "style": "platform-folder24",
+        "img": "/resources/themes/icons/folder24.png"
+    },
+    {
+        "style": "platform-folder25",
+        "img": "/resources/themes/icons/folder25.png"
+    },
+    {
+        "style": "platform-folder26",
+        "img": "/resources/themes/icons/folder26.png"
+    },
+    {
+        "style": "platform-folder27",
+        "img": "/resources/themes/icons/folder27.png"
+    },
+    {
+        "style": "platform-folder28",
+        "img": "/resources/themes/icons/folder28.png"
+    },
+    {
+        "style": "platform-folder4",
+        "img": "/resources/themes/icons/folder4.png"
+    },
+    {
+        "style": "platform-folder5",
+        "img": "/resources/themes/icons/folder5.png"
+    },
+    {
+        "style": "platform-folder6",
+        "img": "/resources/themes/icons/folder6.png"
+    },
+    {
+        "style": "platform-folder7",
+        "img": "/resources/themes/icons/folder7.png"
+    },
+    {
+        "style": "platform-folder8",
+        "img": "/resources/themes/icons/folder8.png"
+    },
+    {
+        "style": "platform-folder9",
+        "img": "/resources/themes/icons/folder9.png"
+    },
+    {
+        "style": "platform-forward",
+        "img": "/resources/themes/icons/forward.png"
+    },
+    {
+        "style": "platform-freelance",
+        "img": "/resources/themes/icons/freelance.png"
+    },
+    {
+        "style": "platform-go",
+        "img": "/resources/themes/icons/go.gif"
+    },
+    {
+        "style": "platform-go",
+        "img": "/resources/themes/icons/go.png"
+    },
+    {
+        "style": "platform-go1",
+        "img": "/resources/themes/icons/go1.gif"
+    },
+    {
+        "style": "platform-go1",
+        "img": "/resources/themes/icons/go1.png"
+    },
+    {
+        "style": "platform-help",
+        "img": "/resources/themes/icons/help.png"
+    },
+    {
+        "style": "platform-home",
+        "img": "/resources/themes/icons/home.gif"
+    },
+    {
+        "style": "platform-home",
+        "img": "/resources/themes/icons/home.png"
+    },
+    {
+        "style": "platform-icon134",
+        "img": "/resources/themes/icons/icon134.png"
+    },
+    {
+        "style": "platform-icon137",
+        "img": "/resources/themes/icons/icon137.png"
+    },
+    {
+        "style": "platform-icon140",
+        "img": "/resources/themes/icons/icon140.png"
+    },
+    {
+        "style": "platform-icon141",
+        "img": "/resources/themes/icons/icon141.png"
+    },
+    {
+        "style": "platform-icon146",
+        "img": "/resources/themes/icons/icon146.png"
+    },
+    {
+        "style": "platform-icon15",
+        "img": "/resources/themes/icons/icon15.png"
+    },
+    {
+        "style": "platform-icon150",
+        "img": "/resources/themes/icons/icon150.png"
+    },
+    {
+        "style": "platform-icon152",
+        "img": "/resources/themes/icons/icon152.png"
+    },
+    {
+        "style": "platform-icon153",
+        "img": "/resources/themes/icons/icon153.png"
+    },
+    {
+        "style": "platform-icon154",
+        "img": "/resources/themes/icons/icon154.png"
+    },
+    {
+        "style": "platform-icon17",
+        "img": "/resources/themes/icons/icon17.gif"
+    },
+    {
+        "style": "platform-icon25",
+        "img": "/resources/themes/icons/icon25.gif"
+    },
+    {
+        "style": "platform-icon26",
+        "img": "/resources/themes/icons/icon26.gif"
+    },
+    {
+        "style": "platform-icon28",
+        "img": "/resources/themes/icons/icon28.gif"
+    },
+    {
+        "style": "platform-icon31",
+        "img": "/resources/themes/icons/icon31.gif"
+    },
+    {
+        "style": "platform-icon32",
+        "img": "/resources/themes/icons/icon32.gif"
+    },
+    {
+        "style": "platform-icon34",
+        "img": "/resources/themes/icons/icon34.gif"
+    },
+    {
+        "style": "platform-icon35",
+        "img": "/resources/themes/icons/icon35.gif"
+    },
+    {
+        "style": "platform-icon36",
+        "img": "/resources/themes/icons/icon36.gif"
+    },
+    {
+        "style": "platform-icon37",
+        "img": "/resources/themes/icons/icon37.gif"
+    },
+    {
+        "style": "platform-icon38",
+        "img": "/resources/themes/icons/icon38.gif"
+    },
+    {
+        "style": "platform-icon39",
+        "img": "/resources/themes/icons/icon39.gif"
+    },
+    {
+        "style": "platform-icon41",
+        "img": "/resources/themes/icons/icon41.gif"
+    },
+    {
+        "style": "platform-icon42",
+        "img": "/resources/themes/icons/icon42.gif"
+    },
+    {
+        "style": "platform-icon5",
+        "img": "/resources/themes/icons/icon5.png"
+    },
+    {
+        "style": "platform-icon56",
+        "img": "/resources/themes/icons/icon56.png"
+    },
+    {
+        "style": "platform-icon59",
+        "img": "/resources/themes/icons/icon59.png"
+    },
+    {
+        "style": "platform-icon63",
+        "img": "/resources/themes/icons/icon63.png"
+    },
+    {
+        "style": "platform-icon65",
+        "img": "/resources/themes/icons/icon65.png"
+    },
+    {
+        "style": "platform-icon66",
+        "img": "/resources/themes/icons/icon66.png"
+    },
+    {
+        "style": "platform-icon67",
+        "img": "/resources/themes/icons/icon67.png"
+    },
+    {
+        "style": "platform-icon68",
+        "img": "/resources/themes/icons/icon68.png"
+    },
+    {
+        "style": "platform-icon7",
+        "img": "/resources/themes/icons/icon7.png"
+    },
+    {
+        "style": "platform-icon70",
+        "img": "/resources/themes/icons/icon70.png"
+    },
+    {
+        "style": "platform-icon71",
+        "img": "/resources/themes/icons/icon71.png"
+    },
+    {
+        "style": "platform-icon72",
+        "img": "/resources/themes/icons/icon72.png"
+    },
+    {
+        "style": "platform-icon75",
+        "img": "/resources/themes/icons/icon75.png"
+    },
+    {
+        "style": "platform-icon76",
+        "img": "/resources/themes/icons/icon76.png"
+    },
+    {
+        "style": "platform-icon77",
+        "img": "/resources/themes/icons/icon77.png"
+    },
+    {
+        "style": "platform-icon78",
+        "img": "/resources/themes/icons/icon78.png"
+    },
+    {
+        "style": "platform-icon79",
+        "img": "/resources/themes/icons/icon79.png"
+    },
+    {
+        "style": "platform-icon8",
+        "img": "/resources/themes/icons/icon8.png"
+    },
+    {
+        "style": "platform-icon80",
+        "img": "/resources/themes/icons/icon80.png"
+    },
+    {
+        "style": "platform-icon82",
+        "img": "/resources/themes/icons/icon82.png"
+    },
+    {
+        "style": "platform-icon85",
+        "img": "/resources/themes/icons/icon85.png"
+    },
+    {
+        "style": "platform-icon86",
+        "img": "/resources/themes/icons/icon86.png"
+    },
+    {
+        "style": "platform-icon88",
+        "img": "/resources/themes/icons/icon88.png"
+    },
+    {
+        "style": "platform-icon9",
+        "img": "/resources/themes/icons/icon9.png"
+    },
+    {
+        "style": "platform-icon96",
+        "img": "/resources/themes/icons/icon96.png"
+    },
+    {
+        "style": "platform-icon_19",
+        "img": "/resources/themes/icons/icon_19.png"
+    },
+    {
+        "style": "platform-icq",
+        "img": "/resources/themes/icons/icq.png"
+    },
+    {
+        "style": "platform-id",
+        "img": "/resources/themes/icons/id.png"
+    },
+    {
+        "style": "platform-jar",
+        "img": "/resources/themes/icons/jar.png"
+    },
+    {
+        "style": "platform-key",
+        "img": "/resources/themes/icons/key.png"
+    },
+    {
+        "style": "platform-layout",
+        "img": "/resources/themes/icons/layout.png"
+    },
+    {
+        "style": "platform-layout2",
+        "img": "/resources/themes/icons/layout2.png"
+    },
+    {
+        "style": "platform-lightbulb",
+        "img": "/resources/themes/icons/lightbulb.png"
+    },
+    {
+        "style": "platform-lock",
+        "img": "/resources/themes/icons/lock.png"
+    },
+    {
+        "style": "platform-lock3",
+        "img": "/resources/themes/icons/lock3.png"
+    },
+    {
+        "style": "platform-monitor",
+        "img": "/resources/themes/icons/monitor.png"
+    },
+    {
+        "style": "platform-node",
+        "img": "/resources/themes/icons/node.png"
+    },
+    {
+        "style": "platform-ok",
+        "img": "/resources/themes/icons/ok.png"
+    },
+    {
+        "style": "platform-ok1",
+        "img": "/resources/themes/icons/ok1.png"
+    },
+    {
+        "style": "platform-ok2",
+        "img": "/resources/themes/icons/ok2.png"
+    },
+    {
+        "style": "platform-ok3",
+        "img": "/resources/themes/icons/ok3.png"
+    },
+    {
+        "style": "platform-ok4",
+        "img": "/resources/themes/icons/ok4.png"
+    },
+    {
+        "style": "platform-ok5",
+        "img": "/resources/themes/icons/ok5.png"
+    },
+    {
+        "style": "platform-org",
+        "img": "/resources/themes/icons/org.png"
+    },
+    {
+        "style": "platform-org2",
+        "img": "/resources/themes/icons/org2.png"
+    },
+    {
+        "style": "platform-own",
+        "img": "/resources/themes/icons/own.png"
+    },
+    {
+        "style": "platform-page",
+        "img": "/resources/themes/icons/page.png"
+    },
+    {
+        "style": "platform-page2",
+        "img": "/resources/themes/icons/page2.png"
+    },
+    {
+        "style": "platform-page3",
+        "img": "/resources/themes/icons/page3.png"
+    },
+    {
+        "style": "platform-page_code",
+        "img": "/resources/themes/icons/page_code.png"
+    },
+    {
+        "style": "platform-page_font",
+        "img": "/resources/themes/icons/page_font.png"
+    },
+    {
+        "style": "platform-page_next",
+        "img": "/resources/themes/icons/page_next.png"
+    },
+    {
+        "style": "platform-page_office",
+        "img": "/resources/themes/icons/page_office.png"
+    },
+    {
+        "style": "platform-page_paint",
+        "img": "/resources/themes/icons/page_paint.png"
+    },
+    {
+        "style": "platform-page_picture",
+        "img": "/resources/themes/icons/page_picture.png"
+    },
+    {
+        "style": "platform-page_vector",
+        "img": "/resources/themes/icons/page_vector.png"
+    },
+    {
+        "style": "platform-paint2",
+        "img": "/resources/themes/icons/paint2.png"
+    },
+    {
+        "style": "platform-paste",
+        "img": "/resources/themes/icons/paste.png"
+    },
+    {
+        "style": "platform-picture",
+        "img": "/resources/themes/icons/picture.png"
+    },
+    {
+        "style": "platform-pictures",
+        "img": "/resources/themes/icons/pictures.png"
+    },
+    {
+        "style": "platform-picture_empty",
+        "img": "/resources/themes/icons/picture_empty.png"
+    },
+    {
+        "style": "platform-plugin",
+        "img": "/resources/themes/icons/plugin.png"
+    },
+    {
+        "style": "platform-plugin1",
+        "img": "/resources/themes/icons/plugin1.png"
+    },
+    {
+        "style": "platform-plugin2",
+        "img": "/resources/themes/icons/plugin2.png"
+    },
+    {
+        "style": "platform-printer",
+        "img": "/resources/themes/icons/printer.png"
+    },
+    {
+        "style": "platform-query",
+        "img": "/resources/themes/icons/query.png"
+    },
+    {
+        "style": "platform-refresh",
+        "img": "/resources/themes/icons/refresh.png"
+    },
+    {
+        "style": "platform-refresh1",
+        "img": "/resources/themes/icons/refresh1.png"
+    },
+    {
+        "style": "platform-refresh2",
+        "img": "/resources/themes/icons/refresh2.png"
+    },
+    {
+        "style": "platform-refresh3",
+        "img": "/resources/themes/icons/refresh3.png"
+    },
+    {
+        "style": "platform-refresh4",
+        "img": "/resources/themes/icons/refresh4.png"
+    },
+    {
+        "style": "platform-save",
+        "img": "/resources/themes/icons/save.png"
+    },
+    {
+        "style": "platform-save_all",
+        "img": "/resources/themes/icons/save_all.png"
+    },
+    {
+        "style": "platform-search",
+        "img": "/resources/themes/icons/search.png"
+    },
+    {
+        "style": "platform-security",
+        "img": "/resources/themes/icons/security.png"
+    },
+    {
+        "style": "platform-send_receive",
+        "img": "/resources/themes/icons/send_receive.png"
+    },
+    {
+        "style": "platform-shape_align_bottom",
+        "img": "/resources/themes/icons/shape_align_bottom.png"
+    },
+    {
+        "style": "platform-shape_align_center",
+        "img": "/resources/themes/icons/shape_align_center.png"
+    },
+    {
+        "style": "platform-shape_align_middle",
+        "img": "/resources/themes/icons/shape_align_middle.png"
+    },
+    {
+        "style": "platform-shape_group",
+        "img": "/resources/themes/icons/shape_group.png"
+    },
+    {
+        "style": "platform-shape_handles",
+        "img": "/resources/themes/icons/shape_handles.png"
+    },
+    {
+        "style": "platform-shape_move_back",
+        "img": "/resources/themes/icons/shape_move_back.png"
+    },
+    {
+        "style": "platform-share",
+        "img": "/resources/themes/icons/share.png"
+    },
+    {
+        "style": "platform-sitemap",
+        "img": "/resources/themes/icons/sitemap.png"
+    },
+    {
+        "style": "platform-sql",
+        "img": "/resources/themes/icons/sql.png"
+    },
+    {
+        "style": "platform-sql2",
+        "img": "/resources/themes/icons/sql2.png"
+    },
+    {
+        "style": "platform-sql3",
+        "img": "/resources/themes/icons/sql3.png"
+    },
+    {
+        "style": "platform-stop",
+        "img": "/resources/themes/icons/stop.gif"
+    },
+    {
+        "style": "platform-stop2",
+        "img": "/resources/themes/icons/stop2.png"
+    },
+    {
+        "style": "platform-stop3",
+        "img": "/resources/themes/icons/stop3.png"
+    },
+    {
+        "style": "platform-system",
+        "img": "/resources/themes/icons/system.png"
+    },
+    {
+        "style": "platform-table",
+        "img": "/resources/themes/icons/table.png"
+    },
+    {
+        "style": "platform-table2",
+        "img": "/resources/themes/icons/table2.png"
+    },
+    {
+        "style": "platform-tables",
+        "img": "/resources/themes/icons/tables.png"
+    },
+    {
+        "style": "platform-tables_relation",
+        "img": "/resources/themes/icons/tables_relation.png"
+    },
+    {
+        "style": "platform-table_edit",
+        "img": "/resources/themes/icons/table_edit.png"
+    },
+    {
+        "style": "platform-tag",
+        "img": "/resources/themes/icons/tag.png"
+    },
+    {
+        "style": "platform-task",
+        "img": "/resources/themes/icons/task.png"
+    },
+    {
+        "style": "platform-task1",
+        "img": "/resources/themes/icons/task1.png"
+    },
+    {
+        "style": "platform-task_finish",
+        "img": "/resources/themes/icons/task_finish.png"
+    },
+    {
+        "style": "platform-task_list",
+        "img": "/resources/themes/icons/task_list.png"
+    },
+    {
+        "style": "platform-terminal",
+        "img": "/resources/themes/icons/terminal.png"
+    },
+    {
+        "style": "platform-textfield",
+        "img": "/resources/themes/icons/textfield.png"
+    },
+    {
+        "style": "platform-text_cap",
+        "img": "/resources/themes/icons/text_cap.png"
+    },
+    {
+        "style": "platform-text_col",
+        "img": "/resources/themes/icons/text_col.png"
+    },
+    {
+        "style": "platform-text_list",
+        "img": "/resources/themes/icons/text_list.png"
+    },
+    {
+        "style": "platform-text_upper",
+        "img": "/resources/themes/icons/text_upper.png"
+    },
+    {
+        "style": "platform-theme",
+        "img": "/resources/themes/icons/theme.png"
+    },
+    {
+        "style": "platform-time",
+        "img": "/resources/themes/icons/time.png"
+    },
+    {
+        "style": "platform-timeline",
+        "img": "/resources/themes/icons/timeline.png"
+    },
+    {
+        "style": "platform-user1",
+        "img": "/resources/themes/icons/user1.png"
+    },
+    {
+        "style": "platform-user20",
+        "img": "/resources/themes/icons/user20.png"
+    },
+    {
+        "style": "platform-user3",
+        "img": "/resources/themes/icons/user3.png"
+    },
+    {
+        "style": "platform-user6",
+        "img": "/resources/themes/icons/user6.png"
+    },
+    {
+        "style": "platform-user8",
+        "img": "/resources/themes/icons/user8.png"
+    },
+    {
+        "style": "platform-vcard",
+        "img": "/resources/themes/icons/vcard.png"
+    },
+    {
+        "style": "platform-vector",
+        "img": "/resources/themes/icons/vector.png"
+    },
+    {
+        "style": "platform-wand",
+        "img": "/resources/themes/icons/wand.png"
+    },
+    {
+        "style": "platform-webcam",
+        "img": "/resources/themes/icons/webcam.png"
+    },
+    {
+        "style": "platform-zoom_in",
+        "img": "/resources/themes/icons/zoom_in.png"
+    },
+    {
+        "style": "platform-zoom_out",
+        "img": "/resources/themes/icons/zoom_out.png"
+    }
+    ,{
+    	"style": "icon-settings-large",
+        "img": "/resources/themes/icons/settings.png"
+    },{
+    	"style": "icon-hengshi-large",
+        "img": "/resources/themes/icons/logo_z.png"
+    }
+]

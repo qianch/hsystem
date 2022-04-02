@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="CutGroup">
+	<sql comment="组别管理列表" id="cutGroup-list">
+		<![CDATA[
+			select t.* from hs_siemens_cut_group t where 1=1
+				<#if key["groupName"]??>
+				 and groupName like :groupName
+				</#if>
+				<#if key["groupLeader"]??>
+				 and groupLeader like :groupLeader
+				</#if>
+				<#if key["groupType"]??>
+				 and groupType like :groupType
+				</#if>
+				<#if key["sort"]??&&key["order"]??>
+					order by ${key["sort"]} ${key["order"]}
+				</#if>
+		]]>
+	</sql>
+	<sql comment="裁剪车间人员列表" id="cut-workshop-users">
+		<![CDATA[
+			SELECT userName,userCode from platform_user where did in (select id from platform_department where name like '%裁剪%' )
+		]]>
+	</sql>
+</sqls>

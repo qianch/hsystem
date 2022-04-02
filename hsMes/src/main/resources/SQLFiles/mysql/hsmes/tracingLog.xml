@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="TracingLogDaoImpl">
+	<sql comment="追溯" id="tracingLog-list">
+		<![CDATA[
+		
+			
+SELECT * FROM hs_tracinglog t where 1=1 
+<#if key["logType"]??>
+			and t.logType=:logType
+		</#if>
+
+ and (t.rollBarcode = :barcode
+		or t.boxBarcode=  :barcode
+		or t.trayBarcode= :barcode
+		or t.partBarcode= :barcode) 
+			order by t.triggerDate
+		]]>
+	</sql>
+		<sql comment="根据订单号和产品ID查询销售订单和生产计划" id="tracingLog-list-sales">
+		<![CDATA[
+		
+			
+SELECT
+	*
+FROM
+	hs_tracinglog t
+WHERE
+	1 = 1
+
+AND t.salesCode = :salesCode
+AND t.productId = :productId
+AND (t.logType = 1 OR t.logType = 2)
+		order by t.triggerDate
+
+		]]>
+	</sql>
+	
+<sql comment="条码追溯" id="tracingLog-lists">
+<![CDATA[
+		SELECT
+			t.rollBarcode,
+			d.productProcessCode,
+			d.productProcessBomVersion,
+			d.productPackagingCode,
+			d.productPackageVersion,
+			d.factoryProductName,
+			d.deliveryTime,
+			c.CONSUMERNAME,
+			c.consumerSimpleName,
+			t.rollQualityGradeCode,
+			t.deviceCode,
+			t.rollOutputTime,
+			t.loginName,
+			fr.feedingDate,
+			u.userName,
+			fr.materialCode,
+			mss.materialModel,
+			ht.packagingTime,
+			(select username from platform_user where id= ht.packagingStaff) packagingStaff1
+		FROM
+			hs_totalstatistics t
+			LEFT JOIN hs_roll_barcode r ON t.rollBarcode = r.barcode 
+			LEFT JOIN hs_sales_order_detail d ON r.salesOrderDetailId = d.id
+			LEFT JOIN hs_sales_order so ON so.id = d.salesOrderId
+			LEFT JOIN hs_consumer c ON c.id = so.salesOrderConsumerId
+			LEFT JOIN hs_part_barcode pb ON pb.barcode = t.rollBarcode
+			LEFT JOIN hs_feeding_record fr ON fr.batchCode = t.rollBarcode
+			LEFT JOIN platform_user u ON u.id = fr.operateUserId
+			LEFT JOIN hs_material_stock_state mss ON mss.materialCode = fr.materialCode
+			LEFT JOIN hs_tray_box_roll tbr ON t.rollBarcode in (tbr.partBarcode,tbr.rollBarcode)
+			LEFT JOIN hs_tray ht ON ht.trayBarcode = tbr.trayBarcode
+			where 1=1 
+				and t.rollBarcode = :rollbarcode
+]]>
+	</sql>
+
+	<sql comment="追溯" id="tracingRollInfoByCode">
+		<![CDATA[
+					SELECT
+				c.CONSUMERNAME,
+				sod.factoryProductName,
+				sod.productModel,
+				rb.salesOrderCode,
+				rb.batchCode,
+				rb.isAbandon,
+				r.rollQualityGradeCode,
+				r.rollDeviceCode,
+				u.userName,
+				r.rollOutputTime,
+				r.rollWeight
+				FROM hs_roll r
+				LEFT JOIN hs_roll_barcode rb ON rb.barcode=r.rollBarcode
+				LEFT JOIN hs_sales_order_detail sod ON sod.id=rb.salesOrderDetailId
+				LEFT JOIN platform_user u ON u.id=r.rollUserId
+				LEFT JOIN hs_sales_order so ON so.id=sod.salesOrderId
+				LEFT JOIN hs_consumer c ON c.id=so.salesOrderConsumerId
+				WHERE r.rollBarcode =:code
+				UNION ALL
+				SELECT
+				c.CONSUMERNAME,
+				p.tcProcBomVersionPartsName factoryProductName
+				, NULL productModel,
+				rb.salesOrderCode,
+				rb.batchCode,
+				rb.isAbandon,
+				r.rollQualityGradeCode,
+				r.rollDeviceCode,
+				u.userName,
+				r.rollOutputTime,
+				r.rollWeight
+				FROM hs_roll r
+				LEFT JOIN hs_part_barcode rb ON rb.barcode=r.partBarcode
+				LEFT JOIN hs_tc_proc_bom_version_parts p ON p.id=rb.partId
+				LEFT JOIN platform_user u ON u.id=r.rollUserId
+				LEFT JOIN hs_sales_order so ON so.id=rb.salesOrderDetailId
+				LEFT JOIN hs_consumer c ON c.id=so.salesOrderConsumerId
+				WHERE r.partBarcode =:code
+				UNION ALL
+				SELECT
+				c.CONSUMERNAME,
+				sod.factoryProductName,
+				sod.productModel,
+				tb.salesOrderCode,
+				tb.batchCode,
+				NULL isAbandon,
+				t.rollQualityGradeCode,
+				NULL rollDeviceCode,
+				null userName,
+				NULL rollOutputTime,
+				null rollWeight
+				FROM hs_tray t
+				LEFT JOIN hs_tray_barcode tb ON tb.barcode=t.trayBarcode
+				LEFT JOIN hs_sales_order_detail sod ON sod.id=tb.salesOrderDetailId
+				LEFT JOIN hs_tc_proc_bom_version_parts p ON p.id=tb.partId
+				LEFT JOIN platform_user u ON u.id=t.packagingStaff
+				LEFT JOIN hs_sales_order so ON so.id=sod.salesOrderId
+				LEFT JOIN hs_consumer c ON c.id=so.salesOrderConsumerId
+				WHERE t.trayBarcode =:code
+		]]>
+	</sql>
+	<sql comment="追溯" id="tracingPackByCode">
+		<![CDATA[
+				SELECT u.userCode, u.userName, br.packagingTime
+				FROM hs_box_roll br
+				LEFT JOIN platform_user u ON br.packagingStaff = u.id
+				WHERE rollBarcode =:code
+				UNION ALL
+				SELECT u.userCode, u.userName, br.packagingTime
+				FROM hs_box_roll br
+				LEFT JOIN platform_user u ON br.packagingStaff = u.id
+				WHERE partBarcode =:code
+				UNION ALL
+				SELECT u.userCode, u.userName, tbr.packagingTime
+				FROM hs_tray_box_roll tbr
+				LEFT JOIN platform_user u ON tbr.packagingStaff = u.id
+				WHERE rollBarcode =:code
+				UNION ALL
+				SELECT u.userCode, u.userName, tbr.packagingTime
+				FROM hs_tray_box_roll tbr
+				LEFT JOIN platform_user u ON tbr.packagingStaff = u.id
+				WHERE partBarcode =:code
+				UNION ALL
+				SELECT u.userCode, u.userName, tbr.packagingTime
+				FROM hs_tray_box_roll tbr
+				LEFT JOIN platform_user u ON tbr.packagingStaff = u.id
+				WHERE trayBarcode =:code
+		]]>
+	</sql>
+
+	<sql comment="追溯" id="tracingDeliveryByCode">
+		<![CDATA[
+			SELECT
+		por.outTime,c.consumerName
+		FROM
+		hs_product_out_record por
+		LEFT JOIN hs_delivery_plan dp ON por.deliveryId = dp.id
+		LEFT JOIN hs_consumer c on c.id=dp.consumerId
+		WHERE
+		por.barCode IN (SELECT DISTINCT trayBarcode
+		FROM
+		hs_tray_box_roll
+		WHERE
+		boxBarcode = (SELECT boxBarcode FROM hs_box_roll WHERE rollBarcode =:code OR partBarcode = :code)
+			OR rollBarcode =:code
+			OR partBarcode =:code
+			OR trayBarcode =:code)
+		]]>
+	</sql>
+
+	<sql comment="追溯" id="tracingRkinfoByCode">
+		<![CDATA[
+			select t.* , a.username
+			from HS_Product_In_Record t
+			LEFT JOIN hs_product_stock_state pss ON pss.barCode = t.barcode
+			left join platform_user a on t.operateUserId = a.id
+			WHERE t.barcode=:code
+			AND pss.stockState = 1
+			ORDER BY t.inTime  LIMIT 1
+		]]>
+	</sql>
+
+
+</sqls>

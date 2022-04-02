@@ -1,0 +1,152 @@
+body{
+	font-family: "微软雅黑";
+	margin: 0;
+	padding:0;
+	font-size: 12px
+}
+ul,li{margin: 0;padding:0;list-style: none;}
+a{text-decoration: none;color:#136bc5;}
+.hide{
+	display:none; 
+}
+.show{
+	display:none; 
+}
+.fl{float: left;}
+.fr{float: right;}
+.clear{clear: both;}
+.top{
+	width: 100%;
+	background: url(../images/topbg.jpg) top left no-repeat;
+	height: 107px;
+	overflow: hidden;
+}
+.shousuo{
+	position: absolute;
+	bottom: 24px;
+	width: 100%;
+	height: 12px;
+	cursor: pointer;
+}
+.uparrow{
+	background: url(../images/uparrow.png) center center no-repeat;
+}
+.downarrow{
+	background: url(../images/downarrow.png) center center no-repeat;
+}
+.logo{
+	background: url(../images/logo.png) no-repeat;
+	width: 231px;
+	height: 57px;
+	margin:10px 20px;
+	float: left;
+}
+.topbtn{
+	float: right;
+	margin: 10px 10px 0 0;
+	color:#fff;
+}
+.top-info{
+	background: url(../images/s-topbg.jpg) repeat-x;
+	height: 30px;
+	width: 100%;
+	color:#fff;
+	line-height: 30px;
+}
+.exit-icon{
+	background: url(../images/exit-icon.png) no-repeat;
+	height: 17px;
+	padding-left: 20px;
+	margin: 7px 30px 0 5px;
+	line-height: 17px;
+	cursor: pointer;
+}
+.layout-panel-west .panel-header .panel-title{text-align: center;}
+.accordion .panel-icon{margin-left:37px;}
+.accordion .panel-with-icon{padding-left: 0}
+.accordion{text-align: center;} 
+#menu .list{padding:3px;overflow: auto;}
+#menu .list ul{line-height: 30px;}
+#menu .list ul li{margin-bottom: 1px; border-bottom: 1px dotted #dedede}
+#menu .list ul li a{display: block;height: 30px;color: #666}
+#menu .list ul li a:hover{background: #BBDCFF;border: 1px dotted #6697FF;height: 28px;line-height: 28px;color: #002777}
+#menu .list ul .on a{background: #BBDCFF;border: 1px dotted #6697FF;height: 28px;line-height: 28px;color: #002777}
+
+.member-R-left{
+	width: 605px;
+}
+.tablelist{
+	width: 100%;
+	border: 1px solid #ccc;
+	border-collapse:collapse;
+	border-spacing:0; 
+	background: #fff;
+}
+.tablelist th{
+	border: 1px solid #ccc;
+	color: #666
+}
+.tablelist td{
+	border: 1px solid #ccc;
+	height: 30px;
+}
+.inputS{border: 1px solid #DdD4D4;color:#666;}
+.member-R-right{
+	width:300px;
+	
+	margin-left:10px;
+	text-align: center;
+}
+.datagrid-row-selected{
+	background:#DAEAF1;
+	color:#333;
+}
+.tablelist .panel-header{
+	background: linear-gradient(to bottom, #ffffff 0px, #f2f2f2 100%) repeat-x;
+}
+.main-left{
+	width: 49%;
+	float: left;
+	height:265px;
+	border: 1px solid #AED0EA; 
+	border-top:0;
+}
+.main-left .panel-header{
+	border-left:0; 
+	border-right:0;
+	line-height: 20px;
+}
+.main-right{
+	width: 49%;
+	float: right;
+	height:265px;
+	border: 1px solid #AED0EA; 
+	border-top:0;
+}
+.main-right .panel-header{
+	border-left:0; 
+	border-right:0;
+	line-height: 20px;
+}
+.main-bottom{
+	width: 100%;
+	height:285px;
+	border: 1px solid #AED0EA; 
+	border-top:0;
+	margin-top:10px; 
+}
+.main-bottom .panel-header{
+	border-left:0; 
+	border-right:0;
+	line-height: 20px;
+}
+.main-infor{
+	margin: 20px;
+	line-height: 30px;
+	font-size: 14px;
+
+}
+.main-infor li{
+	height: 30px;
+	border-bottom:1px dotted #ccc; 
+}

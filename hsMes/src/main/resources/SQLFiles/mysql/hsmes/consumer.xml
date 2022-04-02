@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="ConsumerDaoImpl">
+	<sql comment="客户列表" id="consumer-list">
+		<![CDATA[
+		select * from  hs_consumer where isCancellation is null
+			<#if key["CONSUMERCODE"]??> and CONSUMERCODE like :CONSUMERCODE </#if>
+			<#if key["CONSUMERNAME"]??> and CONSUMERNAME like :CONSUMERNAME </#if>
+			<#if key["CONSUMERSIMPLENAME"]??> and CONSUMERSIMPLENAME like :CONSUMERSIMPLENAME </#if>
+			<#if key["CONSUMERGRADE"]??> and CONSUMERGRADE like :CONSUMERGRADE </#if>
+			<#if key["CONSUMERCONTACT"]??> and CONSUMERCONTACT like :CONSUMERCONTACT </#if>
+			<#if key["CONSUMERADDRESS"]??> and CONSUMERADDRESS like :CONSUMERADDRESS </#if>
+			<#if key["CONSUMERPHONE"]??> and CONSUMERPHONE like :CONSUMERPHONE </#if>
+			<#if key["CONSUMEREMAIL"]??> and CONSUMEREMAIL like :CONSUMEREMAIL </#if>
+			<#if key["CONSUMERCODEERP"]??> and CONSUMERCODEERP like :CONSUMERCODEERP </#if>
+			<#if key["CONSUMERMEMO"]??> and CONSUMERMEMO like :CONSUMERMEMO </#if>
+		<#if key["sort"]??&&key["order"]??>
+			order by ${key["sort"]} ${key["order"]}
+		</#if>
+		<#if !key["sort"]??&&!key["order"]??>
+			order by CONSUMERCODE desc 
+		</#if>
+		]]>
+	</sql>
+	<sql comment="删除客户信息" id="consumer-delete">
+		<![CDATA[
+			delete from hs_consumer where id in (:id)	
+		]]>
+	</sql>
+	<sql comment="作废客户信息" id="consumer-old">
+		<![CDATA[
+			update hs_consumer set isCancellation=1 where id in (:id)
+		]]>
+	</sql>
+
+</sqls>

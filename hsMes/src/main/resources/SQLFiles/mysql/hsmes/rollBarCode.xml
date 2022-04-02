@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="RollBarcodeDaoImpl">
+    <sql comment="查询卷内个性化条码最大值" id="findMaxRollBarCode">
+        <![CDATA[
+			select  max(customerBarCode) as maxCustomerBarCode,max(agentBarCode) as maxAgentBarCode from  hs_roll_barcode
+           where btwfileId=(:btwfileId)
+		]]>
+    </sql>
+
+    <sql comment="查询卷内个性化条码最大值" id="findMaxRollBarCodeCount">
+        <![CDATA[
+			 SELECT IFNULL(MAX(substring(barcode,LENGTH(barcode)-4, 5)),0) as BarCodeCount FROM hs_roll_barcode
+             where printDate>date_format(NOW(),'%Y-%m-%d') and LENGTH(barcode)>5
+		]]>
+    </sql>
+
+
+</sqls>

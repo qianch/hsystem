@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="ScheduleTemplateDaoImpl">
+	<sql comment="查询所有的任务调度模板" id="scheduleTmpelate-list">
+		<![CDATA[
+		select * from platform_schedule_template where 1=1 
+		<#if key["templateName"]??>
+			and templateName like :templateName
+		</#if>
+		<#if key["templateDesc"]??>
+			and templateDesc like :templateDesc
+		</#if>
+		<#if key["sort"]?? && key["order"]??>
+			 order by ${key["sort"]} ${key["order"]}
+		</#if>
+		<#if !key["sort"]?? && !key["order"]??>
+			 order by createTime desc
+		</#if>
+		]]>
+	</sql>
+</sqls>

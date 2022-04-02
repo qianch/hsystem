@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="ScheduleLogDaoImpl">
+	<sql comment="调度日志列表" id="scheduleLog-list">
+		<![CDATA[
+		select * from hs_schedule_log where 1=1 
+		<#if key["taskName"]??>
+			and taskName like :taskName
+		</#if>
+		<#if key["executeResult"]??>
+			and executeResult = :executeResult
+		</#if>
+		<#if key["startexecuteTime"]?? && key["endexecuteTime"]??>
+			and executeTime between :startexecuteTime and :endexecuteTime
+		</#if>
+		
+		<#if key["startexecuteTime"]?? && !key["endexecuteTime"]??>
+			and executeTime >:startexecuteTime
+		</#if>
+		
+		<#if !key["startexecuteTime"]?? && key["endexecuteTime"]??>
+			and executeTime <:endexecuteTime
+		</#if>
+			order by executeTime desc 
+		]]>
+	</sql>
+</sqls>

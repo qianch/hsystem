@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="MenuDaoImpl">
+	<sql comment="角色列表" id="role-list">
+		<![CDATA[
+		select * from platform_role where 1=1  
+		<#if key["name"]??>
+			and name like :name
+		</#if>
+		]]>
+	</sql>
+	<sql comment="删除角色" id="role-delete">
+		<![CDATA[
+			delete from platform_role where id=:id
+		]]>
+	</sql>
+	<sql comment="删除角色对应的权限" id="role-deletePermission">
+		<![CDATA[
+			delete from platform_permission where rid=:rid
+		]]>
+	</sql>
+	<sql comment="根据角色删除权限" id="role-deletePermissionByRole">
+		<![CDATA[
+			delete from platform_permission where rid in (:rid)
+		]]>
+	</sql>
+</sqls>

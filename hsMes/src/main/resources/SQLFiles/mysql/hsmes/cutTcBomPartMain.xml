@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="CutTcBomPartMainDaoImpl">
+    <sql comment="裁剪图纸bom主表" id="CutTcBomPartMainDao-list">
+        <![CDATA[
+		select partmain.* from hs_cut_tc_proc_bom_part_main  partmain
+
+		<#if key["start"]??&&key["end"]??>
+					 and partmain.createTime between :start and :end
+				</#if>
+				<#if key["start"]??&&!key["end"]??>
+					 and partmain.createTime > :start
+				</#if>
+				<#if !key["start"]??&&key["end"]??>
+					 and partmain.createTime < :end
+		</#if>
+
+		<#if key["sort"]??&&key["order"]??>
+			order by ${key["sort"]} ${key["order"]}
+		</#if>
+
+		<#if !key["sort"]??&&!key["order"]??>
+			order by createTime desc
+		</#if>
+
+		]]>
+    </sql>
+
+
+    <sql comment="根据裁剪bom主表id查询裁剪bom明细" id="findCutTcBomPartMainByTcBomMainId">
+        <![CDATA[
+          select *,(select packSequence from hs_cut_tc_proc_bom_part_detail as detail where detail.mainId=main.id order by packSequence desc limit 1  ) as packSequence from hs_cut_tc_proc_bom_part_main as main
+          where main.tcBomMainId=(:tcBomMainId)
+		]]>
+    </sql>
+
+    <sql comment="根据裁剪bom主表id查询裁剪bom明细" id="findCutTcBomPartDetailByMainId">
+        <![CDATA[
+          select * from hs_cut_tc_proc_bom_part_detail where mainId=(:mainId)
+		]]>
+    </sql>
+
+
+
+</sqls>

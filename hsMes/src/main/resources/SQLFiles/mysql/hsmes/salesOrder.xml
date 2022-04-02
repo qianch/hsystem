@@ -1,0 +1,530 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="SalesOrder">
+	<sql comment="销售订单列表" id="salesOrder-list">
+		<![CDATA[
+			select s.*,u.userName,c.CONSUMERNAME,c.consumerSimpleName from hs_sales_order s left join platform_user u on u.id=s.salesOrderBizUserId left join hs_consumer c on c.id=s.salesOrderConsumerId where 1=1 and s.salesOrderIsExport !=-1
+			<#if key["consumerSimpleName"]??>
+			 and c.consumerSimpleName like :consumerSimpleName
+			</#if>
+			<#if key["userName"]??>
+			 and u.userName like :userName
+			</#if>
+			<#if key["auditState"]??>
+			 and s.auditState=:auditState
+			</#if>
+			<#if key["isClosed"]??>
+			 and s.isClosed=:isClosed
+			</#if>
+			<#if key["orderCode"]??>
+			 and s.salesOrderCode like :orderCode
+			</#if>
+			<#if key["orderType"]??>
+			 and s.salesOrderType = :orderType
+			</#if>
+			<#if key["export"]??>
+			 and s.salesOrderIsExport = :export
+			</#if>
+			<#if key["salesOrderSubCode"]??>
+			 and s.id in (SELECT sod.salesOrderId FROM hs_sales_order_detail sod WHERE sod.salesOrderSubCode like :salesOrderSubCode) 
+			</#if>
+			<#if key["factoryProductName"]??>
+			 and s.id in (SELECT sod.salesOrderId FROM hs_sales_order_detail sod WHERE sod.factoryProductName like :factoryProductName) 
+			</#if>
+			
+			<#if key["consumerProductName"]??>
+			 and s.id in (SELECT sod.salesOrderId FROM hs_sales_order_detail sod WHERE sod.consumerProductName like :consumerProductName) 
+			</#if>
+			<#if key["productModel"]??>
+			 and s.id in (SELECT sod.salesOrderId FROM hs_sales_order_detail sod WHERE sod.productModel like :productModel) 
+			</#if>
+			
+			
+			<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+			</#if>
+			<#if !key["sort"]??&&!key["order"]??>
+				order by id desc
+			</#if>
+			
+		]]>
+	</sql>
+	
+	<sql comment="销售订单列表" id="salesOrder-list-peibu">
+		<![CDATA[
+			SELECT
+				s.*,
+				u.userName,
+				c.CONSUMERNAME,
+				ss.DELIVERYTIME
+			FROM
+				hs_sales_order s
+				LEFT JOIN platform_user u ON u.id = s.salesOrderBizUserId
+				LEFT JOIN hs_consumer c ON c.id = s.salesOrderConsumerId
+				LEFT JOIN hs_sales_order_detail ss ON s.id = ss.salesOrderId
+			WHERE
+				1 = 1
+			<#if key["consumerName"]??>
+			 and c.consumerName like :consumerName
+			</#if>
+			<#if key["userName"]??>
+			 and u.userName like :userName
+			</#if>
+			<#if key["auditState"]??>
+			 and s.auditState=:auditState
+			</#if>
+			<#if key["isClosed"]??>
+			 and s.isClosed=:isClosed
+			</#if>
+			<#if key["orderCode"]??>
+			 and s.salesOrderCode like :orderCode
+			</#if>
+			<#if key["orderType"]??>
+			 and s.salesOrderType = :orderType
+			</#if>
+			<#if key["export"]??>
+			 and s.salesOrderIsExport = :export
+			</#if>
+			<#if key["salesOrderSubCode"]??>
+			 and s.id in (SELECT sod.salesOrderId FROM hs_sales_order_detail sod WHERE sod.salesOrderSubCode like :salesOrderSubCode) 
+			</#if>
+			<#if key["factoryProductName"]??>
+			 and s.id in (SELECT sod.salesOrderId FROM hs_sales_order_detail sod WHERE sod.factoryProductName like :factoryProductName) 
+			</#if>
+			<#if key["productBatchCode"]??>
+			 and s.id in (SELECT sod.salesOrderId FROM hs_sales_order_detail sod WHERE sod.productBatchCode like :productBatchCode) 
+			</#if>
+			<#if key["consumerProductName"]??>
+			 and s.id in (SELECT sod.salesOrderId FROM hs_sales_order_detail sod WHERE sod.consumerProductName like :consumerProductName) 
+			</#if>
+			<#if key["productModel"]??>
+			 and s.id in (SELECT sod.salesOrderId FROM hs_sales_order_detail sod WHERE sod.productModel like :productModel) 
+			</#if>
+			GROUP BY s.id
+			
+			<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+			</#if>
+			<#if !key["sort"]??&&!key["order"]??>
+				order by id desc
+			</#if>
+			
+		]]>
+	</sql>
+	<sql comment="销售订单列表" id="salesOrder-list2">
+		<![CDATA[
+			SELECT
+				s.*, u.userName,
+				c.CONSUMERNAME,
+				d.*
+			FROM
+				hs_sales_order s
+			LEFT JOIN platform_user u ON u.id = s.salesOrderBizUserId
+			LEFT JOIN hs_consumer c ON c.id = s.salesOrderConsumerId
+			LEFT JOIN hs_sales_order_detail d on s.id=d.salesOrderId
+			WHERE
+				1 = 1
+			<#if key["consumerName"]??>
+			 and c.consumerName like :consumerName
+			</#if>
+			<#if key["userName"]??>
+			 and u.userName like :userName
+			</#if>
+			<#if key["auditState"]??>
+			 and s.auditState=:auditState
+			</#if>
+			<#if key["isClosed"]??>
+			 and s.isClosed=:isClosed
+			</#if>
+			<#if key["orderCode"]??>
+			 and s.salesOrderCode like :orderCode
+			</#if>
+			<#if key["orderType"]??>
+			 and s.salesOrderType = :orderType
+			</#if>
+			<#if key["export"]??>
+			 and s.salesOrderIsExport = :export
+			</#if>
+			<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+			</#if>
+			<#if !key["sort"]??&&!key["order"]??>
+				order by id desc
+			</#if>
+		]]>
+	</sql>
+	<sql comment="根据code获取销售订单详细列表" id="salesOrder-list-code">
+		<![CDATA[
+			select b.*,
+			(
+				SELECT
+					count(1)
+				FROM
+					hs_roll r LEFT JOIN hs_roll_barcode rb on r.rollBarcode=rb.barcode
+				WHERE
+					rb.salesOrderDetailId = b.id and r.rollQualityGradeCode='A' and rb.isAbandon=0 and r.state<>3
+			) AS rc,
+			(
+				SELECT
+					count(1)
+				FROM
+					hs_tray t LEFT JOIN hs_tray_barcode tb on t.trayBarcode=tb.barcode
+				WHERE
+					tb.salesOrderDetailId = b.id and t.rollQualityGradeCode='A' and tb.isOpened=0
+			) AS tc
+			 from hs_sales_order a,hs_sales_order_detail b
+			where 1=1 
+			and a.id=b.salesOrderId 
+			<#if key["orderCode"]??>
+			 and (a.salesOrderCode ='${key["orderCode"]}')
+			</#if>
+			<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+			</#if>
+			<#if !key["sort"]??&&!key["order"]??>
+				order by id desc
+			</#if>
+		]]>
+	</sql>
+	<sql comment="查询未创建计划的订单" id="salesOrder-unCreatePlans">
+		<![CDATA[
+			From SalesOrder where auditState=2 and ( isClosed=0 or isClosed is null ) and (hasCreatedPlans=0 or hasCreatedPlans is null)
+		]]>
+	</sql>
+	<sql comment="查询最大的订单序号" id="salesOrder-serial">
+		<![CDATA[
+			From SalesOrder where salesOrderCode like :code order by id desc
+		]]>
+	</sql>
+	<sql comment="复制查询最大的订单序号" id="salesOrder-code">
+		<![CDATA[
+			From SalesOrder where salesOrderCode like :code  order by id desc
+		]]>
+	</sql>
+	
+	<sql comment="更新完成状态" id="updateFinish-list">
+		<![CDATA[
+			update hs_sales_order set isComplete =1 where id =(:id)
+		]]>
+	</sql>
+	
+	<sql comment="根据订单明细ID查询各个部件的生产数量" id="order-part-count">
+		<![CDATA[
+			SELECT
+					count(1) count,b.partName
+				FROM
+					hs_roll r
+				LEFT JOIN hs_part_barcode b ON r.partBarcode = b.barcode
+				WHERE b.salesOrderDetailId=:id
+				group by b.partName
+			UNION ALL
+				SELECT
+						count(1) count,tb.partName
+					FROM
+						hs_tray t
+					LEFT JOIN hs_tray_barcode tb ON t.trayBarcode=tb.barcode
+					LEFT JOIN hs_tc_proc_bom_version_parts p on p.id=tb.partId
+					WHERE tb.salesOrderDetailId=:id
+					and p.tcProcBomVersionPartsType='成品胚布'
+					group by tb.partId
+		]]>
+	</sql>
+	
+	<sql comment="根据订单ID获取卷数和托数" id="count-order-rolls-trays">
+		<![CDATA[
+			SELECT
+			(
+				SELECT
+					count(1)
+				FROM
+					hs_roll r
+				LEFT JOIN hs_roll_barcode rb ON r.rollBarcode = rb.barcode
+				WHERE
+					rb.salesOrderDetailId = :id
+				AND r.rollQualityGradeCode = 'A'
+				AND rb.isAbandon = 0
+				AND r.state <> 3
+			) rc,
+			(
+				SELECT
+					count(1)
+				FROM
+					hs_tray t
+				LEFT JOIN hs_tray_barcode tb ON t.trayBarcode = tb.barcode
+				WHERE
+					tb.salesOrderDetailId = :id
+				AND t.rollQualityGradeCode = 'A'
+				AND tb.isOpened = 0
+			) tc
+		]]>
+	</sql>
+	<sql comment="销售出库明细" id="salesOrderOut">
+		<![CDATA[
+		
+		select DISTINCT t.*,
+		u.userName AS OPERATEUSERNAME,
+		t1.CONSUMERNAME,
+		t1.batchCode,
+		t1.salesOrderCode,
+		p.deliveryCode AS deviceCode,
+		tp.tcProcBomVersionPartsName,
+		SUM(t1.productWeight)  AS rollWeight,
+		COUNT(*) AS count
+		from HS_Product_Out_Record t
+		left join platform_user u on u.id=t.operateUserId
+		left join hs_TotalStatistics t1 on t1.rollBarcode = t.barCode
+		left join hs_warehouse t2 on t2.WAREHOUSECODE=t.warehouseCode
+		LEFT JOIN hs_product_out_order p ON p.packingNumber = t.packingNumber
+		LEFT JOIN hs_tray_barcode tb ON tb.barcode = t.barCode
+		LEFT JOIN HS_TC_PROC_BOM_VERSION_PARTS tp ON tb.partId = tp.id
+		where 1=1
+		<#if key["salesOrdercode"]??>
+		 and t1.salesOrdercode like :salesOrdercode
+		</#if>
+		<#if key["tcprocBomversionpartsName"]??>
+		 and tp.tcprocBomversionpartsName like :tcprocBomversionpartsName
+		</#if>
+		<#if key["productConsumerName"]??>
+		 and t.productConsumerName like :productConsumerName
+		</#if>
+		<#if key["batchCode"]??>
+		 and t1.batchCode like :batchCode
+		</#if>
+		<#if key["productFactoryName"]??>
+		 and t.productFactoryName like :productFactoryName
+		</#if>
+		<#if key["productModel"]??>
+		 and t.productModel like :productModel
+		</#if>
+		<#if key["operateuserName"]??>
+		 and u.userName like :operateuserName
+		</#if>
+		<#if key["start"]??&&key["end"]??>
+			and t.outTime between :start and :end
+		</#if>
+		<#if key["start"]??&&!key["end"]??>
+			and t.outTime > :start
+		</#if>
+		<#if !key["start"]??&&key["end"]??>
+			and t.outTime < :end
+		</#if>
+		GROUP BY
+		p.deliveryCode,t.productModel,t1.batchCode,t1.salesOrderCode
+		<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+			</#if>
+		<#if !key["sort"]??&&!key["order"]??>
+			order by t.outTime desc
+		</#if>
+		]]>
+	</sql>
+	<sql comment="销售下单数量统计" id="salesQuantity">
+		<![CDATA[
+		SELECT
+		s.*, sum(s.totalWeight) AS tWeight,
+			(
+			SELECT
+				sum(r.rollWeight)
+			FROM
+				hs_roll r
+			LEFT JOIN hs_roll_barcode rb ON r.rollBarcode = rb.barcode
+			WHERE
+						rb.salesOrderDetailId = s.id
+					AND r.rollQualityGradeCode = 'A'
+					AND rb.isAbandon = 0
+					AND r.state <> 3
+			) as RW,
+			(
+				SELECT
+					sum(r.rollWeight)
+				FROM
+					hs_roll r
+				LEFT JOIN hs_roll_barcode rb ON r.rollBarcode = rb.barcode
+				LEFT JOIN hs_totalstatistics t ON t.rollBarcode = r.rollBarcode
+				WHERE
+					rb.salesOrderDetailId = s.id
+				AND r.rollQualityGradeCode = 'A'
+				AND rb.isAbandon = 0
+				AND r.state <> 3
+				AND t.state = - 1
+			) AS WRW,
+			(
+				SELECT
+					sum(ts.tcProcBomVersionPartsWeight)
+				FROM
+					hs_roll r
+				LEFT JOIN	hs_part_barcode p ON r.partBarcode = p.barcode
+				LEFT JOIN hs_tc_proc_bom_version_parts ts ON p.partId = ts.id
+				where 
+					p.salesOrderDetailId = s.id
+				AND r.rollQualityGradeCode = 'A'
+				AND r.state <> 3
+				AND p.isAbandon = 0
+			)as PW,
+			(
+				SELECT
+					sum(
+						ts.tcProcBomVersionPartsWeight
+					)
+				FROM
+					hs_roll r
+				LEFT JOIN hs_part_barcode p ON r.partBarcode = p.barcode
+				LEFT JOIN hs_tc_proc_bom_version_parts ts ON p.partId = ts.id
+				LEFT JOIN hs_totalstatistics t ON t.rollBarcode = r.partBarcode
+				WHERE
+					p.salesOrderDetailId = s.id
+				AND r.rollQualityGradeCode = 'A'
+				AND r.state <> 3
+				AND p.isAbandon = 0	
+				AND t.state = -1
+			) AS WPW,
+		c.consumerName,
+		ss.salesOrderDate 
+		FROM
+			hs_sales_order_detail s
+		
+		LEFT JOIN hs_sales_order ss ON ss.id = s.salesOrderId
+		LEFT JOIN hs_consumer c ON c.id = ss.salesOrderConsumerId
+		WHERE
+			1 = 1
+		AND (s.closed = 0 OR s.closed IS NULL)
+		<#if key["factoryProductName"]??>
+		 and s.factoryProductName like :factoryProductName
+		</#if>
+		<#if key["consumerProductName"]??>
+		 and s.consumerProductName like :consumerProductName
+		</#if>
+		<#if key["consumerName"]??>
+		 and c.consumerName like :consumerName
+		</#if>
+		<#if key["start"]??&&key["end"]??>
+			and ss.salesOrderDate between :start and :end
+		</#if>
+		<#if key["start"]??&&!key["end"]??>
+			and ss.salesOrderDate > :start
+		</#if>
+		<#if !key["start"]??&&key["end"]??>
+			and ss.salesOrderDate < :end
+		</#if>
+		
+		<#if key["start2"]??&&key["end2"]??>
+			and s.deliveryTime between :start2 and :end2
+		</#if>
+		<#if key["start2"]??&&!key["end2"]??>
+			and s.deliveryTime > :start2
+		</#if>
+		<#if !key["start2"]??&&key["end2"]??>
+			and s.deliveryTime < :end2
+		</#if> 
+		GROUP BY
+			s.productId
+		<#if key["sort"]??&&key["order"]??>
+			order by ${key["sort"]} ${key["order"]}
+		</#if>
+		<#if !key["sort"]??&&!key["order"]??>
+			ORDER BY
+			s.productId DESC
+		</#if>
+		]]>
+	</sql>
+	<!-- LEFT JOIN hs_roll_barcode rb ON rb.salesOrderDetailId = s.id
+		LEFT JOIN hs_roll r ON r.rollBarcode = rb.barcode -->
+	
+	<sql comment="月度订单产品汇总" id="summaryMonthly">
+		<![CDATA[
+           SELECT
+				b.*,
+				p.createTime
+				
+			FROM
+				hs_produce_plan_detail b
+			LEFT JOIN hs_finishproduct finp ON finp.id = b.productId
+			LEFT JOIN hs_produce_plan p ON p.id = b.producePlanId
+			LEFT JOIN hs_sales_order_detail s ON s.id = b.fromSalesOrderDetailId
+			LEFT JOIN hs_sales_order so ON so.id = s.salesOrderId
+			WHERE
+				1 = 1
+			<#if key["consumerName"]??>
+				 and b.consumerName like :consumerName
+			</#if>
+			<#if key["consumerProductName"]??>
+				 and b.consumerProductName like :consumerProductName
+			</#if>
+			<#if key["factoryProductName"]??>
+				 and b.factoryProductName like :factoryProductName
+			</#if>
+			
+			<#if key["start"]??>
+				 and p.createTime >= :start
+			</#if>
+			<#if key["end"]??>
+				 and p.createTime <= :end
+			</#if>
+			<#if key["outstart"]??>
+				 and b.deleveryDate >= :outstart
+			</#if>
+			<#if key["outend"]??>
+				 and b.deleveryDate <= :outend
+			</#if>
+			<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+			</#if>
+			<#if !key["sort"]??&&!key["order"]??>
+				order by createTime desc
+			</#if>
+        ]]>
+		
+	</sql>
+
+	<sql comment="根据订单明细ID查询各个部件的生产数量" id="salesOrder-list-mirror">
+		<![CDATA[
+			SELECT so.salesOrderCode FROM hs_finishproduct_mirror fm
+			LEFT JOIN hs_sales_order so ON so.id = fm.salesOrderId
+			GROUP BY fm.salesOrderId
+		]]>
+	</sql>
+
+
+	<sql comment="根据订单号查询" id="salesOrderMirror-list">
+		<![CDATA[
+		    SELECT so.id,so.salesOrderCode FROM hs_sales_order so
+		    where 1=1
+			<#if key["data"]!="">
+			and so.salesOrderCode like "%${key["data"]}%"
+			</#if>
+		]]>
+	</sql>
+
+	<sql comment="详情订单列表" id="findD-list">
+		<![CDATA[
+		select * from  hs_sales_order_detail where salesOrderId in (:id)
+		]]>
+	</sql>
+
+	<sql comment="非套材bom镜像" id="findFBom-list">
+		<![CDATA[
+		select * from  HS_FTC_PROC_BOM_MIRROR where id in (:id)
+		]]>
+	</sql>
+
+	<sql comment="套材bom镜像" id="findTBom-list">
+		<![CDATA[
+		select * from  HS_TC_PROC_BOM_MIRROR where id in (:id)
+		]]>
+	</sql>
+
+
+
+	<sql comment="镜像版本列表" id="findTV-list">
+		<![CDATA[
+		select * from  HS_TC_PROC_BOM_VERSION_MIRROR where tcProcBomId in (:id) order by TCPROCBOMVERSIONCODE
+		]]>
+	</sql>
+
+	<sql comment="镜像版本列表" id="findFV-list">
+		<![CDATA[
+		select * from  HS_FTC_PROC_BOM_VERSION_MIRROR where ftcProcBomId in (:id) order by FTCPROCBOMVERSIONCODE
+		]]>
+	</sql>
+	
+</sqls>

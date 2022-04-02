@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="QmsAndMesDaoImpl">
+
+	<sql comment="通过批次号查询卷条码和部件条码" id="find-RollandPart">
+		<![CDATA[
+				SELECT
+					tb.barcode,
+					c.CONSUMERCODE,
+					c.CONSUMERNAME,
+					sod.consumerProductName,
+					sod.productProcessCode,
+					sod.salesOrderSubCode,
+					u.userName AS operator,
+					pd.name AS department,
+					dp.deliveryCode,
+					dp.deliveryDate,
+					sod.productModel,
+					dpd.deliveryCount,
+					f.materielCode,
+					t.weight,
+					bvp.tcProcBomVersionPartsName as partName,
+					''embryoClothName
+				FROM hs_delivery_plan_details dpd
+				LEFT JOIN hs_delivery_plan dp ON dp.id = dpd.deliveryId
+				LEFT JOIN hs_sales_order_detail sod ON sod.id = dpd.salesOrderDetailId
+				LEFT join hs_tray_barcode tb on tb.salesOrderDetailId = sod.id
+				RIGHT JOIN hs_tray t ON t.trayBarcode = tb.barcode
+				LEFT JOIN hs_consumer c ON c.id = dp.consumerId
+				LEFT JOIN platform_user u ON u.id = t.packagingStaff
+				LEFT JOIN platform_department pd ON pd.id = u.did
+				LEFT JOIN hs_finishproduct f ON f.id = tb.salesProductId
+				LEFT JOIN hs_tc_proc_bom_version_parts bvp on bvp.id = tb.partId
+				LEFT JOIN hs_tc_proc_bom_version_parts_finished_weight_embryo_cloth pbvp ON pbvp.tcProcBomPartsId = tb.partId
+				WHERE 1=1
+				<#if key["batchCode"]??>
+					AND dpd.batchcode =:batchCode
+				</#if>
+				<#if key["deliveryCode"]??>
+					AND dp.deliveryCode =:deliveryCode
+				</#if>
+				GROUP BY t.trayBarcode
+
+				UNION
+
+				SELECT
+					p.barcode,
+					c.CONSUMERCODE,
+					c.CONSUMERNAME,
+					sod.consumerProductName,
+					sod.productProcessCode,
+					sod.salesOrderSubCode,
+					u.userName AS operator,
+					pd.name AS department,
+					dp.deliveryCode,
+					dp.deliveryDate,
+					sod.productModel,
+					dpd.deliveryCount,
+					f.materielCode,
+					hr.rollWeight,
+					bvp.tcProcBomVersionPartsName as partName,
+				    GROUP_CONCAT(distinct pbvp.embryoClothName) embryoClothName
+				FROM hs_delivery_plan_details dpd
+				LEFT JOIN hs_delivery_plan dp ON dp.id = dpd.deliveryId
+				LEFT JOIN hs_sales_order_detail sod ON sod.id = dpd.salesOrderDetailId
+				LEFT JOIN hs_part_barcode p on p.salesOrderDetailId = sod.id
+				RIGHT JOIN hs_roll hr ON hr.partBarcode = p.barcode
+				LEFT JOIN hs_consumer c ON c.id = dp.consumerId
+				LEFT JOIN platform_user u ON u.id = hr.rollUserId
+				LEFT JOIN platform_department pd ON pd.id = u.did
+				LEFT JOIN hs_finishproduct f ON f.id = p.salesProductId
+				LEFT JOIN hs_tc_proc_bom_version_parts bvp on bvp.id = p.partId
+				LEFT JOIN hs_tc_proc_bom_version_parts_finished_weight_embryo_cloth pbvp ON pbvp.tcProcBomPartsId = p.partId
+				WHERE 1=1
+				<#if key["batchCode"]??>
+					AND dpd.batchcode =:batchCode
+				</#if>
+				<#if key["deliveryCode"]??>
+					AND dp.deliveryCode =:deliveryCode
+				</#if>
+				GROUP BY p.barcode
+		]]>
+	</sql>
+
+	<sql comment="非套材工艺镜像信息" id="select-procBomInfo">
+		<![CDATA[
+			SELECT
+				pb.ftcProcBomCode,
+				pbd.ftcBomDetailModel,
+				pbd.ftcBomDetailName,
+				pbd.ftcBomDetailWeightPerSquareMetre
+			FROM hs_ftc_proc_bom_mirror pb
+			LEFT JOIN hs_ftc_proc_bom_version_mirror pbv ON pbv.ftcProcBomId = pb.id
+			LEFT JOIN hs_ftc_proc_bom_detail_mirror pbd ON pbd.ftcBomVersionId = pbv.id
+			WHERE 1=1
+			<#if key["procBomCode"]??>
+					AND pb.ftcProcBomCode =:procBomCode
+			</#if>
+			<#if key["salesOrderId"]??>
+					AND pb.salesOrderId =:salesOrderId
+			</#if>
+			GROUP BY pb.ftcProcBomCode,pbd.ftcBomDetailModel,pbd.ftcBomDetailName,pbd.ftcBomDetailWeightPerSquareMetre
+		]]>
+	</sql>
+
+	<sql comment="非套材工艺信息" id="select-procBomInfo1">
+		<![CDATA[
+			SELECT
+				pb.ftcProcBomCode,
+				pbd.ftcBomDetailModel,
+				pbd.ftcBomDetailName,
+				pbd.ftcBomDetailWeightPerSquareMetre
+			FROM hs_ftc_proc_bom pb
+			LEFT JOIN hs_ftc_proc_bom_version pbv ON pbv.ftcProcBomId = pb.id
+			LEFT JOIN hs_ftc_proc_bom_detail pbd ON pbd.ftcBomVersionId = pbv.id
+			WHERE 1=1
+			<#if key["procBomCode"]??>
+					AND pb.ftcProcBomCode =:procBomCode
+			</#if>
+		]]>
+	</sql>
+
+	<sql comment="发货单接口信息" id="select-outOrder">
+		<![CDATA[
+			SELECT ft.consumerProductName,ft.productModel,ft.materielCode,sod.salesOrderSubCode,
+			sod.salesOrderSubCodePrint,s.batchCode,s.partName,ft.productShelfLife,
+			dp.deliveryDate,ft.productRollLength,dp.customerBatchCode,dp.poNo,dp.tariffCode,dp.customsCode,dp.shippingMark,
+			(select  GROUP_CONCAT(barCode) from  HS_Product_Out_Record as outorder where  outorder.deliveryId=p.deliveryId and outorder.packingNumber=s.packingNumber
+			and outorder.barcode in (select  barCode from  hs_product_stock_state  where stockState=-1)
+			and outorder.barcode in ( select barcode from hs_tray_barCode  as tb where tb.salesOrderDetailId=s.salesOrderDetailId  and IFNULL(tb.partId, 0) =IFNULL(s.partId, 0)  and tb.batchCode=s.batchCode
+		    union select barcode from hs_part_barCode  as pb where pb.salesOrderDetailId=s.salesOrderDetailId and IFNULL(pb.partId, 0) =IFNULL(s.partId, 0) and pb.batchCode=s.batchCode)) as barCodes
+		    ,s.partID,sod.salesOrderId,s.customerMaterialCodeOfFP,sod.id as salesOrderDetailId,dp.deliveryTargetCompany,ft.productIsTc,ft.productProcessName as productProcessNameFTC,
+		    ft.productProcessCode,ft.productProcessBomVersion
+			from HS_Product_Out_Order  as p
+			left join hs_delivery_plan dp on dp.id=p.deliveryId
+			left join hs_delivery_plan_details s on dp.id=s.deliveryId
+			left join hs_finishproduct ft on ft.id=s.productId
+			LEFT JOIN hs_sales_order_detail sod ON sod.id=s.salesOrderDetailId
+			WHERE  dp.deliveryCode =:deliveryCode and s.batchCode =:batchCode
+		]]>
+	</sql>
+
+
+	<sql comment="发货单接口信息镜像" id="select-outOrderMirror">
+		<![CDATA[
+			SELECT ft.consumerProductName,ft.productModel,ft.materielCode,sod.salesOrderSubCode,
+			sod.salesOrderSubCodePrint,s.batchCode,s.partName,ft.productShelfLife,
+			dp.deliveryDate,ft.productRollLength,dp.customerBatchCode,dp.poNo,dp.tariffCode,dp.customsCode,dp.shippingMark,
+			(select  GROUP_CONCAT(barCode) from  HS_Product_Out_Record as outorder where  outorder.deliveryId=p.deliveryId and outorder.packingNumber=s.packingNumber
+			and outorder.barcode in (select  barCode from  hs_product_stock_state  where stockState=-1)
+			and outorder.barcode in ( select barcode from hs_tray_barCode  as tb where tb.salesOrderDetailId=s.salesOrderDetailId  and IFNULL(tb.partId, 0) =IFNULL(s.partId, 0)  and tb.batchCode=s.batchCode
+		    union select barcode from hs_part_barCode  as pb where pb.salesOrderDetailId=s.salesOrderDetailId and IFNULL(pb.partId, 0) =IFNULL(s.partId, 0) and pb.batchCode=s.batchCode)) as barCodes
+		    ,s.partID,sod.salesOrderId,s.customerMaterialCodeOfFP,
+		    sod.id as salesOrderDetailId,dp.deliveryTargetCompany,ft.productIsTc,ft.productProcessName as productProcessNameFTC,
+		    ft.productProcessCode,ft.productProcessBomVersion
+			from HS_Product_Out_Order  as p
+			left join hs_delivery_plan dp on dp.id=p.deliveryId
+			left join hs_delivery_plan_details s on dp.id=s.deliveryId
+			LEFT JOIN hs_sales_order_detail sod ON sod.id=s.salesOrderDetailId
+			left join hs_finishproduct_mirror ft on ft.id=sod.mirrorProductId
+			left join hs_finishproduct nft on nft.id=s.productId
+			WHERE  dp.deliveryCode =:deliveryCode and s.batchCode =:batchCode
+		]]>
+	</sql>
+
+	<sql comment="发货单接口信息无发货记录" id="select-outOrder-ByDeliveryPlan">
+		<![CDATA[
+		SELECT
+			ft.consumerProductName,
+			ft.productModel,
+			ft.materielCode,
+			sod.salesOrderSubCode,
+			sod.salesOrderSubCodePrint,
+			s.batchCode,
+			s.partName,
+			ft.productShelfLife,
+			dp.deliveryDate,
+			ft.productRollLength,
+			dp.customerBatchCode,
+			dp.poNo,
+			dp.tariffCode,
+			dp.customsCode,
+			dp.shippingMark,
+			s.partID,
+			s.deliveryCount,
+			s.deliverySuitCount,
+			s.memo
+			,sod.salesOrderId
+			,s.customerMaterialCodeOfFP
+			,sod.id as salesOrderDetailId
+			,dp.deliveryTargetCompany,
+			ft.productIsTc,ft.productProcessName as productProcessNameFTC,
+			ft.productProcessCode,ft.productProcessBomVersion
+		FROM
+			hs_delivery_plan dp
+			LEFT JOIN hs_delivery_plan_details s ON dp.id = s.deliveryId
+			LEFT JOIN hs_finishproduct ft ON ft.id = s.productId
+			LEFT JOIN hs_sales_order_detail sod ON sod.id = s.salesOrderDetailId
+			WHERE  dp.deliveryCode =:deliveryCode and s.batchCode =:batchCode
+		]]>
+	</sql>
+	<sql comment="发货单接口信息无发货记录镜像版" id="select-outOrder-ByDeliveryPlanMirror">
+		<![CDATA[
+		SELECT
+			ft.consumerProductName,
+			ft.productModel,
+			ft.materielCode,
+			sod.salesOrderSubCode,
+			sod.salesOrderSubCodePrint,
+			s.batchCode,
+			s.partName,
+			ft.productShelfLife,
+			dp.deliveryDate,
+			ft.productRollLength,
+			dp.customerBatchCode,
+			dp.poNo,
+			dp.tariffCode,
+			dp.customsCode,
+			dp.shippingMark,
+			s.partID,
+			s.deliveryCount,
+			s.deliverySuitCount,
+			s.memo
+			,sod.salesOrderId
+			,s.customerMaterialCodeOfFP
+			,sod.id as salesOrderDetailId
+			,dp.deliveryTargetCompany,
+			ft.productIsTc,ft.productProcessName as productProcessNameFTC,
+			ft.productProcessCode,ft.productProcessBomVersion
+		FROM
+			hs_delivery_plan dp
+			LEFT JOIN hs_delivery_plan_details s ON dp.id = s.deliveryId
+			left join hs_finishproduct nft on nft.id=s.productId
+			LEFT JOIN hs_sales_order_detail sod ON sod.id = s.salesOrderDetailId
+			left join hs_finishproduct_mirror ft on ft.id=sod.mirrorProductId
+			WHERE  dp.deliveryCode =:deliveryCode and s.batchCode =:batchCode
+		]]>
+	</sql>
+</sqls>

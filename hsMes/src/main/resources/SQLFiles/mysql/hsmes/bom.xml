@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="BomDaoImpl">
+	<sql comment="包材BOM明细" id="bc-bom-details">
+		<![CDATA[
+			select * from hs_bc_bom_version_detail d where d.packVersionId = (select v.id from hs_bc_bom_version v where v.packVersion=:version and v.packBomId=(select b.id from hs_bc_bom b where b.packBomCode=:code ) )	
+		]]>
+	</sql>
+	<sql comment="非套材BOM明细" id="ftc-bom-details">
+		<![CDATA[
+			select * from hs_ftc_proc_bom_detail d where d.ftcBomVersionId=(select id from hs_ftc_proc_bom_version v where v.ftcProcBomVersionCode=:version and v.ftcProcBomId=(select id from hs_ftc_proc_bom b where b.ftcProcBomCode=:code))
+		]]>
+	</sql>
+	<sql comment="套材BOM明细" id="tc-bom-details">
+		<![CDATA[
+			select * from hs_tc_proc_bom_version_parts_detail d where d.TCPROCBOMPARTSID in (select id from hs_tc_proc_bom_version_parts p where p.tcProcBomVersoinId=(select id from hs_tc_proc_bom_version v where v.TCPROCBOMVERSIONCODE=:version and v.TCPROCBOMID=(select id from hs_tc_proc_bom b  where b.tcProcBomCode=:code)))	
+		]]>
+	</sql>
+
+	<sql comment="订单号" id="salesOrderD-list2">
+		<![CDATA[
+			SELECT salesOrderId FROM hs_sales_order_detail
+			WHERE 1=1
+			and procBomId =:procBomId
+			and productIsTc in(:productIsTc)
+			group by salesOrderId
+		]]>
+	</sql>
+
+	<sql comment="订单号" id="salesOrderD-list3">
+		<![CDATA[
+			SELECT salesOrderId FROM hs_sales_order_detail
+			WHERE packBomId =:packBomId
+			group by salesOrderId
+		]]>
+	</sql>
+
+
+</sqls>

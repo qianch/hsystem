@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="AppVersion">
+	<sql comment="PDA终端版本列表" id="appVersion-list">
+		<![CDATA[
+			select t.* from hs_app_version t where 1=1
+			<#if key["version"]??>
+			 	and t.version like :version
+			</#if>
+			<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+				<#else>
+				order by t.version desc
+			</#if>
+		]]>
+	</sql>
+	<sql comment="设置其他的为非最新版本" id="appVersion-toOld">
+		<![CDATA[
+			update hs_app_version set isLatest=0 where 1=1
+		]]>
+	</sql>
+</sqls>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="ProductStockTranDaoImpl">
+
+    <sql comment="成品出库单记录" id="ProductStockTranDao-list">
+
+    </sql>
+
+</sqls>

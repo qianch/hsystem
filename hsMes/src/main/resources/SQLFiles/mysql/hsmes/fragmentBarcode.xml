@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="FragmentBarcode">
+	<sql comment="裁片条码列表" id="fragmentBarcode-list">
+		<![CDATA[
+			select t.* from hs_siemens_fragment_barcode t where 1=1
+			<#if key["CTCODE"]??> and CTCODE like :CTCODE</#if>
+			<#if key["CTOCODE"]??> and CTOCODE like :CTOCODE</#if>
+			<#if key["ORDERCODE"]??> and ORDERCODE like :ORDERCODE</#if>
+			<#if key["BATCHCODE"]??> and BATCHCODE like :BATCHCODE</#if>
+			<#if key["CONSUMERNAME"]??> and CONSUMERNAME like :CONSUMERNAME</#if>
+			<#if key["CONSUMERCATEGORY"]??> and CONSUMERCATEGORY like :CONSUMERCATEGORY</#if>
+			<#if key["PARTNAME"]??> and PARTNAME like :PARTNAME</#if>
+			<#if key["FRAGMENTNAME"]??> and FRAGMENTNAME like :FRAGMENTNAME</#if>
+			<#if key["GROUPNAME"]??> and GROUPNAME like :GROUPNAME</#if>
+			<#if key["GROUPLEADER"]??> and GROUPLEADER like :GROUPLEADER</#if>
+			<#if key["DEVICECODE"]??> and DEVICECODE like :DEVICECODE</#if>
+			<#if key["WORKSHOP"]??> and WORKSHOP like :WORKSHOP</#if>
+			<#if key["FRAGMENTLENGTH"]??> and FRAGMENTLENGTH like :FRAGMENTLENGTH</#if>
+			<#if key["FRAGMENTWIDTH"]??> and FRAGMENTWIDTH like :FRAGMENTWIDTH</#if>
+			<#if key["FRAGMENTWEIGHT"]??> and FRAGMENTWEIGHT like :FRAGMENTWEIGHT</#if>
+			<#if key["ISPACKED"]??> and ISPACKED like :ISPACKED</#if>
+			<#if key["PACKEDTIME_S"]??&&key["PACKEDTIME_E"]??>
+				and PACKEDTIME between :PACKEDTIME_S and :PACKEDTIME_E
+			</#if>
+			<#if key["PACKEDTIME_S"]??&&!key["PACKEDTIME_E"]??>
+				and PACKEDTIME > :PACKEDTIME_S 
+			</#if>
+			<#if !key["PACKEDTIME_S"]??&&key["PACKEDTIME_E"]??>
+				and PACKEDTIME < :PACKEDTIME_E
+			</#if>
+			<#if key["PACKUSERNAME"]??> and PACKUSERNAME like :PACKUSERNAME</#if>
+			<#if key["FARBICMODEL"]??> and FARBICMODEL like :FARBICMODEL</#if>
+			<#if key["FRAGMENTDRAWINGNO"]??> and FRAGMENTDRAWINGNO like :FRAGMENTDRAWINGNO</#if>
+			<#if key["FRAGMENTDRAWINGVER"]??> and FRAGMENTDRAWINGVER like :FRAGMENTDRAWINGVER</#if>
+			<#if key["FRAGMENTMEMO"]??> and FRAGMENTMEMO like :FRAGMENTMEMO</#if>
+			<#if key["PRINTSORT"]??> and PRINTSORT like :PRINTSORT</#if>
+			<#if key["BARCODE"]??> and BARCODE like :BARCODE</#if>
+			<#if key["PRINTTIME_S"]??&&key["PRINTTIME_E"]??>
+				and PRINTTIME between :PRINTTIME_S and :PRINTTIME_E
+			</#if>
+			<#if key["PRINTTIME_S"]??&&!key["PRINTTIME_E"]??>
+				and PRINTTIME > :PRINTTIME_S 
+			</#if>
+			<#if !key["PRINTTIME_S"]??&&key["PRINTTIME_E"]??>
+				and PRINTTIME < :PRINTTIME_E
+			</#if>
+			<#if key["PRINTUSER"]??> and PRINTUSER like :PRINTUSER</#if>
+			<#if key["PRINTTYPE"]??> and PRINTTYPE like :PRINTTYPE</#if>
+			<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+				<#else>
+				order by id desc
+			</#if>
+		]]>
+	</sql>
+	<sql comment="查询部件是否已被打包" id="fragment-check-packed">
+		<![CDATA[
+			SELECT GROUP_CONCAT(fragmentBarcode) packed from hs_siemens_part_suit where fragmentBarcode in (:codeList)		
+		]]>
+	</sql>
+	<sql comment="批量更新条码组套信息" id="fragment-update-suit-info">
+		<![CDATA[
+			UPDATE hs_siemens_fragment_barcode
+			SET isPacked = 1,
+			packedTime= '${key["date"]}',
+			packUserName='${key["user"]}',
+			deviceCode='${key["device"]}'
+			where barcode in (${key["codes"]})
+		]]>
+	</sql>
+	<sql comment="条码追溯投料信息" id="fragment-review-feeding">
+		<![CDATA[
+			SELECT DISTINCT productModel from hs_finishproduct where id in (
+				SELECT DISTINCT b.salesProductId from hs_roll_barcode b where b.barcode in (
+					SELECT r.rollCode from hs_feeding_record r where r.cutId=:cutId
+				)
+			)
+		]]>
+	</sql>
+	<sql comment="根据部件条码或者裁片条码查询组套信息" id="fragment-suit-info">
+		<![CDATA[
+			select partName id,barcode text,fragmentName from hs_siemens_fragment_barcode where barcode in (
+				SELECT
+					fragmentBarcode
+				FROM
+					hs_siemens_part_suit
+				WHERE
+					partBarcode = (
+						SELECT
+							partBarcode
+						FROM
+							hs_siemens_part_suit
+						WHERE
+							fragmentBarcode =:code
+					)
+				or partBarcode=:code
+			)
+		]]>
+	</sql>
+</sqls>

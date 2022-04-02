@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="FreezeLogDaoImpl">
+	<sql comment="查询冻结解冻记录" id="freezeLog-list">
+		<![CDATA[
+			select DATE_FORMAT(t.triggerDate,'%Y-%m-%d') dateTime,t.*,t.triggerInfo as cause,t.triggerInfo as code,
+			CONCAT_WS('',rollBarcode,trayBarcode,partBarcode,boxBarcode)as barcode
+			from hs_tracinglog t 
+			WHERE 1=1
+			<#if key["barCode"]??>
+				and (t.rollBarcode like (:barCode) or t.partBarcode like (:barCode) or t.boxBarcode like (:barCode) or t.trayBarcode like (:barCode)) 
+			</#if>
+			<#if key["batchCode"]??>
+				and t.batchCode like (:batchCode)
+			</#if>
+			<#if key["model"]??>
+				and t.PRODUCTMODEL like (:model)
+			</#if>
+			<#if key["salesCode"]??>
+				and t.salesCode like (:salesCode)
+			</#if>
+			<#if key["logType"]??>
+				and t.logType = (:logType)
+				<#else>
+				and (t.logType=9 or t.logType=10)
+			</#if>
+			<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+				<#else>
+				order by t.triggerDate  desc
+			</#if>
+			
+		]]>
+	</sql>
+</sqls>

@@ -1,0 +1,1153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="ProducePlan">
+	<sql comment="生产任务单列表" id="producePlan-list">
+		<![CDATA[
+			select t.*
+			from hs_produce_plan t 
+			where 1=1
+
+       <#if key["salesOrderCode"]??||key["batchCode"]??||key["factoryProductName"]??||key["consumerName"]??||key["consumerSimpleName"]??>
+	        and t.id
+	        in (
+			 		select producePlanId from hs_produce_plan_detail ppd
+			 		 left join hs_consumer c on c.id=ppd.consumerId
+			 		 where 1=1
+			 		  	<#if key["salesOrderCode"]??>
+			 		  	and  ppd.salesOrderCode like :salesOrderCode
+			 		  	</#if>
+			 		  	<#if key["batchCode"]??>
+			 		  	and  ppd.batchCode like :batchCode
+			 		  	</#if>
+
+			 		  	 <#if key["factoryProductName"]??>
+			 		  	 and  ppd.factoryProductName like :factoryProductName
+			 		    </#if>
+
+			 		    <#if key["consumerName"]??>
+			 		  	 and c.consumerName like :consumerName
+			 		    </#if>
+			 		    <#if key["consumerSimpleName"]??>
+			 		  	 and c.consumerSimpleName like :consumerSimpleName
+			 		    </#if>
+			 	)
+      </#if>
+			 <#if key["condition"]??>
+			 and t.producePlanCode like :condition
+			</#if>
+			<#if key["workShop"]??>
+			 and t.workshop like :workShop
+			</#if>
+			<#if key["workShopCode"]??>
+			 and t.workShopCode like :workShopCode
+			</#if>
+			<#if key["sort"]??&&key["order"]??>
+					order by ${key["sort"]} ${key["order"]}
+				<#else>
+					order by id desc
+			</#if>
+		]]>
+	</sql>
+	<sql comment="生产订单" id="produce-order">
+		<![CDATA[
+			SELECT
+				so.salesOrderCode,
+				so.salesOrderDate,
+				so.salesOrderConsumerId,
+				so.salesOrderBizUserId,
+				so.salesOrderIsExport,
+				so.salesOrderReviewState,
+				so.salesOrderType, 
+				so.salesOrderTotalMoney,
+				so.salesOrderDeliveryTime,
+				so.salesOrderProduceProgress,
+				so.salesOrderPackagingProgress,
+				so.salesOrderMemo,
+				so.auditState,
+				so.hasCreatedPlans,
+				so.isClosed,
+				sod.*,
+				c.consumerName,
+				c.id as CONSUMERID,
+				u.userName,
+				u.id as BIZUSERID,
+				p.packReq,
+				p.procReq
+			FROM
+				hs_sales_order_detail sod
+			LEFT JOIN hs_sales_order so ON so.id = sod.salesOrderId
+			LEFT JOIN hs_consumer c ON c.id = so.salesOrderConsumerId
+			LEFT JOIN HS_FINISHPRODUCT p on p.id=sod.productId
+			LEFT JOIN platform_user u ON u.id = so.salesOrderBizUserId
+			WHERE
+				1 = 1
+			AND so.auditState = 2
+			and (sod.closed=0 or sod.closed is null)
+			<#if key["EDITTIMES"]??> 
+				<#if key["EDITTIMES"]=="like:0">
+						and (sod.EDITTIMES is null or sod.EDITTIMES like :EDITTIMES)
+					<#else>
+						and sod.EDITTIMES like :EDITTIMES
+				</#if>
+			</#if>
+			<#if key["condition"]??>
+				and (sod.salesOrderSubCode like :condition or sod.productModel like:condition)
+			</#if>
+			<#if key["isCheck"]??>
+				<#if key["isCheck"]=="1">
+					and ( sod.isplaned is null or sod.isplaned=0 and :isCheck=:isCheck)
+				</#if>
+				<#if key["isCheck"]=="0">
+					and ( :isCheck=:isCheck)
+				</#if>
+			</#if>
+			<#if key["complete"]??>
+					and (and sod.isComplete = :complete )
+				<#else>
+					and (sod.isComplete=0 or sod.isComplete is null)
+			</#if>
+			<#if key["Ids"]??> and sod.ID in (:Ids) </#if>
+			<#if key["ISPLANED"]??> and sod.ISPLANED = :ISPLANED </#if>
+			<#if key["PRODUCTCOUNT"]??> and sod.PRODUCTCOUNT like :PRODUCTCOUNT </#if>
+			<#if key["ALLOCATECOUNT"]??> and sod.ALLOCATECOUNT like :ALLOCATECOUNT </#if>
+			<#if key["PRODUCEDROLLS"]??> and sod.PRODUCEDROLLS like :PRODUCEDROLLS </#if>
+			<#if key["PRODUCEDTRAYS"]??> and sod.PRODUCEDTRAYS like :PRODUCEDTRAYS </#if>
+			<#if key["PRODUCECOUNT"]??> and sod.PRODUCECOUNT like :PRODUCECOUNT </#if>
+			<#if key["DELIVERYTIME"]??> and sod.DELIVERYTIME like :DELIVERYTIME </#if>
+			<#if key["SALESORDERSUBCODE"]??> and sod.SALESORDERSUBCODE like :SALESORDERSUBCODE </#if>
+			<#if key["CONSUMERNAME"]??> and c.CONSUMERNAME like :CONSUMERNAME </#if>
+			<#if key["CONSUMERPRODUCTNAME"]??> and sod.CONSUMERPRODUCTNAME like :CONSUMERPRODUCTNAME </#if>
+			<#if key["FACTORYPRODUCTNAME"]??> and sod.FACTORYPRODUCTNAME like :FACTORYPRODUCTNAME </#if>
+			<#if key["PRODUCTMODEL"]??> and sod.PRODUCTMODEL like :PRODUCTMODEL </#if>
+			<#if key["PRODUCTWIDTH"]??> and sod.PRODUCTWIDTH like :PRODUCTWIDTH </#if>
+			<#if key["PRODUCTROLLLENGTH"]??> and sod.PRODUCTROLLLENGTH like :PRODUCTROLLLENGTH </#if>
+			<#if key["PRODUCTROLLWEIGHT"]??> and sod.PRODUCTROLLWEIGHT like :PRODUCTROLLWEIGHT </#if>
+			<#if key["USERNAME"]??> and u.USERNAME like :USERNAME </#if>
+			<#if key["SALESORDERISEXPORT"]??> and so.SALESORDERISEXPORT like :SALESORDERISEXPORT </#if>
+			<#if key["SALESORDERTYPE"]??> and so.SALESORDERTYPE like :SALESORDERTYPE </#if>
+			<#if key["PRODUCTPROCESSCODE"]??> and sod.PRODUCTPROCESSCODE like :PRODUCTPROCESSCODE </#if>
+			<#if key["PRODUCTPACKAGINGCODE"]??> and sod.PRODUCTPACKAGINGCODE like :PRODUCTPACKAGINGCODE </#if>
+			<#if key["PRODUCTROLLCODE"]??> and sod.PRODUCTROLLCODE like :PRODUCTROLLCODE </#if>
+			<#if key["PRODUCTBOXCODE"]??> and sod.PRODUCTBOXCODE like :PRODUCTBOXCODE </#if>
+			<#if key["PRODUCTTRAYCODE"]??> and sod.PRODUCTTRAYCODE like :PRODUCTTRAYCODE </#if>
+			<#if key["PRODUCTMEMO"]??> and sod.PRODUCTMEMO like :PRODUCTMEMO </#if>
+			<#if key["consumerName"]??>
+				and c.consumerName = :consumerName
+			</#if>
+			<#if key["order"]??>
+					order by so.salesOrderCode  ${key["order"]}
+			</#if>
+			
+			
+			
+			
+		]]>
+	</sql>
+	
+	<sql comment="生产订单" id="delivery-order">
+		<![CDATA[
+			SELECT
+				so.salesOrderCode,
+				so.salesOrderDate,
+				so.salesOrderConsumerId,
+				so.salesOrderBizUserId,
+				so.salesOrderIsExport,
+				so.salesOrderReviewState,
+				so.salesOrderType, 
+				so.salesOrderTotalMoney,
+				so.salesOrderDeliveryTime,
+				so.salesOrderProduceProgress,
+				so.salesOrderPackagingProgress,
+				so.salesOrderMemo,
+				so.auditState,
+				so.hasCreatedPlans,
+				so.isClosed,
+				sod.*,
+				c.consumerName,
+				c.id as CONSUMERID,
+				u.userName,
+				u.id as BIZUSERID,
+				p.packReq,
+				p.procReq
+			FROM
+				hs_sales_order_detail sod
+			LEFT JOIN hs_sales_order so ON so.id = sod.salesOrderId
+			LEFT JOIN hs_consumer c ON c.id = so.salesOrderConsumerId
+			LEFT JOIN HS_FINISHPRODUCT p on p.id=sod.productId
+			LEFT JOIN platform_user u ON u.id = so.salesOrderBizUserId
+			WHERE
+				1 = 1
+			AND so.auditState = 2
+			and (sod.closed=0 or sod.closed is null)
+			<#if key["consumerName"]??> and c.consumerName like :consumerName </#if>
+			<#if key["order"]??>
+					order by so.salesOrderCode  ${key["order"]}
+			</#if>
+			
+			
+			
+			
+		]]>
+	</sql>
+	
+	<sql comment="生产订单" id="produce-order2">
+		<![CDATA[
+			SELECT 
+				so.salesOrderCode,
+				so.salesOrderDate,
+				so.salesOrderConsumerId,
+				so.salesOrderBizUserId,
+				so.salesOrderIsExport,
+				so.salesOrderReviewState,
+				so.salesOrderType, 
+				so.salesOrderTotalMoney,
+				so.salesOrderDeliveryTime,
+				so.salesOrderProduceProgress,
+				so.salesOrderPackagingProgress,
+				so.salesOrderMemo,
+				so.auditState,
+				so.hasCreatedPlans,
+				so.isClosed,
+				sod.*,
+				c.consumerName,
+				c.id as CONSUMERID,
+				u.userName,
+				u.id as BIZUSERID
+			FROM
+				hs_sales_order_detail sod
+			LEFT JOIN hs_sales_order so ON so.id = sod.salesOrderId
+			LEFT JOIN hs_consumer c ON c.id = so.salesOrderConsumerId
+			LEFT JOIN platform_user u ON u.id = so.salesOrderBizUserId
+			WHERE
+				1 = 1
+			AND so.auditState = 2
+			and sod.SALESORDERSUBCODEPRINT is not null
+			and (sod.closed=0 or sod.closed is null)
+			<#if key["EDITTIMES"]??> 
+				<#if key["EDITTIMES"]=="like:0">
+						and (sod.EDITTIMES is null or sod.EDITTIMES like :EDITTIMES)
+					<#else>
+						and sod.EDITTIMES like :EDITTIMES
+				</#if>
+			</#if>
+			<#if key["ISCOMPLETE"]??>
+				<#if key["ISCOMPLETE"]=="like:0">
+						and ( sod.ISCOMPLETE is null or sod.ISCOMPLETE like :ISCOMPLETE)
+					<#elseif key["ISCOMPLETE"]=="like:1">
+						and (sod.ISCOMPLETE=1 or sod.ISCOMPLETE like :ISCOMPLETE)
+					<#else>
+						and (sod.ISCOMPLETE in(0,1) or sod.ISCOMPLETE is null or sod.ISCOMPLETE like :ISCOMPLETE)
+				</#if> 
+			</#if>
+			
+			<#if key["isCheck"]??>
+				<#if key["isCheck"]=="1">
+					and (sod.isplaned is null or sod.isplaned=0 and :isCheck=:isCheck)
+				</#if>
+				<#if key["isCheck"]=="0">
+					and ( :isCheck=:isCheck)
+				</#if>
+			</#if> 
+			<#if key["Ids"]??> and sod.ID in (:Ids) </#if>
+			<#if key["TC"]??&&key["TC"]=="1">
+					and sod.productIsTc=:TC 
+					<#else>
+					and 2=:TC
+			</#if>
+			<#if key["PRODUCTBATCHCODE"]??> and sod.PRODUCTBATCHCODE like :PRODUCTBATCHCODE </#if>
+			<#if key["PRODUCTCOUNT"]??> and sod.PRODUCTCOUNT like :PRODUCTCOUNT </#if>
+			<#if key["SALESORDERDATE"]??> and so.SALESORDERDATE like :SALESORDERDATE </#if>
+			<#if key["ALLOCATECOUNT"]??> and sod.ALLOCATECOUNT like :ALLOCATECOUNT </#if>
+			<#if key["PRODUCEDROLLS"]??> and sod.PRODUCEDROLLS like :PRODUCEDROLLS </#if>
+			<#if key["PRODUCEDTRAYS"]??> and sod.PRODUCEDTRAYS like :PRODUCEDTRAYS </#if>
+			<#if key["PRODUCECOUNT"]??> and sod.PRODUCECOUNT like :PRODUCECOUNT </#if>
+			<#if key["DELIVERYTIME"]??> and sod.DELIVERYTIME like :DELIVERYTIME </#if>
+			<#if key["SALESORDERSUBCODE"]??> and sod.SALESORDERSUBCODE like :SALESORDERSUBCODE </#if>
+			<#if key["CONSUMERNAME"]??> and c.CONSUMERNAME like :CONSUMERNAME </#if>
+			<#if key["CONSUMERPRODUCTNAME"]??> and sod.CONSUMERPRODUCTNAME like :CONSUMERPRODUCTNAME </#if>
+			<#if key["FACTORYPRODUCTNAME"]??> and sod.FACTORYPRODUCTNAME like :FACTORYPRODUCTNAME </#if>
+			<#if key["PRODUCTMODEL"]??> and sod.PRODUCTMODEL like :PRODUCTMODEL </#if>
+			<#if key["PRODUCTWIDTH"]??> and sod.PRODUCTWIDTH like :PRODUCTWIDTH </#if>
+			<#if key["PRODUCTROLLLENGTH"]??> and sod.PRODUCTROLLLENGTH like :PRODUCTROLLLENGTH </#if>
+			<#if key["PRODUCTROLLWEIGHT"]??> and sod.PRODUCTROLLWEIGHT like :PRODUCTROLLWEIGHT </#if>
+			<#if key["USERNAME"]??> and u.USERNAME like :USERNAME </#if>
+			<#if key["SALESORDERISEXPORT"]??> and so.SALESORDERISEXPORT like :SALESORDERISEXPORT </#if>
+			<#if key["SALESORDERTYPE"]??> and so.SALESORDERTYPE like :SALESORDERTYPE </#if>
+			<#if key["PRODUCTPROCESSCODE"]??> and sod.PRODUCTPROCESSCODE like :PRODUCTPROCESSCODE </#if>
+			<#if key["PRODUCTPACKAGINGCODE"]??> and sod.PRODUCTPACKAGINGCODE like :PRODUCTPACKAGINGCODE </#if>
+			<#if key["PRODUCTROLLCODE"]??> and sod.PRODUCTROLLCODE like :PRODUCTROLLCODE </#if>
+			<#if key["PRODUCTBOXCODE"]??> and sod.PRODUCTBOXCODE like :PRODUCTBOXCODE </#if>
+			<#if key["PRODUCTTRAYCODE"]??> and sod.PRODUCTTRAYCODE like :PRODUCTTRAYCODE </#if>
+			<#if key["PRODUCTMEMO"]??> and sod.PRODUCTMEMO like :PRODUCTMEMO </#if>
+			<#if key["SALESORDERSUBCODEPRINT"]??> and sod.SALESORDERSUBCODEPRINT like :SALESORDERSUBCODEPRINT </#if>
+			<#if key["TOTALWEIGHT"]??> and sod.TOTALWEIGHT like :TOTALWEIGHT </#if>
+			<#if key["TOTALMETRES"]??> and sod.TOTALMETRES like :TOTALMETRES </#if>
+			<#if key["consumerName"]??>
+				and c.consumerName = :consumerName
+			</#if>
+			
+			<#if key["ISPLANED"]??>
+					<#if key["ISPLANED"]=="0">
+							and ( sod.ALLOCATECOUNT=0 and 0=:ISPLANED) 
+						<#elseif key["ISPLANED"]=="1">
+							and (sod.ALLOCATECOUNT>0 and sod.ALLOCATECOUNT<sod.TOTALWEIGHT and 1=:ISPLANED)
+						<#elseif key["ISPLANED"]=="-1">
+							and -1=:ISPLANED
+						<#else>	
+							and (sod.ALLOCATECOUNT>=sod.TOTALWEIGHT and 2=:ISPLANED and sod.ALLOCATECOUNT<>0)
+					</#if>
+				<#else>
+					and  (sod.ALLOCATECOUNT<sod.TOTALWEIGHT  or (sod.ALLOCATECOUNT=0 and sod.TOTALWEIGHT=0))
+			</#if>
+			order by salesOrderDate asc
+		]]>
+	</sql>
+	<sql comment="生成序号" id="producePlan-serial">
+		<![CDATA[
+			from ProducePlan p where p.workShopCode=:workShopCode and p.producePlanCode like :code order by p.producePlanCode desc
+		]]>
+	</sql>
+	<sql comment="生产计划列表" id="producePlan-datalist">
+		<![CDATA[
+		select * from HS_Produce_Plan t where 1=1 and t.auditState=2
+		<#if key["code"]??>
+			and (t.PRODUCEPLANCODE like :code)
+		</#if>
+		<#if key["begin"]??>
+			and t.createTime>= :begin
+		</#if>
+		<#if key["end"]??>
+			and t.createTime<= :end
+		</#if>
+		<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+			</#if>
+			<#if !key["sort"]??&&!key["order"]??>
+				order by t.ID desc
+			</#if>
+		]]>
+	</sql>
+
+	<sql comment="更新编织日计划关联的生产计划的已分配标志" id="update-settled-weave">
+		<![CDATA[
+			UPDATE hs_weave_plan
+			SET isSettled = 1
+			WHERE
+				id IN (
+					SELECT
+						d.weavePlanId
+					FROM
+						hs_weave_daily_plan_detail d
+					WHERE
+						d.DailyId=:id
+				)
+		]]>
+	</sql>
+	<sql comment="更新裁剪日计划关联的生产计划的已分配标志" id="update-settled-cut">
+		<![CDATA[
+			UPDATE hs_cut_plan
+			SET isSettled = 1
+			WHERE
+				id IN (
+					SELECT
+						d.cutPlanId
+					FROM
+						hs_cut_daily_plan_detail d
+					WHERE
+						d.cutPlanDailyId=:id
+				)
+		]]>
+	</sql>
+	<sql comment="判断批次号是否存在" id="producePlan-checkBatchCode">
+		<![CDATA[
+			select * from hs_produce_plan_detail t where t.batchCode=(:batchCode) and t.producePlanId<>(:producePlanId)
+		]]>
+	</sql>
+	<sql comment="获取生产计划明细" id="producePlan-details">
+        <![CDATA[
+            SELECT
+            	fpc.categoryCode,
+				fpc.categoryName,
+				finp.reserveLength,
+                c.consumerSimpleName,
+				(SELECT  so.salesOrderMemo FROM hs_sales_order so LEFT JOIN hs_sales_order_detail sod ON sod.salesOrderId= so.id 
+                WHERE sod.id= b.fromSalesOrderDetailId  ) yx,
+                b.*,
+                (SELECT count(1) from hs_roll r LEFT JOIN hs_roll_barcode rb on rb.barcode=r.rollBarcode where rb.producePlanDetailId=b.id and r.rollQualityGradeCode='A' and rb.isAbandon=0 and r.state<>3) rc,
+				(SELECT count(1) from hs_tray t LEFT JOIN hs_tray_barcode tb on tb.barcode=t.trayBarcode where tb.producePlanDetailId=b.id and t.rollQualityGradeCode='A' and tb.isOpened=0) tc
+            FROM
+                hs_produce_plan_detail b
+            LEFT JOIN hs_finishproduct finp ON finp.id = b.productId
+			LEFT JOIN hs_consumer c ON c.id = b.consumerId
+			LEFT JOIN hs_finished_product_category  fpc ON fpc.id=finp.fpcid
+            WHERE  1 =1 and b.producePlanId=:id
+        ]]>
+    </sql>
+	<sql comment="获取生产计划明细镜像版" id="producePlan-details-mirror">
+		<![CDATA[
+            SELECT
+            	fpc.categoryCode,
+				fpc.categoryName,
+				finp.reserveLength,
+                c.consumerSimpleName,
+				(SELECT  so.salesOrderMemo FROM hs_sales_order so LEFT JOIN hs_sales_order_detail sod ON sod.salesOrderId= so.id
+                WHERE sod.id= b.fromSalesOrderDetailId  ) yx,
+                b.*,
+                (SELECT count(1) from hs_roll r LEFT JOIN hs_roll_barcode rb on rb.barcode=r.rollBarcode where rb.producePlanDetailId=b.id and r.rollQualityGradeCode='A' and rb.isAbandon=0 and r.state<>3) rc,
+				(SELECT count(1) from hs_tray t LEFT JOIN hs_tray_barcode tb on tb.barcode=t.trayBarcode where tb.producePlanDetailId=b.id and t.rollQualityGradeCode='A' and tb.isOpened=0) tc
+            FROM
+                hs_produce_plan_detail b
+            LEFT JOIN hs_sales_order_detail SOD ON B.fromSalesOrderDetailId=SOD.ID
+            LEFT JOIN hs_finishproduct_mirror finp ON finp.ID =SOD.mirrorProductId
+			LEFT JOIN hs_consumer c ON c.id = b.consumerId
+			LEFT JOIN hs_finished_product_category  fpc ON fpc.id=finp.fpcid
+            WHERE  1 =1 and b.producePlanId=:id
+        ]]>
+	</sql>
+     <sql comment="获取实际生产机台编码" id="sdevicecode">
+        <![CDATA[
+         SELECT
+			GROUP_CONCAT('', d.rollDeviceCode) sdeviceCode
+		 FROM
+			
+			(SELECT DISTINCT
+			       rollDeviceCode
+		    FROM
+			   hs_roll r
+		    LEFT JOIN hs_roll_barcode rb ON rb.barcode = r.rollBarcode
+		    WHERE
+			   rb.producePlanDetailId=:id) d
+	 
+        ]]>
+    </sql>
+    <sql comment="获取生产进度跟踪表" id="producePlan-schedule">
+        <![CDATA[ 
+          
+          select * from (
+            SELECT
+                    ppd.id,
+                    ppd.packReq,
+		            ppdpc.partName,
+		            pp.createTime,
+		            ppd.deviceCode,
+		            ppd.processBomCode,
+		            ppd.processBomVersion,
+		            ppd.bcBomCode,
+		            ppd.bcBomVersion,
+		            so.salesOrderIsExport,
+		            case when so.salesOrderIsExport=0 then '外销' when so.salesOrderIsExport=1 then '内销' else '胚布' end _salesOrderIsExport,
+		            pp.producePlanCode,
+		            pp.workshop,
+		            c.consumerSimpleName,
+		            fpc.categoryCode,
+		            fpc.categoryName,
+		            sod.salesOrderSubCode,
+		            case when isnull(ppd.totalTrayCount) then '-' else ppd.totalTrayCount end totalTrayCount,
+		            ppd.isTurnBagPlan,
+		            ppd.batchCode,
+		            ppd.consumerProductName,
+		            ppd.factoryProductName,
+		            ppd.productWidth,
+		            ppd.productWeight,
+		            ppd.productLength,
+		            round(case when ppd.productIsTc=1 then p.tcProcBomVersionPartsWeight*ppdpc.planPartCount else ppd.planTotalWeight end,2) planTotalWeight, 
+		            ppd.isFinished,
+		            case when datediff(ppd.deleveryDate,now())>3 then '否' else '是' end _yujing,
+		            ppd.closed,
+		            case when ppd.closed=1 then '已关闭' else '正常' end _closed,
+		            ppdpc.planPartCount requirementCount,
+		            ppd.deleveryDate,
+		            pps.deviceCode _deviceCode,
+		            case when isnull(pps.produceRollCount) then 0 else pps.produceRollCount end produceRollCount,
+		            case when isnull(pps.realRollCount) then 0 else pps.realRollCount end realRollCount,
+		            case when isnull(pps.producePalletCount) then 0 else pps.producePalletCount end producePalletCount,
+		            case when isnull(pps.realPalletCount) then 0 else pps.realPalletCount end realPalletCount,
+		            case when isnull(pps.produceTotalWeight) then 0 else pps.produceTotalWeight end produceTotalWeight,
+		            case when isnull(pps.realTotalWeight) then 0 else pps.realTotalWeight end realTotalWeight,
+		            case when isnull(pps.inBankPalletCount) then 0 else pps.inBankPalletCount end inBankPalletCount,
+		            case when isnull(pps.inBankPalletWeight) then 0 else pps.inBankPalletWeight end inBankPalletWeight,
+		            case when isnull(pps.stockPalletCount) then 0 else pps.stockPalletCount end stockPalletCount,
+		            case when isnull(pps.stockPalletWeight) then 0 else pps.stockPalletWeight end stockPalletWeight,
+		            case when isnull(pps.deliveryPalletCount) then 0 else pps.deliveryPalletCount end deliveryPalletCount,
+		            case when isnull(pps.deliveryPalletWeight) then 0 else pps.deliveryPalletWeight end deliveryPalletWeight,
+		            round((
+		                case when ppd.productIsTc=1 then ppdpc.planPartCount else ppd.requirementCount end - case when isnull(pps.realRollCount) then 0 else pps.realRollCount end
+		            ),2) uncompleteRollCount,
+		            case when (
+                        case when ppd.productIsTc=1 then ppdpc.planPartCount else ppd.requirementCount end - case when isnull(pps.realRollCount) then 0 else pps.realRollCount end
+                    ) >0 then '未完成' else '已完成' end _completed,
+		            round((
+		                case when ppd.productIsTc=1 then p.tcProcBomVersionPartsWeight*ppdpc.planPartCount else ppd.planTotalWeight end - case when isnull(pps.realTotalWeight) then 0 else pps.realTotalWeight end
+		            ),2) uncompleteWeight,
+		            case when isnull(pps.realRollCount) then '0' 
+		            	 when ppdpc.planPartCount>pps.realRollCount then '1' 
+		            	 when pps.realRollCount>=ppdpc.planPartCount then '2' 
+		                 end prodStatus,
+		            u.userName orderBizUserName,
+		            u2.userName planBizUserName,
+		            case when ppd.productIsTc=1 then '套' else '卷' end unit
+		        FROM
+		            hs_produce_plan_detail ppd
+		        
+		        LEFT JOIN hs_produce_plan pp ON pp.id = ppd.producePlanId
+		        LEFT JOIN hs_finishproduct fp ON fp.id = ppd.productId
+		        LEFT JOIN hs_finished_product_category fpc ON fpc.id = fp.fpcid
+		        LEFT JOIN hs_sales_order_detail sod ON sod.id = ppd.fromSalesOrderDetailId
+		        LEFT JOIN hs_sales_order so ON sod.salesOrderId = so.id
+		        LEFT JOIN hs_consumer c ON c.id = so.salesOrderConsumerId
+		        LEFT JOIN platform_user u ON so.salesOrderBizUserId = u.id
+		        LEFT JOIN platform_user u2 ON pp.createUserId = u2.id 
+		        LEFT JOIN hs_produce_plan_detail_part_count ppdpc on ppdpc.planDetailId=ppd.id
+		        LEFT JOIN (
+		            SELECT * FROM hs_production_progress WHERE bizType = 2
+		        ) pps ON (ppd.id = pps.bizID and ppdpc.partId=pps.partId)
+		        LEFT JOIN hs_tc_proc_bom_version_parts p on p.id=ppdpc.partId
+		        where 1=1 and ppdpc.planPartCount>0  and ppd.productIsTc=1  
+		        <#if key["plancode"]??>
+		            and pp.producePlanCode like :plancode
+		        </#if>
+		        <#if key["consumername"]??> 
+		            and c.consumerSimpleName  like :consumername
+		        </#if>
+		        <#if key["salesordercode"]??>
+		            and sod.salesOrderSubCode like :salesordercode
+		        </#if>
+		        <#if key["workshop"]??>
+		            and pp.workShop like :workshop
+		        </#if>
+		        <#if key["consumerproductname"]??>
+		            and fp.consumerproductname like :consumerproductname
+		        </#if>
+		        <#if key["factoryproductname"]??>
+		            and fp.factoryproductname like :factoryproductname
+		        </#if>
+		        <#if key["batchcode"]??>
+		            and ppd.batchcode like :batchcode
+		        </#if>
+		        <#if key["productlength"]??>
+		            and ppd.productlength like :productlength
+		        </#if>
+		        <#if key["processbomcode"]??>
+		            and ppd.processbomcode like :processbomcode
+		        </#if>
+		        <#if key["processbomversion"]??>
+		            and ppd.processbomversion like :processbomversion
+		        </#if>
+		        <#if key["username_s"]??>
+		            and u.username like :username_s
+		        </#if>
+		        <#if key["username_p"]??>
+		            and u2.username like :username_p
+		        </#if>
+		        <#if key["bcbomcode"]??>
+		            and ppd.bcbomcode like :bcbomcode
+		        </#if>
+		        <#if key["bcbomversion"]??>
+		            and ppd.bcbomversion like :bcbomversion
+		        </#if>
+		        <#if key["salesorderisexport"]??>
+		            and so.salesOrderIsExport=:salesorderisexport
+		        </#if>
+		        <#if key["isTurnBagPlan"]??>
+		            and ppd.isTurnBagPlan=:isTurnBagPlan
+		        </#if>
+		        <#if key["productwidth"]??>
+                    and ppd.productwidth like :productwidth
+                </#if>
+		        <#if key["closed"]??>
+		            and ppd.closed=:closed
+		        </#if>
+		        <#if key["devicecode"]??>
+		            and pps.devicecode=:devicecode
+		        </#if>
+		        <#if key["start"]?? && key["end"]??>
+		            and pp.createTime between :start and :end
+		        </#if>
+		        <#if !key["start"]?? && key["end"]??>
+		            and pp.createTime <=  :end
+		        </#if>
+		        <#if key["start"]?? && !key["end"]??>
+		            and pp.createTime > :start
+		        </#if>
+		        
+		        <#if key["sstart"]?? && key["send"]??>
+		            and ppd.deleveryDate between :sstart and :send
+		        </#if>
+		        <#if !key["sstart"]?? && key["send"]??>
+		            and ppd.deleveryDate <= :send
+		        </#if>
+		        <#if key["sstart"]?? && !key["send"]??>
+		            and ppd.deleveryDate > :sstart
+		        </#if>
+		        union all
+		        SELECT
+		            ppd.id,
+		            ppd.packReq,
+		            ppdpc.partName,
+		            pp.createTime,
+		            ppd.deviceCode,
+		            ppd.processBomCode,
+		            ppd.processBomVersion,
+		            ppd.bcBomCode,
+		            ppd.bcBomVersion,
+		            so.salesOrderIsExport,
+		            case when so.salesOrderIsExport=0 then '外销' when so.salesOrderIsExport=1 then '内销' else '胚布' end _salesOrderIsExport,
+		            pp.producePlanCode,
+		            pp.workshop,
+		            c.consumerSimpleName,
+		            fpc.categoryCode,
+		            fpc.categoryName,
+		            sod.salesOrderSubCode,
+		            case when isnull(ppd.totalTrayCount) then '-' else ppd.totalTrayCount end totalTrayCount,
+		            ppd.isTurnBagPlan,
+		            ppd.batchCode,
+		            ppd.consumerProductName,
+		            ppd.factoryProductName,
+		            ppd.productWidth,
+		            ppd.productWeight,
+		            ppd.productLength,
+		            round(case when ppd.productIsTc=1 then p.tcProcBomVersionPartsWeight*ppdpc.planPartCount else ppd.planTotalWeight end,2) planTotalWeight, 
+		            ppd.isFinished,
+		            case when datediff(ppd.deleveryDate,now())>3 then '否' else '是' end _yujing,
+		            ppd.closed,
+		            case when ppd.closed=1 then '已关闭' else '正常' end _closed,
+		            ppd.requirementCount requirementCount,
+		            ppd.deleveryDate,
+		            pps.deviceCode _deviceCode,
+		            case when isnull(pps.produceRollCount) then 0 else pps.produceRollCount end produceRollCount,
+		            case when isnull(pps.realRollCount) then 0 else pps.realRollCount end realRollCount,
+		            case when isnull(pps.producePalletCount) then 0 else pps.producePalletCount end producePalletCount,
+		            case when isnull(pps.realPalletCount) then 0 else pps.realPalletCount end realPalletCount,
+		            case when isnull(pps.produceTotalWeight) then 0 else pps.produceTotalWeight end produceTotalWeight,
+		            case when isnull(pps.realTotalWeight) then 0 else pps.realTotalWeight end realTotalWeight,
+		            case when isnull(pps.inBankPalletCount) then 0 else pps.inBankPalletCount end inBankPalletCount,
+		            case when isnull(pps.inBankPalletWeight) then 0 else pps.inBankPalletWeight end inBankPalletWeight,
+		            case when isnull(pps.stockPalletCount) then 0 else pps.stockPalletCount end stockPalletCount,
+		            case when isnull(pps.stockPalletWeight) then 0 else pps.stockPalletWeight end stockPalletWeight,
+		            case when isnull(pps.deliveryPalletCount) then 0 else pps.deliveryPalletCount end deliveryPalletCount,
+		            case when isnull(pps.deliveryPalletWeight) then 0 else pps.deliveryPalletWeight end deliveryPalletWeight,
+		            round((
+		                case when ppd.productIsTc=1 then ppdpc.planPartCount else ppd.requirementCount end - case when isnull(pps.realRollCount) then 0 else pps.realRollCount end
+		            ),2) uncompleteRollCount,
+		            case when (
+                        case when ppd.productIsTc=1 then ppdpc.planPartCount else ppd.requirementCount end - case when isnull(pps.realRollCount) then 0 else pps.realRollCount end
+                    ) >0 then '未完成' else '已完成' end _completed,
+		            round((
+		                case when ppd.productIsTc=1 then p.tcProcBomVersionPartsWeight*ppdpc.planPartCount else ppd.planTotalWeight end - case when isnull(pps.realTotalWeight) then 0 else pps.realTotalWeight end
+		            ),2) uncompleteWeight,
+		            case when isnull(pps.realRollCount) then '0' 
+		            	 when ppdpc.planPartCount>pps.realRollCount then '1' 
+		            	 when pps.realRollCount>=ppdpc.planPartCount then '2' 
+		                 end prodStatus,
+		            u.userName orderBizUserName,
+		            u2.userName planBizUserName,
+		            case when ppd.productIsTc=1 then '套' else '卷' end unit
+		        FROM
+		            hs_produce_plan_detail ppd
+		        
+		        LEFT JOIN hs_produce_plan pp ON pp.id = ppd.producePlanId
+		        LEFT JOIN hs_finishproduct fp ON fp.id = ppd.productId
+		        LEFT JOIN hs_finished_product_category fpc ON fpc.id = fp.fpcid
+		        LEFT JOIN hs_sales_order_detail sod ON sod.id = ppd.fromSalesOrderDetailId
+		        LEFT JOIN hs_sales_order so ON sod.salesOrderId = so.id
+		        LEFT JOIN hs_consumer c ON c.id = so.salesOrderConsumerId
+		        LEFT JOIN platform_user u ON so.salesOrderBizUserId = u.id
+		        LEFT JOIN platform_user u2 ON pp.createUserId = u2.id 
+		        LEFT JOIN hs_produce_plan_detail_part_count ppdpc on ppdpc.planDetailId=ppd.id
+		        LEFT JOIN (
+		            SELECT * FROM hs_production_progress WHERE bizType = 2
+		        ) pps ON (ppd.id = pps.bizID)
+		        LEFT JOIN hs_tc_proc_bom_version_parts p on p.id=ppdpc.partId
+		        where 1=1 and requirementCount>0 and ppd.productIsTc in (2,-1)
+		        <#if key["plancode"]??>
+		            and pp.producePlanCode like :plancode
+		        </#if>
+		        <#if key["consumername"]??> 
+		            and c.consumerSimpleName  like :consumername
+		        </#if>
+		        <#if key["salesordercode"]??>
+		            and sod.salesOrderSubCode like :salesordercode
+		        </#if>
+		        <#if key["workshop"]??>
+		            and pp.workShop like :workshop
+		        </#if>
+		        <#if key["consumerproductname"]??>
+		            and fp.consumerproductname like :consumerproductname
+		        </#if>
+		        <#if key["factoryproductname"]??>
+		            and fp.factoryproductname like :factoryproductname
+		        </#if>
+		        <#if key["batchcode"]??>
+		            and ppd.batchcode like :batchcode
+		        </#if>
+		        <#if key["productlength"]??>
+		            and ppd.productlength like :productlength
+		        </#if>
+		        <#if key["processbomcode"]??>
+		            and ppd.processbomcode like :processbomcode
+		        </#if>
+		        <#if key["processbomversion"]??>
+		            and ppd.processbomversion like :processbomversion
+		        </#if>
+		        <#if key["username_s"]??>
+		            and u.username like :username_s
+		        </#if>
+		        <#if key["username_p"]??>
+		            and u2.username like :username_p
+		        </#if>
+		        <#if key["bcbomcode"]??>
+		            and ppd.bcbomcode like :bcbomcode
+		        </#if>
+		        <#if key["bcbomversion"]??>
+		            and ppd.bcbomversion like :bcbomversion
+		        </#if>
+		        <#if key["salesorderisexport"]??>
+		            and so.salesOrderIsExport=:salesorderisexport
+		        </#if>
+		        <#if key["isTurnBagPlan"]??>
+		            and ppd.isTurnBagPlan=:isTurnBagPlan
+		        </#if>
+		        <#if key["productwidth"]??>
+                    and ppd.productwidth like :productwidth
+                </#if>
+		        <#if key["closed"]??>
+		            and ppd.closed=:closed
+		        </#if>
+		        <#if key["devicecode"]??>
+		            and pps.devicecode=:devicecode
+		        </#if>
+		        <#if key["start"]?? && key["end"]??>
+		            and pp.createTime between :start and :end
+		        </#if>
+		        <#if !key["start"]?? && key["end"]??>
+		            and pp.createTime <=  :end
+		        </#if>
+		        <#if key["start"]?? && !key["end"]??>
+		            and pp.createTime > :start
+		        </#if>
+		        
+		        <#if key["sstart"]?? && key["send"]??>
+		            and ppd.deleveryDate between :sstart and :send
+		        </#if>
+		        <#if !key["sstart"]?? && key["send"]??>
+		            and ppd.deleveryDate <= :send
+		        </#if>
+		        <#if key["sstart"]?? && !key["send"]??>
+		            and ppd.deleveryDate > :sstart
+		        </#if>
+          
+          ) x where 1=1 
+         <#if key["prodStatus"]??>
+		         and   x.prodStatus=:prodStatus
+		 </#if>
+		        
+        <#if key["sort"]??&&key["order"]??>
+                    order by ${key["sort"]} ${key["order"]}
+                <#else>
+                   order by id desc
+        </#if>
+        
+        ]]>
+    </sql>
+	
+	    <sql comment="获取生产进度跟踪表" id="producePlan-schedule-weight">
+        <![CDATA[ 
+          
+          select count(PLANTOTALWEIGHT) PLANTOTALWEIGHT,count(REALTOTALWEIGHT) REALTOTALWEIGHT,count(UNCOMPLETEWEIGHT) UNCOMPLETEWEIGHT from (
+            SELECT
+                    ppd.id,
+                    ppd.packReq,
+		            ppdpc.partName,
+		            pp.createTime,
+		            ppd.deviceCode,
+		            ppd.processBomCode,
+		            ppd.processBomVersion,
+		            ppd.bcBomCode,
+		            ppd.bcBomVersion,
+		            so.salesOrderIsExport,
+		            case when so.salesOrderIsExport=0 then '外销' when so.salesOrderIsExport=1 then '内销' else '胚布' end _salesOrderIsExport,
+		            pp.producePlanCode,
+		            pp.workshop,
+		            c.consumerSimpleName,
+		            fpc.categoryCode,
+		            fpc.categoryName,
+		            sod.salesOrderSubCode,
+		            case when isnull(ppd.totalTrayCount) then '-' else ppd.totalTrayCount end totalTrayCount,
+		            ppd.isTurnBagPlan,
+		            ppd.batchCode,
+		            ppd.consumerProductName,
+		            ppd.factoryProductName,
+		            ppd.productWidth,
+		            ppd.productWeight,
+		            ppd.productLength,
+		            round(case when ppd.productIsTc=1 then p.tcProcBomVersionPartsWeight*ppdpc.planPartCount else ppd.planTotalWeight end,2) planTotalWeight, 
+		            ppd.isFinished,
+		            case when datediff(ppd.deleveryDate,now())>3 then '否' else '是' end _yujing,
+		            ppd.closed,
+		            case when ppd.closed=1 then '已关闭' else '正常' end _closed,
+		            ppdpc.planPartCount requirementCount,
+		            ppd.deleveryDate,
+		            pps.deviceCode _deviceCode,
+		            case when isnull(pps.produceRollCount) then 0 else pps.produceRollCount end produceRollCount,
+		            case when isnull(pps.realRollCount) then 0 else pps.realRollCount end realRollCount,
+		            case when isnull(pps.producePalletCount) then 0 else pps.producePalletCount end producePalletCount,
+		            case when isnull(pps.realPalletCount) then 0 else pps.realPalletCount end realPalletCount,
+		            case when isnull(pps.produceTotalWeight) then 0 else pps.produceTotalWeight end produceTotalWeight,
+		            case when isnull(pps.realTotalWeight) then 0 else pps.realTotalWeight end realTotalWeight,
+		            case when isnull(pps.inBankPalletCount) then 0 else pps.inBankPalletCount end inBankPalletCount,
+		            case when isnull(pps.inBankPalletWeight) then 0 else pps.inBankPalletWeight end inBankPalletWeight,
+		            case when isnull(pps.stockPalletCount) then 0 else pps.stockPalletCount end stockPalletCount,
+		            case when isnull(pps.stockPalletWeight) then 0 else pps.stockPalletWeight end stockPalletWeight,
+		            case when isnull(pps.deliveryPalletCount) then 0 else pps.deliveryPalletCount end deliveryPalletCount,
+		            case when isnull(pps.deliveryPalletWeight) then 0 else pps.deliveryPalletWeight end deliveryPalletWeight,
+		            round((
+		                case when ppd.productIsTc=1 then ppdpc.planPartCount else ppd.requirementCount end - case when isnull(pps.realRollCount) then 0 else pps.realRollCount end
+		            ),2) uncompleteRollCount,
+		            case when (
+                        case when ppd.productIsTc=1 then ppdpc.planPartCount else ppd.requirementCount end - case when isnull(pps.realRollCount) then 0 else pps.realRollCount end
+                    ) >0 then '未完成' else '已完成' end _completed,
+		            round((
+		                case when ppd.productIsTc=1 then p.tcProcBomVersionPartsWeight*ppdpc.planPartCount else ppd.planTotalWeight end - case when isnull(pps.realTotalWeight) then 0 else pps.realTotalWeight end
+		            ),2) uncompleteWeight,
+		            case when isnull(pps.realRollCount) then '0' 
+		            	 when ppdpc.planPartCount>pps.realRollCount then '1' 
+		            	 when pps.realRollCount>=ppdpc.planPartCount then '2' 
+		                 end prodStatus,
+		            u.userName orderBizUserName,
+		            u2.userName planBizUserName,
+		            case when ppd.productIsTc=1 then '套' else '卷' end unit
+		        FROM
+		            hs_produce_plan_detail ppd
+		        
+		        LEFT JOIN hs_produce_plan pp ON pp.id = ppd.producePlanId
+		        LEFT JOIN hs_finishproduct fp ON fp.id = ppd.productId
+		        LEFT JOIN hs_finished_product_category fpc ON fpc.id = fp.fpcid
+		        LEFT JOIN hs_sales_order_detail sod ON sod.id = ppd.fromSalesOrderDetailId
+		        LEFT JOIN hs_sales_order so ON sod.salesOrderId = so.id
+		        LEFT JOIN hs_consumer c ON c.id = so.salesOrderConsumerId
+		        LEFT JOIN platform_user u ON so.salesOrderBizUserId = u.id
+		        LEFT JOIN platform_user u2 ON pp.createUserId = u2.id 
+		        LEFT JOIN hs_produce_plan_detail_part_count ppdpc on ppdpc.planDetailId=ppd.id
+		        LEFT JOIN (
+		            SELECT * FROM hs_production_progress WHERE bizType = 2
+		        ) pps ON (ppd.id = pps.bizID and ppdpc.partId=pps.partId)
+		        LEFT JOIN hs_tc_proc_bom_version_parts p on p.id=ppdpc.partId
+		        where 1=1 and ppdpc.planPartCount>0  and ppd.productIsTc=1  
+		        <#if key["plancode"]??>
+		            and pp.producePlanCode like :plancode
+		        </#if>
+		        <#if key["consumername"]??> 
+		            and c.consumerSimpleName  like :consumername
+		        </#if>
+		        <#if key["salesordercode"]??>
+		            and sod.salesOrderSubCode like :salesordercode
+		        </#if>
+		        <#if key["workshop"]??>
+		            and pp.workShop like :workshop
+		        </#if>
+		        <#if key["consumerproductname"]??>
+		            and fp.consumerproductname like :consumerproductname
+		        </#if>
+		        <#if key["factoryproductname"]??>
+		            and fp.factoryproductname like :factoryproductname
+		        </#if>
+		        <#if key["batchcode"]??>
+		            and ppd.batchcode like :batchcode
+		        </#if>
+		        <#if key["productlength"]??>
+		            and ppd.productlength like :productlength
+		        </#if>
+		        <#if key["processbomcode"]??>
+		            and ppd.processbomcode like :processbomcode
+		        </#if>
+		        <#if key["processbomversion"]??>
+		            and ppd.processbomversion like :processbomversion
+		        </#if>
+		        <#if key["username_s"]??>
+		            and u.username like :username_s
+		        </#if>
+		        <#if key["username_p"]??>
+		            and u2.username like :username_p
+		        </#if>
+		        <#if key["bcbomcode"]??>
+		            and ppd.bcbomcode like :bcbomcode
+		        </#if>
+		        <#if key["bcbomversion"]??>
+		            and ppd.bcbomversion like :bcbomversion
+		        </#if>
+		        <#if key["salesorderisexport"]??>
+		            and so.salesOrderIsExport=:salesorderisexport
+		        </#if>
+		        <#if key["isTurnBagPlan"]??>
+		            and ppd.isTurnBagPlan=:isTurnBagPlan
+		        </#if>
+		        <#if key["productwidth"]??>
+                    and ppd.productwidth like :productwidth
+                </#if>
+		        <#if key["closed"]??>
+		            and ppd.closed=:closed
+		        </#if>
+		        <#if key["devicecode"]??>
+		            and pps.devicecode=:devicecode
+		        </#if>
+		        <#if key["start"]?? && key["end"]??>
+		            and pp.createTime between :start and :end
+		        </#if>
+		        <#if !key["start"]?? && key["end"]??>
+		            and pp.createTime <=  :end
+		        </#if>
+		        <#if key["start"]?? && !key["end"]??>
+		            and pp.createTime > :start
+		        </#if>
+		        
+		        <#if key["sstart"]?? && key["send"]??>
+		            and ppd.deleveryDate between :sstart and :send
+		        </#if>
+		        <#if !key["sstart"]?? && key["send"]??>
+		            and ppd.deleveryDate <= :send
+		        </#if>
+		        <#if key["sstart"]?? && !key["send"]??>
+		            and ppd.deleveryDate > :sstart
+		        </#if>
+		        union all
+		        SELECT
+		            ppd.id,
+		            ppd.packReq,
+		            ppdpc.partName,
+		            pp.createTime,
+		            ppd.deviceCode,
+		            ppd.processBomCode,
+		            ppd.processBomVersion,
+		            ppd.bcBomCode,
+		            ppd.bcBomVersion,
+		            so.salesOrderIsExport,
+		            case when so.salesOrderIsExport=0 then '外销' when so.salesOrderIsExport=1 then '内销' else '胚布' end _salesOrderIsExport,
+		            pp.producePlanCode,
+		            pp.workshop,
+		            c.consumerSimpleName,
+		            fpc.categoryCode,
+		            fpc.categoryName,
+		            sod.salesOrderSubCode,
+		            case when isnull(ppd.totalTrayCount) then '-' else ppd.totalTrayCount end totalTrayCount,
+		            ppd.isTurnBagPlan,
+		            ppd.batchCode,
+		            ppd.consumerProductName,
+		            ppd.factoryProductName,
+		            ppd.productWidth,
+		            ppd.productWeight,
+		            ppd.productLength,
+		            round(case when ppd.productIsTc=1 then p.tcProcBomVersionPartsWeight*ppdpc.planPartCount else ppd.planTotalWeight end,2) planTotalWeight, 
+		            ppd.isFinished,
+		            case when datediff(ppd.deleveryDate,now())>3 then '否' else '是' end _yujing,
+		            ppd.closed,
+		            case when ppd.closed=1 then '已关闭' else '正常' end _closed,
+		            ppd.requirementCount requirementCount,
+		            ppd.deleveryDate,
+		            pps.deviceCode _deviceCode,
+		            case when isnull(pps.produceRollCount) then 0 else pps.produceRollCount end produceRollCount,
+		            case when isnull(pps.realRollCount) then 0 else pps.realRollCount end realRollCount,
+		            case when isnull(pps.producePalletCount) then 0 else pps.producePalletCount end producePalletCount,
+		            case when isnull(pps.realPalletCount) then 0 else pps.realPalletCount end realPalletCount,
+		            case when isnull(pps.produceTotalWeight) then 0 else pps.produceTotalWeight end produceTotalWeight,
+		            case when isnull(pps.realTotalWeight) then 0 else pps.realTotalWeight end realTotalWeight,
+		            case when isnull(pps.inBankPalletCount) then 0 else pps.inBankPalletCount end inBankPalletCount,
+		            case when isnull(pps.inBankPalletWeight) then 0 else pps.inBankPalletWeight end inBankPalletWeight,
+		            case when isnull(pps.stockPalletCount) then 0 else pps.stockPalletCount end stockPalletCount,
+		            case when isnull(pps.stockPalletWeight) then 0 else pps.stockPalletWeight end stockPalletWeight,
+		            case when isnull(pps.deliveryPalletCount) then 0 else pps.deliveryPalletCount end deliveryPalletCount,
+		            case when isnull(pps.deliveryPalletWeight) then 0 else pps.deliveryPalletWeight end deliveryPalletWeight,
+		            round((
+		                case when ppd.productIsTc=1 then ppdpc.planPartCount else ppd.requirementCount end - case when isnull(pps.realRollCount) then 0 else pps.realRollCount end
+		            ),2) uncompleteRollCount,
+		            case when (
+                        case when ppd.productIsTc=1 then ppdpc.planPartCount else ppd.requirementCount end - case when isnull(pps.realRollCount) then 0 else pps.realRollCount end
+                    ) >0 then '未完成' else '已完成' end _completed,
+		            round((
+		                case when ppd.productIsTc=1 then p.tcProcBomVersionPartsWeight*ppdpc.planPartCount else ppd.planTotalWeight end - case when isnull(pps.realTotalWeight) then 0 else pps.realTotalWeight end
+		            ),2) uncompleteWeight,
+		            case when isnull(pps.realRollCount) then '0' 
+		            	 when ppdpc.planPartCount>pps.realRollCount then '1' 
+		            	 when pps.realRollCount>=ppdpc.planPartCount then '2' 
+		                 end prodStatus,
+		            u.userName orderBizUserName,
+		            u2.userName planBizUserName,
+		            case when ppd.productIsTc=1 then '套' else '卷' end unit
+		        FROM
+		            hs_produce_plan_detail ppd
+		        
+		        LEFT JOIN hs_produce_plan pp ON pp.id = ppd.producePlanId
+		        LEFT JOIN hs_finishproduct fp ON fp.id = ppd.productId
+		        LEFT JOIN hs_finished_product_category fpc ON fpc.id = fp.fpcid
+		        LEFT JOIN hs_sales_order_detail sod ON sod.id = ppd.fromSalesOrderDetailId
+		        LEFT JOIN hs_sales_order so ON sod.salesOrderId = so.id
+		        LEFT JOIN hs_consumer c ON c.id = so.salesOrderConsumerId
+		        LEFT JOIN platform_user u ON so.salesOrderBizUserId = u.id
+		        LEFT JOIN platform_user u2 ON pp.createUserId = u2.id 
+		        LEFT JOIN hs_produce_plan_detail_part_count ppdpc on ppdpc.planDetailId=ppd.id
+		        LEFT JOIN (
+		            SELECT * FROM hs_production_progress WHERE bizType = 2
+		        ) pps ON (ppd.id = pps.bizID)
+		        LEFT JOIN hs_tc_proc_bom_version_parts p on p.id=ppdpc.partId
+		        where 1=1 and requirementCount>0 and ppd.productIsTc in (2,-1)
+		        <#if key["plancode"]??>
+		            and pp.producePlanCode like :plancode
+		        </#if>
+		        <#if key["consumername"]??> 
+		            and c.consumerSimpleName  like :consumername
+		        </#if>
+		        <#if key["salesordercode"]??>
+		            and sod.salesOrderSubCode like :salesordercode
+		        </#if>
+		        <#if key["workshop"]??>
+		            and pp.workShop like :workshop
+		        </#if>
+		        <#if key["consumerproductname"]??>
+		            and fp.consumerproductname like :consumerproductname
+		        </#if>
+		        <#if key["factoryproductname"]??>
+		            and fp.factoryproductname like :factoryproductname
+		        </#if>
+		        <#if key["batchcode"]??>
+		            and ppd.batchcode like :batchcode
+		        </#if>
+		        <#if key["productlength"]??>
+		            and ppd.productlength like :productlength
+		        </#if>
+		        <#if key["processbomcode"]??>
+		            and ppd.processbomcode like :processbomcode
+		        </#if>
+		        <#if key["processbomversion"]??>
+		            and ppd.processbomversion like :processbomversion
+		        </#if>
+		        <#if key["username_s"]??>
+		            and u.username like :username_s
+		        </#if>
+		        <#if key["username_p"]??>
+		            and u2.username like :username_p
+		        </#if>
+		        <#if key["bcbomcode"]??>
+		            and ppd.bcbomcode like :bcbomcode
+		        </#if>
+		        <#if key["bcbomversion"]??>
+		            and ppd.bcbomversion like :bcbomversion
+		        </#if>
+		        <#if key["salesorderisexport"]??>
+		            and so.salesOrderIsExport=:salesorderisexport
+		        </#if>
+		        <#if key["isTurnBagPlan"]??>
+		            and ppd.isTurnBagPlan=:isTurnBagPlan
+		        </#if>
+		        <#if key["productwidth"]??>
+                    and ppd.productwidth like :productwidth
+                </#if>
+		        <#if key["closed"]??>
+		            and ppd.closed=:closed
+		        </#if>
+		        <#if key["devicecode"]??>
+		            and pps.devicecode=:devicecode
+		        </#if>
+		        <#if key["start"]?? && key["end"]??>
+		            and pp.createTime between :start and :end
+		        </#if>
+		        <#if !key["start"]?? && key["end"]??>
+		            and pp.createTime <=  :end
+		        </#if>
+		        <#if key["start"]?? && !key["end"]??>
+		            and pp.createTime > :start
+		        </#if>
+		        
+		        <#if key["sstart"]?? && key["send"]??>
+		            and ppd.deleveryDate between :sstart and :send
+		        </#if>
+		        <#if !key["sstart"]?? && key["send"]??>
+		            and ppd.deleveryDate <= :send
+		        </#if>
+		        <#if key["sstart"]?? && !key["send"]??>
+		            and ppd.deleveryDate > :sstart
+		        </#if>
+          
+          ) x where 1=1 
+         <#if key["prodStatus"]??>
+		         and   x.prodStatus=:prodStatus
+		 </#if>
+        
+        ]]>
+    </sql>
+	
+    <sql comment="翻包订单查询" id="turnBagPlanDetail-list">
+		<![CDATA[
+			select t.*,
+			(SELECT count(1) from hs_roll r LEFT JOIN hs_roll_barcode rb on rb.barcode=r.rollBarcode where rb.producePlanDetailId=t.id and r.rollQualityGradeCode='A' and rb.isAbandon=0 and r.state<>3) rc 
+			from hs_produce_plan_detail t 
+			where isTurnBagPlan='翻包' 	
+			<#if key["salesOrderCode"]??>
+			 and t.salesOrderCode like :salesOrderCode
+			</#if>
+			<#if key["batchCode"]??>
+			 and t.batchCode like :batchCode
+			</#if>
+			
+			<#if key["sort"]??&&key["order"]??>
+					order by ${key["sort"]} ${key["order"]}
+				<#else>
+					order by id desc
+			</#if>
+		]]>
+	</sql>
+	
+	<sql comment="被翻包订单查询" id="turnBagPlanDetail-list2">
+		<![CDATA[
+			select t.*,
+			(SELECT count(1) from hs_roll r LEFT JOIN hs_roll_barcode rb on rb.barcode=r.rollBarcode where rb.producePlanDetailId=t.id and r.rollQualityGradeCode='A' and rb.isAbandon=0 and r.state<>3) rc 
+			from hs_produce_plan_detail t 
+			where isTurnBagPlan='生产' and batchCode in (select batchCode from hs_produce_plan_detail where isTurnBagPlan='翻包')
+			<#if key["salesOrderCode"]??>
+			 and t.salesOrderCode like :salesOrderCode
+			</#if>
+			<#if key["batchCode"]??>
+			 and t.batchCode like :batchCode
+			</#if>
+			
+			<#if key["sort"]??&&key["order"]??>
+					order by ${key["sort"]} ${key["order"]}
+				<#else>
+					order by id desc
+			</#if>
+		]]>
+	</sql>
+
+
+	<sql comment="统计未分配的生产订单" id="produce-order3">
+		<![CDATA[
+			SELECT
+			so.salesOrderCode
+			FROM
+				hs_sales_order_detail sod
+			LEFT JOIN hs_sales_order so ON so.id = sod.salesOrderId
+			WHERE
+				1 = 1
+			AND so.auditState = 2
+			and sod.SALESORDERSUBCODEPRINT is not null
+			and (sod.closed=0 or sod.closed is NULL)
+			 and sod.productId = :PRODUCTID
+			and  (sod.ALLOCATECOUNT<sod.TOTALWEIGHT  or (sod.ALLOCATECOUNT=0 and sod.TOTALWEIGHT=0))
+		]]>
+	</sql>
+
+	<sql comment="查找详情进行分组" id="selectPlanDetailByPlanId">
+		<![CDATA[
+			select batchCode,productModel from hs_produce_plan_detail
+			where producePlanId =(:producePlanId)
+			GROUP BY batchCode,productModel
+		]]>
+	</sql>
+
+	<sql comment="查找详情进行分组" id="findListGroupBy-map">
+		<![CDATA[
+			select * from hs_produce_plan_detail
+			where batchCode =(:batchCode)
+			and productModel =(:productModel)
+			and productStatus is not null
+		]]>
+	</sql>
+</sqls>

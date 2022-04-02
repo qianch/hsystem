@@ -1,0 +1,182 @@
+@charset "utf-8";
+/* CSS Document */
+
+/* 公共样式 */
+body{ background:#2989ce; font-size:12px; margin:0; padding:0; overflow:hidden; font-family:"微软雅黑"; height:100%; width:100%}
+ul{ list-style:none; padding:0; margin:0}
+a{ text-decoration:none; color:inherit}
+.fcolorw{ color:#FFF}
+.fl{ float:left}
+.fr{ float:right}
+.fbold{ font-weight:bold}
+.cpointer{ cursor:pointer}
+.bgtrans{border:none; background:transparent}
+.m15{margin-top:5px;margin-right:60px;}
+.hide{display: none;}
+/*loading*/
+.background { 
+display: block; 
+width: 100%; 
+height: 100%; 
+opacity: 0.8; 
+filter: alpha(opacity=80); 
+background:#fff; 
+position: absolute; 
+top: 0; 
+left: 0; 
+z-index: 2000; 
+} 
+.progressBar { 
+	border:none;
+	background: white url(images/ui.loading.gif) no-repeat 10px center; 
+} 
+.progressBar { 
+display: block; 
+width: 200px; 
+height: 40px; 
+position: fixed; 
+top: 50%; 
+left: 50%; 
+margin-left: -74px; 
+margin-top: -14px; 
+text-indent:50px;
+text-align: left; 
+line-height: 40px; 
+font-size:14px;
+color:#333;
+position: absolute; 
+z-index: 2001; 
+}
+.layermask{
+position:absolute;
+z-index:3000;
+left: 0;
+top: 0;
+width: 100%;
+height: 100%;
+background: #fff;
+opacity: 0.8; 
+filter: alpha(opacity=80);display: none }
+/*loading*/
+/* 头部 */
+.m20{margin: 20px 40px 0 0}
+.tophead{ overflow:hidden; display:inline-block; position:relative; width:100%; background:transparent}
+.topheadlogo{ height:68px; width:100%; background: url(images/hdbg.jpg) top center repeat-x; overflow:hidden; display:inline-block;}
+.companylogo{ width:429px; height:43px; margin:20px 0 0 20px; color:#fff;line-height:25px; font-size:20px;font-weight:bold;
+ no-repeat;
+}
+.topheadmenuicon a{ color:#FFF}
+.icon-home,.icon-person,.icon-data,.icon-setion,.icon-skin,.icon-exit
+{background:url(images/topicon.png) no-repeat; padding-left:30px;  height:24px; float:left;line-height:24px; margin:0 10px; color:#fff}
+.icon-person{background-position:-8px -6px;}
+.icon-home{background-position:-7px -73px;}
+.icon-data{background-position:-8px -38px;}
+.icon-setion{background-position:-8px -110px;}
+.icon-skin{background-position:-6px -145px;}
+.icon-exit{background-position:-6px -174px;}
+.icon-password a{color: #fff}
+.icon-exit a{color: #fff} 
+.icon-password{background: url(images/changepassword.png) no-repeat;height: 24px;float: left; padding-left:30px;line-height:24px; margin:0 10px; color:#fff}
+.toparrow{ width:18px; height:17px; display: inline-block; margin-right:10px; cursor:pointer; position:absolute;top:22px; right:10px;z-index:2000}
+.up{ background:url(images/arrowsup.png) no-repeat}
+.down{ background:url(images/arrowsdown.png) no-repeat}
+.clandericon{ background:url(images/clandericon.png) no-repeat;}
+/*#main{ height:100%}*/
+.pull{ background:url(images/pullup.png) no-repeat; width:18px; height:40px; position:absolute; top:35px; right:10px; cursor:pointer; z-index:999}
+/* 尾部 */
+.foot{ height:20px; color:#CCC; text-align:center;line-height:20px}
+#main{ margin-top:5px}
+/* 左侧菜单 */
+.leftmenu{ width:180px; overflow:hidden; }
+#menu{ overflow-x:hidden; overflow-y:auto}
+.submenu{overflow:hidden; background-color: transparent; color:#333}
+.submenu ul{ line-height:40px; text-align:center; font-size:12px;}
+.submenu ul a{ color:#333; font-size:12px}
+.layout-panel-west .panel-header{background: url(images/lefthead.png) repeat; height: 22px;line-height: 22px;}
+.layout-panel-west .panel-title{color: #fff;text-align: center;}
+/* 右侧菜单 */
+.right{margin-left:5px;}
+.rightborder{}
+/*easyui样式重写*/
+.layout-panel-west .panel-header .panel-title{font-size: 16px;font-weight: normal;}
+.layout-panel-west .panel-header{border-color: #3175b4}
+.layout-panel-west .accordion .accordion-header{background:#E0ECFF url('images/panel_title.png') repeat-x;
+  border-top-width:0;
+  cursor:pointer;
+  font-weight: normal;
+  color:#0E2D5F;}
+.layout-panel-west  .accordion .accordion-header-selected {
+   background:#E0ECFF url('images/panel_titleon.png') repeat-x;
+   border-color:#ccc;
+}
+.layout-panel-west .accordion .accordion-header-selected .panel-title {
+  
+  font-weight: bold;
+}
+.layout-panel-west .accordion .accordion-header .panel-title{color:#0E2D5F;font-size: 14px;text-align: left;}
+.layout-panel-west .accordion .accordion-header{border-color: #99BBE8}
+.layout-panel-west .accordion .accordion-header-selected {
+   border-color:#ccc;
+}
+.datagrid-header-row td .datagrid-cell{font-weight: bold;}
+
+/*icons*/
+.icon{ background:url(images/tabicons.png) no-repeat;width:18px; line-height:18px; display:inline-block;}
+.icon-sys{ background-position:0px -200px;}
+.icon-set{ background-position:-380px -200px;}
+.icon-add{background-position: -20px 0px;}
+.icon-add1{background:url('icon/edit_add.png') no-repeat;}
+.icon-nav{background-position: -100px -20px; }
+.icon-users{background-position: -100px -480px;}
+.icon-role{background-position: -360px -200px;}
+.icon-set{background-position: -380px -200px;}
+.icon-log{background-position: -380px -80px;}
+.icon-delete16{background:url('icon/delete.gif') no-repeat;width:18px; line-height:18px; display:inline-block;}
+.icon-delete{ background-position:-140px -120px;}
+.icon-edit{ background-position:-380px -320px;}
+.icon-magic{ background-position:0px -500px;}
+.icon-database{ background-position:-20px -140px;}
+.icon-expand{ background:url('/images/coll2.gif') no-repeat;}
+.icon-collapse{ background:url('/images/coll3.gif') no-repeat;}
+/*子菜单样式*/
+.submenu_1{background-position: -484px 0 }
+.submenu_2{background-position: -484px -21px}
+.submenu_3{background-position: -484px -44px; }
+.submenu_4{background-position: -484px -68px; }
+.submenu_5{background-position:  -484px -93px; }
+.submenu_6{background-position: -484px -117px;}
+.submenu_7{background-position: -484px -143px; }
+.submenu_8{background-position: -484px -170px; }
+.submenu_9{background-position:  -484px -196px;margin-top: -6px}
+.submenu_10{background-position: -484px -222px; }
+.icon-pic{background-position: -280px -220px;}
+.icon-pic_1{background-position: -40px -340px}
+.icon-product{background-position: -140px -280px;}
+.icon-tj{background-position: -260px -80px}
+.icon-depart{background-position:-300px -80px}
+.icon-dperson{background-position: -140px -480px}
+.icon-system{background-position: -220px -300px}
+.icon-unusual{background-position:-484px -283px}
+.icon-taskgz{background-position: -280px -80px}
+.icon-plan{background-position: -100px -300px}
+.icon-cxxx{background-position: -220px -320px}
+.icon-qygg{background-position: -380px -60px}
+.icon-code{background-position: -120px -400px;}
+.icon-pcard{background-position: -260px -480px;}
+.icon-pappoint{background-position: -100px -60px}
+.icon-prole{background-position: -360px -200px}
+.icon-pinfor{background-position: -80px -60px}
+.icon-pzhinfor{background-position: -100px -480px}
+.icon-run{background-position: -120px -280px } 
+.icon-stateset{background-position: -340px -220px}
+.icon-tzgl{background-position: -300px -220px}
+.icon-tzgllb{background-position: -361px -40px}
+.icon-tzglinfor{background-position: -380px -80px}
+.icon-tzgldj{background-position:  -280px -460px}
+.icon-pjgl{background-position: -140px -400px}
+
+.easyui-accordion ul{list-style-type:none;margin:0px; padding:10px;}
+.easyui-accordion ul li div{ padding:2px 0 0 5px;height:28px;margin-bottom:10px;border:1px dotted #99BBE8; background:#eaf2ff;line-height: 28px}
+.easyui-accordion ul li a{line-height:28px; color:#036;text-algin:center}
+.easyui-accordion ul li .selected{border:1px solid #99BBE8; background:#c5dbfe;cursor:default;padding:2px 0 0 5px;}
+.easyui-accordion ul li .selected a{color:#036;}

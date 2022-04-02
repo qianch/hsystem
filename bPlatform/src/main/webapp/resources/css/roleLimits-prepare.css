@@ -1,0 +1,32 @@
+.myul{margin:0;padding:0;list-style:none; }
+.myul li {
+	height:40px;
+	line-height:40px; 
+	text-align:center; 
+	text-decoration:none;
+	padding:0;
+	border-bottom:1px dotted #ccc;
+}
+
+.myul li a{font-size:14px;text-decoration:none;color:#333}
+
+.myul li:hover{
+	background:#E0ECFF;
+	cursor: pointer;
+}
+
+.myul .selected{
+	background:#E0ECFF;
+	}
+	
+.memu_content{
+	scrollbar-base-color:red;
+	width:200px;
+	padding:0px;
+	display:none;
+}
+.top{background:#eaf2ff;width:100%;table-layout:fixed;border:0px;border-bottom: 1px solid #C3DAF9;margin-top:1px;}
+.top .text{padding-left:15px}
+.sysAuthtree{margin:10px 20px;font:14px}
+.sysAuthtree li div{height:30px;line-height:30px;}
+.sysAuth_but{height:25px;display:none;padding:10px;background:#eeeeee}

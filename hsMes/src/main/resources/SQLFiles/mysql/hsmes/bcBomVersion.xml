@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="BcBomVersionDaoImpl">
+	<sql comment="包材BOM版本" id="bcBomVersion-list">
+		<![CDATA[
+		select * from HS_Bc_Bom_Version where 1=1
+
+		<#if key["id"]??>
+			and (packBomId = (${key["id"]}))
+		</#if>
+		]]>
+	</sql>
+		<sql comment="按父级删除包材BOM版本" id="bcBomVersion-delete-pid">
+		<![CDATA[
+		delete from HS_Bc_Bom_Version where 1=1
+		<#if key["id"]??>
+			and (packBomId = (${key["id"]}))
+		</#if>
+
+		]]>
+	</sql>
+	
+
+
+</sqls>

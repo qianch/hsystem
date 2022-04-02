@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="MaterialActionDaoImpl">
+	<sql comment="原料入库/退库记录" id="materialIn-list">
+		<![CDATA[
+		SELECT * from hs_material_in_record_view where 1=1
+			<#if key["materialCode"]??>
+				and materialCode like :materialCode
+			</#if>
+			<#if key["materialModel"]??>
+				and materialModel like :materialModel
+			</#if>
+			<#if key["palletCode"]??>
+				and palletCode like :palletCode
+			</#if>
+			<#if key["inBankSource"]??>
+				and inBankSource like :inBankSource
+			</#if>
+			<#if key["optUser"]??>
+				and optUser like :optUser
+			</#if>
+			<#if key["produceCategory"]??>
+				and produceCategory like :produceCategory
+			</#if>
+			<#if key["mssId"]??>
+				and mssId like :mssId
+			</#if>
+			<#if key["warehouseCode"]??>
+				and warehouseCode= :warehouseCode
+			</#if>
+			<#if key["warehousePosCode"]??>
+				and warehousePosCode like :warehousePosCode
+			</#if>
+			<#if key["stockState"]??>
+				and stockState= :stockState
+			</#if>
+			<#if key["start"]?? && key["end"]?? >
+				and inTime between :start and :end
+			</#if>
+			<#if key["start"]?? && !key["end"]?? >
+				and inTime>:start
+			</#if>
+			<#if !key["start"]?? && key["end"]?? >
+				and inTime < :end
+			</#if>
+			<#if key["inBankType"]??>
+				and inBankType = :inBankType
+			</#if>
+
+			<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+			</#if>
+		]]>
+	</sql>
+
+	<sql comment="原料出库记录" id="materialOut-list">
+		<![CDATA[
+		SELECT * from hs_material_out_record_view where 1=1
+			<#if key["materialCode"]??>
+				and materialCode like :materialCode
+			</#if>
+			<#if key["materialModel"]??>
+				and materialModel like :materialModel
+			</#if>
+			<#if key["produceCategory"]??>
+				and produceCategory like :produceCategory
+			</#if>
+			<#if key["outOrderCode"]??>
+				and outOrderCode like :outOrderCode
+			</#if>
+			<#if key["isPass"]??>
+				and isPass like :isPass
+			</#if>
+			<#if key["isLocked"]??>
+				and isLocked like :isLocked
+			</#if>
+			<#if key["palletCode"]??>
+				and palletCode like :palletCode
+			</#if>
+			<#if key["workShop"]??>
+				and workShop like :workShop
+			</#if>
+			<#if key["workshopCode"]??>
+				and workshopCode like :workshopCode
+			</#if>
+			<#if key["start"]?? && key["end"]?? >
+				and outTime between :start and :end
+			</#if>
+			<#if key["start"]?? && !key["end"]?? >
+				and outTime>:start
+			</#if>
+			<#if !key["start"]?? && key["end"]?? >
+				and outTime < :end
+			</#if>
+
+			<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+			</#if>
+			order by outTime desc
+		]]>
+	</sql>
+
+	<sql comment="原料总库存" id="materialDetail-list">
+		<![CDATA[
+		SELECT * from hs_material_stock_detail_view where 1=1
+			<#if key["materialCode"]??>
+				and materialCode like :materialCode
+			</#if>
+			<#if key["stockState"]??>
+                and stockState =:stockState
+                <#else>
+                and stockState=0
+            </#if>
+            <#if key["state"]??>
+                and state =:state
+            </#if>
+			<#if key["materialModel"]??>
+				and materialModel like :materialModel
+			</#if>
+			<#if key["produceCategory"]??>
+				and produceCategory like :produceCategory
+			</#if>
+			<#if key["isPass"]??>
+				and isPass like :isPass
+			</#if>
+			<#if key["isLocked"]??>
+				and isLocked like :isLocked
+			</#if>
+			<#if key["palletCode"]??>
+				and palletCode =:palletCode
+			</#if>
+			<#if key["warehouseCode"]??>
+				and warehouseCode=:warehouseCode
+			</#if>
+			<#if key["warehousePosCode"]??>
+				and warehousePosCode =:warehousePosCode
+			</#if>
+			<#if key["start"]?? && key["end"]?? >
+				and productionDate between unix_timestamp(:start )*1000 and unix_timestamp(:end )*1000
+			</#if>
+			<#if key["start"]?? && !key["end"]?? >
+				and productionDate>unix_timestamp(:start )*1000
+			</#if>
+			<#if !key["start"]?? && key["end"]?? >
+				and productionDate < unix_timestamp(:end )*1000
+			</#if>
+
+			<#if key["inTimeStart"]?? && key["inTimeEnd"]?? >
+                and inTime between unix_timestamp(:inTimeStart )*1000 and unix_timestamp(:inTimeEnd )*1000
+            </#if>
+            <#if key["inTimeStart"]?? && !key["inTimeEnd"]?? >
+                and inTime>unix_timestamp(:inTimeStart )*1000
+            </#if>
+            <#if !key["inTimeStart"]?? && key["inTimeEnd"]?? >
+                and inTime < unix_timestamp(:inTimeEnd )*1000
+            </#if>
+
+			<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+				<#else>
+				order by inTime desc
+			</#if>
+		]]>
+	</sql>
+
+	<sql comment="原料异常退回" id="materialForceOut-list">
+		<![CDATA[
+		SELECT * from hs_material_forceout_record_view where 1=1
+			<#if key["materialCode"]??>
+				and materialCode like :materialCode
+			</#if>
+			<#if key["materialModel"]??>
+				and materialModel like :materialModel
+			</#if>
+			<#if key["produceCategory"]??>
+				and produceCategory like :produceCategory
+			</#if>
+			<#if key["isPass"]??>
+				and isPass like :isPass
+			</#if>
+			<#if key["isLocked"]??>
+				and isLocked like :isLocked
+			</#if>
+			<#if key["warehouseCode"]??>
+				and warehouseCode= :warehouseCode
+			</#if>
+			<#if key["warehousePosCode"]??>
+				and warehousePosCode like :warehousePosCode
+			</#if>
+			<#if key["stockState"]??>
+				and stockState= :stockState
+			</#if>
+			<#if key["palletCode"]??>
+				and palletCode like :palletCode
+			</#if>
+			<#if key["start"]?? && key["end"]?? >
+                and outTime between :start and :end
+            </#if>
+			<#if key["start"]?? && !key["end"]?? >
+				and outTime>:start
+			</#if>
+			<#if !key["start"]?? && key["end"]?? >
+				and outTime < :end
+			</#if>
+
+			<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+			</#if>
+		]]>
+	</sql>
+
+
+</sqls>

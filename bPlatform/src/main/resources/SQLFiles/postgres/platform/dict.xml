@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="DictDaoImpl">
+	<sql comment="查询字典表" id="dict-list">
+		<![CDATA[
+			select * from platform_dict where 1=1
+			<#if key["name"]??>
+				and name_zh_CN like :name
+			</#if>
+			<#if key["pid"]??>
+				and cast(pid as varchar) in (:pid)
+			</#if>
+			<#if key["sort"]?? && key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+			</#if>
+		]]>
+	</sql>
+
+	<sql comment="查询字典表" id="dictall-combobox">
+		<![CDATA[
+			select * from platform_dict
+		]]>
+	</sql>
+
+
+	<sql comment="删除字典表" id="dict-delete">
+		<![CDATA[
+			delete from platform_dict where id in (:id)
+		]]>
+	</sql>
+
+	<sql comment="根据Code查询字典列表.COMBOBOX等于" id="dict-combobox">
+		<![CDATA[
+			select * from platform_dict where deprecated=0
+			    <#if key["rootcode"]??>
+			    and  rootcode in (${key["rootcode"]})
+			    </#if>
+				<#if key["defaultId"]??>
+					or id=${key["defaultId"]}
+				</#if>
+			 order by sort asc
+		]]>
+	</sql>
+	<sql comment="根据Code查询字典列表.COMBOBOX等于" id="dict-combobox-deprecated">
+		<![CDATA[
+			select * from platform_dict where (rootcode=:rootcode and deprecated=0) or id=:id order by id asc
+		]]>
+	</sql>
+
+
+	<sql comment="批量更新字典数据的启用/弃用状态" id="dict-enable-batch">
+		<![CDATA[
+			update platform_dict set deprecated=0 where id in (:id)
+		]]>
+	</sql>
+	<sql comment="批量更新字典数据的启用/弃用状态" id="dict-deprecated-batch">
+		<![CDATA[
+			update platform_dict set deprecated=1 where id in (:id)
+		]]>
+	</sql>
+
+</sqls>

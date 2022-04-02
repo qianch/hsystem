@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="SuitErrorLog">
+	<sql comment="条码扫描错误记录列表" id="suitErrorLog-list">
+		<![CDATA[
+			select t.* from hs_siemens_suit_error_log t where 1=1
+			<#if key["FRAGMENTBARCODE"]??> and FRAGMENTBARCODE like :FRAGMENTBARCODE</#if>
+			<#if key["FRAGMENTPRINTTYPE"]??> and FRAGMENTPRINTTYPE like :FRAGMENTPRINTTYPE</#if>
+			<#if key["FRAGMENTCTCODE"]??> and FRAGMENTCTCODE like :FRAGMENTCTCODE</#if>
+			<#if key["FRAGMENTORDERCODE"]??> and FRAGMENTORDERCODE like :FRAGMENTORDERCODE</#if>
+			<#if key["FRAGMENTBATCHCODE"]??> and FRAGMENTBATCHCODE like :FRAGMENTBATCHCODE</#if>
+			<#if key["FRAGMENTCTOCODE"]??> and FRAGMENTCTOCODE like :FRAGMENTCTOCODE</#if>
+			<#if key["FRAGMENTCONSUMERSIMPLENAME"]??> and FRAGMENTCONSUMERSIMPLENAME like :FRAGMENTCONSUMERSIMPLENAME</#if>
+			<#if key["FRAGMENTCONSUMERCATEGORY"]??> and FRAGMENTCONSUMERCATEGORY like :FRAGMENTCONSUMERCATEGORY</#if>
+			<#if key["PARTNAME"]??> and PARTNAME like :PARTNAME</#if>
+			<#if key["FRAGMENTNAME"]??> and FRAGMENTNAME like :FRAGMENTNAME</#if>
+			<#if key["SUITCTCODE"]??> and SUITCTCODE like :SUITCTCODE</#if>
+			<#if key["SUITORDERCODE"]??> and SUITORDERCODE like :SUITORDERCODE</#if>
+			<#if key["SUITBATCHCODE"]??> and SUITBATCHCODE like :SUITBATCHCODE</#if>
+			<#if key["SUITCTOCODE"]??> and SUITCTOCODE like :SUITCTOCODE</#if>
+			<#if key["ERRORMSG"]??> and ERRORMSG like :ERRORMSG</#if>
+			<#if key["SCANTIME"]??> and SCANTIME like :SCANTIME</#if>
+			<#if key["SCANTIME_S"]??&&key["SCANTIME_E"]??>
+				and SCANTIME between :SCANTIME_S and :SCANTIME_E
+			</#if>
+			<#if key["SCANTIME_S"]??&&!key["SCANTIME_E"]??>
+				and SCANTIME > :SCANTIME_S 
+			</#if>
+			<#if !key["SCANTIME_S"]??&&key["SCANTIME_E"]??>
+				and SCANTIME < :SCANTIME_E
+			</#if>
+			<#if key["SCANUSER"]??> and SCANUSER like :SCANUSER</#if>
+			<#if key["PARTBARCODE"]??> and PARTBARCODE like :PARTBARCODE</#if>
+			<#if key["sort"]??&&key["order"]??>
+				order by ${key["sort"]} ${key["order"]}
+				<#else>
+				order by id desc
+			</#if>
+		]]>
+	</sql>
+</sqls>

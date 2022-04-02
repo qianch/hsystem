@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
+<sqls class="TcBomDaoImpl">
+	<sql comment="bom列表" id="tcparts-list">
+		<![CDATA[
+		select * from  HS_TC_PROC_BOM where 1=1 
+		<#if key["code"]??>
+			and WAREHOUSE_CODE like :code
+		</#if>
+		<#if key["name"]??>
+			and WAREHOUSE_NAME like :name
+		</#if>
+		
+		]]>
+	</sql>
+	<sql comment="常规bom列表" id="findBom-list">
+		<![CDATA[
+		select t.* from  HS_TC_PROC_BOM t
+		left join hs_consumer c on c.id=t.tcProcBomConsumerId
+		where 1=1 and t.isTestPro = 0 
+		<#if key["data"]!="">
+			and (t.tcProcBomName like "%${key["data"]}%"
+ 			or t.tcProcBomCode like "%${key["data"]}%"
+ 			or c.CONSUMERNAME like "%${key["data"]}%")
+		</#if>
+		order by t.tcProcBomName
+		]]>
+	</sql>
+	<sql comment="常规查询状态bom列表" id="findBom1-list">
+		<![CDATA[
+		select t.* from  HS_TC_PROC_BOM t
+		left join hs_consumer c on c.id=t.tcProcBomConsumerId
+		left join HS_TC_PROC_BOM_VERSION t1 on t1.tcProcBomId = t.id
+		where 1=1 and t.isTestPro = 0 and t1.auditState=:state
+		
+		<#if key["data"]!="">
+			and (t.tcProcBomName like "%${key["data"]}%"
+ 			or t.tcProcBomCode like "%${key["data"]}%"
+ 			or c.CONSUMERNAME like "%${key["data"]}%")
+		</#if>
+		order by t.tcProcBomName
+		]]>
+	</sql>
+	
+	<sql comment="变更试样bom列表" id="findBom-list1">
+		<![CDATA[
+		select t.* from  HS_TC_PROC_BOM t
+		left join hs_consumer c on c.id=t.tcProcBomConsumerId
+		where 1=1  and t.isTestPro=1 
+		<#if key["data"]!="">
+			and (t.tcProcBomName like "%${key["data"]}%"
+ 			or t.tcProcBomCode like "%${key["data"]}%"
+ 			or c.CONSUMERNAME like "%${key["data"]}%")
+		</#if>
+		order by t.tcProcBomName
+		]]>
+	</sql>
+	
+	<sql comment="变更试样bom列表" id="findBom1-list1">
+		<![CDATA[
+		select t.* from  HS_TC_PROC_BOM t
+		left join hs_consumer c on c.id=t.tcProcBomConsumerId
+		left join HS_TC_PROC_BOM_VERSION t1 on t1.tcProcBomId = t.id
+		where 1=1  and t.isTestPro=1 and t1.auditState=:state
+		<#if key["data"]!="">
+			and (t.tcProcBomName like "%${key["data"]}%"
+ 			or t.tcProcBomCode like "%${key["data"]}%"
+ 			or c.CONSUMERNAME like "%${key["data"]}%")
+		</#if>
+		order by t.tcProcBomName
+		]]>
+	</sql>
+	<sql comment="新品试样bom列表" id="findBom-list2">
+		<![CDATA[
+		select t.* from  HS_TC_PROC_BOM t
+		left join hs_consumer c on c.id=t.tcProcBomConsumerId
+		where 1=1  and t.isTestPro=2 
+		<#if key["data"]!="">
+			and (t.tcProcBomName like "%${key["data"]}%"
+ 			or t.tcProcBomCode like "%${key["data"]}%"
+ 			or c.CONSUMERNAME like "%${key["data"]}%")
+		</#if>
+		order by t.tcProcBomName
+		]]>
+	</sql>
+	
+	<sql comment="新品试样bom列表" id="findBom2-list2">
+		<![CDATA[
+		select t.* from  HS_TC_PROC_BOM t
+		left join hs_consumer c on c.id=t.tcProcBomConsumerId
+		left join HS_TC_PROC_BOM_VERSION t1 on t1.tcProcBomId = t.id
+		where 1=1  and t.isTestPro=2 and t1.auditState=:state
+		<#if key["data"]!="">
+			and (t.tcProcBomName like "%${key["data"]}%"
+ 			or t.tcProcBomCode like "%${key["data"]}%"
+ 			or c.CONSUMERNAME like "%${key["data"]}%")
+		</#if>
+		order by t.tcProcBomName
+		]]>
+	</sql>
+	
+	<sql comment="bom删除" id="tcparts-delete">
+		<![CDATA[
+			delete from HS_TC_PROC_BOM where id in (:id)	
+		]]>
+	</sql>
+	<sql comment="版本列表" id="findV-list">
+		<![CDATA[
+		select * from  HS_TC_PROC_BOM_VERSION where tcProcBomId in (:id) order by TCPROCBOMVERSIONCODE
+		]]>
+	</sql>
+	<sql comment="部件列表" id="findP-list">
+		<![CDATA[
+		select * from  HS_TC_PROC_BOM_VERSION_PARTS where tcProcBomVersoinId in(:id) and isNull(tcProcBomVersionParentParts) and isDeleted=0
+		]]>
+	</sql>
+	<sql comment="删除部件" id="part-delete">
+		<![CDATA[
+		delete from  HS_TC_PROC_BOM_VERSION_PARTS where id in (:id) 
+		]]>
+	</sql>
+	
+	<sql comment="伪删除部件" id="part-falseDelete">
+		<![CDATA[
+		 UPDATE hs_tc_proc_bom_version_parts set isDeleted=1 WHERE id in (:id)
+		]]>
+	</sql>
+	
+	<sql comment="部件列表" id="findPC-list">
+		<![CDATA[
+		select * from  HS_TC_PROC_BOM_VERSION_PARTS where tcProcBomVersionParentParts in (:id) 
+		]]>
+	</sql>
+	<sql comment="删除版本" id="delete-v">
+		<![CDATA[
+		delete from  HS_TC_PROC_BOM_VERSION where TCPROCBOMID in (:id) 
+		]]>
+	</sql>
+	<sql comment="删除套材bom版本时下的部件" id="delete-allparts">
+		<![CDATA[
+			DELETE from HS_TC_PROC_BOM_VERSION_PARTS  where 1=1 and tcProcBomVersoinId not in (select t.id from HS_TC_PROC_BOM_VERSION t )
+		]]>
+	</sql>
+	<sql comment="删除套材bom版本时下的部件的明细" id="delete-allD">
+		<![CDATA[
+			DELETE from HS_Tc_Proc_Bom_Version_Parts_Detail  where 1=1 and TCPROCBOMPARTSID not in (select t.id from HS_TC_PROC_BOM_VERSION_PARTS t )
+		]]>
+	</sql>
+	<sql comment="部件列表" id="findParts-list">
+		<![CDATA[
+		select * from  HS_TC_PROC_BOM_VERSION_PARTS where tcProcBomVersionParentParts  in (:id) 
+		]]>
+	</sql>
+	<sql comment="根据子部件删除下级部件" id="deleteP-list">
+		<![CDATA[
+		delete from  HS_TC_PROC_BOM_VERSION_PARTS where id in (:id) 
+		]]>
+	</sql>
+	<sql comment="根据子部件删除对应明细" id="deleteD-list">
+		<![CDATA[
+		delete from  HS_Tc_Proc_Bom_Version_Parts_Detail where TCPROCBOMPARTSID in (:id) 
+		]]>
+	</sql>
+	<sql comment="查询产品ftc信息" id="findFtcBom-list">
+		<![CDATA[
+			SELECT
+				t.*, c.CONSUMERNAME,
+				c.CONSUMERCODE
+			FROM
+				HS_FINISHPRODUCT t
+			LEFT JOIN hs_consumer c ON c.ID = t.PRODUCTCONSUMERID
+			 
+			WHERE
+				t.productIsTc = -1
+			AND t.obsolete is null
+			AND t.auditState = 2
+			AND t.obsolete is null
+			AND t.PRODUCTCONSUMERID=(:id)
+			<#if key["XID"]??>
+			AND t.id LIKE :XID
+			</#if>
+			<#if key["materielCode"]??>
+			AND t.materielCode LIKE :materielCode
+			</#if>
+			<#if key["consumerCode"]??>
+			AND c.CONSUMERCODE LIKE :consumerCode
+			</#if>
+			<#if key["consumerName"]??>
+			AND c.CONSUMERNAME LIKE :consumerName
+			</#if>
+			<#if key["consumerProductName"]??>
+			AND t.consumerProductName LIKE :consumerProductName
+			</#if>
+			<#if key["productProcessName"]??>
+			AND t.productProcessName LIKE :productProcessName
+			</#if>
+			<#if key["productProcessCode"]??>
+			AND t.productProcessCode LIKE :productProcessCode
+			</#if>
+			<#if key["productProcessbomVersion"]??>
+			AND t.productProcessbomVersion LIKE :productProcessbomVersion
+			</#if>
+			<#if key["productModel"]??>
+			AND t.productModel LIKE :productModel
+			</#if>
+			order by id desc
+		]]>
+	</sql>
+	<sql comment="查询bom的客户信息" id="findConsumer-list">
+		<![CDATA[
+			SELECT
+				t2.tcProcBomConsumerId,t3.*
+			FROM
+				HS_TC_PROC_BOM_VERSION_PARTS t
+			LEFT JOIN HS_TC_PROC_BOM_VERSION t1 ON t.tcProcBomVersoinId = t1.id
+			LEFT JOIN HS_TC_PROC_BOM t2 ON t2.id = t1.TCPROCBOMID
+			left join hs_consumer t3 on t2.tcProcBomConsumerId = t3.id
+			WHERE
+				t.id = (:id)
+		]]>
+	</sql>
+	<sql comment="查询部件下的明细" id="findPartsDetais-list">
+		<![CDATA[
+			select * from HS_Tc_Proc_Bom_Version_Parts_Detail where tcProcBomPartsId = (:id)
+		]]>
+	</sql>
+	<sql comment="查询部件下的明细" id="findPartsEmbryoCloths-list">
+		<![CDATA[
+			select * from HS_TC_PROC_BOM_VERSION_PARTS_FINISHED_WEIGHT_EMBRYO_CLOTH where tcProcBomPartsId = (:id)
+		]]>
+	</sql>
+
+	<sql comment="部件列表" id="findP-mirrorList">
+		<![CDATA[
+		select * from  HS_TC_PROC_BOM_VERSION_PARTS_MIRROR where tcProcBomVersoinId in(:id) and isNull(tcProcBomVersionParentParts) and isDeleted=0
+		]]>
+	</sql>
+
+	<sql comment="订单明细" id="find-salesOrderListById">
+		<![CDATA[
+		select * from  hs_sales_order_detail
+		where salesOrderId=:id
+		group by salesOrderSubCode,procBomId,productProcessBomVersion
+		]]>
+	</sql>
+
+	<sql comment="试样订单校验明细" id="find-selectSalesOrder">
+		<![CDATA[
+			SELECT SOD.factoryProductName,SOD.salesOrderSubCode,F.isCommon FROM HS_Sales_Order_Detail SOD
+			LEFT JOIN hs_finishproduct F ON F.ID = SOD.productId
+			where SOD.salesOrderSubCode=:salesOrderSubCode and SOD.factoryProductName=:factoryProductName
+			and (SOD.closed is null or SOD.closed = 0)
+			and F.isCommon=0
+		]]>
+	</sql>
+
+</sqls>

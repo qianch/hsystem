@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 查找最新的schemaLocation 访问 http://www.springframework.org/schema/ -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation=" 
+        http://www.springframework.org/schema/beans   
+        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+	<bean id="validatorFactory" name="validatorFactory" class="com.bluebirdme.mes.core.valid.ValidatorFactory" >
+		<property name="validators">
+			<map>
+				<entry key="com.bluebirdme.mes.core.valid.annotations.Email" value="com.bluebirdme.mes.core.valid.annotations.Validator.EmailValidator" />
+				<entry key="com.bluebirdme.mes.core.valid.annotations.Future" value="com.bluebirdme.mes.core.valid.annotations.Validator.FutureValidator" />
+				<entry key="com.bluebirdme.mes.core.valid.annotations.In" value="com.bluebirdme.mes.core.valid.annotations.Validator.InValidator" />
+				<entry key="com.bluebirdme.mes.core.valid.annotations.IP" value="com.bluebirdme.mes.core.valid.annotations.Validator.IPValidator" />
+				<entry key="com.bluebirdme.mes.core.valid.annotations.Length" value="com.bluebirdme.mes.core.valid.annotations.Validator.LengthValidator" />
+				<entry key="com.bluebirdme.mes.core.valid.annotations.Max" value="com.bluebirdme.mes.core.valid.annotations.Validator.MaxValidator" />
+				<entry key="com.bluebirdme.mes.core.valid.annotations.Min" value="com.bluebirdme.mes.core.valid.annotations.Validator.MinValidator" />
+				<entry key="com.bluebirdme.mes.core.valid.annotations.NoHtmlTag" value="com.bluebirdme.mes.core.valid.annotations.Validator.NoHtmlTagValidator" />
+				<entry key="com.bluebirdme.mes.core.valid.annotations.NoJavaScript" value="com.bluebirdme.mes.core.valid.annotations.Validator.NoJavaScriptValidator" />
+				<entry key="com.bluebirdme.mes.core.valid.annotations.NoSpecialChar" value="com.bluebirdme.mes.core.valid.annotations.Validator.NoSpecialCharValidator" />
+				<entry key="com.bluebirdme.mes.core.valid.annotations.NotBlank" value="com.bluebirdme.mes.core.valid.annotations.Validator.NotBlankValidator" />
+				<entry key="com.bluebirdme.mes.core.valid.annotations.NotNull" value="com.bluebirdme.mes.core.valid.annotations.Validator.NotNullValidator" />
+				<entry key="com.bluebirdme.mes.core.valid.annotations.Past" value="com.bluebirdme.mes.core.valid.annotations.Validator.PastValidator" />
+				<entry key="com.bluebirdme.mes.core.valid.annotations.Regex" value="com.bluebirdme.mes.core.valid.annotations.Validator.RegexValidator" />
+			</map>
+		</property>
+	</bean>
+</beans>
