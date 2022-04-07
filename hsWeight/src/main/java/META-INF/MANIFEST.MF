@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Main-Class: com.bluebirdme.mes.ui.Main
+Class-Path: httpclient-4.5.2.jar freemarker-2.3.23.jar SuperUtility-1.2.
+ 26.jar RXTXcomm.jar swingx-core-1.6.2-2.jar commons-codec-1.7.jar httpc
+ ore-4.3.2.jar commons-httpclient-3.1.jar gson-2.8.0.jar jsoup-1.8.1.jar
+  commons-logging-1.1.1.jar
+
