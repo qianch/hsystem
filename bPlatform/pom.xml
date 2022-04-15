@@ -20,7 +20,6 @@
     <properties>
         <springframework>5.3.17</springframework>
         <jackson>1.9.13</jackson>
-        <c3p0>0.9.5.5</c3p0>
         <log4j>2.17.1</log4j>
         <jstl>1.2</jstl>
         <servlet>4.0.1</servlet>
