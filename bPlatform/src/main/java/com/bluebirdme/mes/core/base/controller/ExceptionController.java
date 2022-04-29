@@ -72,7 +72,7 @@ public class ExceptionController extends BaseController {
      */
     @RequestMapping("expired")
     public ModelAndView expired() {
-        isAjax = null != request.getHeader("X-Requested-With") ? true : false;
+        isAjax = null != request.getHeader("X-Requested-With");
         model.addAttribute("error", "expired");
         if (isAjax) {
             return new ModelAndView("error/ajaxError", model);
@@ -90,7 +90,7 @@ public class ExceptionController extends BaseController {
     @RequestMapping("ajaxError")
     public String ajaxError() {
         try {
-            Map<String, Object> error = new HashMap();
+            Map<String, Object> error = new HashMap(1);
             error.put("error", request.getAttribute("error"));
             try {
                 int code = request.getAttribute("_HTTP_STATUS_CODE_") == null ? 500 : Integer.valueOf(request.getAttribute("_HTTP_STATUS_CODE_") + "");

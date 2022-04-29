@@ -122,12 +122,8 @@ public class DevHelper {
             String table = desc.value();
             Field[] fields = entity.getDeclaredFields();
             List<Map<String, String>> list = new ArrayList();
-            Field[] arr$ = fields;
-            int length = fields.length;
-
-            for (int i = 0; i < length; ++i) {
-                Field f = arr$[i];
-                Map<String, String> map = new HashMap();
+            for (Field f : fields) {
+                Map<String, String> map = new HashMap(4);
                 Desc d = f.getAnnotation(Desc.class);
                 Column column = f.getAnnotation(Column.class);
                 if (column != null) {
@@ -141,7 +137,7 @@ public class DevHelper {
                 }
             }
 
-            Map<String, Object> data = new HashMap();
+            Map<String, Object> data = new HashMap(5);
             data.put("table", table);
             data.put("entity", Utils.firstCharToLowerCase(entity.getSimpleName()));
             data.put("list", list);
@@ -168,7 +164,7 @@ public class DevHelper {
         if (desc == null) {
             throw new Exception("在类" + clazz.getName() + "上找不到@Desc注解");
         } else {
-            Map<String, String> map = new HashMap();
+            Map<String, String> map = new HashMap(6);
             String Entity = clazz.getSimpleName();
             String entity = StringUtils.firstCharToLowerCase(Entity);
             String time = sdf.format(new Date());

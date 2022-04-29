@@ -122,7 +122,7 @@ public class SpringContextLoader extends ContextLoaderListener {
         // 自动重载SQL内容
         final File file = new File(path);
         logger.info("Watching SQL files:" + file.getAbsolutePath());
-        new Thread(() -> {
+        new UserThreadFactory("WatchGroup").newThread(()->{
             try {
                 new WatchDir(file, true, new FileActionCallback() {
                     @Override
@@ -167,18 +167,18 @@ public class SpringContextLoader extends ContextLoaderListener {
         InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream("system.properties");
         Properties properties = new Properties();
         properties.load(is);
-        String user_log = properties.getProperty("user_log");
-        String exception_log = properties.getProperty("exception_log");
+        String userLog = properties.getProperty("user_log");
+        String exceptionLog = properties.getProperty("exception_log");
         String debug = properties.getProperty("debug");
         String uploadPath = properties.getProperty("upload_path");
-        String db_type = properties.getProperty("dbType");
+        String dbType = properties.getProperty("dbType");
         String runType = properties.getProperty("runType");
-        RuntimeVariable.RUNTYPE = runType == null ? 0 : Integer.parseInt(runType);
-        RuntimeVariable.USER_LOG = user_log == null ? false : (user_log.equalsIgnoreCase("false") ? false : true);
-        RuntimeVariable.EXCEPTION_LOG = exception_log == null ? false : (exception_log.equalsIgnoreCase("false") ? false : true);
-        RuntimeVariable.DEBUG = debug == null ? false : (debug.equalsIgnoreCase("false") ? false : true);
+        RuntimeVariable.RUN_TYPE = runType == null ? 0 : Integer.parseInt(runType);
+        RuntimeVariable.USER_LOG = userLog != null && (!"false".equalsIgnoreCase(userLog));
+        RuntimeVariable.EXCEPTION_LOG = exceptionLog != null && (!"false".equalsIgnoreCase(exceptionLog));
+        RuntimeVariable.DEBUG = debug != null && (!"false".equalsIgnoreCase(debug));
         RuntimeVariable.UPLOAD_PATH = uploadPath;
-        RuntimeVariable.DBTYPE = (db_type == null ? DBType.MYSQL : DBType.getType(db_type));
+        RuntimeVariable.DBTYPE = (dbType == null ? DBType.MYSQL : DBType.getType(dbType));
 
         if (RuntimeVariable.UPLOAD_PATH != null) {
             File file = new File(RuntimeVariable.UPLOAD_PATH);

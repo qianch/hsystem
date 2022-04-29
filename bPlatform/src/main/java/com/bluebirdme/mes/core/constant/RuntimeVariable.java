@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public class RuntimeVariable {
     public static String WEB_PATH;
-    public static int RUNTYPE = 0;
+    public static int RUN_TYPE = 0;
     public static String RUNTIME_VERSION = "16c61fc1-7132-5837-5734-c89c3973589b";
     public static boolean USER_LOG = false;
     public static boolean EXCEPTION_LOG = false;
