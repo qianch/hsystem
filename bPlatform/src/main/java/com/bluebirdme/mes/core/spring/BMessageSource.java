@@ -25,26 +25,26 @@ public class BMessageSource extends AbstractMessageSource implements MessageSour
     /**
      * 存放所有国际化数据
      */
-    private final static Map<String, String> chineseMap = Maps.newHashMap();
-    private final static Map<String, String> englishMap = Maps.newHashMap();
-    private final static Map<String, String> arabicMap = Maps.newHashMap();
-    private final static Map<String, String> turkeyMap = Maps.newHashMap();
+    private final static Map<String, String> CHINESE_MAP = Maps.newHashMap();
+    private final static Map<String, String> ENGLISH_MAP = Maps.newHashMap();
+    private final static Map<String, String> ARABIC_MAP = Maps.newHashMap();
+    private final static Map<String, String> TURKEY_MAP = Maps.newHashMap();
 
     public BMessageSource() {
     }
 
-
     @Override
     public void setBeanClassLoader(ClassLoader classLoader) {
         List<Language> languages = languageService.findAll(Language.class);
-        chineseMap.clear();
-        englishMap.clear();
-        arabicMap.clear();
+        CHINESE_MAP.clear();
+        ENGLISH_MAP.clear();
+        ARABIC_MAP.clear();
+        TURKEY_MAP.clear();
         for (Language language : languages) {
-            chineseMap.put(language.getLanguageCode(), language.getChinese());
-            englishMap.put(language.getLanguageCode(), language.getEnglish());
-            arabicMap.put(language.getLanguageCode(), language.getArabic());
-            turkeyMap.put(language.getLanguageCode(), language.getTurkey());
+            CHINESE_MAP.put(language.getLanguageCode(), language.getChinese());
+            ENGLISH_MAP.put(language.getLanguageCode(), language.getEnglish());
+            ARABIC_MAP.put(language.getLanguageCode(), language.getArabic());
+            TURKEY_MAP.put(language.getLanguageCode(), language.getTurkey());
         }
     }
 
@@ -55,24 +55,23 @@ public class BMessageSource extends AbstractMessageSource implements MessageSour
         return result;
     }
 
-
     private String getText(String code, Locale locale) {
         String languageTag = locale.toLanguageTag();
         String localeText = "";
-        if (languageTag.equalsIgnoreCase("zh-CN")) {
-            localeText = chineseMap.get(code);
+        if ("zh-CN".equalsIgnoreCase(languageTag)) {
+            localeText = CHINESE_MAP.get(code);
         }
 
-        if (languageTag.equalsIgnoreCase("en-US")) {
-            localeText = englishMap.get(code);
+        if ("en-US".equalsIgnoreCase(languageTag)) {
+            localeText = ENGLISH_MAP.get(code);
         }
 
-        if (languageTag.equalsIgnoreCase("ar-EG")) {
-            localeText = arabicMap.get(code);
+        if ("ar-EG".equalsIgnoreCase(languageTag)) {
+            localeText = ARABIC_MAP.get(code);
         }
 
-        if (languageTag.equalsIgnoreCase("tr-TR")) {
-            localeText = turkeyMap.get(code);
+        if ("tr-TR".equalsIgnoreCase(languageTag)) {
+            localeText = TURKEY_MAP.get(code);
         }
 
         if (StringUtils.isEmpty(localeText)) {

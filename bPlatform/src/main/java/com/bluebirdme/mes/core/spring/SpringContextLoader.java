@@ -69,13 +69,8 @@ public class SpringContextLoader extends ContextLoaderListener {
                     }
                 }
             }
-
-            logger.info("资源部署完毕");
-            logger.info("系统启动中...");
-            Thread.sleep(1000);
             String path = PathUtils.getClassPath() + File.separator + "SQLFiles" + File.separator + new SystemProperties().getAsString("dbType");
             loadSql(path);
-            sqlListener(path);
         } catch (Exception e) {
             logger.error(e.getLocalizedMessage(), e);
             StartException.show(e);
@@ -98,7 +93,7 @@ public class SpringContextLoader extends ContextLoaderListener {
         Map<String, String> sql = new HashMap();
         SAXReader reader = new SAXReader(true);
         Document doc;
-        List<Element> eList;
+        List<Element> elements;
         Element root;
         for (File file : files) {
             logger.info(" [Loading " + file.getName() + " ]");
@@ -107,8 +102,8 @@ public class SpringContextLoader extends ContextLoaderListener {
             if (root == null) {
                 continue;
             }
-            eList = root.elements("sql");
-            for (Element e : eList) {
+            elements = root.elements("sql");
+            for (Element e : elements) {
                 if (sql.containsKey(e.attribute("id").getText())) {
                     throw new SQLTemplateException("重复的SQL ID定义:" + e.attribute("id").getText() + "，文件:" + file.getName());
                 }
@@ -116,46 +111,6 @@ public class SpringContextLoader extends ContextLoaderListener {
             }
         }
         SQL.setSql(sql);
-    }
-
-    public void sqlListener(final String path) {
-        // 自动重载SQL内容
-        final File file = new File(path);
-        logger.info("Watching SQL files:" + file.getAbsolutePath());
-        new UserThreadFactory("WatchGroup").newThread(()->{
-            try {
-                new WatchDir(file, true, new FileActionCallback() {
-                    @Override
-                    public void create(File file1) {
-                        try {
-                            loadSql(path);
-                        } catch (Exception e) {
-                            logger.error(e.getLocalizedMessage(), e);
-                        }
-                    }
-
-                    @Override
-                    public void delete(File file1) {
-                        try {
-                            loadSql(path);
-                        } catch (Exception e) {
-                            logger.error(e.getLocalizedMessage(), e);
-                        }
-                    }
-
-                    @Override
-                    public void modify(File file1) {
-                        try {
-                            loadSql(path);
-                        } catch (Exception e) {
-                            logger.error(e.getLocalizedMessage(), e);
-                        }
-                    }
-                });
-            } catch (Exception e) {
-                logger.error(e.getLocalizedMessage(), e);
-            }
-        }).start();
     }
 
     /**

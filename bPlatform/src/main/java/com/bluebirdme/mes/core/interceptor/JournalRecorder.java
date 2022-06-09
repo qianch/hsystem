@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.lang.reflect.Method;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @author qianchen
@@ -42,7 +43,7 @@ public class JournalRecorder {
     @Resource
     BeanFactory beanFactory;
 
-    private static LocalVariableTableParameterNameDiscoverer discoverer = new LocalVariableTableParameterNameDiscoverer();
+    private static final LocalVariableTableParameterNameDiscoverer DISCOVERER = new LocalVariableTableParameterNameDiscoverer();
     ThreadLocal<Long> time = new ThreadLocal();
 
     public JournalRecorder() {
@@ -58,25 +59,25 @@ public class JournalRecorder {
         MethodSignature ms = (MethodSignature) joinPoint.getSignature();
         Class<? extends Object> clazz = joinPoint.getTarget().getClass();
         Object[] os = joinPoint.getArgs();
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        HttpServletRequest request = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest();
         HttpSession session = request.getSession();
 
         Method method = ms.getMethod();
         Journal journal = method.getAnnotation(Journal.class);
         String userName = session.getAttribute(Constant.CURRENT_USER_NAME) == null ? "" : session.getAttribute(Constant.CURRENT_USER_NAME).toString();
-        String loginName = userName.equals("") ? "-" : session.getAttribute(Constant.CURRENT_USER_LOGINNAME).toString();
-        Long userId = userName.equals("") ? -999 : (Long) session.getAttribute(Constant.CURRENT_USER_ID);
+        String loginName = "".equals(userName) ? "-" : session.getAttribute(Constant.CURRENT_USER_LOGINNAME).toString();
+        Long userId = "".equals(userName) ? -999 : (Long) session.getAttribute(Constant.CURRENT_USER_ID);
 
         // 检查是否开启记录用户日志，对于要求记录在数据库的日志，要写入到日志表中
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder builder = new StringBuilder();
         if (RuntimeVariable.USER_LOG && journal.logType() == LogType.DB) {
             Log log = new Log();
             String beanName = StringUtils.firstCharToLowerCase(clazz.getSimpleName());
             HandlerMethod hm = new HandlerMethod(beanName, beanFactory, method);
-            StringBuffer params = new StringBuffer();
+            StringBuilder params = new StringBuilder();
             for (int i = 0; i < hm.getMethodParameters().length; i++) {
-                hm.getMethodParameters()[i].initParameterNameDiscovery(discoverer);
-                params.append((i == 0 ? "" : ",") + hm.getMethodParameters()[i].getParameterName());
+                hm.getMethodParameters()[i].initParameterNameDiscovery(DISCOVERER);
+                params.append(i == 0 ? "" : ",").append(hm.getMethodParameters()[i].getParameterName());
             }
             log.setLogDate(new Date());
             log.setUserName(userName);
@@ -85,34 +86,34 @@ public class JournalRecorder {
             log.setParams(params.toString());
             log.setUserId(userId);
             log.setParamsValue(GsonTools.toJson(os));
-            String IP = request.getHeader("X-Real-IP");
-            if (IP == null || IP.length() == 0 || "unknown".equalsIgnoreCase(IP)) {
-                IP = request.getRemoteAddr();
+            String ip = request.getHeader("X-Real-IP");
+            if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+                ip = request.getRemoteAddr();
             }
-            log.setIp(IP);
+            log.setIp(ip);
 
-            buffer.setLength(0);
-            buffer.append("AppVersion:");
-            buffer.append(request.getHeader("AppVersion"));
-            buffer.append("|UserID:");
-            buffer.append(request.getHeader("UserID"));
-            buffer.append("|User-Agent:");
-            buffer.append(request.getHeader("User-Agent"));
-            log.setRequestIdentity(buffer.toString());
+            builder.setLength(0);
+            builder.append("AppVersion:");
+            builder.append(request.getHeader("AppVersion"));
+            builder.append("|UserID:");
+            builder.append(request.getHeader("UserID"));
+            builder.append("|User-Agent:");
+            builder.append(request.getHeader("User-Agent"));
+            log.setRequestIdentity(builder.toString());
             logService.save(log);
         }
 
-        buffer.setLength(0);
-        buffer.append("\n[用户]\t");
-        buffer.append(userName);
-        buffer.append("\n[操作]\t");
-        buffer.append(journal.name());
-        buffer.append("\n[地址]\t");
-        buffer.append(request.getRequestURL().toString());
-        buffer.append("\n[后台]\t");
-        buffer.append(clazz.getName());
-        buffer.append(".");
-        buffer.append(method.getName() + "\n");
-        logger.debug(buffer.toString());
+        builder.setLength(0);
+        builder.append("\n[用户]\t");
+        builder.append(userName);
+        builder.append("\n[操作]\t");
+        builder.append(journal.name());
+        builder.append("\n[地址]\t");
+        builder.append(request.getRequestURL().toString());
+        builder.append("\n[后台]\t");
+        builder.append(clazz.getName());
+        builder.append(".");
+        builder.append(method.getName()).append("\n");
+        logger.debug(builder.toString());
     }
 }

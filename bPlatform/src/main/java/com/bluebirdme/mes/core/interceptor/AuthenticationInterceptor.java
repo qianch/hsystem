@@ -48,7 +48,6 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
         } else {
             response.sendRedirect(this.loginPath);
         }
-
         return false;
     }
 }
