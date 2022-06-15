@@ -35,7 +35,7 @@ public class ParameterValidation {
     @Resource
     ValidatorFactory factory;
     Map<Class<? extends Annotation>, Class<?>> validators = null;
-    private static LocalVariableTableParameterNameDiscoverer discoverer = new LocalVariableTableParameterNameDiscoverer();
+    private static final LocalVariableTableParameterNameDiscoverer discoverer = new LocalVariableTableParameterNameDiscoverer();
 
     public ParameterValidation() {
     }
@@ -64,10 +64,7 @@ public class ParameterValidation {
 
     public <T> void validEntity(T t) throws IllegalArgumentException, IllegalAccessException, InstantiationException, ValidException {
         Field[] fields = t.getClass().getDeclaredFields();
-        int length = fields.length;
-
-        for (int i = 0; i < length; ++i) {
-            Field field = fields[i];
+        for (Field field : fields) {
             field.setAccessible(true);
             Iterator it = this.validators.entrySet().iterator();
 
