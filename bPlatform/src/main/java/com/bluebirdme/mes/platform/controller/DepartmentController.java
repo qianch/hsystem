@@ -95,7 +95,7 @@ public class DepartmentController extends BaseController {
         if (!_department.getName().equals(department.getName()) && this.departmentService.isExist(Department.class, map)) {
             throw new BusinessException("部门名称重复:" + department.getName());
         }
-        this.departmentService.update2(new Object[]{department});
+        this.departmentService.update2(department);
         return (new GsonBuilder()).serializeNulls().create().toJson(department);
     }
 
@@ -103,7 +103,7 @@ public class DepartmentController extends BaseController {
     @ResponseBody
     @Journal(name = "批量更新部门层级关系")
     @RequestMapping(value = {"batchUpdateDepartmentLevel"}, method = {RequestMethod.POST})
-    public String batchUpdateDepartmentLevel(@RequestBody List<Department> list) throws Exception {
+    public String batchUpdateDepartmentLevel(@RequestBody List<Department> list) {
         this.departmentService.batchUpdateDepartmentLevel(list);
         return "{}";
     }
@@ -112,8 +112,8 @@ public class DepartmentController extends BaseController {
     @Journal(name = "编辑部门信息")
     @RequestMapping({"editDepartmentById"})
     public String editDepartmentById(String id) {
-        Department dpartment = this.departmentService.findById(Department.class, Long.parseLong(id));
-        return (new Gson()).toJson(dpartment);
+        Department department = this.departmentService.findById(Department.class, Long.parseLong(id));
+        return (new Gson()).toJson(department);
     }
 
     @ResponseBody
@@ -194,7 +194,7 @@ public class DepartmentController extends BaseController {
     @RequestMapping(value = "queryDepartmentByType")
     public String queryDepartmentByType(String type) throws Exception {
         List<Map<String, Object>> list = departmentService.queryAllDepartmentByType(type);
-        List<Map<String, Object>> combobox = new ArrayList<Map<String, Object>>();
+        List<Map<String, Object>> combobox = new ArrayList<>();
         Map<String, Object> map;
         for (Map<String, Object> m : list) {
             map = new HashMap();

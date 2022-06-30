@@ -146,7 +146,7 @@ public class DictController extends BaseController {
                     dict.setRootCode(dict.getCode());
                 }
 
-                this.dictService.save(new Object[]{dict});
+                this.dictService.save(dict);
                 if (dict.getDeprecated() == 1) {
                     dict.setName_zh_CN(dict.getName_zh_CN() + "[弃用]");
                 }

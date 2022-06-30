@@ -81,14 +81,14 @@ public class ExcelController extends BaseController {
         }
 
         String fileName = file.getOriginalFilename();
-        String fileUUIDName = UUID.randomUUID().toString();
+        String id = UUID.randomUUID().toString();
         String suffix = fileName.lastIndexOf(".") == -1 ? "" : fileName.substring(fileName.lastIndexOf(".") + 1);
         String filePath = RuntimeVariable.UPLOAD_PATH + File.separator;
         if (!(new File(filePath)).exists()) {
             (new File(filePath)).mkdirs();
         }
 
-        filePath = filePath + fileUUIDName + "." + suffix;
+        filePath = filePath + id + "." + suffix;
         File target = new File(filePath);
         byte[] bytes = file.getBytes();
         FileCopyUtils.copy(bytes, target);
