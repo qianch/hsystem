@@ -197,13 +197,13 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
                 // udpateSalesOrderAssignedCount(audit.getFormId());
                 // 生产任务通过时，改变产品的工艺明细和包装明细
                 //producePlanService.updateProductInfo(audit.getFormId());
-                List<Map<String,Object>> list = producePlanDao.selectByFormId(audit.getFormId());
-                for (Map<String,Object> map : list) {
+                List<Map<String, Object>> list = producePlanDao.selectByFormId(audit.getFormId());
+                for (Map<String, Object> map : list) {
                     //查询检测状态不为空的计划明细集合
-                    List<ProducePlanDetail> pList = producePlanDao.findListGroupByMap(map.get("BATCHCODE").toString(),map.get("PRODUCTMODEL").toString());
-                    if(pList.size() > 0){
-                        List<ProducePlanDetail> pdpList = findListByMap(ProducePlanDetail.class,map);
-                        for(ProducePlanDetail p : pdpList){
+                    List<ProducePlanDetail> pList = producePlanDao.findListGroupByMap(map.get("BATCHCODE").toString(), map.get("PRODUCTMODEL").toString());
+                    if (pList.size() > 0) {
+                        List<ProducePlanDetail> pdpList = findListByMap(ProducePlanDetail.class, map);
+                        for (ProducePlanDetail p : pdpList) {
                             p.setProductStatus(pList.get(0).getProductStatus());//送样检测状态
                             auditInstanceDao.update(p);
                         }
@@ -366,8 +366,8 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
 
                                 FtcBomVersion ftcBomVersion = ftcBcBomVersionDao.findById(FtcBomVersion.class, tcfp.getProcBomId());
                                 FtcBom ftcBom = findById(FtcBom.class, ftcBomVersion.getFtcProcBomId());
-                                if(ftcBomVersion.getAuditState() != 2){
-                                    throw new Exception("工艺代码："+ftcBom.getFtcProcBomCode()+"没有审核通过");
+                                if (ftcBomVersion.getAuditState() != 2) {
+                                    throw new Exception("工艺代码：" + ftcBom.getFtcProcBomCode() + "没有审核通过");
                                 }
                                 FtcBomMirror ftcBomMirror = new FtcBomMirror();
                                 BeanUtils.copyProperties(ftcBom, ftcBomMirror);
@@ -433,8 +433,8 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
                     } else if (salesOrderDetail.getProductIsTc() == ProductIsTc.FTC) {//非套材或者胚布
                         FtcBomVersion ftcBomVersion = ftcBcBomVersionDao.findById(FtcBomVersion.class, salesOrderDetail.getProcBomId());
                         FtcBom ftcBom = findById(FtcBom.class, ftcBomVersion.getFtcProcBomId());
-                        if(ftcBomVersion.getAuditState() != 2){
-                            throw new Exception("工艺代码："+ftcBom.getFtcProcBomCode()+"没有审核通过");
+                        if (ftcBomVersion.getAuditState() != 2) {
+                            throw new Exception("工艺代码：" + ftcBom.getFtcProcBomCode() + "没有审核通过");
                         }
                         FtcBomMirror ftcBomMirror = new FtcBomMirror();
                         BeanUtils.copyProperties(ftcBom, ftcBomMirror);
@@ -540,8 +540,8 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
                         } else {
                             FtcBomVersion ftcBomVersion = ftcBcBomVersionDao.findById(FtcBomVersion.class, salesOrderDetail.getProcBomId());
                             FtcBom ftcBom = findById(FtcBom.class, ftcBomVersion.getFtcProcBomId());
-                            if(ftcBomVersion.getAuditState() != 2){
-                                throw new Exception("工艺代码："+ftcBom.getFtcProcBomCode()+"没有审核通过");
+                            if (ftcBomVersion.getAuditState() != 2) {
+                                throw new Exception("工艺代码：" + ftcBom.getFtcProcBomCode() + "没有审核通过");
                             }
                             FtcBomMirror ftcBomMirror = new FtcBomMirror();
                             BeanUtils.copyProperties(ftcBom, ftcBomMirror);

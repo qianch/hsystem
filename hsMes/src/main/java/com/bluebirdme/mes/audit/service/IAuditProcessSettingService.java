@@ -10,10 +10,9 @@ import com.bluebirdme.mes.audit.entity.AuditProcessSetting;
 import com.bluebirdme.mes.core.base.service.IBaseService;
 
 /**
- * 
  * @author 高飞
  * @Date 2016-10-24 14:51:44
  */
 public interface IAuditProcessSettingService extends IBaseService {
-	public void saveAuditSetting(AuditProcessSetting setting);
+    void saveAuditSetting(AuditProcessSetting setting);
 }

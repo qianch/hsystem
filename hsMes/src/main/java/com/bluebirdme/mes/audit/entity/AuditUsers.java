@@ -1,14 +1,15 @@
 package com.bluebirdme.mes.audit.entity;
 
+import com.bluebirdme.mes.core.annotation.Desc;
+import com.bluebirdme.mes.core.base.entity.BaseEntity;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import com.bluebirdme.mes.core.annotation.Desc;
-import com.bluebirdme.mes.core.base.entity.BaseEntity;
-
 /**
  * 审核人员设置
+ *
  * @author Goofy
  * @Date 2016年10月24日 下午2:40:07
  */
@@ -16,42 +17,43 @@ import com.bluebirdme.mes.core.base.entity.BaseEntity;
 @Entity
 @Table(name = "HS_Audit_USERS")
 public class AuditUsers extends BaseEntity {
-	
-	@Desc("等级")
-	@Column(nullable=false)
-	private Integer auditLevel;//1,2
-	
-	@Desc("流程代码")
-	@Column(nullable=false)
-	private String auditCode;
-	
-	@Desc("用户ID")
-	@Column(nullable=false)
-	private Long userId;
 
-	public Integer getAuditLevel() {
-		return auditLevel;
-	}
+    /**
+     * 1,2
+     */
+    @Desc("等级")
+    @Column(nullable = false)
+    private Integer auditLevel;
 
-	public void setAuditLevel(Integer auditLevel) {
-		this.auditLevel = auditLevel;
-	}
+    @Desc("流程代码")
+    @Column(nullable = false)
+    private String auditCode;
 
-	public String getAuditCode() {
-		return auditCode;
-	}
+    @Desc("用户ID")
+    @Column(nullable = false)
+    private Long userId;
 
-	public void setAuditCode(String auditCode) {
-		this.auditCode = auditCode;
-	}
+    public Integer getAuditLevel() {
+        return auditLevel;
+    }
 
-	public Long getUserId() {
-		return userId;
-	}
+    public void setAuditLevel(Integer auditLevel) {
+        this.auditLevel = auditLevel;
+    }
 
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
-	
-	
+    public String getAuditCode() {
+        return auditCode;
+    }
+
+    public void setAuditCode(String auditCode) {
+        this.auditCode = auditCode;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 }

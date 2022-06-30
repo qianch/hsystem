@@ -51,7 +51,9 @@ import java.util.Map;
 @RequestMapping("/audit")
 @Journal(name = "流程实例")
 public class AuditController extends BaseController {
-    // 流程实例页面
+    /**
+     * 流程实例页面
+     */
     final String auditPage = "audit/auditPage";
     final String taskPage = "audit/auditTask";
     final String myTaskPage = "audit/myTaskAudit";
@@ -169,7 +171,7 @@ public class AuditController extends BaseController {
         }
 
         // 判断流程是否结束
-        if (ai.getIsCompleted() == AuditConstant.STATE.FINISHED) {
+        if (ai.getIsCompleted().equals(AuditConstant.STATE.FINISHED)) {
             isLevelTwo = false;
             isLevelOne = false;
             model.addAttribute("isCompleted", true);
@@ -204,104 +206,105 @@ public class AuditController extends BaseController {
         if (level == 1) {
             if (ai.getFirstRealAuditUserId() != null) {
                 User levelOneUser = auditService.findById(User.class, ai.getFirstRealAuditUserId());
-                return ajaxError("当前节点[" + levelOneUser.getUserName() + "]已审核 " + (ai.getFirstAuditResult() == AuditConstant.RS.PASS ? "通过" : "不通过"));
+                return ajaxError("当前节点[" + levelOneUser.getUserName() + "]已审核 " + (ai.getFirstAuditResult().equals(RS.PASS) ? "通过" : "不通过"));
             }
         }
 
         if (ai.getSecondRealAuditUserId() != null) {
             User levelOneUser = auditService.findById(User.class, ai.getSecondRealAuditUserId());
-            return ajaxError("当前节点[" + levelOneUser.getUserName() + "]已审核 " + (ai.getFirstAuditResult() == AuditConstant.RS.PASS ? "通过" : "不通过"));
+            return ajaxError("当前节点[" + levelOneUser.getUserName() + "]已审核 " + (ai.getFirstAuditResult().equals(RS.PASS) ? "通过" : "不通过"));
         }
 
         //判断套材BOM是否导入成功
-        if(result.intValue() == AuditConstant.RS.PASS &&ai.getAuditCode().equals("TC")) {
+        if (result.intValue() == AuditConstant.RS.PASS && ai.getAuditCode().equals("TC")) {
             //查找套材判断依据
             TcBomVersion tcBomVersion1 = auditService.findById(TcBomVersion.class, ai.getFormId());
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("tcProcBomVersoinId", tcBomVersion1.getId());
             List<TcBomVersionParts> tcBomVersionPartsList = auditService.findListByMap(TcBomVersionParts.class, map);
             TcBom tcBom = auditService.findById(TcBom.class, tcBomVersion1.getTcProcBomId());
-            if (tcBomVersion1.getAttachmentId() != null){//导入Execl自动转换PDF失败
-                Map<String, Object> map2 = new HashMap<String, Object>();
+            //导入Excel自动转换PDF失败
+            if (tcBomVersion1.getAttachmentId() != null) {
+                Map<String, Object> map2 = new HashMap<>();
                 map2.put("processBomCode", tcBom.getTcProcBomCode());
                 List<BomFile> bomFileList = auditService.findListByMap(BomFile.class, map2);
                 if (tcBomVersionPartsList.size() == 0 || bomFileList.size() == 0) {
-                    return ajaxError( "套材BOM未成功导入工艺文件，请执行拒绝操作");
+                    return ajaxError("套材BOM未成功导入工艺文件，请执行拒绝操作");
                 }
-            }else {//手动创建信息没有填全
-                if(tcBomVersionPartsList.size() == 0 ) {
-                    return ajaxError( "手动导入套材BOM信息未填全，请执行拒绝操作");
+            } else {//手动创建信息没有填全
+                if (tcBomVersionPartsList.size() == 0) {
+                    return ajaxError("手动导入套材BOM信息未填全，请执行拒绝操作");
                 }
             }
 
         }
 
         //判断非套材BOM是否导入成功
-        if (result.intValue() == AuditConstant.RS.PASS &&ai.getAuditCode().equals("FTC")){
+        if (result.intValue() == AuditConstant.RS.PASS && ai.getAuditCode().equals("FTC")) {
             FtcBomVersion ftcBomVersion = auditService.findById(FtcBomVersion.class, ai.getFormId());
             FtcBom ftcBom = auditService.findById(FtcBom.class, ftcBomVersion.getFtcProcBomId());
-            Map<String, Object> map = new HashMap<String, Object>();
-            map.put("ftcBomVersionId",ftcBomVersion.getId());
+            Map<String, Object> map = new HashMap<>();
+            map.put("ftcBomVersionId", ftcBomVersion.getId());
             List<FtcBomDetail> ftcBomDetailList = auditService.findListByMap(FtcBomDetail.class, map);
-            if (ftcBomVersion.getAttachmentId() != null){//导入Execl自动转换PDF失败
-                Map<String, Object> map2 = new HashMap<String, Object>();
-                map2.put("processBomCode",ftcBom.getFtcProcBomCode());
+            if (ftcBomVersion.getAttachmentId() != null) {
+                Map<String, Object> map2 = new HashMap<>();
+                map2.put("processBomCode", ftcBom.getFtcProcBomCode());
                 List<BomFile> bomFileList = auditService.findListByMap(BomFile.class, map2);
-                if (bomFileList.size()==0){
-                    return ajaxError( "非套材BOM未成功导入工艺文件，请执行拒绝操作");
+                if (bomFileList.size() == 0) {
+                    return ajaxError("非套材BOM未成功导入工艺文件，请执行拒绝操作");
                 }
-                if (ftcBomDetailList.size()==0){
-                    return ajaxError( "非套材BOM明细列表信息未填全，请执行拒绝操作");
+                if (ftcBomDetailList.size() == 0) {
+                    return ajaxError("非套材BOM明细列表信息未填全，请执行拒绝操作");
                 }
-            }else {//手动创建信息没有填全
-                if(ftcBomDetailList.size()==0){
-                    return ajaxError( "手动导入非套材BOM信息未填全，请执行拒绝操作");
+            } else {//手动创建信息没有填全
+                if (ftcBomDetailList.size() == 0) {
+                    return ajaxError("手动导入非套材BOM信息未填全，请执行拒绝操作");
                 }
             }
         }
 
         //判断非套材包材BOM是否导入成
-        if (result.intValue() == AuditConstant.RS.PASS &&ai.getAuditCode().equals("FTCBC")){
+        if (result.intValue() == AuditConstant.RS.PASS && ai.getAuditCode().equals("FTCBC")) {
             FtcBcBomVersion ftcBcBomVersion = auditService.findById(FtcBcBomVersion.class, ai.getFormId());
-            Map<String, Object> map = new HashMap<String, Object>();
-            map.put("packVersionId",ftcBcBomVersion.getId());
+            Map<String, Object> map = new HashMap<>();
+            map.put("packVersionId", ftcBcBomVersion.getId());
             List<FtcBcBomVersionDetail> ftcBcBomVersionDetails = auditService.findListByMap(FtcBcBomVersionDetail.class, map);
             FtcBcBom ftcBcBom = auditService.findById(FtcBcBom.class, ftcBcBomVersion.bid);
-            if (ftcBcBomVersion.getAttachmentId() != null){
+            if (ftcBcBomVersion.getAttachmentId() != null) {
                 FtcBcBom ftcBcBom1 = auditService.findById(FtcBcBom.class, ftcBcBom.getPid());
-                Map<String, Object> map2 = new HashMap<String, Object>();
-                map2.put("bcBomCode",ftcBcBom1.getCode());
+                Map<String, Object> map2 = new HashMap<>();
+                map2.put("bcBomCode", ftcBcBom1.getCode());
                 List<BomFile> bomFileList = auditService.findListByMap(BomFile.class, map2);
-                if (ftcBcBomVersionDetails.size() ==0 || bomFileList.size() == 0){
-                    return ajaxError( "非套材包材BOM未成功导入工艺文件，请执行拒绝操作");
+                if (ftcBcBomVersionDetails.size() == 0 || bomFileList.size() == 0) {
+                    return ajaxError("非套材包材BOM未成功导入工艺文件，请执行拒绝操作");
                 }
             } else {
-                if (ftcBcBomVersionDetails.size() ==0){
-                    return ajaxError( "手动导入非套材包材BOM信息未填全，请执行拒绝操作");
+                if (ftcBcBomVersionDetails.size() == 0) {
+                    return ajaxError("手动导入非套材包材BOM信息未填全，请执行拒绝操作");
                 }
             }
         }
 
         //判断包材BOM导入是否成功
-        if (result.intValue() == AuditConstant.RS.PASS &&ai.getAuditCode().equals("BC")){
+        if (result.intValue() == AuditConstant.RS.PASS && ai.getAuditCode().equals("BC")) {
             BCBomVersion bcBomVersion = auditService.findById(BCBomVersion.class, ai.getFormId());
             BcBom bcBom = auditService.findById(BcBom.class, bcBomVersion.getPackBomId());
-            Map<String, Object> map = new HashMap<String, Object>();
-            map.put("packVersionId",bcBomVersion.getId());
+            Map<String, Object> map = new HashMap<>();
+            map.put("packVersionId", bcBomVersion.getId());
             List<BcBomVersionDetail> bcBomVersionDetails = auditService.findListByMap(BcBomVersionDetail.class, map);
-            if (bcBomVersion.getAttachmentId() != null){
-                Map<String, Object> map2 = new HashMap<String, Object>();
-                map2.put("bcBomCode",bcBom.getPackBomCode());
+            if (bcBomVersion.getAttachmentId() != null) {
+                Map<String, Object> map2 = new HashMap<>();
+                map2.put("bcBomCode", bcBom.getPackBomCode());
                 List<BomFile> bomFileList = auditService.findListByMap(BomFile.class, map2);
-                if (bomFileList.size()==0){
-                    return ajaxError( "包材BOM未成功导入工艺文件，请执行拒绝操作");
+                if (bomFileList.size() == 0) {
+                    return ajaxError("包材BOM未成功导入工艺文件，请执行拒绝操作");
                 }
-                if (bcBomVersionDetails.size()==0){
-                    return ajaxError( "包材BOM明细列表信息未填全，请执行拒绝操作");
+                if (bcBomVersionDetails.size() == 0) {
+                    return ajaxError("包材BOM明细列表信息未填全，请执行拒绝操作");
                 }
-            }else {
-                if (bcBomVersionDetails.size()==0){
-                    return ajaxError( "手动导入包材BOM明细列表信息未填全，请执行拒绝操作");
+            } else {
+                if (bcBomVersionDetails.size() == 0) {
+                    return ajaxError("手动导入包材BOM明细列表信息未填全，请执行拒绝操作");
                 }
             }
 
@@ -315,7 +318,8 @@ public class AuditController extends BaseController {
             map.put("salesOrderId", ai.getFormId());
             List<Map<String, Object>> salesOrderDetailMap = salesOrderService.findListByMap1(ai.getFormId());
             for (Map<String, Object> s : salesOrderDetailMap) {
-                if (s.get("PRODUCTISTC").toString().equals("1")) {//套材
+                //套材
+                if (s.get("PRODUCTISTC").toString().equals("1")) {
                     TcBomVersion tcBomVersion = tcBomVersionService.findById(TcBomVersion.class, Long.parseLong(s.get("PROCBOMID").toString()));
                     if (null == tcBomVersion) {
                         return ajaxError("订单号为:" + s.get("SALESORDERSUBCODE") + "工艺代码为：" + s.get("PRODUCTPROCESSCODE") + "BOM已被删除，审核不通过，请执行拒绝操作");
@@ -323,7 +327,8 @@ public class AuditController extends BaseController {
                         str = "订单号为:" + s.get("SALESORDERSUBCODE") + "工艺代码为：" + s.get("PRODUCTPROCESSCODE");
                         list.add(str);
                     }
-                } else if (s.get("PRODUCTISTC").toString().equals("2")) {//非套材
+                    //非套材
+                } else if (s.get("PRODUCTISTC").toString().equals("2")) {
                     FtcBomVersion ftcBomVersion = ftcBcBomVersionService.findById(FtcBomVersion.class, Long.parseLong(s.get("PROCBOMID").toString()));
                     if (null == ftcBomVersion) {
                         return ajaxError("订单号为:" + s.get("SALESORDERSUBCODE") + "工艺代码为：" + s.get("PRODUCTPROCESSCODE") + "的BOM已被删除，审核不通过，请执行拒绝操作");
@@ -331,7 +336,8 @@ public class AuditController extends BaseController {
                         str = "订单号为:" + s.get("SALESORDERSUBCODE") + "工艺代码为：" + s.get("PRODUCTPROCESSCODE");
                         list.add(str);
                     }
-                } else if (s.get("PRODUCTISTC").toString().equals("-1")) {//胚布
+                    //胚布
+                } else if (s.get("PRODUCTISTC").toString().equals("-1")) {
                     map.clear();
                     map.put("productBatchCode", s.get("PRODUCTBATCHCODE"));
                     map.put("closed", null);
@@ -372,15 +378,15 @@ public class AuditController extends BaseController {
             aiList.addAll(aiList2);
         }
 
-        if(code.startsWith("PBOrder")){
+        if (code.startsWith("PBOrder")) {
             Filter filter = new Filter();
-            filter.set("auditCode","like:" + code);
+            filter.set("auditCode", "like:" + code);
             filter.set("formId", formId.toString());
             Page page = new Page();
             page.setAll(1);
-            List<Map<String, Object>> rows = (List<Map<String, Object>>) auditService.findPageInfo(filter,page).get("rows");
-            for(Map<String,Object> row : rows){
-                AuditInstance instance = auditService.findById(AuditInstance.class,Long.parseLong(row.get("ID").toString()));
+            List<Map<String, Object>> rows = (List<Map<String, Object>>) auditService.findPageInfo(filter, page).get("rows");
+            for (Map<String, Object> row : rows) {
+                AuditInstance instance = auditService.findById(AuditInstance.class, Long.parseLong(row.get("ID").toString()));
                 aiList.add(instance);
             }
         }
@@ -488,11 +494,11 @@ public class AuditController extends BaseController {
     }
 
     public String formatCheckResult(Integer state) {
-        if (state == RS.AUDITING) {
+        if (state.equals(RS.AUDITING)) {
             return "审核中";
-        } else if (state == RS.PASS) {
+        } else if (state.equals(RS.PASS)) {
             return "通过";
-        } else if (state == RS.REJECT) {
+        } else if (state.equals(RS.REJECT)) {
             return "不通过";
         }
         return "未知";

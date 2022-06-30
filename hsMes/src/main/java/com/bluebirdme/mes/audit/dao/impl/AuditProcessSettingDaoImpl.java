@@ -26,24 +26,24 @@ import org.springframework.stereotype.Repository;
 import com.bluebirdme.mes.audit.dao.IAuditProcessSettingDao;
 
 /**
- * 
  * @author 高飞
  * @Date 2016年4月5日 下午4:35:34
  */
 @Repository
 public class AuditProcessSettingDaoImpl extends BaseDaoImpl implements IAuditProcessSettingDao {
-	
-	@Resource SessionFactory factory;
 
-	@Override
-	public Session getSession() {
-		return factory.getCurrentSession();
-	}
+    @Resource
+    SessionFactory factory;
 
-	@Override
-	public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-		return this.findPageInfo(filter,page,"auditProcessSetting-list");
-	}
-	
+    @Override
+    public Session getSession() {
+        return factory.getCurrentSession();
+    }
+
+    @Override
+    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+        return this.findPageInfo(filter, page, "auditProcessSetting-list");
+    }
+
 
 }
