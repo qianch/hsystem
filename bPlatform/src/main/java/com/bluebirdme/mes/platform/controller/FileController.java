@@ -97,7 +97,7 @@ public class FileController {
         }
 
         String fileName = file.getOriginalFilename();
-        String fileUUIDName = UUID.randomUUID().toString();
+        String id = UUID.randomUUID().toString();
         Long size = file.getSize();
         String suffix = fileName.lastIndexOf(".") == -1 ? "" : fileName.substring(fileName.lastIndexOf(".") + 1);
         String filePath = RuntimeVariable.UPLOAD_PATH + File.separator + path + File.separator;
@@ -105,7 +105,7 @@ public class FileController {
             (new File(filePath)).mkdirs();
         }
 
-        filePath = filePath + fileUUIDName + "." + suffix;
+        filePath = filePath + id + "." + suffix;
         File target = new File(filePath);
         FileCopyUtils.copy(file.getInputStream(), new FileOutputStream(target));
         String md5 = MD5Utils.getFileMD5(filePath);
@@ -113,12 +113,12 @@ public class FileController {
         attachment.setFileName(fileName);
         attachment.setFilePath(filePath);
         attachment.setShortFilePath(path);
-        attachment.setFileUUIDName(fileUUIDName);
+        attachment.setFileUUIDName(id);
         attachment.setFileSize(size);
         attachment.setSuffix(suffix);
         attachment.setMd5(md5);
         attachment.setUploadTime(new Date());
-        this.attachmentService.save(new Object[]{attachment});
+        this.attachmentService.save(attachment);
         return (new GsonBuilder()).serializeNulls().setExclusionStrategies(new ExclusionStrategy[]{new GsonExclusion(new String[]{"filePath"})}).create().toJson(attachment);
     }
 
@@ -138,7 +138,7 @@ public class FileController {
         if (file.exists()) {
             file.delete();
         }
-        this.attachmentService.delete(new Object[]{_attachment});
+        this.attachmentService.delete(_attachment);
         return "{}";
     }
 }
