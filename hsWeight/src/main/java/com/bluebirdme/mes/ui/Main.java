@@ -151,14 +151,8 @@ public class Main {
         frmmes.setTitle("恒石纤维基业MES系统称重");
         frmmes.setBounds(100, 100, 1200, 600);
         frmmes.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//		frmmes.setAlwaysOnTop(true);
-        frmmes.setExtendedState(JFrame.MAXIMIZED_BOTH); //最大化
-//		frmmes.setAlwaysOnTop(true);    //总在最前面
-//		frmmes.setResizable(false);    //不能改变大小
-//		frmmes.setUndecorated(true);    //不要边框
-
-        // frmmes.setLocationRelativeTo(null);
-        // frmmes.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        //最大化
+        frmmes.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         JLabel scanText = new JLabel("请扫码");
         scanText.setHorizontalAlignment(SwingConstants.LEFT);
@@ -196,8 +190,8 @@ public class Main {
         label.setHorizontalAlignment(SwingConstants.LEFT);
         label.setFont(new Font("微软雅黑", Font.BOLD, 40));
 
-        JLabel label_1 = new JLabel("介质条码");
-        label_1.setFont(new Font("微软雅黑", Font.BOLD, 40));
+        JLabel jLabel = new JLabel("介质条码");
+        jLabel.setFont(new Font("微软雅黑", Font.BOLD, 40));
 
         carrier = new JTextField();
         carrier.setEditable(false);
@@ -237,8 +231,10 @@ public class Main {
 
         saveButton = new JButton("保 存", new ImageIcon(getClass().getResource("/com/bluebirdme/mes/resources/ok.png")));
         saveButton.setBackground(new Color(192, 192, 192));
-        saveButton.setUI(new BasicButtonUI());// 恢复基本视觉效果
-        saveButton.setMargin(new Insets(0, 0, 0, 0));// 按钮内容与边框距离
+        // 恢复基本视觉效果
+        saveButton.setUI(new BasicButtonUI());
+        // 按钮内容与边框距离
+        saveButton.setMargin(new Insets(0, 0, 0, 0));
         saveButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 saveWeight();
@@ -366,10 +362,10 @@ public class Main {
             }
         });
 
-        JLabel label_5 = new JLabel("下限");
-        label_5.setForeground(Color.ORANGE);
-        label_5.setHorizontalAlignment(SwingConstants.CENTER);
-        label_5.setFont(new Font("微软雅黑", Font.BOLD, 40));
+        JLabel label5 = new JLabel("下限");
+        label5.setForeground(Color.ORANGE);
+        label5.setHorizontalAlignment(SwingConstants.CENTER);
+        label5.setFont(new Font("微软雅黑", Font.BOLD, 40));
 
         minWeight = new JTextField();
         minWeight.setText("0");
@@ -385,10 +381,10 @@ public class Main {
         maxWeight.setFont(new Font("微软雅黑", Font.BOLD, 35));
         maxWeight.setEditable(false);
 
-        JLabel label_6 = new JLabel("上限");
-        label_6.setForeground(Color.ORANGE);
-        label_6.setHorizontalAlignment(SwingConstants.CENTER);
-        label_6.setFont(new Font("微软雅黑", Font.BOLD, 40));
+        JLabel label6 = new JLabel("上限");
+        label6.setForeground(Color.ORANGE);
+        label6.setHorizontalAlignment(SwingConstants.CENTER);
+        label6.setFont(new Font("微软雅黑", Font.BOLD, 40));
 
         label_3 = new JLabel("质量");
         label_3.setForeground(Color.RED);
@@ -417,7 +413,7 @@ public class Main {
                                         .addGroup(groupLayout.createSequentialGroup()
                                                 .addGap(67)
                                                 .addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-                                                        .addComponent(label_5, GroupLayout.PREFERRED_SIZE, 103, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(label5, GroupLayout.PREFERRED_SIZE, 103, GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(label_2, GroupLayout.PREFERRED_SIZE, 97, GroupLayout.PREFERRED_SIZE))
                                                 .addPreferredGap(ComponentPlacement.RELATED)
                                                 .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
@@ -434,7 +430,7 @@ public class Main {
                                                         .addGroup(groupLayout.createSequentialGroup()
                                                                 .addComponent(minWeight, GroupLayout.PREFERRED_SIZE, 170, GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(ComponentPlacement.UNRELATED)
-                                                                .addComponent(label_6, GroupLayout.PREFERRED_SIZE, 103, GroupLayout.PREFERRED_SIZE)
+                                                                .addComponent(label6, GroupLayout.PREFERRED_SIZE, 103, GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(ComponentPlacement.UNRELATED)
                                                                 .addComponent(maxWeight, GroupLayout.PREFERRED_SIZE, 170, GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(ComponentPlacement.UNRELATED)
@@ -447,7 +443,7 @@ public class Main {
                                         .addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
                                                 .addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
                                                         .addGroup(groupLayout.createSequentialGroup()
-                                                                .addComponent(label_1, GroupLayout.PREFERRED_SIZE, 170, GroupLayout.PREFERRED_SIZE)
+                                                                .addComponent(jLabel, GroupLayout.PREFERRED_SIZE, 170, GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(ComponentPlacement.RELATED)
                                                                 .addComponent(carrier, GroupLayout.DEFAULT_SIZE, 986, Short.MAX_VALUE))
                                                         .addGroup(groupLayout.createSequentialGroup()
@@ -474,7 +470,7 @@ public class Main {
                                         .addComponent(barcode, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                 .addGap(18)
                                 .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-                                        .addComponent(label_1, GroupLayout.PREFERRED_SIZE, 55, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel, GroupLayout.PREFERRED_SIZE, 55, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(carrier, GroupLayout.PREFERRED_SIZE, 55, GroupLayout.PREFERRED_SIZE))
                                 .addGap(18)
                                 .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
@@ -492,9 +488,9 @@ public class Main {
                                 .addPreferredGap(ComponentPlacement.RELATED)
                                 .addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)
                                         .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-                                                .addComponent(label_5, GroupLayout.PREFERRED_SIZE, 55, GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(label5, GroupLayout.PREFERRED_SIZE, 55, GroupLayout.PREFERRED_SIZE)
                                                 .addComponent(minWeight, GroupLayout.PREFERRED_SIZE, 55, GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(label_6, GroupLayout.PREFERRED_SIZE, 55, GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(label6, GroupLayout.PREFERRED_SIZE, 55, GroupLayout.PREFERRED_SIZE)
                                                 .addComponent(maxWeight, GroupLayout.PREFERRED_SIZE, 55, GroupLayout.PREFERRED_SIZE)
                                                 .addComponent(label_3, GroupLayout.PREFERRED_SIZE, 55, GroupLayout.PREFERRED_SIZE))
                                         .addGroup(groupLayout.createParallelGroup(Alignment.BASELINE, false)

@@ -52,15 +52,14 @@ public class SerialPortUtils implements SerialPortEventListener {
         try {
             portId = CommPortIdentifier.getPortIdentifier(prop.getProp(Prop.KEY_PORT));
             serialPort = (SerialPort) portId.open("PORTID", 2000);
-			/*serialPort.setSerialPortParams(1200,// 波特率
-					SerialPort.DATABITS_8,// 数据位数
-					SerialPort.STOPBITS_2,// 停止位
-					SerialPort.PARITY_NONE);// 校验*/
-
-            serialPort.setSerialPortParams(Integer.parseInt(prop.getProp(Prop.KEY_BAUD_RATE)),// 波特率
-                    Integer.parseInt(prop.getProp(Prop.KEY_DATA_BIT)),// 数据位数
-                    Integer.parseInt(prop.getProp(Prop.KEY_STOP_BIT)),// 停止位
-                    Integer.parseInt(prop.getProp(Prop.KEY_PARITY_BIT)));// 校验
+            // 波特率
+            serialPort.setSerialPortParams(Integer.parseInt(prop.getProp(Prop.KEY_BAUD_RATE)),
+                    // 数据位数
+                    Integer.parseInt(prop.getProp(Prop.KEY_DATA_BIT)),
+                    // 停止位
+                    Integer.parseInt(prop.getProp(Prop.KEY_STOP_BIT)),
+                    // 校验
+                    Integer.parseInt(prop.getProp(Prop.KEY_PARITY_BIT)));
         } catch (Exception e) {
             e.printStackTrace();
             res.error("串口打开失败");
@@ -96,11 +95,9 @@ public class SerialPortUtils implements SerialPortEventListener {
                 }, 0, 1000);
             }
             return this;
-        } catch (UnsupportedEncodingException e) {
+        } catch (UnsupportedEncodingException | TooManyListenersException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (TooManyListenersException e) {
             e.printStackTrace();
         }
         return this;
@@ -113,8 +110,6 @@ public class SerialPortUtils implements SerialPortEventListener {
         try {
             writer = new PrintWriter(new OutputStreamWriter(serialPort.getOutputStream(), "UTF-8"), true);
             writer.println(prop.getProp(Prop.KEY_COMMAND));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -154,13 +149,16 @@ public class SerialPortUtils implements SerialPortEventListener {
                     //数据到达，回调
                     callback.call(reader, is);
                 }
+            default:
+                break;
         }
     }
 
     public static void main(String[] args) {
         AbstractReadCallback callback = new LanJian_OCS_SZ_2_Callback();
         new SerialPortUtils().open().read(callback);
-        while (true)
+        while (true) {
             System.out.println(callback.getResult());
+        }
     }
 }
