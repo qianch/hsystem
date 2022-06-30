@@ -6,33 +6,28 @@
  */
 package com.bluebirdme.mes.mobile.produce.service.impl;
 
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
 import com.bluebirdme.mes.core.annotation.AnyExceptionRollback;
-
+import com.bluebirdme.mes.core.base.dao.IBaseDao;
+import com.bluebirdme.mes.core.base.entity.Filter;
+import com.bluebirdme.mes.core.base.entity.Page;
+import com.bluebirdme.mes.core.base.service.BaseServiceImpl;
+import com.bluebirdme.mes.mobile.produce.dao.IFeedingRecordDao;
+import com.bluebirdme.mes.mobile.produce.entity.FeedingRecord;
+import com.bluebirdme.mes.mobile.produce.service.IFeedingRecordService;
+import com.bluebirdme.mes.mobile.stock.controller.MobileMaterialController;
 import com.bluebirdme.mes.planner.weave.service.IWeavePlanService;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFFont;
-
+import com.bluebirdme.mes.printer.entity.MyException;
+import com.bluebirdme.mes.stock.entity.ProductStockState;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.stereotype.Service;
 
-import com.bluebirdme.mes.core.base.dao.IBaseDao;
-import com.bluebirdme.mes.core.base.entity.Filter;
-import com.bluebirdme.mes.core.base.entity.Page;
-import com.bluebirdme.mes.core.base.service.BaseServiceImpl;
-import com.bluebirdme.mes.mobile.produce.service.IFeedingRecordService;
-import com.bluebirdme.mes.mobile.produce.dao.IFeedingRecordDao;
-import com.bluebirdme.mes.mobile.produce.entity.FeedingRecord;
-import com.bluebirdme.mes.mobile.stock.controller.MobileMaterialController;
-import com.bluebirdme.mes.printer.entity.MyException;
-import com.bluebirdme.mes.stock.entity.ProductStockState;
+import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -84,10 +79,7 @@ public class FeedingRecordServiceImpl extends BaseServiceImpl implements IFeedin
 	@Resource
 	IWeavePlanService weavePlanService;
 	@Override
-	public SXSSFWorkbook getForceMaterialExport1(Filter filter) throws Exception {
-		SimpleDateFormat sf = new SimpleDateFormat("yyyy年MM月dd日");
-		String templateName = "裁剪投料";
-		SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日");
+	public SXSSFWorkbook getForceMaterialExport1(Filter filter) {
 		SXSSFWorkbook wb = new SXSSFWorkbook();
 		Font font = wb.createFont();
 		font.setFontHeightInPoints((short) 10);
@@ -123,8 +115,8 @@ public class FeedingRecordServiceImpl extends BaseServiceImpl implements IFeedin
 		cellStyle3.setFont(font1);
 		Sheet sheet = wb.createSheet();
 
-		Row row = null;
-		Cell cell = null;
+		Row row;
+		Cell cell;
 		Page page=new Page();
 		page.setRows(99999);
 		Map<String, Object> materialMap=weavePlanService.findWeavePageInfo2(filter, page);
