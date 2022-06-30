@@ -57,7 +57,7 @@ public class Main {
     private static JTextField tareWeight;
     //净重
     private static JTextField grossWeight;
-    private static JEditorPane editorPane = new JEditorPane("text/html", "");
+    private static final JEditorPane EDITOR_PANE = new JEditorPane("text/html", "");
     private static JLabel tipInfo;
     public static Prop prop = new Prop();
 
@@ -182,9 +182,9 @@ public class Main {
         HTMLEditorKit hk = new HTMLEditorKit();
         hk.getStyleSheet().addRule("table{width:100%;font-size:14px;table-layout:fixed;}");
         hk.getStyleSheet().addRule("td{text-align:center;color:red;font-weight:bold;width:12%;}");
-        editorPane.setBorder(null);
-        editorPane.setEditorKit(hk);
-        editorPane.setEditable(false);
+        EDITOR_PANE.setBorder(null);
+        EDITOR_PANE.setEditorKit(hk);
+        EDITOR_PANE.setEditable(false);
 
         tipInfo = new JLabel("请扫卷条码");
         tipInfo.setHorizontalAlignment(SwingConstants.CENTER);
@@ -266,7 +266,7 @@ public class Main {
                     tipInfo.setText("");
                     if (codeScanText.startsWith("R")) {
                         clearForm();
-                        editorPane.setText("加载中，请稍后");
+                        EDITOR_PANE.setText("加载中，请稍后");
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -274,7 +274,7 @@ public class Main {
                                     tipInfo.setText("");
                                     JsonObject json = res.getBarCodeInfo(SERVER_ADDR, codeScanText);
                                     if (json.get("ERROR").getAsBoolean()) {
-                                        editorPane.setText(json.get("MSG").getAsString());
+                                        EDITOR_PANE.setText(json.get("MSG").getAsString());
                                         tipInfo.setText(json.get("MSG").getAsString());
                                         barcode.setText("");
                                     } else {
@@ -296,7 +296,7 @@ public class Main {
                                         } else {
                                             map.put("grade", "尚未判级");
                                         }
-                                        editorPane.setText(Utils.generateToString("info.ftl", map));
+                                        EDITOR_PANE.setText(Utils.generateToString("info.ftl", map));
                                         JsonElement obj = json.get("PRODUCT").getAsJsonObject().get("MINWEIGHT");
                                         if (obj.isJsonNull()) {
                                             clearForm();
@@ -412,7 +412,7 @@ public class Main {
                         .addGroup(groupLayout.createSequentialGroup()
                                 .addContainerGap()
                                 .addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-                                        .addComponent(editorPane, GroupLayout.DEFAULT_SIZE, 1172, Short.MAX_VALUE)
+                                        .addComponent(EDITOR_PANE, GroupLayout.DEFAULT_SIZE, 1172, Short.MAX_VALUE)
                                         .addComponent(tipInfo, GroupLayout.DEFAULT_SIZE, 1172, Short.MAX_VALUE)
                                         .addGroup(groupLayout.createSequentialGroup()
                                                 .addGap(67)
@@ -503,7 +503,7 @@ public class Main {
                                 .addPreferredGap(ComponentPlacement.RELATED)
                                 .addComponent(tipInfo, GroupLayout.PREFERRED_SIZE, 59, GroupLayout.PREFERRED_SIZE)
                                 .addGap(10)
-                                .addComponent(editorPane, GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
+                                .addComponent(EDITOR_PANE, GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
                                 .addContainerGap())
         );
         frmmes.getContentPane().setLayout(groupLayout);
@@ -542,7 +542,7 @@ public class Main {
     }
 
     static void clearForm() {
-        editorPane.setText("");
+        EDITOR_PANE.setText("");
         barcode.setText("");
         carrier.setText("");
         totalWeight.setText("0");
