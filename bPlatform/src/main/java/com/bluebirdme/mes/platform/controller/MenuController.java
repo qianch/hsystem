@@ -105,7 +105,7 @@ public class MenuController extends BaseController {
     @Journal(name = "保存编辑的菜单")
     @RequestMapping(value = {"edit"}, method = {RequestMethod.POST})
     public String edit(Menu menu) throws Exception {
-        menuService.update2(new Object[]{menu});
+        menuService.update2(menu);
         return (new GsonBuilder()).serializeNulls().create().toJson(menu);
     }
 

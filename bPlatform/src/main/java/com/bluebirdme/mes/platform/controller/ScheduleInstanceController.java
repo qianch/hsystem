@@ -29,9 +29,9 @@ import java.io.Serializable;
 @RequestMapping({"/scheduleInstance"})
 @Journal(name = "调度实例")
 public class ScheduleInstanceController extends BaseController {
-    private static final  String INDEX = "platform/scheduleInstance";
-    private static final  String ADD_OR_EDIT = "platform/scheduleInstanceAddOrEdit";
-    private static final  String CRON = "platform/cron";
+    private static final String INDEX = "platform/scheduleInstance";
+    private static final String ADD_OR_EDIT = "platform/scheduleInstanceAddOrEdit";
+    private static final String CRON = "platform/cron";
     @Resource
     IScheduleInstanceService scheduleInstanceService;
 

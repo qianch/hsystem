@@ -74,9 +74,9 @@ public class LoginController extends BaseController {
         User user;
         Map<String, Object> params = new HashMap();
         params.put("loginName", loginName);
-        String md5_password = MD5Utils.getStringMD5(password, "6d02d09506f651a26bdc3fef63494e5b");
+        String md5Password = MD5Utils.getStringMD5(password, "6d02d09506f651a26bdc3fef63494e5b");
         user = userService.findUniqueByMap(User.class, params);
-        if (user != null && user.getPassword().equals(md5_password)) {
+        if (user != null && user.getPassword().equals(md5Password)) {
             if (user.getStatus() == -1) {
                 return (new ModelAndView("login")).addObject("error", "该账户已被禁用");
             }
@@ -102,7 +102,6 @@ public class LoginController extends BaseController {
             request.getServletContext().setAttribute("version", PropertiesUtils.readProperties(rootPath + "system.properties").getProperty("version"));
             return new ModelAndView("redirect:/");
         }
-
         return (new ModelAndView("login")).addObject("error", "用户名或者密码不正确");
     }
 

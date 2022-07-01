@@ -42,7 +42,6 @@ public class PlatformToolsController extends BaseController {
         HandlerMethod method;
         Class<? extends Object> clazz = null;
         HashMap urlMap = new HashMap();
-
         while (true) {
             do {
                 if (!it.hasNext()) {
@@ -54,11 +53,9 @@ public class PlatformToolsController extends BaseController {
 
             clazz = method.getBeanType();
             Method[] methods = clazz.getMethods();
-
             Journal journal = clazz.getAnnotation(Journal.class);
             String base = clazz.getAnnotation(RequestMapping.class).value()[0].substring(1);
             urlMap.put(base, journal == null ? "" : journal.name());
-
             int length = methods.length;
             for (int i = 0; i < length; ++i) {
                 Method m = methods[i];

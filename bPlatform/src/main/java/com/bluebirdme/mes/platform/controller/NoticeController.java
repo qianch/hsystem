@@ -59,7 +59,6 @@ public class NoticeController extends BaseController {
         } else {
             user = this.userService.findById(User.class, userId);
         }
-
         return new ModelAndView("platform/noticeAddOrEdit", this.model.addAttribute("user", user));
     }
 
@@ -80,7 +79,6 @@ public class NoticeController extends BaseController {
         } else {
             user = userService.findById(User.class, notice.getUserId());
         }
-
         notice = this.noticeService.findById(Notice.class, notice.getId());
         return new ModelAndView("platform/noticeAddOrEdit",
                 model.addAttribute("user", user)
@@ -115,7 +113,6 @@ public class NoticeController extends BaseController {
         } else {
             user = userService.findById(User.class, notice.getUserId());
         }
-
         return new ModelAndView("platform/noticeView",
                 model.addAttribute("notice", notice)
                         .addAttribute("user", user));

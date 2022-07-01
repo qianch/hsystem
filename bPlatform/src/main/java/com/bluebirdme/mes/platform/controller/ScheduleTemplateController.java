@@ -33,8 +33,8 @@ public class ScheduleTemplateController extends BaseController {
     /**
      * 任务调度模板页面
      */
-    private static final  String INDEX = "platform/scheduleTemplate";
-    private static final  String addOrEdit = "platform/scheduleTemplateAddOrEdit";
+    private static final String INDEX = "platform/scheduleTemplate";
+    private static final String addOrEdit = "platform/scheduleTemplateAddOrEdit";
 
     @Resource
     IScheduleTemplateService scheduleTemplateService;

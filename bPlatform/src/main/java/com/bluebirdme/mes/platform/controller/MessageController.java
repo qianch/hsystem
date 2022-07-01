@@ -62,7 +62,6 @@ public class MessageController extends BaseController {
         if (!filter.getFilter().containsKey("messageType")) {
             filter.set("messageType", "in:" + getUserMTypes(userId));
         }
-
         filter.set("toUser", session.getAttribute("userId").toString());
         return (new GsonBuilder()).setDateFormat(DATE_FORMAT).create().toJson(msgService.findUnreadMessage(filter, page));
     }
@@ -76,7 +75,6 @@ public class MessageController extends BaseController {
         if (!filter.getFilter().containsKey("messageType")) {
             filter.set("messageType", "in:" + getUserMTypes(userId));
         }
-
         filter.set("toUser", session.getAttribute("userId").toString());
         return (new GsonBuilder()).setDateFormat(DATE_FORMAT).create().toJson(msgService.findReadedMessage(filter, page));
     }
@@ -106,9 +104,9 @@ public class MessageController extends BaseController {
     @RequestMapping(value = {"send"}, method = {RequestMethod.POST})
     public String send(Message msg, @RequestParam(required = true) Integer toType, @RequestBody List<Map<Integer, Long>> sendto) throws IOException {
         if (toType == -1) {
-            this.broadcast(msg);
+            broadcast(msg);
         } else {
-            this.sendto(msg, sendto);
+            sendto(msg, sendto);
         }
         return "{}";
     }
