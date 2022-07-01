@@ -2,6 +2,7 @@
 *.pdb
 packages/
 .vs/
+.vscode/
 LogFiles/
 IndexData/
 BigFileUpLoadStorage/
