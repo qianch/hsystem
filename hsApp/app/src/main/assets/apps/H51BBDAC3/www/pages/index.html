@@ -1,152 +1,211 @@
 ﻿<!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <script src="../resources/js/include.js"></script>
-</head>
-<body>
+  </head>
+  <body>
     <header class="mui-bar mui-bar-nav nouser nomenu">
-        <h1 class="mui-title">恒石MES 智能终端</h1>
+      <h1 class="mui-title">恒石MES 智能终端</h1>
     </header>
     <div class="mui-content">
-        <div class="logo"></div>
-        <form class="mui-input-group">
-            <div class="mui-input-row">
-                <label>账号</label>
-                <input id="user" type="text" class="mui-input-clear" value="" placeholder="请输入账号">
-            </div>
-            <div class="mui-input-row">
-                <label>密码</label>
-                <input id="password" type="password" class="mui-input-password" value="" placeholder="请输入密码">
-            </div>
-            <div class="mui-button-row" style="height:65px">
-                <button type="button" class="mui-btn mui-btn-primary" style="width:80%;" onclick="login()">点击登录（ENT键）</button>
-            </div>
-        </form>
-        <div id="tip" style="color:#504f4f;font-size: 12px;width:250px;margin:0 auto;text-align: center;position: fixed;left: 50%;margin-left: -125px;">
-            请务必确保<br> <label style="color: red;">条码扫描功能键配置</label> （<label id="openConfig" style="color:blue;">点击打开</label>）<br>中的<label style="color: red;">模拟按键</label>为<label style="color: red;">关闭</label>状态
-            <div style="font-size: 12px;color:gray;">
-                当前版本号 :<label id="app_version"></label>
-            </div>
-            <div style="font-size: 12px;color:gray;">
-                <a id="checkForNewVersion">检查更新</a>
-            </div>
-            <div style="font-size: 12px;color:gray;">
-                <a id="serverIp"></a>
-            </div>
-            <div style="height:40px;margin-left:20px;">
-                <div style="float:left;height:30px;margin:5px;color:#007aff;">外网</div>
-                <div style="float:left;" id="external" class="mui-switch mui-switch-mini mui-switch-blue">
-                    <div class="mui-switch-handle"></div>
-                </div>
-            </div>
+      <div class="logo"></div>
+      <form class="mui-input-group">
+        <div class="mui-input-row">
+          <label>账号</label>
+          <input
+            id="user"
+            type="text"
+            class="mui-input-clear"
+            value=""
+            placeholder="请输入账号"
+          />
         </div>
+        <div class="mui-input-row">
+          <label>密码</label>
+          <input
+            id="password"
+            type="password"
+            class="mui-input-password"
+            value=""
+            placeholder="请输入密码"
+          />
+        </div>
+        <div class="mui-button-row" style="height: 65px">
+          <button
+            type="button"
+            class="mui-btn mui-btn-primary"
+            style="width: 80%"
+            onclick="login()"
+          >
+            点击登录（ENT键）
+          </button>
+        </div>
+      </form>
+      <div
+        id="tip"
+        style="
+          color: #504f4f;
+          font-size: 12px;
+          width: 250px;
+          margin: 0 auto;
+          text-align: center;
+          position: fixed;
+          left: 50%;
+          margin-left: -125px;
+        "
+      >
+        请务必确保<br />
+        <label style="color: red">条码扫描功能键配置</label> （<label
+          id="openConfig"
+          style="color: blue"
+          >点击打开</label
+        >）<br />中的<label style="color: red">模拟按键</label>为<label
+          style="color: red"
+          >关闭</label
+        >状态
+        <div style="font-size: 12px; color: gray">
+          当前版本号 :<label id="app_version"></label>
+        </div>
+        <div style="font-size: 12px; color: gray">
+          <a id="checkForNewVersion">检查更新</a>
+        </div>
+        <div style="font-size: 12px; color: gray">
+          <a id="serverIp"></a>
+        </div>
+        <div style="height: 40px; margin-left: 20px">
+          <div style="float: left; height: 30px; margin: 5px; color: #007aff">
+            外网
+          </div>
+          <div
+            style="float: left"
+            id="external"
+            class="mui-switch mui-switch-mini mui-switch-blue"
+          >
+            <div class="mui-switch-handle"></div>
+          </div>
+        </div>
+      </div>
     </div>
     <script>
-		
-        $(document).ready(function () {
-            $("#app_version").text(Config.project.version);
-        });
-		var scanner;
-        /**
-         * 进入首页，做一些初始化操作
-         */
-        App.ready(function () {
-            plus.navigator.closeSplashscreen();
-            appInit();
-            $("#serverIp").text("地址：http://" + SERVER_IP)
-            LS.remove(KEY.SERVER_IP);
-			scanner = new Scanner(parseCode);
-			scanner.scan();
-        });
-		function parseCode(code) {
-		    var user = code.split(";")[0];
-			var password = code.split(";")[1];
-		    $("#user").val(user);
-			$("#password").val(password);
-		}
-        function loadTasks() {
-            App.ajaxGet(App.getServerUrl() + "/msg", function (data) {
-                var notices = data.notice;
-                for (var i = 0; i < notices.length; i++) {
-                    notify(notices[i].TITLE, notices[i].CONTENT);
-                }
-            }, function (e, es, t) { });
+      $(document).ready(function () {
+        $("#app_version").text(Config.project.version);
+      });
+      var scanner;
+      /**
+       * 进入首页，做一些初始化操作
+       */
+      App.ready(function () {
+        plus.navigator.closeSplashscreen();
+        appInit();
+        $("#serverIp").text("地址：http://" + SERVER_IP);
+        LS.remove(KEY.SERVER_IP);
+        scanner = new Scanner(parseCode);
+        scanner.scan();
+      });
+      function parseCode(code) {
+        var user = code.split(";")[0];
+        var password = code.split(";")[1];
+        $("#user").val(user);
+        $("#password").val(password);
+      }
+      function loadTasks() {
+        App.ajaxGet(
+          App.getServerUrl() + "/msg",
+          function (data) {
+            var notices = data.notice;
+            for (var i = 0; i < notices.length; i++) {
+              notify(notices[i].TITLE, notices[i].CONTENT);
+            }
+          },
+          function (e, es, t) {}
+        );
+      }
+
+      var mainPage;
+      document.onkeydown = function (e) {
+        if (e.keyCode == 13) {
+          login();
+        }
+      };
+
+      function login() {
+        var user = $("#user");
+        var password = $("#password");
+        if (isEmpty(user.val())) {
+          user.focus();
+          toast("请输入账号");
+          return;
         }
 
-        var mainPage;
-        document.onkeydown = function (e) {
-            if (e.keyCode == 13) {
-                login();
-            }
+        if (isEmpty(password.val())) {
+          password.focus();
+          toast("请输入密码");
+          return;
         }
-
-        function login() {
-            var user = $("#user");
-            var password = $("#password");
-            if (isEmpty(user.val())) {
-                user.focus();
-                toast("请输入账号");
-                return;
+        waiting("正在登陆");
+        App.ajaxGet(
+          App.getServerUrl() +
+            "login?userName=" +
+            user.val() +
+            "&password=" +
+            password.val(),
+          function (data) {
+            //登陆成功后，清空用户信息
+            if (data.ID == undefined || data.USERNAME == undefined) {
+              closeWaiting();
+              toast("账户或者密码错误!");
             }
+            user.val("");
+            password.val("");
+            toast("登陆成功");
+            LS.set(KEY.USER_ID, data.ID);
+            LS.set(KEY.USER_NAME, data.USERNAME);
+            LS.set(KEY.USER_DEPT, data.T_1);
+            waiting("正在初始化");
+            //预加载页面
+            mainPage = App.preload("main.html");
+            setTimeout(function () {
+              closeWaiting();
+              App.show(mainPage);
+            }, 3000);
+          },
+          function () {
+            closeWaiting();
+            toast("账户或者密码错误!");
+          }
+        );
+      }
+      /**
+       * 打开条码配置
+       */
+      mui("#tip").on("tap", "#openConfig", function () {
+        plus.runtime.launchApplication(
+          {
+            pname: "com.hyipc.app.bootapp",
+          },
+          function (e) {
+            toast("打开失败，请确认是否已安装该应用");
+          }
+        );
+        toast("请选择模拟按键，并关闭它！");
+      });
+      mui("#tip").on("tap", "#checkForNewVersion", function () {
+        checkForUpdate();
+      });
 
-            if (isEmpty(password.val())) {
-                password.focus();
-                toast("请输入密码");
-                return;
-            }
-            waiting("正在登陆");
-            App.ajaxGet(App.getServerUrl() + "login?userName=" + user.val() + "&password=" + password.val(), function (data) {
-                //登陆成功后，清空用户信息
-                if(data.ID == undefined || data.USERNAME == undefined){
-                    closeWaiting();
-                    toast("账户或者密码错误!");
-                }
-                user.val("");
-                password.val("");
-                toast("登陆成功");
-                LS.set(KEY.USER_ID, data.ID);
-                LS.set(KEY.USER_NAME, data.USERNAME);
-                LS.set(KEY.USER_DEPT, data.T_1);
-                waiting("正在初始化");
-                //预加载页面
-                mainPage = App.preload("main.html");
-                setTimeout(function () {
-                    closeWaiting();
-                    App.show(mainPage);
-                }, 3000);
-
-            }, function () {
-                closeWaiting();
-                toast("账户或者密码错误!");
-            });
-        }
-        /**
-         * 打开条码配置
-         */
-        mui("#tip").on("tap", "#openConfig", function () {
-            plus.runtime.launchApplication({
-                pname: "com.hyipc.app.bootapp"
-            }, function (e) {
-                toast("打开失败，请确认是否已安装该应用");
-            });
-            toast("请选择模拟按键，并关闭它！");
+      document
+        .getElementById("external")
+        .addEventListener("toggle", function (event) {
+          if (event.detail.isActive) {
+            LS.set(KEY.SERVER_IP, EXTERNAL_IP);
+            $("#serverIp").text("地址：http://" + EXTERNAL_IP);
+          } else {
+            LS.set(KEY.SERVER_IP, SERVER_IP);
+            $("#serverIp").text("地址：http://" + SERVER_IP);
+          }
+          checkForUpdate();
         });
-        mui("#tip").on("tap", "#checkForNewVersion", function () {
-            checkForUpdate();
-        });
-
-        document.getElementById("external").addEventListener("toggle", function (event) {
-            if (event.detail.isActive) {
-                LS.set(KEY.SERVER_IP, EXTERNAL_IP);
-                $("#serverIp").text("地址：http://" + EXTERNAL_IP);
-            } else {
-                LS.set(KEY.SERVER_IP, SERVER_IP);
-                $("#serverIp").text("地址：http://" + SERVER_IP);     
-            }
-            checkForUpdate();
-        })
-		
     </script>
-</body>
+  </body>
 </html>
