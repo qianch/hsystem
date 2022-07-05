@@ -47,8 +47,6 @@ public class BomController extends BaseController {
     @Resource
     ITcBomService tcBomService;
     @Resource
-    IFtcBomService ftcBomService;
-    @Resource
     IBcBomService bcBomService;
     @Resource
     IBomService bomService;
@@ -111,9 +109,9 @@ public class BomController extends BaseController {
     public String getBcBomCode() {
         List<BcBom> list = bomService.findAll(BcBom.class);
         List<Map<String, String>> cs = new ArrayList<Map<String, String>>();
-        Map<String, String> c = new HashMap<String, String>();
+        Map<String, String> c;
         for (BcBom v : list) {
-            c = new HashMap<String, String>();
+            c = new HashMap<>();
             c.put("v", v.getPackBomCode());
             c.put("t", v.getPackBomName() + "/" + v.getPackBomCode());
             cs.add(c);
@@ -121,12 +119,12 @@ public class BomController extends BaseController {
         return GsonTools.toJson(cs);
     }
 
-    public String getTcBom(String code) throws Exception {
+    public String getTcBom(String code) {
         List<TcBomVersion> list = bomService.getTcVersions(code);
-        List<Map<String, String>> vs = new ArrayList<Map<String, String>>();
-        Map<String, String> version = new HashMap<String, String>();
+        List<Map<String, String>> vs = new ArrayList<>();
+        Map<String, String> version;
         for (TcBomVersion v : list) {
-            version = new HashMap<String, String>();
+            version = new HashMap<>();
             version.put("t", v.getTcProcBomVersionCode() + "[" + (v.getTcProcBomVersionDefault() == 1 ? "默认-" : "") + (v.getTcProcBomVersionEnabled() == 1 ? "启用" : "改版") + "]");
             version.put("v", v.getTcProcBomVersionCode());
             vs.add(version);
@@ -134,12 +132,12 @@ public class BomController extends BaseController {
         return GsonTools.toJson(vs);
     }
 
-    public String getFtcBom(String code) throws Exception {
+    public String getFtcBom(String code) {
         List<FtcBomVersion> list = bomService.getFtcVersions(code);
-        List<Map<String, String>> vs = new ArrayList<Map<String, String>>();
-        Map<String, String> version = new HashMap<String, String>();
+        List<Map<String, String>> vs = new ArrayList<>();
+        Map<String, String> version;
         for (FtcBomVersion v : list) {
-            version = new HashMap<String, String>();
+            version = new HashMap<>();
             version.put("t", v.getFtcProcBomVersionCode() + "[" + (v.getFtcProcBomVersionDefault() == 1 ? "默认-" : "") + (v.getFtcProcBomVersionEnabled() == 1 ? "启用" : "改版") + "]");
             version.put("v", v.getFtcProcBomVersionCode());
             vs.add(version);
@@ -149,10 +147,10 @@ public class BomController extends BaseController {
 
     public String getBcBom(String code) {
         List<BCBomVersion> list = bomService.getBcVersions(code);
-        List<Map<String, String>> vs = new ArrayList<Map<String, String>>();
-        Map<String, String> version = new HashMap<String, String>();
+        List<Map<String, String>> vs = new ArrayList<>();
+        Map<String, String> version;
         for (BCBomVersion v : list) {
-            version = new HashMap<String, String>();
+            version = new HashMap<>();
             version.put("t", v.getPackVersion() + "[" + (v.getPackEnabled() == 1 ? "默认-" : "") + (v.getPackEnabled() == 1 ? "启用" : "改版") + "]");
             version.put("v", v.getPackVersion());
             vs.add(version);
@@ -191,24 +189,18 @@ public class BomController extends BaseController {
     @Journal(name = "重置套材BOM中米长为0的产品为匹配非套材的米长")
     @ResponseBody
     @RequestMapping(value = "resetTcLength", method = {RequestMethod.GET})
-    public String resetTcLength() throws Exception {
+    public String resetTcLength() {
         List<TcBomVersionPartsDetail> tcDetailList = bomService.findAll(TcBomVersionPartsDetail.class);
         for (TcBomVersionPartsDetail tvpd : tcDetailList) {
             Long productId = tvpd.getTcFinishedProductId();
             Double length = tvpd.getLength();
             FinishedProduct fp = bomService.findById(FinishedProduct.class, productId);
-            if (fp == null) {
-                continue;
-            } else {
+            if (fp != null) {
                 if (length == 0) {
                     if (fp.getProductRollLength() != null) {
                         tvpd.setLength(fp.getProductRollLength());
                         bomService.update(tvpd);
-                    } else {
-                        continue;
                     }
-                } else {
-                    continue;
                 }
             }
         }
@@ -232,7 +224,7 @@ public class BomController extends BaseController {
         List<Map<String, Object>> list = new ArrayList<>();
         type = type.toUpperCase();
         switch (type) {
-            case "TC": {
+            case "TC" -> {
                 TcBomVersion v = bomService.findById(TcBomVersion.class, id);
                 //1：套材
                 b.add("1");
@@ -252,14 +244,12 @@ public class BomController extends BaseController {
                 v.setAuditState(AuditConstant.RS.SUBMIT);
                 bomService.update(v);
             }
-            break;
-            case "FTC": {
+            case "FTC" -> {
                 FtcBomVersion v = bomService.findById(FtcBomVersion.class, id);
                 //2:非套材  -1 胚布
                 b.add("-1");
                 b.add("2");
-                String c = String.join(",", b);
-                list = bomService.findSalesOrderDetail(v.getId(), c);
+                list = bomService.findSalesOrderDetail(v.getId(), String.join(",", b));
                 for (Map<String, Object> so : list) {
                     str = so.get("SALESORDERID") + "";
                     SalesOrder salesOrder = bomService.findById(SalesOrder.class, Long.parseLong(str));
@@ -268,14 +258,12 @@ public class BomController extends BaseController {
                     }
                 }
                 if (s.size() > 0) {
-                    String.join(",", s);
-                    return ajaxError("当前有销售订单编号为：" + s + "没有审核通过，不能变更BOM工艺");
+                    return ajaxError("当前有销售订单编号为：" + String.join(",", s) + "没有审核通过，不能变更BOM工艺");
                 }
                 v.setAuditState(AuditConstant.RS.SUBMIT);
                 bomService.update(v);
             }
-            break;
-            case "BC": {
+            case "BC" -> {
                 BCBomVersion v = bomService.findById(BCBomVersion.class, id);
                 list = bomService.findSalesOrderDetail1(v.getId());
                 for (Map<String, Object> so : list) {
@@ -286,15 +274,13 @@ public class BomController extends BaseController {
                     }
                 }
                 if (s.size() > 0) {
-                    String.join(",", s);
-                    return ajaxError("当前有销售订单编号为：" + s + "没有审核通过，不能变更BOM工艺");
+                    return ajaxError("当前有销售订单编号为：" + String.join(",", s) + "没有审核通过，不能变更BOM工艺");
                 }
                 v.setAuditState(AuditConstant.RS.SUBMIT);
                 bomService.update(v);
             }
-            break;
-            default:
-                break;
+            default -> {
+            }
         }
         return ajaxSuccess();
     }
@@ -305,7 +291,7 @@ public class BomController extends BaseController {
     public String getParts(@PathVariable("vid") Long vid, @PathVariable("count") Integer count, @PathVariable("orderDetailId") Long orderDetailId) {
         List<Map<String, Object>> ret = new ArrayList<>();
         Map<String, Object> map = new HashMap<>();
-        if (orderDetailId.longValue() == -1L) {
+        if (orderDetailId == -1L) {
             map.put("tcProcBomVersoinId", vid);
             map.put("isDeleted", 0);
             List<TcBomVersionParts> list = tcBomService.findListByMap(TcBomVersionParts.class, map);
@@ -367,8 +353,8 @@ public class BomController extends BaseController {
                 isWeaveWorkshop = true;
             }
         }
-        boolean danxiangbu = (StringUtils.isEmpty(workShopCode) ? false : (isWeaveWorkshop ? true : false));
-        if (planId.longValue() == -1L) {
+        boolean danxiangbu = (!StringUtils.isEmpty(workShopCode) && (isWeaveWorkshop));
+        if (planId == -1L) {
             map.put("salesOrderDetailId", orderId);
             if (danxiangbu) {
                 map.put("partType", "成品胚布");
@@ -453,7 +439,7 @@ public class BomController extends BaseController {
     public String getPlanParts(@PathVariable("orderId") Long orderId, @PathVariable("planId") Long planId, @PathVariable("partId") Long partId) {
         Map<String, Object> ret = new HashMap<>();
         Map<String, Object> map = new HashMap<>();
-        if (planId.longValue() == -1L) {
+        if (planId == -1L) {
             map.put("salesOrderDetailId", orderId);
             List<SalesOrderDetailPartsCount> list = tcBomService.findListByMap(SalesOrderDetailPartsCount.class, map);
             for (SalesOrderDetailPartsCount p : list) {
@@ -487,8 +473,7 @@ public class BomController extends BaseController {
                 }
             }
         }
-        String json = GsonTools.toJson(ret);
-        return json;
+        return GsonTools.toJson(ret);
     }
 
     //读取excel文件的内容，生成非套材bom

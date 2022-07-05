@@ -383,16 +383,6 @@ public class FtcBomController extends BaseController {
     public String editBomVersion(FtcBomVersion ftcBomVersion, Long fileId) throws Exception {
         HashMap<String, Object> map = new HashMap();
         map.put("ftcProcBomId", ftcBomVersion.getFtcProcBomId());
-		/*map.put("ftcProcBomVersionCode", ftcBomVersion.getFtcProcBomVersionCode());
-		map.put("ftcProcBomVersionDefault", ftcBomVersion.getFtcProcBomVersionDefault());
-		map.put("ftcProcBomVersionEnabled", ftcBomVersion.getFtcProcBomVersionEnabled());
-		if (ftcBomVersion.getAuditState() > 0) {
-			return ajaxError("不能修改审核中或已通过的数据");
-		}
-		if(ftcBomService.isExist(FtcBomVersion.class, map, true)){
-			return ajaxError("已经有相同名字的版本");
-		}*/
-
         List<FtcBomVersion> li = ftcBomService.findListByMap(FtcBomVersion.class, map);
         for (FtcBomVersion fbv : li) {
             if (fbv.getId() == ftcBomVersion.getId()) {
@@ -404,33 +394,12 @@ public class FtcBomController extends BaseController {
                 return ajaxError("已经有相同名字的版本");
             }
         }
-        //ftcBomService.update2(ftcBomVersion);
         ExcelImportMessage eim = ftcBomService.doUpdateFtcBomVersion(ftcBomVersion, fileId);
         if (eim != null && eim.hasError()) {
             Map<String, String> excelErrorMsg = new HashMap<>();
             excelErrorMsg.put("excelErrorMsg", eim.getMessage());
             return GsonTools.toJson(excelErrorMsg);
         }
-        /*
-         *
-         * List<FtcBomVersion> saveList = new ArrayList<FtcBomVersion>();
-         * HashMap<String,Object> map=new HashMap<String,Object>();
-         * map.put("ftcProcBomId", ftcBomVersion.getFtcProcBomId());
-         * List<FtcBomVersion>
-         * li=ftcBomService.findListByMap(FtcBomVersion.class, map);
-         * for(FtcBomVersion fv:li){
-         * if(fv.getFtcProcBomVersionCode().equals(ftcBomVersion
-         * .getFtcProcBomVersionCode
-         * ())&&fv.getId().intValue()!=ftcBomVersion.getId().intValue()){ return
-         * ajaxError("版本号重复！"); }
-         * if(ftcBomVersion.getFtcProcBomVersionDefault()==
-         * 1&&fv.getId().intValue()!=ftcBomVersion.getId().intValue()){
-         * fv.setFtcProcBomVersionDefault(-1); saveList.add(fv); }
-         *
-         * } if (ftcBomVersion.getAuditState() > 0) { return
-         * ajaxError("审核中和审核通过的计划不能编辑！"); } saveList.add(ftcBomVersion);
-         * ftcBomService.update2(saveList.toArray(new FtcBomVersion[] {}));
-         */
         return GsonTools.toJson(ftcBomVersion);
     }
 

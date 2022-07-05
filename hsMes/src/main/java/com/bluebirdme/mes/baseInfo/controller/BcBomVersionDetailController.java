@@ -54,16 +54,27 @@ import java.util.UUID;
 @RequestMapping("/bom/packaging")
 @Journal(name = "包材bom明细")
 public class BcBomVersionDetailController extends BaseController {
-    // 包材bom明细页面
+    /**
+     * 包材bom明细页面
+     */
     final String index = "baseInfo/bcBom/bcBomVersionDetail";
-    // 包材bom明细添加/修改页面
+    /**
+     * 包材bom明细添加/修改页面
+     */
     final String addOrEdit = "baseInfo/bcBom/bcBomVersionDetailAddOrEdit";
-    // 包材bom版本添加/修改页面
+    /**
+     * 包材bom版本添加/修改页面
+     */
     final String addOrEditBomVersion = "baseInfo/bcBom/bCBomVersionAddOrEdit";
-    // 包材bom添加/修改页面
+    /**
+     * 包材bom添加/修改页面
+     */
     final String addOrEditBom = "baseInfo/bcBom/bcBomAddOrEdit";
     final String auditBomVersion = "baseInfo/bcBom/auditBomVersion";
-    final String PAGE_BOMDETAILIMPORT = "baseInfo/bcBom/bcBomDetailUpload";//图纸BOM导入页面
+    /**
+     * 图纸BOM导入页面
+     */
+    final String PAGE_BOM_DETAIL_IMPORT = "baseInfo/bcBom/bcBomDetailUpload";
     @Resource
     IAuditInstanceService auditInstanceService;
     @Resource
@@ -83,7 +94,10 @@ public class BcBomVersionDetailController extends BaseController {
         map.put("packVersionId", bCBomVersion.getId());
         List<BcBomVersionDetail> li = bcBomVersionDetailService.findListByMap(BcBomVersionDetail.class, map);
 
-        return new ModelAndView(auditBomVersion, model.addAttribute("bCBomVersion", bCBomVersion).addAttribute("details", GsonTools.toJson(li)).addAttribute("bcBom", bcBom).addAttribute("consumer", consumer));
+        return new ModelAndView(auditBomVersion, model.addAttribute("bCBomVersion", bCBomVersion)
+                .addAttribute("details", GsonTools.toJson(li))
+                .addAttribute("bcBom", bcBom)
+                .addAttribute("consumer", consumer));
     }
 
     @ResponseBody
@@ -108,7 +122,7 @@ public class BcBomVersionDetailController extends BaseController {
         for (BCBomVersion bv : versionList) {
             if (bv.getAuditState() == null)
                 continue;
-            if (bv.getAuditState() > 0 && bv.getAuditState() < 2) {
+            if (bv.getAuditState() == 1) {
                 BcBom bom = bCBomVersionService.findById(BcBom.class, bv.getPackBomId());
                 commit(bv.getId() + "", "包材BOM审核：BOM名称：" + bom.getPackBomName() + "/" + bom.getPackBomCode() + "BOM版本：" + bv.getPackVersion());
             }
@@ -190,30 +204,33 @@ public class BcBomVersionDetailController extends BaseController {
     public ModelAndView _add(BcBomVersionDetail bcBomVersionDetail) {
         return new ModelAndView(addOrEdit, model.addAttribute("bcBomVersionDetail", bcBomVersionDetail));
     }
-    @Journal(name="包材BOM明细导入")
-    @RequestMapping(value="upload",method = RequestMethod.GET)
-    public ModelAndView _drawingsImport(){
-        String filePath=UUID.randomUUID().toString();
-        return new ModelAndView(PAGE_BOMDETAILIMPORT, model.addAttribute("filePath", filePath));
+
+    @Journal(name = "包材BOM明细导入")
+    @RequestMapping(value = "upload", method = RequestMethod.GET)
+    public ModelAndView _drawingsImport() {
+        String filePath = UUID.randomUUID().toString();
+        return new ModelAndView(PAGE_BOM_DETAIL_IMPORT, model.addAttribute("filePath", filePath));
     }
-    @Journal(name="包材BOM明细导出模板")
-    @RequestMapping(value="export",method = RequestMethod.GET)
+
+    @Journal(name = "包材BOM明细导出模板")
+    @RequestMapping(value = "export", method = RequestMethod.GET)
     public void _drawingsExport() throws Exception {
         InputStream is = new FileInputStream(PathUtils.getClassPath() + "template/bcBomDetail.xlsx");
         Workbook wb = new SXSSFWorkbook(new XSSFWorkbook(is));
-        HttpUtils.download(response,wb,"包材BOM明细导出模板");
+        HttpUtils.download(response, wb, "包材BOM明细导出模板");
         is.close();
     }
+
     @ResponseBody
     @Journal(name = "包材BOM明细导入", logType = LogType.DB)
     @RequestMapping(value = "importBcBomUploadFile")
-    public String importcutTcBomMainUploadFile(@RequestParam(value = "file") MultipartFile file,String packVersionId) throws Exception {
+    public String importcutTcBomMainUploadFile(@RequestParam(value = "file") MultipartFile file, String packVersionId) throws Exception {
         BCBomVersion bvs = bCBomVersionService.findById(BCBomVersion.class, Long.parseLong(packVersionId));
         if (bvs.getAuditState() > 0) {
             return ajaxError("不能修改审核中或已通过的数据");
         }
         String userId = session.getAttribute(Constant.CURRENT_USER_ID).toString();
-        String result = bCBomVersionService.importBcBomMainUploadFile(file, userId,packVersionId);
+        String result = bCBomVersionService.importBcBomMainUploadFile(file, userId, packVersionId);
         return GsonTools.toJson(result);
     }
 
@@ -286,7 +303,7 @@ public class BcBomVersionDetailController extends BaseController {
             json.put("attributes", j.put("nodeType", "root"));
             jarray.put(json);
             result = jarray.toString();
-        } else if (nodeType.equals("root") && data != "") {
+        } else if ("root".equals(nodeType) && !"".equals(data)) {
             List<Map<String, Object>> list = bcBomService.getBcBomJson(data);
             if (list.size() > 0) {
                 if ("-1".equals(((Map<String, Object>) list.get(0).get("attributes")).get("PACKCANCELED") + "")) {
@@ -308,7 +325,7 @@ public class BcBomVersionDetailController extends BaseController {
                 jarray.put(json);
             }
             result = jarray.toString();
-        } else if (nodeType.equals("bom")) {
+        } else if ("bom".equals(nodeType)) {
             result = GsonTools.toJson(bCBomVersionService.getBcBomJson(id));
         } else {
             List<Map<String, Object>> list = bcBomService.getBcBomJson(data);
@@ -417,7 +434,9 @@ public class BcBomVersionDetailController extends BaseController {
     @Journal(name = "添加包材bom页面")
     @RequestMapping(value = "addBom", method = RequestMethod.GET)
     public ModelAndView _addBom(BcBom bcBom) {
-        return new ModelAndView(addOrEditBom, model.addAttribute("bcBom", bcBom).addAttribute("consumerName", ""));
+        return new ModelAndView(addOrEditBom, model
+                .addAttribute("bcBom", bcBom)
+                .addAttribute("consumerName", ""));
     }
 
     @ResponseBody
@@ -436,7 +455,9 @@ public class BcBomVersionDetailController extends BaseController {
     public ModelAndView _editBom(BcBom bcBom) {
         bcBom = bcBomService.findById(BcBom.class, bcBom.getId());
         Consumer c = bcBomService.findById(Consumer.class, bcBom.getPackBomConsumerId());
-        return new ModelAndView(addOrEditBom, model.addAttribute("bcBom", bcBom).addAttribute("consumerName", c.getConsumerName()));
+        return new ModelAndView(addOrEditBom, model
+                .addAttribute("bcBom", bcBom)
+                .addAttribute("consumerName", c.getConsumerName()));
     }
 
     @ResponseBody
@@ -466,10 +487,10 @@ public class BcBomVersionDetailController extends BaseController {
     @Journal(name = "删除包材bom", logType = LogType.DB)
     @RequestMapping(value = {"deleteBom"}, method = RequestMethod.POST)
     public String deleteBom(String ids) throws Exception {
-        String id[] = ids.split(",");
-        for (int a = 0; a < id.length; a++) {
+        String[] id = ids.split(",");
+        for (String s : id) {
             HashMap<String, Object> map = new HashMap();
-            map.put("packBomId", Long.parseLong(id[a]));
+            map.put("packBomId", Long.parseLong(s));
             List<BCBomVersion> li = bCBomVersionService.findListByMap(BCBomVersion.class, map);
             if (li != null && li.size() > 0) {
                 return ajaxError("请删除版本后删除工艺");
@@ -483,9 +504,9 @@ public class BcBomVersionDetailController extends BaseController {
     @Journal(name = "作废包材bom", logType = LogType.DB)
     @RequestMapping(value = {"cancelBom"}, method = RequestMethod.POST)
     public String cancelBom(String ids) {
-        String id[] = ids.split(",");
-        for (int a = 0; a < id.length; a++) {
-            BcBom bcBom = bcBomService.findById(BcBom.class, Long.parseLong(id[a]));
+        String[] id = ids.split(",");
+        for (String s : id) {
+            BcBom bcBom = bcBomService.findById(BcBom.class, Long.parseLong(s));
             bcBom.setPackCanceled(-1);
             this.bcBomService.update(bcBom);
         }
@@ -503,7 +524,9 @@ public class BcBomVersionDetailController extends BaseController {
     @RequestMapping(value = "addBomVersion", method = RequestMethod.GET)
     public ModelAndView _addBomVersion(BCBomVersion bCBomVersion) {
         String filePath = UUID.randomUUID().toString();
-        return new ModelAndView(addOrEditBomVersion, model.addAttribute("bCBomVersion", bCBomVersion).addAttribute("filePath", filePath));
+        return new ModelAndView(addOrEditBomVersion, model
+                .addAttribute("bCBomVersion", bCBomVersion)
+                .addAttribute("filePath", filePath));
     }
 
     @ResponseBody
@@ -538,7 +561,9 @@ public class BcBomVersionDetailController extends BaseController {
     public ModelAndView _editBomVersion(BCBomVersion bCBomVersion) {
         bCBomVersion = bCBomVersionService.findById(BCBomVersion.class, bCBomVersion.getId());
         String filePath = UUID.randomUUID().toString();
-        return new ModelAndView(addOrEditBomVersion, model.addAttribute("bCBomVersion", bCBomVersion).addAttribute("filePath", filePath));
+        return new ModelAndView(addOrEditBomVersion, model
+                .addAttribute("bCBomVersion", bCBomVersion)
+                .addAttribute("filePath", filePath));
     }
 
     @ResponseBody
@@ -550,7 +575,7 @@ public class BcBomVersionDetailController extends BaseController {
         map.put("packBomId", bCBomVersion.getPackBomId());
         List<BCBomVersion> li = bCBomVersionService.findListByMap(BCBomVersion.class, map);
         for (BCBomVersion bv : li) {
-            if (bv.getId() == bCBomVersion.getId()) {
+            if (bv.getId().equals(bCBomVersion.getId())) {
                 if (bv.getAuditState() > 0) {
                     return ajaxError("不能修改审核中或已通过的数据");
                 }
@@ -568,9 +593,9 @@ public class BcBomVersionDetailController extends BaseController {
     @Journal(name = "删除包材bom版本信息", logType = LogType.DB)
     @RequestMapping(value = {"deleteBomVersion"}, method = RequestMethod.POST)
     public String deleteBomVersion(String ids) throws Exception {
-        String id[] = ids.split(",");
-        for (int a = 0; a < id.length; a++) {
-            BCBomVersion bCBomVersion = bCBomVersionService.findById(BCBomVersion.class, Long.parseLong(id[a]));
+        String[] id = ids.split(",");
+        for (String s : id) {
+            BCBomVersion bCBomVersion = bCBomVersionService.findById(BCBomVersion.class, Long.parseLong(s));
             if (bCBomVersion.getAuditState() > 0) {
                 return ajaxError("不能修改审核中或已通过的数据");
             }

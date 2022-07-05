@@ -157,7 +157,6 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
                 audit.setFirstAuditTime(new Date());
                 audit.setFirstRealAuditUserId(uid);
                 audit.setCurrentAuditProcessNode(2);
-
                 // 如果审核级别是1，那么审核就结束了
                 if (aps.getAuditLevel().intValue() == 1) {
                     audit.setFinalResult(result);
@@ -208,7 +207,6 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
                             auditInstanceDao.update(p);
                         }
                     }
-
                 }
             }
             if (audit.getAuditCode().startsWith("RJH")) {
@@ -639,27 +637,6 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
         producePlanService.setIsSettled(null, cutDailyPlanId);
     }
 
-    /**
-     * 修改订单已分配数量
-     *
-     * @param producePlanId
-     */
-    public void udpateSalesOrderAssignedCount(Long producePlanId) {
-        Map<String, Object> param = new HashMap();
-        param.put("producePlanId", producePlanId);
-        List<ProducePlanDetail> list = findListByMap(ProducePlanDetail.class, param);
-        SalesOrderDetail sod;
-
-        for (ProducePlanDetail detail : list) {
-            param.clear();
-            param.put("productId", detail.getProductId());
-            param.put("salesOrderSubCode", detail.getSalesOrderCode());
-            sod = findUniqueByMap(SalesOrderDetail.class, param);
-            sod.setAssignedCount((sod.getAssignedCount() == null ? 0D : sod.getAssignedCount()) + detail.getRequirementCount());
-            update(sod);
-        }
-    }
-
     public <T> void updateByCondition(Class<T> clazz, Map<String, Object> condition, Map<String, Object> values) {
         auditInstanceDao.updateByCondition(clazz, condition, values);
     }
@@ -694,17 +671,6 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
                 update(producePlan);
                 break;
             case 3:
-			/*map.put("formId", id);
-			map.put("entityJavaClass", "com.bluebirdme.mes.planner.weave.entity.WeaveDailyPlan");
-			// ailist=findListByMap(AuditInstance.class, map);
-			// for(AuditInstance ai:ailist){
-			// ai.setIsCompleted(1);
-			// update(ai);
-			// }
-			WeaveDailyPlan weavePlan = findById(WeaveDailyPlan.class, id);
-			weavePlan.setIsClosed(1);
-			// weavePlan.setAuditstate(0);
-			update(weavePlan);*/
                 break;
             case 4:
                 map.put("formId", id);
@@ -715,7 +681,6 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
                     update(ai);
                 }
                 CutDailyPlan cutPlan = findById(CutDailyPlan.class, id);
-                //cutPlan.setAuditState(0);
                 cutPlan.setIsClosed(1);
                 update(cutPlan);
                 break;

@@ -64,6 +64,7 @@ public interface IAuditInstanceService extends IBaseService {
 
     /**
      * type:1=销售订单，2=producePlan，3=weaveDailyPlan，4=cutDailyPlan
+     *
      * @param id
      * @param type
      * @throws Exception

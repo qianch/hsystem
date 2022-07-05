@@ -33,7 +33,6 @@ import com.bluebirdme.mes.audit.entity.AuditUsers;
 @Service
 @AnyExceptionRollback
 public class AuditProcessSettingServiceImpl extends BaseServiceImpl implements IAuditProcessSettingService {
-
     @Resource
     IAuditProcessSettingDao auditProcessSettingDao;
 
@@ -55,7 +54,6 @@ public class AuditProcessSettingServiceImpl extends BaseServiceImpl implements I
 
         List<AuditUsers> aus = new ArrayList<>();
         AuditUsers au;
-
         if (setting.getFirstLevelUsers() != null && setting.getFirstLevelUsers().length != 0) {
             param.put("auditLevel", 1);
             this.delete(AuditUsers.class, param);
