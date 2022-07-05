@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.bluebirdme.mes.core.annotation.Journal;
 
 
-
-
 import com.bluebirdme.mes.core.annotation.NoLogin;
 
 import java.util.ArrayList;
@@ -49,89 +47,89 @@ import com.google.gson.GsonBuilder;
 import org.xdemo.superutil.thirdparty.gson.GsonTools;
 
 /**
- *  质量等级Controller
+ * 质量等级Controller
+ *
  * @author 高飞
  * @Date 2016-10-12 10:34:41
  */
 @Controller
 @RequestMapping("/qualityGrade")
-@Journal(name=" 质量等级")
+@Journal(name = " 质量等级")
 public class QualityGradeController extends BaseController {
+    /**
+     * 质量等级页面
+     */
+    final String index = "baseInfo/qualityGrade";
+    final String addOrEdit = "baseInfo/qualityGradeAddOrEdit";
+    @Resource
+    IQualityGradeService qualityGradeService;
 
-	//  质量等级页面
-	final String index = "baseInfo/qualityGrade";
-	final String addOrEdit="baseInfo/qualityGradeAddOrEdit";
+    @Journal(name = "首页")
+    @RequestMapping(method = RequestMethod.GET)
+    public String index() {
+        return index;
+    }
 
-	@Resource IQualityGradeService qualityGradeService;
+    @NoAuth
+    @ResponseBody
+    @Journal(name = "获取 质量等级列表信息")
+    @RequestMapping("list")
+    public String getQualityGrade(Filter filter, Page page) throws Exception {
+        return GsonTools.toJson(qualityGradeService.findPageInfo(filter, page));
+    }
 
-	@Journal(name = "首页")
-	@RequestMapping(method = RequestMethod.GET)
-	public String index() {
-		return index;
-	}
-	
-	@NoAuth
-	@ResponseBody
-	@Journal(name="获取 质量等级列表信息")
-	@RequestMapping("list")
-	public String getQualityGrade(Filter filter, Page page) throws Exception{
-		return GsonTools.toJson(qualityGradeService.findPageInfo(filter, page));
-	}
-	
+    @Journal(name = "添加 质量等级页面")
+    @RequestMapping(value = "add", method = RequestMethod.GET)
+    public ModelAndView _add(QualityGrade qualityGrade) {
+        return new ModelAndView(addOrEdit, model.addAttribute("qualityGrade", qualityGrade));
+    }
 
-	@Journal(name="添加 质量等级页面")
-	@RequestMapping(value="add",method=RequestMethod.GET)
-	public ModelAndView _add(QualityGrade qualityGrade){
-		return new ModelAndView(addOrEdit,model.addAttribute("qualityGrade", qualityGrade));
-	}
-	
-	@ResponseBody
-	@Journal(name="保存 质量等级",logType=LogType.DB)
-	@RequestMapping(value="add",method=RequestMethod.POST)
-	@Valid
-	public String add(QualityGrade qualityGrade) throws Exception{
-		qualityGradeService.save(qualityGrade);
-		return GsonTools.toJson(qualityGrade);
-	}
-	
-	@Journal(name="编辑 质量等级页面")
-	@RequestMapping(value="edit",method=RequestMethod.GET)
-	public ModelAndView _edit(QualityGrade qualityGrade){
-		qualityGrade=qualityGradeService.findById(QualityGrade.class, qualityGrade.getId());
-		return new ModelAndView(addOrEdit, model.addAttribute("qualityGrade", qualityGrade));
-	}
-	
-	@ResponseBody
-	@Journal(name="编辑 质量等级",logType=LogType.DB)
-	@RequestMapping(value="edit",method=RequestMethod.POST)
-	@Valid
-	public String edit(QualityGrade qualityGrade) throws Exception{
-		qualityGradeService.update(qualityGrade);
-		return GsonTools.toJson(qualityGrade);
-	}
+    @ResponseBody
+    @Journal(name = "保存 质量等级", logType = LogType.DB)
+    @RequestMapping(value = "add", method = RequestMethod.POST)
+    @Valid
+    public String add(QualityGrade qualityGrade) throws Exception {
+        qualityGradeService.save(qualityGrade);
+        return GsonTools.toJson(qualityGrade);
+    }
 
-	@ResponseBody
-	@Journal(name="删除 质量等级",logType=LogType.DB)
-	@RequestMapping(value="delete",method=RequestMethod.POST)
-	public String edit(String ids) throws Exception{
-		qualityGradeService.delete(QualityGrade.class,ids);
-		return Constant.AJAX_SUCCESS;
-	}
-	
-	@NoLogin
-	@ResponseBody
-	@Journal(name = "获取所有质量等级")
-	@RequestMapping(value = "getQualityGrade", method = RequestMethod.POST)
-	public String getQualityGrade() {
-		List<QualityGrade> plist = qualityGradeService.findAll(QualityGrade.class);
-		List<HashMap<String, String>> outInfo = new ArrayList<HashMap<String, String>>();
-		for (QualityGrade p : plist) {
-			HashMap<String, String> map = new HashMap<String, String>();
-					map.put("gradename", p.getGradeName());
-					map.put("gradedesc", p.getGradeDesc());
-					outInfo.add(map);
-		}
-		return GsonTools.toJson(outInfo);
-	}
+    @Journal(name = "编辑 质量等级页面")
+    @RequestMapping(value = "edit", method = RequestMethod.GET)
+    public ModelAndView _edit(QualityGrade qualityGrade) {
+        qualityGrade = qualityGradeService.findById(QualityGrade.class, qualityGrade.getId());
+        return new ModelAndView(addOrEdit, model.addAttribute("qualityGrade", qualityGrade));
+    }
 
+    @ResponseBody
+    @Journal(name = "编辑 质量等级", logType = LogType.DB)
+    @RequestMapping(value = "edit", method = RequestMethod.POST)
+    @Valid
+    public String edit(QualityGrade qualityGrade) throws Exception {
+        qualityGradeService.update(qualityGrade);
+        return GsonTools.toJson(qualityGrade);
+    }
+
+    @ResponseBody
+    @Journal(name = "删除 质量等级", logType = LogType.DB)
+    @RequestMapping(value = "delete", method = RequestMethod.POST)
+    public String edit(String ids) throws Exception {
+        qualityGradeService.delete(QualityGrade.class, ids);
+        return Constant.AJAX_SUCCESS;
+    }
+
+    @NoLogin
+    @ResponseBody
+    @Journal(name = "获取所有质量等级")
+    @RequestMapping(value = "getQualityGrade", method = RequestMethod.POST)
+    public String getQualityGrade() {
+        List<QualityGrade> plist = qualityGradeService.findAll(QualityGrade.class);
+        List<HashMap<String, String>> outInfo = new ArrayList<HashMap<String, String>>();
+        for (QualityGrade p : plist) {
+            HashMap<String, String> map = new HashMap<String, String>();
+            map.put("gradename", p.getGradeName());
+            map.put("gradedesc", p.getGradeDesc());
+            outInfo.add(map);
+        }
+        return GsonTools.toJson(outInfo);
+    }
 }

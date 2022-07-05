@@ -46,7 +46,9 @@ import java.util.*;
 @RequestMapping("/bom/tc")
 @Journal(name = "套材BOM")
 public class TcBomController extends BaseController {
-    // 套材BOM页面
+    /**
+     * 套材BOM页面
+     */
     final String index = "baseInfo/tcBom/tcBom";
     final String addOrEdit = "baseInfo/tcBom/tcBomAddOrEdit";
     final String tcBomAudit = "baseInfo/tcBom/tcBomAudit";
@@ -164,7 +166,7 @@ public class TcBomController extends BaseController {
             }
         }
 
-        JSONArray jarray = new JSONArray();
+        JSONArray array = new JSONArray();
         String result = "";
         if (status == null) {
             JSONObject json = new JSONObject();
@@ -172,9 +174,9 @@ public class TcBomController extends BaseController {
             json.put("state", "closed");
             JSONObject j = new JSONObject();
             json.put("attributes", j.put("status", "0").put("vId", "0"));
-            jarray.put(json);
-            result = jarray.toString();
-        } else if (status.equals("0") && data != "") {
+            array.put(json);
+            result = array.toString();
+        } else if (status.equals("0") && !data.equals("")) {
             List<Map<String, Object>> list = tcBomService.findBom(data, state);
             if (list.size() > 0) {
                 JSONObject json = new JSONObject();
@@ -183,22 +185,16 @@ public class TcBomController extends BaseController {
                 JSONObject j = new JSONObject();
                 json.put("attributes", j.put("status", "0").put("vId", "0"));
                 json.put("children", tcBomService.findBom(data, state));
-                jarray.put(json);
-                result = jarray.toString();
+                array.put(json);
+                result = array.toString();
             } else {
                 JSONObject json = new JSONObject();
                 json.put("text", "套材bom");
                 json.put("state", "closed");
-				/*JSONObject j = new JSONObject();
-				json.put("attributes", j.put("status", "").put("vId", ""));
-				json.put("children", new JSONObject());*/
-                jarray.put(json);
-                result = jarray.toString();
+                array.put(json);
+                result = array.toString();
             }
-//			result = GsonTools.toJson(tcBomService.findBom(data, state));
-        } /*else if (status.equals("0") && isNeedTop==null) {
-			result = GsonTools.toJson(tcBomService.findBom(data, state));
-		}*/ else if (status.equals("1")) {
+        } else if (status.equals("1")) {
             result = GsonTools.toJson(tcBomService.findV(id));
         } else if (status.equals("2")) {
             result = GsonTools.toJson(tcBomService.findP(id));
@@ -225,7 +221,7 @@ public class TcBomController extends BaseController {
                 }
             }
         }
-        JSONArray jarray = new JSONArray();
+        JSONArray array = new JSONArray();
         String result = "";
         if (status == null) {
             JSONObject json = new JSONObject();
@@ -233,9 +229,9 @@ public class TcBomController extends BaseController {
             json.put("state", "closed");
             JSONObject j = new JSONObject();
             json.put("attributes", j.put("status", "0").put("vId", "0"));
-            jarray.put(json);
-            result = jarray.toString();
-        } else if (status.equals("0") && data != "") {
+            array.put(json);
+            result = array.toString();
+        } else if (status.equals("0") && !data.equals("")) {
             List<Map<String, Object>> list = tcBomService.getTcBomJsonTest(data, state);
             if (list.size() > 0) {
                 JSONObject json = new JSONObject();
@@ -244,16 +240,15 @@ public class TcBomController extends BaseController {
                 JSONObject j = new JSONObject();
                 json.put("attributes", j.put("status", "0").put("vId", "0"));
                 json.put("children", tcBomService.getTcBomJsonTest(data, state));
-                jarray.put(json);
-                result = jarray.toString();
+                array.put(json);
+                result = array.toString();
             } else {
                 JSONObject json = new JSONObject();
                 json.put("text", "套材bom");
                 json.put("state", "closed");
-                jarray.put(json);
-                result = jarray.toString();
+                array.put(json);
+                result = array.toString();
             }
-            //	result = GsonTools.toJson(tcBomService.getTcBomJsonTest(data, state));
         } else if (status.equals("1")) {
             result = GsonTools.toJson(tcBomService.findV(id));
         } else if (status.equals("2")) {
@@ -263,7 +258,6 @@ public class TcBomController extends BaseController {
         } else {
             result = GsonTools.toJson(tcBomService.getTcBomJsonTest(data, state));
         }
-
         return result;
     }
 
@@ -292,7 +286,7 @@ public class TcBomController extends BaseController {
             json.put("attributes", j.put("status", "0").put("vId", "0"));
             jarray.put(json);
             result = jarray.toString();
-        } else if (status.equals("0") && data != "") {
+        } else if (status.equals("0") && !data.equals("")) {
             List<Map<String, Object>> list = tcBomService.getTcBomJsonTest1(data, state);
             if (list.size() > 0) {
                 JSONObject json = new JSONObject();
@@ -310,7 +304,6 @@ public class TcBomController extends BaseController {
                 jarray.put(json);
                 result = jarray.toString();
             }
-            //	result = GsonTools.toJson(tcBomService.getTcBomJsonTest1(data, state));
         } else if (status.equals("1")) {
             result = GsonTools.toJson(tcBomService.findV(id));
         } else if (status.equals("2")) {
@@ -350,12 +343,10 @@ public class TcBomController extends BaseController {
             return ajaxError("不能修改审核中或已通过的数据");
         }
         if (detail.getId() == null) {
-            HashMap<String, Object> map = new HashMap<String, Object>();
+            HashMap<String, Object> map = new HashMap<>();
             map.put("tcFinishedProductId", detail.getTcFinishedProductId());
             map.put("tcProcBomPartsId", detail.getTcProcBomPartsId());
             List<TcBomVersionPartsDetail> list = tcBomService.findListByMap(TcBomVersionPartsDetail.class, map);
-			/*if (!ListUtils.isEmpty(list))
-				return ajaxError("胚布规格型号重复");*/
             tcBomService.save(detail);
         } else {
             tcBomService.update(detail);

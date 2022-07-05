@@ -6,10 +6,7 @@
  */
 package com.bluebirdme.mes.baseInfo.controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import javax.annotation.Resource;
 
@@ -117,9 +114,8 @@ public class FtcBcBomController extends BaseController {
     @Journal(name = "删除包材bom明细", logType = LogType.DB)
     @RequestMapping(value = {"delete"}, method = RequestMethod.POST)
     public String delete(String ids) throws Exception {
-        String id[] = ids.split(",");
+        String[] id = ids.split(",");
         FtcBcBomVersionDetail ftcBcBomVersionDetail = ftcBcBomVersionDetailService.findById(FtcBcBomVersionDetail.class, Long.parseLong(id[0]));
-
         FtcBcBomVersion bvs = ftcBcBomVersionService.findById(FtcBcBomVersion.class, ftcBcBomVersionDetail.getPackVersionId());
         if (bvs.getAuditState() > 0) {
             return ajaxError("不能修改审核中或已通过的数据");
@@ -132,8 +128,8 @@ public class FtcBcBomController extends BaseController {
     @ResponseBody
     @Journal(name = "获取非套材包材bom列表信息")
     @RequestMapping("listBom")
-    public String getFtcBcBom(String nodeType, String id, String data) throws Exception {
-        JSONArray jarray = new JSONArray();
+    public String getFtcBcBom(String nodeType, String id, String data) {
+        JSONArray array = new JSONArray();
         if (data == null) {
             data = "";
         }
@@ -148,8 +144,8 @@ public class FtcBcBomController extends BaseController {
             json.put("state", "closed");
             JSONObject j = new JSONObject();
             json.put("attributes", j.put("nodeType", "root"));
-            jarray.put(json);
-            result = jarray.toString();
+            array.put(json);
+            result = array.toString();
         } else if (nodeType.equals("root") && StringUtils.isNotBlank(data)) {    //带参数查询
             List<Map<String, Object>> list = ftcBcBomService.getFtcBcBomJson(id, data, null);
             if (list.size() > 0) {
@@ -160,17 +156,16 @@ public class FtcBcBomController extends BaseController {
                 JSONObject j = new JSONObject();
                 json.put("attributes", j.put("nodeType", "root"));
                 json.put("children", ftcBcBomService.getFtcBcBomJson(id, data, null));
-                jarray.put(json);
-                result = jarray.toString();
+                array.put(json);
+                result = array.toString();
             } else {
                 JSONObject json = new JSONObject();
                 json.put("id", "root");
                 json.put("text", "非套材包材bom");
                 json.put("state", "closed");
-                jarray.put(json);
-                result = jarray.toString();
+                array.put(json);
+                result = array.toString();
             }
-            //	result = GsonTools.toJson(bcBomService.getBcBomJson(data));
         } else if (nodeType.equals("bom1")) {
             result = GsonTools.toJson(ftcBcBomService.getFtcBcBomJson(id, data, 2));
         } else if (nodeType.equals("bom2")) {
@@ -180,7 +175,6 @@ public class FtcBcBomController extends BaseController {
         } else {
             result = GsonTools.toJson(ftcBcBomService.getFtcBcBomJson(id, data, null));
         }
-        // System.out.println(result);
         return result;
     }
 
@@ -225,7 +219,6 @@ public class FtcBcBomController extends BaseController {
                 jarray.put(json);
                 result = jarray.toString();
             }
-            //	result = GsonTools.toJson(bcBomService.getBcBomJson(data));
         } else if (nodeType.equals("bom1")) {
             result = GsonTools.toJson(ftcBcBomService.getFtcBcBomJson(id, data, 2));
         } else if (nodeType.equals("bom2")) {
@@ -235,7 +228,6 @@ public class FtcBcBomController extends BaseController {
         } else {
             result = GsonTools.toJson(ftcBcBomService.getFtcBcBomJson(id, data, null));
         }
-        // System.out.println(result);
         return result;
     }
 
@@ -280,7 +272,6 @@ public class FtcBcBomController extends BaseController {
                 jarray.put(json);
                 result = jarray.toString();
             }
-            //	result = GsonTools.toJson(bcBomService.getBcBomJson(data));
         } else if (nodeType.equals("bom1")) {
             result = GsonTools.toJson(ftcBcBomService.getFtcBcBomJson(id, data, 2));
         } else if (nodeType.equals("bom2")) {
@@ -290,7 +281,6 @@ public class FtcBcBomController extends BaseController {
         } else {
             result = GsonTools.toJson(ftcBcBomService.getFtcBcBomJson(id, data, null));
         }
-        // System.out.println(result);
         return result;
     }
 
@@ -309,7 +299,6 @@ public class FtcBcBomController extends BaseController {
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("code", ftcBcBom.getCode());
         map.put("level", ftcBcBom.getLevel());
-//		map.put("pid", ftcBcBom.getPid());
         if (ftcBcBomService.isExist(FtcBcBom.class, map, true)) {
             return ajaxError("已经有同名非套材包材BOM");
         }
@@ -325,7 +314,6 @@ public class FtcBcBomController extends BaseController {
                 return GsonTools.toJson(excelErrorMsg);
             }
         }
-
         return GsonTools.toJson(ftcBcBom);
     }
 
@@ -334,7 +322,9 @@ public class FtcBcBomController extends BaseController {
     public ModelAndView _editBom(FtcBcBom ftcBcBom) {
         ftcBcBom = ftcBcBomService.findById(FtcBcBom.class, ftcBcBom.getId());
         String filePath = UUID.randomUUID().toString();
-        return new ModelAndView(addOrEditBom, model.addAttribute("ftcBcBom", ftcBcBom).addAttribute("filePath", filePath));
+        return new ModelAndView(addOrEditBom, model
+                .addAttribute("ftcBcBom", ftcBcBom)
+                .addAttribute("filePath", filePath));
     }
 
     @ResponseBody
@@ -345,7 +335,6 @@ public class FtcBcBomController extends BaseController {
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("code", ftcBcBom.getCode());
         map.put("level", ftcBcBom.getLevel());
-//		map.put("pid", ftcBcBom.getPid());
         if (ftcBcBomService.isExist(FtcBcBom.class, map, ftcBcBom.getId(), true)) {
             return ajaxError("已经有同名非套材包材BOM");
         }
@@ -360,7 +349,7 @@ public class FtcBcBomController extends BaseController {
                     param.put("pid", ftcBcBom2.getId());
                     List<FtcBcBom> fbb2List = ftcBcBomService.findListByMap(FtcBcBom.class, param);
                     for (FtcBcBom ftcBcBom3 : fbb2List) {
-                        HashMap<String, Object> map2 = new HashMap<String, Object>();
+                        HashMap<String, Object> map2 = new HashMap<>();
                         map2.put("bid", ftcBcBom3.getId());
 
                         List<FtcBcBomVersion> li1 = ftcBcBomService.findListByMap(FtcBcBomVersion.class, map2);
@@ -379,7 +368,6 @@ public class FtcBcBomController extends BaseController {
                 for (FtcBcBom ftcBcBom3 : fbbList) {
                     HashMap<String, Object> map2 = new HashMap<String, Object>();
                     map2.put("bid", ftcBcBom3.getId());
-
                     List<FtcBcBomVersion> li1 = ftcBcBomService.findListByMap(FtcBcBomVersion.class, map2);
                     for (FtcBcBomVersion bv : li1) {
                         if (bv.getAuditState() > 0) {
@@ -388,24 +376,23 @@ public class FtcBcBomController extends BaseController {
                     }
                 }
             }
-            HashMap<String, Object> map2 = new HashMap<String, Object>();
-            map2.put("bid", ftcBcBom.getId());
 
+            HashMap<String, Object> map2 = new HashMap<>();
+            map2.put("bid", ftcBcBom.getId());
             List<FtcBcBomVersion> li1 = ftcBcBomService.findListByMap(FtcBcBomVersion.class, map2);
             for (FtcBcBomVersion bv : li1) {
                 if (bv.getAuditState() > 0) {
                     if (!fbb.getCode().equals(ftcBcBom.getCode())) {
                         return ajaxError("含有审核中或已通过的版本,不能修改“三级包装工艺代码”");
                     }
-
                 }
             }
         }
 
-//		ftcBcBomService.update2(ftcBcBom);
         if (ftcBcBom.getLevel() != 2 || fileId == null) {
             ftcBcBomService.update2(ftcBcBom);
-        } else {//目录BOM是第2层和有fileId(要导入的Excel文件ID)
+        } else {
+            //目录BOM是第2层和有fileId(要导入的Excel文件ID)
             StringBuffer info = new StringBuffer();
             ExcelImportMessage eim = ftcBcBomService.doUpdateFtcBcBom(ftcBcBom, fileId, info);
             ftcBcBomService.savePdfFile(ftcBcBom, fileId, eim);
@@ -417,7 +404,6 @@ public class FtcBcBomController extends BaseController {
                 return ajaxSuccess(info);
             }
         }
-
         return GsonTools.toJson(ftcBcBom);
     }
 
@@ -426,32 +412,30 @@ public class FtcBcBomController extends BaseController {
     @Journal(name = "删除非套材包材bom", logType = LogType.DB)
     @RequestMapping(value = {"deleteBom"}, method = RequestMethod.POST)
     public String deleteBom(String ids) throws Exception {
-        String id[] = ids.split(",");
-        for (int a = 0; a < id.length; a++) {
-            FtcBcBom fbb = ftcBcBomService.findById(FtcBcBom.class, Long.parseLong(id[a]));
-            HashMap<String, Object> map = new HashMap<String, Object>();
+        String[] id = ids.split(",");
+        for (String s : id) {
+            FtcBcBom fbb = ftcBcBomService.findById(FtcBcBom.class, Long.parseLong(s));
+            HashMap<String, Object> map = new HashMap<>();
             if (fbb.getLevel() == 1) {
-                map.put("pid", Long.parseLong(id[a]));
+                map.put("pid", Long.parseLong(s));
                 List<FtcBcBom> li = ftcBcBomVersionService.findListByMap(FtcBcBom.class, map);
                 if (li != null && li.size() > 0) {
                     return ajaxError("请删除一级包装工艺前删除二级包装工艺");
                 }
             } else if (fbb.getLevel() == 2) {
-                map.put("pid", Long.parseLong(id[a]));
+                map.put("pid", Long.parseLong(s));
                 List<FtcBcBom> li = ftcBcBomVersionService.findListByMap(FtcBcBom.class, map);
                 if (li != null && li.size() > 0) {
                     return ajaxError("请删除二级包装工艺前删除三级包装工艺");
                 }
             } else if (fbb.getLevel() == 3) {
-                map.put("bid", Long.parseLong(id[a]));
+                map.put("bid", Long.parseLong(s));
 
                 List<FtcBcBomVersion> li = ftcBcBomVersionService.findListByMap(FtcBcBomVersion.class, map);
                 if (li != null && li.size() > 0) {
                     return ajaxError("请删除三级包装工艺前删除版本");
                 }
             }
-
-
         }
         this.ftcBcBomService.deleteAll(ids);
         return "{}";
@@ -460,16 +444,17 @@ public class FtcBcBomController extends BaseController {
     @Journal(name = "添加非套材包材bom版本信息页面")
     @RequestMapping(value = "addBomVersion", method = RequestMethod.GET)
     public ModelAndView _addBomVersion(FtcBcBomVersion ftcBcBomVersion) {
-        return new ModelAndView(addOrEditBomVersion, model.addAttribute("ftcBcBomVersion", ftcBcBomVersion).addAttribute("consumerName", ""));
+        return new ModelAndView(addOrEditBomVersion, model
+                .addAttribute("ftcBcBomVersion", ftcBcBomVersion)
+                .addAttribute("consumerName", ""));
     }
 
     @ResponseBody
     @Journal(name = "保存非套材包材bom版本信息")
     @RequestMapping(value = "addBomVersion", method = RequestMethod.POST)
     public String addBomVersion(FtcBcBomVersion ftcBcBomVersion) {
-        HashMap<String, Object> map = new HashMap<String, Object>();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("bid", ftcBcBomVersion.getBid());
-
         List<FtcBcBomVersion> li = ftcBcBomService.findListByMap(FtcBcBomVersion.class, map);
         for (FtcBcBomVersion bcv : li) {
             if (bcv.getVersion().equals(ftcBcBomVersion.getVersion())) {
@@ -488,7 +473,6 @@ public class FtcBcBomController extends BaseController {
         if (ftcBcBomVersion.getEnabled() == null) {
             ftcBcBomVersion.setEnabled(1);
         }
-
         ftcBcBomService.save(ftcBcBomVersion);
         return GsonTools.toJson(ftcBcBomVersion);
     }
@@ -498,7 +482,9 @@ public class FtcBcBomController extends BaseController {
     public ModelAndView _editBomVersion(FtcBcBomVersion ftcBcBomVersion) {
         ftcBcBomVersion = ftcBcBomVersionService.findById(FtcBcBomVersion.class, ftcBcBomVersion.getId());
         Consumer c = ftcBcBomService.findById(Consumer.class, ftcBcBomVersion.getConsumerId());
-        return new ModelAndView(addOrEditBomVersion, model.addAttribute("ftcBcBomVersion", ftcBcBomVersion).addAttribute("consumerName", c.getConsumerName()));
+        return new ModelAndView(addOrEditBomVersion, model
+                .addAttribute("ftcBcBomVersion", ftcBcBomVersion)
+                .addAttribute("consumerName", c.getConsumerName()));
     }
 
     @ResponseBody
@@ -506,12 +492,11 @@ public class FtcBcBomController extends BaseController {
     @RequestMapping(value = "editBomVersion", method = RequestMethod.POST)
     @Valid
     public String editBomVersion(FtcBcBomVersion ftcBcBomVersion) throws Exception {
-        HashMap<String, Object> map = new HashMap<String, Object>();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("bid", ftcBcBomVersion.getBid());
-
         List<FtcBcBomVersion> li = ftcBcBomVersionService.findListByMap(FtcBcBomVersion.class, map);
         for (FtcBcBomVersion bv : li) {
-            if (bv.getId() == ftcBcBomVersion.getId()) {
+            if (Objects.equals(bv.getId(), ftcBcBomVersion.getId())) {
                 if (bv.getAuditState() > 0) {
                     return ajaxError("不能修改审核中或已通过的数据");
                 }
@@ -528,10 +513,9 @@ public class FtcBcBomController extends BaseController {
     @Journal(name = "删除非套材包材bom版本信息", logType = LogType.DB)
     @RequestMapping(value = {"deleteBomVersion"}, method = RequestMethod.POST)
     public String deleteBomVersion(String ids) throws Exception {
-        // this.bCBomVersionService.delete(ids);
-        String id[] = ids.split(",");
-        for (int a = 0; a < id.length; a++) {
-            FtcBcBomVersion ftcBcBomVersion = ftcBcBomVersionService.findById(FtcBcBomVersion.class, Long.parseLong(id[a]));
+        String[] id = ids.split(",");
+        for (String s : id) {
+            FtcBcBomVersion ftcBcBomVersion = ftcBcBomVersionService.findById(FtcBcBomVersion.class, Long.parseLong(s));
             if (ftcBcBomVersion.getAuditState() > 0) {
                 return ajaxError("不能修改审核中或已通过的数据");
             }
@@ -544,7 +528,7 @@ public class FtcBcBomController extends BaseController {
     @Journal(name = "查看BOM下的版本是否存在")
     @RequestMapping(value = "findV")
     public String findV(String id, String version) throws Exception {
-        HashMap<String, Object> map = new HashMap<String, Object>();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("bid", Long.valueOf(id));
         List<FtcBcBomVersion> list = ftcBcBomVersionService.findListByMap(FtcBcBomVersion.class, map);
         for (FtcBcBomVersion bcv : list) {
@@ -565,7 +549,11 @@ public class FtcBcBomController extends BaseController {
         param.put("packVersionId", ftcBcBomVersion.getId());
         List<FtcBcBomVersionDetail> li = ftcBcBomVersionService.findListByMap(FtcBcBomVersionDetail.class, param);
 
-        return new ModelAndView(auditBomVersion, model.addAttribute("ftcBcBomVersion", ftcBcBomVersion).addAttribute("details", GsonTools.toJson(li)).addAttribute("ftcBcBom", ftcBcBom).addAttribute("consumer", consumer));
+        return new ModelAndView(auditBomVersion, model
+                .addAttribute("ftcBcBomVersion", ftcBcBomVersion)
+                .addAttribute("details", GsonTools.toJson(li))
+                .addAttribute("ftcBcBom", ftcBcBom)
+                .addAttribute("consumer", consumer));
     }
 
     @ResponseBody
@@ -596,10 +584,9 @@ public class FtcBcBomController extends BaseController {
     public void rebuildBcAudit() throws Exception {
         List<FtcBcBomVersion> versionList = ftcBcBomVersionService.findAll(FtcBcBomVersion.class);
         for (FtcBcBomVersion bv : versionList) {
-
             if (bv.getAuditState() == null)
                 continue;
-            if (bv.getAuditState() > 0 && bv.getAuditState() < 2) {
+            if (bv.getAuditState() == 1) {
                 FtcBcBom bom = ftcBcBomVersionService.findById(FtcBcBom.class, bv.getBid());
                 commit(bv.getId() + "", "非套材包材BOM审核：BOM名称：" + bom.getName() + "/" + bom.getCode() + "BOM版本：" + bv.getVersion());
             }
@@ -613,7 +600,6 @@ public class FtcBcBomController extends BaseController {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("id", vid);
         return GsonTools.toJson(ftcBcBomVersionService.findUniqueByMap(FtcBcBomVersion.class, map));
-
     }
 
 
@@ -621,9 +607,9 @@ public class FtcBcBomController extends BaseController {
     @Journal(name = "作废bom", logType = LogType.DB)
     @RequestMapping(value = {"cancelBom"}, method = RequestMethod.POST)
     public String cancelBom(String ids) throws Exception {
-        String id[] = ids.split(",");
-        for (int a = 0; a < id.length; a++) {
-            FtcBcBom ftcbcBom = ftcBcBomService.findById(FtcBcBom.class, Long.parseLong(id[a]));
+        String[] id = ids.split(",");
+        for (String s : id) {
+            FtcBcBom ftcbcBom = ftcBcBomService.findById(FtcBcBom.class, Long.parseLong(s));
             ftcbcBom.setPackCanceled(-1);
             this.ftcBcBomService.update(ftcbcBom);
         }
