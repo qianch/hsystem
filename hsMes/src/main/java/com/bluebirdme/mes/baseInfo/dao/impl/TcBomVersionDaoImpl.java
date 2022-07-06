@@ -20,23 +20,21 @@ import org.springframework.stereotype.Repository;
 import com.bluebirdme.mes.baseInfo.dao.ITcBomVersionDao;
 
 /**
- * 
  * @author 肖文彬
  * @Date 2016年4月5日 下午4:35:34
  */
 @Repository
 public class TcBomVersionDaoImpl extends BaseDaoImpl implements ITcBomVersionDao {
-	
-	@Resource SessionFactory factory;
+    @Resource
+    SessionFactory factory;
 
-	@Override
-	public Session getSession() {
-		return factory.getCurrentSession();
-	}
+    @Override
+    public Session getSession() {
+        return factory.getCurrentSession();
+    }
 
-	@Override
-	public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-		return null;
-	}
-
+    @Override
+    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+        return null;
+    }
 }

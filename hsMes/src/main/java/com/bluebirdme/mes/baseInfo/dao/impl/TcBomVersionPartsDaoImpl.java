@@ -6,51 +6,45 @@
  */
 package com.bluebirdme.mes.baseInfo.dao.impl;
 
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-
+import com.bluebirdme.mes.baseInfo.dao.ITcBomVersionPartsDao;
 import com.bluebirdme.mes.core.base.dao.BaseDaoImpl;
 import com.bluebirdme.mes.core.base.entity.Filter;
 import com.bluebirdme.mes.core.base.entity.Page;
 import com.bluebirdme.mes.core.sql.SQL;
-
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
-import com.bluebirdme.mes.baseInfo.dao.ITcBomVersionPartsDao;
+import javax.annotation.Resource;
+import java.util.Map;
 
 /**
- * 
  * @author 肖文彬
  * @Date 2016年4月5日 下午4:35:34
  */
 @Repository
 public class TcBomVersionPartsDaoImpl extends BaseDaoImpl implements ITcBomVersionPartsDao {
-	
-	@Resource SessionFactory factory;
+    @Resource
+    SessionFactory factory;
 
-	@Override
-	public Session getSession() {
-		return factory.getCurrentSession();
-	}
+    @Override
+    public Session getSession() {
+        return factory.getCurrentSession();
+    }
 
-	@Override
-	public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-		return findPageInfo(filter,page,"part-list");
-	}
+    @Override
+    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+        return findPageInfo(filter, page, "part-list");
+    }
 
-	@Override
-	public void deleteParts(Long id) {
-		getSession().createSQLQuery(SQL.get("part-falseDelete")).setParameter("id",id).executeUpdate();
-		
-	}
+    @Override
+    public void deleteParts(Long id) {
+        getSession().createSQLQuery(SQL.get("part-falseDelete")).setParameter("id", id).executeUpdate();
 
-	@Override
-	public Map<String, Object> findPageInfo1(Filter filter, Page page) {
-		return findPageInfo(filter,page,"partMirror-list");
-	}
+    }
 
+    @Override
+    public Map<String, Object> findPageInfo1(Filter filter, Page page) {
+        return findPageInfo(filter, page, "partMirror-list");
+    }
 }
