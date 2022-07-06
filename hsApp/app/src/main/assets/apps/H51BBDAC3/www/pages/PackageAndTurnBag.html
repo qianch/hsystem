@@ -1,164 +1,177 @@
 ﻿<!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>生产页面</title>
     <script src="../resources/js/include.js"></script>
-</head>
-<body>
+  </head>
+  <body>
     <header class="mui-bar mui-bar-nav">
-        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-        <h1 class="mui-title">打包翻包</h1>
+      <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+      <h1 class="mui-title">打包翻包</h1>
     </header>
     <style type="text/css">
-        .mui-table-view-cell:after {
-            position: absolute;
-            right: 0;
-            bottom: 0;
-            left: 15px;
-            height: 1px;
-            content: '';
-            -webkit-transform: scaleY(.5);
-            transform: scaleY(.5);
-        }
+      .mui-table-view-cell:after {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 15px;
+        height: 1px;
+        content: "";
+        -webkit-transform: scaleY(0.5);
+        transform: scaleY(0.5);
+      }
 
-        .mui-table-view {
-            position: relative;
-            margin-top: 0;
-            margin-bottom: 0;
-            padding-left: 0;
-            list-style: none;
-            background-color: #efeff4;
-        }
+      .mui-table-view {
+        position: relative;
+        margin-top: 0;
+        margin-bottom: 0;
+        padding-left: 0;
+        list-style: none;
+        background-color: #efeff4;
+      }
 
-            .mui-table-view:before {
-                height: 0px;
-            }
+      .mui-table-view:before {
+        height: 0px;
+      }
 
-            .mui-table-view:after {
-                height: 0px;
-            }
+      .mui-table-view:after {
+        height: 0px;
+      }
 
-        .mui-table-view-cell:after {
-            height: 0px;
-        }
+      .mui-table-view-cell:after {
+        height: 0px;
+      }
     </style>
     <div class="mui-content">
-        <div>
-            <div id="segmentedControl" class="mui-segmented-control">
-                <a class="mui-control-item mui-active" href="#item1" index="1">
-                    打包
-                </a>
-                <a class="mui-control-item" href="#item2" index="2">
-                    编织翻包
-                </a>
-                <a class="mui-control-item" href="#item3" index="3">
-                    裁剪翻包
-                </a>
-            </div>
+      <div>
+        <div id="segmentedControl" class="mui-segmented-control">
+          <a class="mui-control-item mui-active" href="#item1" index="1">
+            打包
+          </a>
+          <a class="mui-control-item" href="#item2" index="2"> 编织翻包 </a>
+          <a class="mui-control-item" href="#item3" index="3"> 裁剪翻包 </a>
         </div>
-        <div id="item1" class="mui-control-content mui-active">
-            <ul class="mui-table-view" topIndex="1">
-                <li class="mui-table-view-cell" index="1" href="pBPackage.html">
-                    盒打包
-                </li>
-                <li class="mui-table-view-cell" index="3" href="pTPackage_Part.html">
-                    托打包
-                </li>
-                <li class="mui-table-view-cell" index="3" href="pOpenPack.html">
-                    拆　包
-                </li>
-                <li class="mui-table-view-cell" index="4" href="pPackageCheck.html">
-                    条码校验
-                </li>
-                <li class="mui-table-view-cell" index="4" href="pStockPending.html">
-                    成品待入库
-                </li>
-            </ul>
-        </div>
-        <div id="item2" class="mui-control-content">
-            <ul class="mui-table-view" topIndex="2">
-                <li class="mui-table-view-cell" index="1" href="tTakeOut.html">
-                    翻包领出
-                </li>
-                <li class="mui-table-view-cell" index="2" href="tTurnBagPerTray.html">
-                    整托翻包
-                </li>
-                <li class="mui-table-view-cell" index="3" href="tTurnBagPackBox.html">
-                    翻包盒打包
-                </li>
-                <li class="mui-table-view-cell" index="4" href="tTurnBagPackTray.html">
-                    翻包托打包
-                </li>
-            </ul>
-        </div>
-        <div id="item3" class="mui-control-content">
-            <ul class="mui-table-view" topIndex="3">
-                <li class="mui-table-view-cell" index="1" href="tCutTakeOut.html">
-                    翻包领出
-                </li>
-                <li class="mui-table-view-cell" index="2" href="tCutTurnBagPerTray.html">
-                    裁剪翻包
-                </li>
-            </ul>
-        </div>
+      </div>
+      <div id="item1" class="mui-control-content mui-active">
+        <ul class="mui-table-view" topIndex="1">
+          <li class="mui-table-view-cell" index="1" href="pBPackage.html">
+            盒打包
+          </li>
+          <li class="mui-table-view-cell" index="3" href="pTPackage_Part.html">
+            托打包
+          </li>
+          <li class="mui-table-view-cell" index="3" href="pOpenPack.html">
+            拆　包
+          </li>
+          <li class="mui-table-view-cell" index="4" href="pPackageCheck.html">
+            条码校验
+          </li>
+          <li class="mui-table-view-cell" index="4" href="pStockPending.html">
+            成品待入库
+          </li>
+        </ul>
+      </div>
+      <div id="item2" class="mui-control-content">
+        <ul class="mui-table-view" topIndex="2">
+          <li class="mui-table-view-cell" index="1" href="tTakeOut.html">
+            翻包领出
+          </li>
+          <li class="mui-table-view-cell" index="2" href="tTurnBagPerTray.html">
+            整托翻包
+          </li>
+          <li class="mui-table-view-cell" index="3" href="tTurnBagPackBox.html">
+            翻包盒打包
+          </li>
+          <li
+            class="mui-table-view-cell"
+            index="4"
+            href="tTurnBagPackTray.html"
+          >
+            翻包托打包
+          </li>
+        </ul>
+      </div>
+      <div id="item3" class="mui-control-content">
+        <ul class="mui-table-view" topIndex="3">
+          <li class="mui-table-view-cell" index="1" href="tCutTakeOut.html">
+            翻包领出
+          </li>
+          <li
+            class="mui-table-view-cell"
+            index="2"
+            href="tCutTurnBagPerTray.html"
+          >
+            裁剪翻包
+          </li>
+        </ul>
+      </div>
     </div>
 
     <script type="text/javascript">
-        /**
-         * 设置键盘事件
-         */
-        $(document).keydown(function (e) {
+      /**
+       * 设置键盘事件
+       */
+      $(document).keydown(function (e) {
+        if (e.keyCode == 37 || e.keyCode == 39) {
+          $(".mui-segmented-control a").toggleClass("mui-active");
+          $(".mui-control-content").toggleClass("mui-active");
+        }
 
-            if (e.keyCode == 37 || e.keyCode == 39) {
-                $(".mui-segmented-control a").toggleClass("mui-active");
-                $(".mui-control-content").toggleClass("mui-active");
+        if (e.keyCode == 40 || e.keyCode == 38) {
+          //判断方向键
+          var direction = e.keyCode == 40 ? 1 : -1;
+
+          //获取当前的tab的索引
+          var topIndex = $(".mui-control-item.mui-active").attr("index");
+          //如果没有选中项，那么选择第一项
+          if ($("ul[topIndex=" + topIndex + "] .mui-item-active").length == 0) {
+            $("li[index=1]").addClass("mui-item-active");
+          } else {
+            //获取当前选中项的index
+            var itemIndex = parseInt(
+              $("ul[topIndex=" + topIndex + "] .mui-item-active").attr("index")
+            );
+
+            //根据方向键，计算下一项item的index
+            var nextIndex = itemIndex + direction;
+
+            //如果根据索引，找不到下一个选中项，那么就返回，不执行后续操作
+            if (
+              $("ul[topIndex=" + topIndex + "] li[index=" + nextIndex + "]")
+                .length == 0
+            ) {
+              return;
             }
 
-            if (e.keyCode == 40 || e.keyCode == 38) {
-
-                //判断方向键
-                var direction = e.keyCode == 40 ? 1 : -1;
-
-                //获取当前的tab的索引
-                var topIndex = $(".mui-control-item.mui-active").attr("index");
-                //如果没有选中项，那么选择第一项
-                if ($("ul[topIndex=" + topIndex + "] .mui-item-active").length == 0) {
-                    $("li[index=1]").addClass("mui-item-active");
-                } else {
-                    //获取当前选中项的index
-                    var itemIndex = parseInt($("ul[topIndex=" + topIndex + "] .mui-item-active").attr("index"));
-
-                    //根据方向键，计算下一项item的index
-                    var nextIndex = itemIndex + direction;
-
-                    //如果根据索引，找不到下一个选中项，那么就返回，不执行后续操作
-                    if ($("ul[topIndex=" + topIndex + "] li[index=" + nextIndex + "]").length == 0) {
-                        return;
-                    }
-
-                    $("ul[topIndex=" + topIndex + "] li").removeClass("mui-item-active");
-                    $("ul[topIndex=" + topIndex + "] li[index=" + nextIndex + "]").addClass("mui-item-active");
-                }
-            }
-            if (e.keyCode == 13) {
-                var topIndex = $(".mui-control-item.mui-active").attr("index");
-                if ($("ul[topIndex=" + topIndex + "] .mui-item-active").length == 0) {
-                    $("li[index=1]").addClass("mui-item-active");
-                }
-                App.go($("ul[topIndex=" + topIndex + "] .mui-item-active").attr("href"));
-            }
-        });
-        /**
-         * 设置触摸事件
-         */
-        mui(".mui-control-content").on('tap', "li", function () {
-            //获取当前的tab的索引
-            var topIndex = $(".mui-control-item.mui-active").attr("index");
-            $("ul[topIndex=" + topIndex + "] li").removeClass("mui-item-active");
-            $(this).addClass("mui-item-active");
-            App.go($(this).attr("href"));
-        });
+            $("ul[topIndex=" + topIndex + "] li").removeClass(
+              "mui-item-active"
+            );
+            $(
+              "ul[topIndex=" + topIndex + "] li[index=" + nextIndex + "]"
+            ).addClass("mui-item-active");
+          }
+        }
+        if (e.keyCode == 13) {
+          var topIndex = $(".mui-control-item.mui-active").attr("index");
+          if ($("ul[topIndex=" + topIndex + "] .mui-item-active").length == 0) {
+            $("li[index=1]").addClass("mui-item-active");
+          }
+          App.go(
+            $("ul[topIndex=" + topIndex + "] .mui-item-active").attr("href")
+          );
+        }
+      });
+      /**
+       * 设置触摸事件
+       */
+      mui(".mui-control-content").on("tap", "li", function () {
+        //获取当前的tab的索引
+        var topIndex = $(".mui-control-item.mui-active").attr("index");
+        $("ul[topIndex=" + topIndex + "] li").removeClass("mui-item-active");
+        $(this).addClass("mui-item-active");
+        App.go($(this).attr("href"));
+      });
     </script>
-</body>
+  </body>
 </html>

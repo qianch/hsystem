@@ -1,363 +1,452 @@
 ﻿<!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>胚布批量入库</title>
 
-    <script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
+    <script
+      src="../resources/js/include.js"
+      type="text/javascript"
+      charset="utf-8"
+    ></script>
     <style type="text/css">
-        * {
-            margin: 0;
-            padding: 0;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+      }
 
-        .m-slider {
-            width: 600px;
-            margin: 50px 20px;
-            overflow: hidden;
-        }
+      .m-slider {
+        width: 600px;
+        margin: 50px 20px;
+        overflow: hidden;
+      }
 
-        .plist {
-            width: 1000px;
-            margin: auto;
-            border: 1px solid #aaa;
-            border-collapse: collapse;
-        }
+      .plist {
+        width: 1000px;
+        margin: auto;
+        border: 1px solid #aaa;
+        border-collapse: collapse;
+      }
 
-            .plist th,
-            .plist td {
-                width: auto;
-                line-height: 30px;
-                font-size: 16px;
-                font-family: "微软雅黑";
-                border: 3px solid #aaa;
-                text-align: center;
-                padding: 8px;
-            }
+      .plist th,
+      .plist td {
+        width: auto;
+        line-height: 30px;
+        font-size: 16px;
+        font-family: "微软雅黑";
+        border: 3px solid #aaa;
+        text-align: center;
+        padding: 8px;
+      }
 
-            .plist td {
-                padding: 0;
-            }
+      .plist td {
+        padding: 0;
+      }
 
-            .plist tr.headline {
-                background-color: #379;
-            }
+      .plist tr.headline {
+        background-color: #379;
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <header class="mui-bar mui-bar-nav">
-        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-        <h1 class="mui-title">胚布批量入库</h1>
+      <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+      <h1 class="mui-title">胚布批量入库</h1>
     </header>
     <div class="mui-content">
-        <div class="mui-scroll-wrapper">
-            <div class="mui-input-group" style="background:#dcdcdc;border-bottom: 2px solid #007aff;margin-bottom: 1px;">
-                <div class="mui-input-row">
-                    <input id="position" type="text" readonly required placeholder="仓库信息">
-                    <input id="warehouseName" type="hidden" readonly required placeholder="仓库名称">
-                    <input id="warehouseCode" type="hidden" readonly required placeholder="仓库代码">
-                    <input id="warehousePosCode" type="hidden" readonly required placeholder="库位">
-                </div>
-                <div class="mui-button-row">
-                    <button type="button" class="mui-btn mui-btn-primary" onclick="doSubmit()" style="width: 50%;">保存</button>
-                </div>
-            </div>
-            <div class="mui-scroll" style="width: 100%; overflow-x: auto;" id="block">
-                <table class="plist">
-                    <thead>
-                        <tr class="headline">
-                            <th>删除</th>
-                            <th>条码</th>
-                            <th>产品名称</th>
-                            <th>批次号</th>
-                            <th>订单号</th>
-                            <th>部件名称</th>
-                            <th>产品重量</th>
-                            <th>客户名称</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tbMain"></tbody>
-                </table>
-                <div style="color:red;text-align: center;font-size: 25px;font-weight: bold;margin-top:10px;" id="count"></div>
-            </div>
+      <div class="mui-scroll-wrapper">
+        <div
+          class="mui-input-group"
+          style="
+            background: #dcdcdc;
+            border-bottom: 2px solid #007aff;
+            margin-bottom: 1px;
+          "
+        >
+          <div class="mui-input-row">
+            <input
+              id="position"
+              type="text"
+              readonly
+              required
+              placeholder="仓库信息"
+            />
+            <input
+              id="warehouseName"
+              type="hidden"
+              readonly
+              required
+              placeholder="仓库名称"
+            />
+            <input
+              id="warehouseCode"
+              type="hidden"
+              readonly
+              required
+              placeholder="仓库代码"
+            />
+            <input
+              id="warehousePosCode"
+              type="hidden"
+              readonly
+              required
+              placeholder="库位"
+            />
+          </div>
+          <div class="mui-button-row">
+            <button
+              type="button"
+              class="mui-btn mui-btn-primary"
+              onclick="doSubmit()"
+              style="width: 50%"
+            >
+              保存
+            </button>
+          </div>
         </div>
+        <div
+          class="mui-scroll"
+          style="width: 100%; overflow-x: auto"
+          id="block"
+        >
+          <table class="plist">
+            <thead>
+              <tr class="headline">
+                <th>删除</th>
+                <th>条码</th>
+                <th>产品名称</th>
+                <th>批次号</th>
+                <th>订单号</th>
+                <th>部件名称</th>
+                <th>产品重量</th>
+                <th>客户名称</th>
+              </tr>
+            </thead>
+            <tbody id="tbMain"></tbody>
+          </table>
+          <div
+            style="
+              color: red;
+              text-align: center;
+              font-size: 25px;
+              font-weight: bold;
+              margin-top: 10px;
+            "
+            id="count"
+          ></div>
+        </div>
+      </div>
     </div>
 
     <script type="text/javascript">
-        var submitUrl = App.getServerUrl() + "stock2/product/pIns";
-        var findInfoUrl = App.getServerUrl() + "common/infos";
-        var queryWarhourseUrl = App.getServerUrl() + "stock2/product/queryWarhourse";
-        var rdata = "";
-        var code = [];
-        var total = 0.0;
-        var pInfoList = [];
-        var tbody = document.getElementById('tbMain');
+      var submitUrl = App.getServerUrl() + "stock2/product/pIns";
+      var findInfoUrl = App.getServerUrl() + "common/infos";
+      var queryWarhourseUrl =
+        App.getServerUrl() + "stock2/product/queryWarhourse";
+      var rdata = "";
+      var code = [];
+      var total = 0.0;
+      var pInfoList = [];
+      var tbody = document.getElementById("tbMain");
 
-        App.ready(function () {
-            scanner = new Scanner(parseCode);
-            scanner.scan();
-        });
+      App.ready(function () {
+        scanner = new Scanner(parseCode);
+        scanner.scan();
+      });
 
-        function addBarcode(h) {
-            var row = document.createElement('tr'); //创建行  
+      function addBarcode(h) {
+        var row = document.createElement("tr"); //创建行
 
-            var button = document.createElement('td'); //创建第一列barCode
-            button.innerHTML = "<input type=\"button\" onclick=\"delRow(this)\" value=\"删除\"/>"; //填充数据  
-            row.appendChild(button); //加入行  ，下面类似   
+        var button = document.createElement("td"); //创建第一列barCode
+        button.innerHTML =
+          '<input type="button" onclick="delRow(this)" value="删除"/>'; //填充数据
+        row.appendChild(button); //加入行  ，下面类似
 
-            var barCodeCell = document.createElement('td'); //创建第一列barCode  
-            barCodeCell.innerHTML = h.barCode; //填充数据  
-            row.appendChild(barCodeCell); //加入行  ，下面类似  
+        var barCodeCell = document.createElement("td"); //创建第一列barCode
+        barCodeCell.innerHTML = h.barCode; //填充数据
+        row.appendChild(barCodeCell); //加入行  ，下面类似
 
-            var productNameCell = document.createElement('td'); //创建第二列productName 
-            productNameCell.innerHTML = h.productName;
-            row.appendChild(productNameCell);
+        var productNameCell = document.createElement("td"); //创建第二列productName
+        productNameCell.innerHTML = h.productName;
+        row.appendChild(productNameCell);
 
-            var batchCodeCell = document.createElement('td'); //创建第三列batchCode 
-            batchCodeCell.innerHTML = h.batchCode;
-            row.appendChild(batchCodeCell);
+        var batchCodeCell = document.createElement("td"); //创建第三列batchCode
+        batchCodeCell.innerHTML = h.batchCode;
+        row.appendChild(batchCodeCell);
 
-            var salesOrderCodeCell = document.createElement('td'); //创建第四列salesOrderCode 
-            salesOrderCodeCell.innerHTML = h.salesOrderCode;
-            row.appendChild(salesOrderCodeCell);
+        var salesOrderCodeCell = document.createElement("td"); //创建第四列salesOrderCode
+        salesOrderCodeCell.innerHTML = h.salesOrderCode;
+        row.appendChild(salesOrderCodeCell);
 
-            var partNameCell = document.createElement('td'); //创建第五列partName 
-            partNameCell.innerHTML = h.partName;
-            row.appendChild(partNameCell);
+        var partNameCell = document.createElement("td"); //创建第五列partName
+        partNameCell.innerHTML = h.partName;
+        row.appendChild(partNameCell);
 
-            var productWeightCell = document.createElement('td'); //创建第六列productWeight 
-            productWeightCell.innerHTML = h.productWeight;
-            row.appendChild(productWeightCell);
+        var productWeightCell = document.createElement("td"); //创建第六列productWeight
+        productWeightCell.innerHTML = h.productWeight;
+        row.appendChild(productWeightCell);
 
-            var CONSUMERNAMECell = document.createElement('td'); //创建第六列CONSUMERNAME
-            CONSUMERNAMECell.innerHTML = h.CONSUMERNAME;
-            row.appendChild(CONSUMERNAMECell);
+        var CONSUMERNAMECell = document.createElement("td"); //创建第六列CONSUMERNAME
+        CONSUMERNAMECell.innerHTML = h.CONSUMERNAME;
+        row.appendChild(CONSUMERNAMECell);
 
-            tbody.appendChild(row);
-        }
+        tbody.appendChild(row);
+      }
 
-        function delRow(obj) {
-            var tr = $(obj).parent().parent().children();
-            var vbarcode = tr.eq(1).text();
-            var res = confirm("确定要删除:" + vbarcode + "？");
-            if (res) {
-
-                tr.remove();
-                code.splice(code.indexOf(vbarcode), 1);
-                for (var i = 0; i < pInfoList.length; i++) {
-                    if (pInfoList[i].barCode == vbarcode) {
-                        total = toFixed((total - pInfoList[i].productWeight), 1);
-                        pInfoList.splice(i, 1);
-                    }
-                }
-                $("#count").html("总托数：" + pInfoList.length + '\xa0\xa0\xa0' + "总重量：" + total + "KG");
+      function delRow(obj) {
+        var tr = $(obj).parent().parent().children();
+        var vbarcode = tr.eq(1).text();
+        var res = confirm("确定要删除:" + vbarcode + "？");
+        if (res) {
+          tr.remove();
+          code.splice(code.indexOf(vbarcode), 1);
+          for (var i = 0; i < pInfoList.length; i++) {
+            if (pInfoList[i].barCode == vbarcode) {
+              total = toFixed(total - pInfoList[i].productWeight, 1);
+              pInfoList.splice(i, 1);
             }
+          }
+          $("#count").html(
+            "总托数：" +
+              pInfoList.length +
+              "\xa0\xa0\xa0" +
+              "总重量：" +
+              total +
+              "KG"
+          );
+        }
+      }
+
+      mui(".mui-scroll-wrapper").scroll({
+        deceleration: 0.0005, //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+      });
+
+      function parseCode(data) {
+        rdata = data.split(";");
+        for (var i = 0; i < code.length; i++) {
+          if (code[i] == rdata[0]) {
+            toast("扫描条码重复");
+            beepAndVibrate();
+            return;
+          }
         }
 
-        mui('.mui-scroll-wrapper').scroll({
-            deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
-        });
+        if (rdata != "") {
+          if (rdata.length == 5) {
+            waiting("正在查询该条码的状态信息");
 
-        function parseCode(data) {
-            rdata = data.split(";");
-            for (var i = 0; i < code.length; i++) {
-                if (code[i] == rdata[0]) {
+            if (rdata[0].indexOf("B") == 0) {
+              toast("盒不能直接入库");
+              return;
+            }
+            if (rdata[0].indexOf("R") == 0) {
+              toast("卷不能直接入库");
+            }
+
+            if (rdata[0].indexOf("T") != 0 && rdata[0].indexOf("P") != 0) {
+              toast("无效条码");
+              return;
+            }
+
+            App.ajaxGet(
+              findInfoUrl + "?barCode=" + rdata[0],
+              function (ajaxData) {
+                closeWaiting();
+                if (ajaxData.ERROR) {
+                  tip(ajaxData.MSG);
+                  return;
+                }
+
+                //判断条码是否产出登记
+                if (!ajaxData.REGISTER) {
+                  beepAndVibrate();
+                  toast("该条码未产出登记");
+                  return;
+                }
+
+                if (!ajaxData.ENDPACK) {
+                  beepAndVibrate();
+                  if (code.indexOf("PCJ") == 0) {
+                    toast("请先裁剪产出登记");
+                  } else {
+                    toast("打包未结束");
+                  }
+                  return;
+                }
+
+                for (var i = 0; i < code.length; i++) {
+                  if (code[i] == rdata[0]) {
                     toast("扫描条码重复");
                     beepAndVibrate();
                     return;
-                }
-            }
-
-            if (rdata != "") {
-                if (rdata.length == 5) {
-                    waiting("正在查询该条码的状态信息");
-
-                    if (rdata[0].indexOf("B") == 0) {
-                        toast("盒不能直接入库");
-                        return;
-                    }
-                    if (rdata[0].indexOf("R") == 0) {
-                        toast("卷不能直接入库");
-                    }
-
-                    if (rdata[0].indexOf("T") != 0 && rdata[0].indexOf("P") != 0) {
-                        toast("无效条码");
-                        return;
-                    }
-
-                    App.ajaxGet(findInfoUrl + "?barCode=" + rdata[0], function (ajaxData) {
-                        closeWaiting();
-                        if (ajaxData.ERROR) {
-                            tip(ajaxData.MSG);
-                            return;
-                        }
-
-                        //判断条码是否产出登记
-                        if (!ajaxData.REGISTER) {
-                            beepAndVibrate();
-                            toast("该条码未产出登记");
-                            return;
-                        }
-
-                        if (!ajaxData.ENDPACK) {
-                            beepAndVibrate();
-                            if (code.indexOf('PCJ') == 0) {
-                                toast("请先裁剪产出登记");
-                            } else {
-                                toast("打包未结束");
-                            }
-                            return;
-                        }
-
-                        for (var i = 0; i < code.length; i++) {
-
-                            if (code[i] == rdata[0]) {
-                                toast("扫描条码重复");
-                                beepAndVibrate();
-                                return;
-                            }
-                        }
-
-                        if (ajaxData.STOCK != 2) {
-                            beepAndVibrate();
-                            toast("该条码不是待入库状态");
-                            return;
-                        }
-
-                        //判断条码是否为胚布(裁剪车间产品)
-                        if (!(ajaxData.CONSUMERSIMPLENAME).indexOf("裁剪车间") == 0) {
-                            beepAndVibrate();
-                            toast("该条码是非裁剪车间用,无法入胚布库");
-                            return;
-                        }
-
-                        $("#count").empty();
-                        //动态拼条码扫的数据
-                        code.push(rdata[0]);
-
-                        var productPartName = '';
-                        if (isEmpty(ajaxData.PRODUCT.FACTORYPRODUCTNAME)) {
-                            productPartName = ajaxData.PRODUCT.TCPROCBOMVERSIONPARTSNAME;
-                        } else {
-                            productPartName = ajaxData.PRODUCT.FACTORYPRODUCTNAME;
-                        }
-
-                        var partBatchCode = '';
-                        if (isEmpty(ajaxData.BATCHCODE)) {
-                            partBatchCode = ajaxData.CODE.BATCHCODE;
-                        } else {
-                            partBatchCode = ajaxData.BATCHCODE;
-                        }
-
-                        var mStr = {
-                            "newWarehouseCode": $("#warehouseCode").val(),
-                            "newWarehousePosCode": $("#warehousePosCode").val(),
-                            "barCode": ajaxData.TRAY.TRAYBARCODE,
-                            "productName": productPartName,
-                            "batchCode": partBatchCode,
-                            "salesOrderCode": ajaxData.CODE.SALESORDERCODE,
-                            "productWeight": ajaxData.TRAY.WEIGHT,
-                            "CONSUMERNAME": ajaxData.CONSUMERSIMPLENAME,
-                            "partName": ajaxData.PARTNAME
-                        };
-                        pInfoList.push(mStr);
-                        addBarcode(mStr);
-                        total = total.add(mStr.productWeight);
-                        $("#count").html("总托数：" + pInfoList.length + '\xa0\xa0\xa0' + "总重量：" + total + "KG");
-
-                    }, function () {
-                        closeWaiting();
-                        beepAndVibrate();
-                        toast("查询条码信息失败");
-                    });
-                } else if (rdata.length == 2) {
-                    //库房库位扫的数据
-                    App.ajaxGet(queryWarhourseUrl + "?warehouseCode=" + rdata[0].trim(),
-                        function (ajaxData) {
-                            if (ajaxData.WARETYPE == "pbbdk") {
-                                $("#position").val("仓库:(" + rdata[0].trim() + "," + ajaxData.WAREHOUSENAME + ");库位：" + rdata[1].trim());
-                                $("#warehouseCode").val(rdata[0].trim());
-                                $("#warehousePosCode").val(rdata[1].trim());
-                                $("#warehouseName").val(ajaxData.WAREHOUSENAME);
-                            } else {
-                                toast("扫描库位非胚布本地库库位，不能入库");
-                            }
-
-                        },
-                        function () {
-                            beepAndVibrate();
-                            toast("查询库位信息失败");
-                        });
-                }
-            }
-        }
-
-        function doSubmit() {
-            if (code.length == 0) {
-                toast("请先扫描条码！");
-                beepAndVibrate();
-                return;
-            }
-
-            if ($("#warehouseCode").val() == "") {
-                toast("请先扫描库位！");
-                beepAndVibrate();
-                return;
-            }
-
-            mconfirm('警告', '确认批量入库？', function () {
-                waiting("正在批量入库", true);
-
-                var productInRecordlist = [];
-                for (var i = 0; i < pInfoList.length; i++) {
-
-                    var rStr = {
-                        "barCode": pInfoList[i].barCode,
-                        "weight": pInfoList[i].productWeight,
-                        "overTime": 0,
-                        "operateUserId": App.getLoginUserId(),
-                        "puid": App.getLoginUserId(),
-                        "puname": App.getLoginUserName(),
-                        "warehouseCode": $("#warehouseCode").val(),
-                        "warehousePosCode": $("#warehousePosCode").val(),
-                        "syncState": 0,
-                        "inBankSource": App.getUserDepartment()
-                    };
-                    productInRecordlist.push(rStr);
+                  }
                 }
 
-                var jsondata = JSON.stringify(productInRecordlist);
-                var params = {};
-                params.productInRecordlist = JSON.stringify(productInRecordlist);
+                if (ajaxData.STOCK != 2) {
+                  beepAndVibrate();
+                  toast("该条码不是待入库状态");
+                  return;
+                }
 
-                App.ajaxPost(submitUrl, $.param(params), function (data) {
-                    if (data == "") {
-                        closeWaiting();
-                        toast("批量入库成功");
-                        clearRoll();
-                        plus.audio.createPlayer("notice.mp3").play();
-                    } else {
-                        closeWaiting();
-                        malert("入库提示", data, "我已知晓", null);
-                        beepAndVibrate();
-                    }
-                }, function () {
-                    closeWaiting();
-                    toast("批量入库失败");
-                    beepAndVibrate();
-                })
-            }, function () {
+                //判断条码是否为胚布(裁剪车间产品)
+                if (!ajaxData.CONSUMERSIMPLENAME.indexOf("裁剪车间") == 0) {
+                  beepAndVibrate();
+                  toast("该条码是非裁剪车间用,无法入胚布库");
+                  return;
+                }
+
+                $("#count").empty();
+                //动态拼条码扫的数据
+                code.push(rdata[0]);
+
+                var productPartName = "";
+                if (isEmpty(ajaxData.PRODUCT.FACTORYPRODUCTNAME)) {
+                  productPartName = ajaxData.PRODUCT.TCPROCBOMVERSIONPARTSNAME;
+                } else {
+                  productPartName = ajaxData.PRODUCT.FACTORYPRODUCTNAME;
+                }
+
+                var partBatchCode = "";
+                if (isEmpty(ajaxData.BATCHCODE)) {
+                  partBatchCode = ajaxData.CODE.BATCHCODE;
+                } else {
+                  partBatchCode = ajaxData.BATCHCODE;
+                }
+
+                var mStr = {
+                  newWarehouseCode: $("#warehouseCode").val(),
+                  newWarehousePosCode: $("#warehousePosCode").val(),
+                  barCode: ajaxData.TRAY.TRAYBARCODE,
+                  productName: productPartName,
+                  batchCode: partBatchCode,
+                  salesOrderCode: ajaxData.CODE.SALESORDERCODE,
+                  productWeight: ajaxData.TRAY.WEIGHT,
+                  CONSUMERNAME: ajaxData.CONSUMERSIMPLENAME,
+                  partName: ajaxData.PARTNAME,
+                };
+                pInfoList.push(mStr);
+                addBarcode(mStr);
+                total = total.add(mStr.productWeight);
+                $("#count").html(
+                  "总托数：" +
+                    pInfoList.length +
+                    "\xa0\xa0\xa0" +
+                    "总重量：" +
+                    total +
+                    "KG"
+                );
+              },
+              function () {
                 closeWaiting();
-            });
+                beepAndVibrate();
+                toast("查询条码信息失败");
+              }
+            );
+          } else if (rdata.length == 2) {
+            //库房库位扫的数据
+            App.ajaxGet(
+              queryWarhourseUrl + "?warehouseCode=" + rdata[0].trim(),
+              function (ajaxData) {
+                if (ajaxData.WARETYPE == "pbbdk") {
+                  $("#position").val(
+                    "仓库:(" +
+                      rdata[0].trim() +
+                      "," +
+                      ajaxData.WAREHOUSENAME +
+                      ");库位：" +
+                      rdata[1].trim()
+                  );
+                  $("#warehouseCode").val(rdata[0].trim());
+                  $("#warehousePosCode").val(rdata[1].trim());
+                  $("#warehouseName").val(ajaxData.WAREHOUSENAME);
+                } else {
+                  toast("扫描库位非胚布本地库库位，不能入库");
+                }
+              },
+              function () {
+                beepAndVibrate();
+                toast("查询库位信息失败");
+              }
+            );
+          }
+        }
+      }
+
+      function doSubmit() {
+        if (code.length == 0) {
+          toast("请先扫描条码！");
+          beepAndVibrate();
+          return;
         }
 
-        function clearRoll() {
-            pInfoList.empty();
-            tbody.empty();
-            rdata = "";
-            code = [];
+        if ($("#warehouseCode").val() == "") {
+          toast("请先扫描库位！");
+          beepAndVibrate();
+          return;
         }
+
+        mconfirm(
+          "警告",
+          "确认批量入库？",
+          function () {
+            waiting("正在批量入库", true);
+
+            var productInRecordlist = [];
+            for (var i = 0; i < pInfoList.length; i++) {
+              var rStr = {
+                barCode: pInfoList[i].barCode,
+                weight: pInfoList[i].productWeight,
+                overTime: 0,
+                operateUserId: App.getLoginUserId(),
+                puid: App.getLoginUserId(),
+                puname: App.getLoginUserName(),
+                warehouseCode: $("#warehouseCode").val(),
+                warehousePosCode: $("#warehousePosCode").val(),
+                syncState: 0,
+                inBankSource: App.getUserDepartment(),
+              };
+              productInRecordlist.push(rStr);
+            }
+
+            var jsondata = JSON.stringify(productInRecordlist);
+            var params = {};
+            params.productInRecordlist = JSON.stringify(productInRecordlist);
+
+            App.ajaxPost(
+              submitUrl,
+              $.param(params),
+              function (data) {
+                if (data == "") {
+                  closeWaiting();
+                  toast("批量入库成功");
+                  clearRoll();
+                  plus.audio.createPlayer("notice.mp3").play();
+                } else {
+                  closeWaiting();
+                  malert("入库提示", data, "我已知晓", null);
+                  beepAndVibrate();
+                }
+              },
+              function () {
+                closeWaiting();
+                toast("批量入库失败");
+                beepAndVibrate();
+              }
+            );
+          },
+          function () {
+            closeWaiting();
+          }
+        );
+      }
+
+      function clearRoll() {
+        pInfoList.empty();
+        tbody.empty();
+        rdata = "";
+        code = [];
+      }
     </script>
-</body>
+  </body>
 </html>
