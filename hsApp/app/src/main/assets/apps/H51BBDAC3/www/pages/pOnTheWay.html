@@ -1,290 +1,351 @@
 ﻿<!DOCTYPE html>
 <html>
-
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>成品在途状态更新</title>
 
+    <script
+      src="../resources/js/include.js"
+      type="text/javascript"
+      charset="utf-8"
+    ></script>
+    <style type="text/css"></style>
+  </head>
 
-    <script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
-    <style type="text/css">
-    </style>
-</head>
-
-<body>
+  <body>
     <header class="mui-bar mui-bar-nav">
-        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-        <h1 class="mui-title">成品在途</h1>
+      <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+      <h1 class="mui-title">成品在途</h1>
     </header>
     <div class="mui-content" id="pMove">
-        <div class="mui-scroll-wrapper">
-            <div class="mui-scroll">
-                <div class="mui-card">
-                    <div class="mui-card-header">
-                        <form class="mui-input-group" id="rForm">
-                            <div class="mui-input-row">
-                                <label>终点仓库:</label>
-                                <select id="selwarehouse" data-options="'valueField':'v','textField':'t','url':'warehouse/queryWarehousebyType?waretype=cpwk'">
-                                </select>
-                            </div>
-                            <div class="mui-input-row">
-                                <label>车牌:</label>
-                                <input id="plate" type="text" placeholder="请输入车牌">
-                            </div>
-                        </form>
-                    </div>
-                    <div class="mui-card-content">
-                        <form class="mui-input-group" id="list">
-                        </form>
-                        <div style="color:red;text-align: center;font-size: 25px;font-weight: bold;margin-top:10px;" id="count"></div>
-                    </div>
+      <div class="mui-scroll-wrapper">
+        <div class="mui-scroll">
+          <div class="mui-card">
+            <div class="mui-card-header">
+              <form class="mui-input-group" id="rForm">
+                <div class="mui-input-row">
+                  <label>终点仓库:</label>
+                  <select
+                    id="selwarehouse"
+                    data-options="'valueField':'v','textField':'t','url':'warehouse/queryWarehousebyType?waretype=cpwk'"
+                  ></select>
                 </div>
-                <div class="mui-button-row">
-                    <button type="button" class="mui-btn mui-btn-primary" onclick="doRMoveInfo()" style="width: 50%;">详情</button>
+                <div class="mui-input-row">
+                  <label>车牌:</label>
+                  <input id="plate" type="text" placeholder="请输入车牌" />
                 </div>
-
-                <div class="mui-button-row">
-                    <button type="button" class="mui-btn mui-btn-primary" onclick="doOnTheWay()" style="width: 50%;">在途更新</button>
-                </div>
+              </form>
             </div>
+            <div class="mui-card-content">
+              <form class="mui-input-group" id="list"></form>
+              <div
+                style="
+                  color: red;
+                  text-align: center;
+                  font-size: 25px;
+                  font-weight: bold;
+                  margin-top: 10px;
+                "
+                id="count"
+              ></div>
+            </div>
+          </div>
+          <div class="mui-button-row">
+            <button
+              type="button"
+              class="mui-btn mui-btn-primary"
+              onclick="doRMoveInfo()"
+              style="width: 50%"
+            >
+              详情
+            </button>
+          </div>
+
+          <div class="mui-button-row">
+            <button
+              type="button"
+              class="mui-btn mui-btn-primary"
+              onclick="doOnTheWay()"
+              style="width: 50%"
+            >
+              在途更新
+            </button>
+          </div>
         </div>
+      </div>
     </div>
 
     <script type="text/javascript">
-        var ponthewayUrl = App.getServerUrl() + "stock2/product/pontheway";
-        var moveInfoUrl = App.getServerUrl() + "stock/product/moveInfo";
-        var findInfoUrl = App.getServerUrl() + "common/infos";
-        var rdata = "";
-        var code = [];
-        var total = 0.0;
-        var moveInfoList = [];
-        mui.init({
-            gestureConfig: {
-                longtap: true
-            },
+      var ponthewayUrl = App.getServerUrl() + "stock2/product/pontheway";
+      var moveInfoUrl = App.getServerUrl() + "stock/product/moveInfo";
+      var findInfoUrl = App.getServerUrl() + "common/infos";
+      var rdata = "";
+      var code = [];
+      var total = 0.0;
+      var moveInfoList = [];
+      mui.init({
+        gestureConfig: {
+          longtap: true,
+        },
+      });
+      mui(".mui-scroll-wrapper").scroll({
+        deceleration: 0.0005, //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+      });
 
-        });
-        mui('.mui-scroll-wrapper').scroll({
-            deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
-        });
+      var scanner;
+      App.ready(function () {
+        scanner = new Scanner(parseCode);
+        scanner.scan();
+        initSelect();
+      });
 
-        var scanner;
-        App.ready(function () {
-            scanner = new Scanner(parseCode);
-            scanner.scan();
-            initSelect();
-        });
-
-        function parseCode(data) {
-            rdata = data.split(";");
-            for (var i = 0; i < code.length; i++) {
-                if (code[i] == rdata[0]) {
-                    toast("扫描条码重复");
-                    beepAndVibrate();
-                    return;
-                }
-            }
-            var str = '';
-            var tWeight = 0.0;
-
-            if (rdata != "") {
-                if (rdata.length == 5) {
-                    waiting("正在查询该条码的状态信息");
-                    App.ajaxGet(findInfoUrl + "?barCode=" + rdata[0], function (ajaxData) {
-                        $("#count").empty();
-                        closeWaiting();
-                        if (ajaxData.ERROR) {
-                            tip(ajaxData.MSG);
-                            return;
-                        }
-                        //判断条码是否产出登记
-                        if (ajaxData.REGISTER) {
-
-                            if (ajaxData.STOCK == -1) {
-                                beepAndVibrate();
-                                toast("该条码没有入库");
-                                return;
-                            }
-
-                            if (ajaxData.STOCK == 3) {
-                                beepAndVibrate();
-                                toast("该条码已经是在途状态");
-                                return;
-                            }
-
-                            if (ajaxData.STOCK != 1) {
-                                beepAndVibrate();
-                                toast("该条码非在库状态");
-                                return;
-                            }
-
-                            for (var i = 0; i < code.length; i++) {
-                                if (code[i] == rdata[0]) {
-                                    toast("扫描条码重复");
-                                    beepAndVibrate();
-                                    return;
-                                }
-                            }
-
-                            //动态拼条码扫的数据
-                            code.push(rdata[0]);
-                            str += '<div class="mui-input-row" weight=' + ajaxData.TRAY.WEIGHT + '  id=' + rdata[0] + '>';
-                            str += '<label>条码</label>';
-                            str += '<input id="barcode" type="text" required readonly class="mui-input-clear" weight = ' + ajaxData.TRAY.WEIGHT +
-                                ' value=' + rdata[0] + '>';
-                            str += '</div>';
-                            $("#list").append(str);
-
-                            var productName = "";
-                            if (isEmpty(ajaxData.PRODUCT.FACTORYPRODUCTNAME)) {
-                                productName = ajaxData.PRODUCT.TCPROCBOMVERSIONPARTSNAME;
-                            } else {
-                                productName = ajaxData.PRODUCT.FACTORYPRODUCTNAME;
-                            }
-
-
-                            var mStr = {
-                                "newWarehouseCode": $("#selwarehouse").val(),
-                                "newWarehousePosCode": "",
-                                "barCode": ajaxData.TRAY.TRAYBARCODE,
-                                "productName": productName,
-                                "batchCode": ajaxData.CODE.BATCHCODE,
-                                "salesOrderCode": ajaxData.CODE.SALESORDERCODE,
-                                "productWeight": ajaxData.TRAY.WEIGHT,
-                                "CONSUMERNAME": ajaxData.CONSUMERSIMPLENAME,
-                                "partName": ajaxData.PARTNAME
-                            };
-                            moveInfoList.push(mStr);
-                            total = total.add(mStr.productWeight);
-                            $("#count").html("总托数：" + $("#list input").length + '\xa0\xa0\xa0' + "总重量：" + total + "KG");
-
-                        } else {
-                            beepAndVibrate();
-                            toast("该条码未产出登记");
-                        }
-
-
-                    }, function () {
-                        closeWaiting();
-                        beepAndVibrate();
-                        toast("查询条码信息失败");
-                    });
-                } else if (rdata.length == 1) {
-                    //库房库位扫的数据
-                    $("#warehouseCode").val(rdata[0]);
-                }
-            }
+      function parseCode(data) {
+        rdata = data.split(";");
+        for (var i = 0; i < code.length; i++) {
+          if (code[i] == rdata[0]) {
+            toast("扫描条码重复");
+            beepAndVibrate();
+            return;
+          }
         }
+        var str = "";
+        var tWeight = 0.0;
 
-        document.onkeydown = function (e) {
-            //键盘事件
-            if (e.keyCode == 37 || e.keyCode == 39) { }
-
-            if (e.keyCode == 13) { }
-        }
-
-        //卷数据提交
-        function doOnTheWay() {
-            var warehouseCode = $("#selwarehouse").val();//终点仓库
-            var logisticsCompany = "";//货运
-            var plate = $("#plate").val();//车牌
-            var loginid = App.getLoginUserId();
-
-            if (!validForm('rForm')) {
-                return;
-            }
-
-            if (code.length == 0) {
-                toast("请先扫描条码！");
-                beepAndVibrate();
-                return;
-            }
-            mconfirm('警告', '确认在途？', function () {
-                waiting("正在在途", true);
-                var rStr = {
-                    "code": code.toString(),
-                    "warehousecode": warehouseCode,
-                    "plate": plate,
-                    "loginid": loginid
-                };
-
-                App.ajaxPost(ponthewayUrl, rStr, function (data) {
-                    closeWaiting();
-                    toast("在途成功");
-                    clearRoll();
-                }, function () {
-                    //失败
-                    closeWaiting();
-                    toast("在途失败");
-                    beepAndVibrate();
-                })
-            }, function () {
+        if (rdata != "") {
+          if (rdata.length == 5) {
+            waiting("正在查询该条码的状态信息");
+            App.ajaxGet(
+              findInfoUrl + "?barCode=" + rdata[0],
+              function (ajaxData) {
+                $("#count").empty();
                 closeWaiting();
-            });
-
-        }
-
-        function doRMoveInfo() {
-            if (!validForm('rForm')) {
-                return;
-            }
-
-            if (code.length == 0) {
-                toast("请先扫描条码！");
-                beepAndVibrate();
-                return;
-            }
-            window.localStorage.setItem('moveList', JSON.stringify(moveInfoList));
-            window.localStorage.setItem('countTotal', JSON.stringify(total));
-            App.go("pMoveInfo.html");
-        }
-
-        //重写toFixed方法
-        function toFixed(num, d) {
-            num *= Math.pow(10, d);
-            num = Math.round(num);
-            return num / (Math.pow(10, d));
-        }
-        //长按删除事件
-        mui('#list').on('longtap', '.mui-input-row', function () {
-            var id = this.getAttribute("id");
-            var weight = this.getAttribute("weight");
-            mconfirm("删除", "确认删除", function () {
-                //删除卷中code数组中的值
-                var del;
-                var mDel;
-                for (var j = 0; j < code.length; j++) {
-                    if (code[j] == id) {
-                        del = code[j];
-                    }
+                if (ajaxData.ERROR) {
+                  tip(ajaxData.MSG);
+                  return;
                 }
+                //判断条码是否产出登记
+                if (ajaxData.REGISTER) {
+                  if (ajaxData.STOCK == -1) {
+                    beepAndVibrate();
+                    toast("该条码没有入库");
+                    return;
+                  }
 
-                code.splice(code.indexOf(del), 1);
-                $("#" + id).remove();
-                for (var i = 0; i < moveInfoList.length; i++) {
-                    if (moveInfoList[i].barCode == id) {
-                        moveInfoList.splice(i, 1);
+                  if (ajaxData.STOCK == 3) {
+                    beepAndVibrate();
+                    toast("该条码已经是在途状态");
+                    return;
+                  }
+
+                  if (ajaxData.STOCK != 1) {
+                    beepAndVibrate();
+                    toast("该条码非在库状态");
+                    return;
+                  }
+
+                  for (var i = 0; i < code.length; i++) {
+                    if (code[i] == rdata[0]) {
+                      toast("扫描条码重复");
+                      beepAndVibrate();
+                      return;
                     }
-                }
-                total = toFixed((total - weight), 1);
-                if (0.0 != total || 0 != total) {
-                    $("#count").html("总托数：" + $("#list input").length + '\xa0\xa0\xa0' + "总重量：" + total + "KG");
+                  }
+
+                  //动态拼条码扫的数据
+                  code.push(rdata[0]);
+                  str +=
+                    '<div class="mui-input-row" weight=' +
+                    ajaxData.TRAY.WEIGHT +
+                    "  id=" +
+                    rdata[0] +
+                    ">";
+                  str += "<label>条码</label>";
+                  str +=
+                    '<input id="barcode" type="text" required readonly class="mui-input-clear" weight = ' +
+                    ajaxData.TRAY.WEIGHT +
+                    " value=" +
+                    rdata[0] +
+                    ">";
+                  str += "</div>";
+                  $("#list").append(str);
+
+                  var productName = "";
+                  if (isEmpty(ajaxData.PRODUCT.FACTORYPRODUCTNAME)) {
+                    productName = ajaxData.PRODUCT.TCPROCBOMVERSIONPARTSNAME;
+                  } else {
+                    productName = ajaxData.PRODUCT.FACTORYPRODUCTNAME;
+                  }
+
+                  var mStr = {
+                    newWarehouseCode: $("#selwarehouse").val(),
+                    newWarehousePosCode: "",
+                    barCode: ajaxData.TRAY.TRAYBARCODE,
+                    productName: productName,
+                    batchCode: ajaxData.CODE.BATCHCODE,
+                    salesOrderCode: ajaxData.CODE.SALESORDERCODE,
+                    productWeight: ajaxData.TRAY.WEIGHT,
+                    CONSUMERNAME: ajaxData.CONSUMERSIMPLENAME,
+                    partName: ajaxData.PARTNAME,
+                  };
+                  moveInfoList.push(mStr);
+                  total = total.add(mStr.productWeight);
+                  $("#count").html(
+                    "总托数：" +
+                      $("#list input").length +
+                      "\xa0\xa0\xa0" +
+                      "总重量：" +
+                      total +
+                      "KG"
+                  );
                 } else {
-                    $("#count").empty();
+                  beepAndVibrate();
+                  toast("该条码未产出登记");
                 }
-
-            }, function () { });
-        });
-
-        function clearRoll() {
-            $("#rForm")[0].reset();
-            $("#list").empty();
-            $("#count").empty();
-            moveInfoList = [];
-            window.localStorage.setItem('moveList', JSON.stringify(moveInfoList));
-            rdata = "";
-            code = [];
+              },
+              function () {
+                closeWaiting();
+                beepAndVibrate();
+                toast("查询条码信息失败");
+              }
+            );
+          } else if (rdata.length == 1) {
+            //库房库位扫的数据
+            $("#warehouseCode").val(rdata[0]);
+          }
         }
+      }
+
+      document.onkeydown = function (e) {
+        //键盘事件
+        if (e.keyCode == 37 || e.keyCode == 39) {
+        }
+
+        if (e.keyCode == 13) {
+        }
+      };
+
+      //卷数据提交
+      function doOnTheWay() {
+        var warehouseCode = $("#selwarehouse").val(); //终点仓库
+        var logisticsCompany = ""; //货运
+        var plate = $("#plate").val(); //车牌
+        var loginid = App.getLoginUserId();
+
+        if (!validForm("rForm")) {
+          return;
+        }
+
+        if (code.length == 0) {
+          toast("请先扫描条码！");
+          beepAndVibrate();
+          return;
+        }
+        mconfirm(
+          "警告",
+          "确认在途？",
+          function () {
+            waiting("正在在途", true);
+            var rStr = {
+              code: code.toString(),
+              warehousecode: warehouseCode,
+              plate: plate,
+              loginid: loginid,
+            };
+
+            App.ajaxPost(
+              ponthewayUrl,
+              rStr,
+              function (data) {
+                closeWaiting();
+                toast("在途成功");
+                clearRoll();
+              },
+              function () {
+                //失败
+                closeWaiting();
+                toast("在途失败");
+                beepAndVibrate();
+              }
+            );
+          },
+          function () {
+            closeWaiting();
+          }
+        );
+      }
+
+      function doRMoveInfo() {
+        if (!validForm("rForm")) {
+          return;
+        }
+
+        if (code.length == 0) {
+          toast("请先扫描条码！");
+          beepAndVibrate();
+          return;
+        }
+        window.localStorage.setItem("moveList", JSON.stringify(moveInfoList));
+        window.localStorage.setItem("countTotal", JSON.stringify(total));
+        App.go("pMoveInfo.html");
+      }
+
+      //重写toFixed方法
+      function toFixed(num, d) {
+        num *= Math.pow(10, d);
+        num = Math.round(num);
+        return num / Math.pow(10, d);
+      }
+      //长按删除事件
+      mui("#list").on("longtap", ".mui-input-row", function () {
+        var id = this.getAttribute("id");
+        var weight = this.getAttribute("weight");
+        mconfirm(
+          "删除",
+          "确认删除",
+          function () {
+            //删除卷中code数组中的值
+            var del;
+            var mDel;
+            for (var j = 0; j < code.length; j++) {
+              if (code[j] == id) {
+                del = code[j];
+              }
+            }
+
+            code.splice(code.indexOf(del), 1);
+            $("#" + id).remove();
+            for (var i = 0; i < moveInfoList.length; i++) {
+              if (moveInfoList[i].barCode == id) {
+                moveInfoList.splice(i, 1);
+              }
+            }
+            total = toFixed(total - weight, 1);
+            if (0.0 != total || 0 != total) {
+              $("#count").html(
+                "总托数：" +
+                  $("#list input").length +
+                  "\xa0\xa0\xa0" +
+                  "总重量：" +
+                  total +
+                  "KG"
+              );
+            } else {
+              $("#count").empty();
+            }
+          },
+          function () {}
+        );
+      });
+
+      function clearRoll() {
+        $("#rForm")[0].reset();
+        $("#list").empty();
+        $("#count").empty();
+        moveInfoList = [];
+        window.localStorage.setItem("moveList", JSON.stringify(moveInfoList));
+        rdata = "";
+        code = [];
+      }
     </script>
-</body>
+  </body>
 </html>
