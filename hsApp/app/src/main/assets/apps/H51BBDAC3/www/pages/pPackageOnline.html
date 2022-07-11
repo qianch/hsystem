@@ -1,276 +1,329 @@
 ﻿<!DOCTYPE html>
 <html>
-
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>托打包</title>
-    <script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
-    <script src="../resources/js/app/Calc.js" type="text/javascript" charset="utf-8"></script>
+    <script
+      src="../resources/js/include.js"
+      type="text/javascript"
+      charset="utf-8"
+    ></script>
+    <script
+      src="../resources/js/app/Calc.js"
+      type="text/javascript"
+      charset="utf-8"
+    ></script>
     <style type="text/css">
-        .mui-input-row:active {
-            background: gray;
-        }
+      .mui-input-row:active {
+        background: gray;
+      }
 
-        .mui-scroll-wrapper {
-            margin-top: 45px;
-        }
+      .mui-scroll-wrapper {
+        margin-top: 45px;
+      }
 
-        .mui-popover {
-            margin-top: 50px;
-            margin-left: 20px;
-            height: 300px;
-        }
+      .mui-popover {
+        margin-top: 50px;
+        margin-left: 20px;
+        height: 300px;
+      }
 
-        .roll_row {
-        }
+      .roll_row {
+      }
 
-            .roll_row label {
-                font-size: 18px;
-            }
+      .roll_row label {
+        font-size: 18px;
+      }
 
-        input {
-            font-size: 20px;
-        }
+      input {
+        font-size: 20px;
+      }
 
-        .nobox {
-            color: #504f4f;
-            font-size: 12px;
-            width: 250px;
-            margin: 0 auto;
-            text-align: center;
-        }
+      .nobox {
+        color: #504f4f;
+        font-size: 12px;
+        width: 250px;
+        margin: 0 auto;
+        text-align: center;
+      }
 
-        .count {
-            text-align: center;
-            font-weight: bold;
-            color: red;
-            font-size: 20px;
-            padding-top: 10px;
-            /*display: none;*/
-        }
+      .count {
+        text-align: center;
+        font-weight: bold;
+        color: red;
+        font-size: 20px;
+        padding-top: 10px;
+        /*display: none;*/
+      }
 
-        #count {
-            font-size: 35px;
-            padding-left: 5px;
-            padding-right: 5px;
-        }
+      #count {
+        font-size: 35px;
+        padding-left: 5px;
+        padding-right: 5px;
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <header class="mui-bar mui-bar-nav">
-        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-        <h1 class="mui-title">托打包(在线打包)</h1>
+      <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+      <h1 class="mui-title">托打包(在线打包)</h1>
     </header>
     <div class="mui-content">
-        <div class="mui-scroll-wrapper">
-            <div class="mui-scroll">
-                <div class="mui-control-content mui-active" style="margin-top: 0px;">
-                    <div class="mui-input-group" style="background:#dcdcdc;padding-top: 0px;">
-                        <div class="mui-input-row">
-                            <label>托条码</label>
-                            <input id="tray" type="text" readonly required placeholder="请扫托条码">
-                        </div>
-                    </div>
-                    <form class="mui-input-group" id="trayForm" onsubmit="return false;">
-                    </form>
-                    <div class="count">当前托中共<label id="count">0</label>卷，请勿多扫</div>
-                    <div class="nobox">不可以扫描盒条码，不适用于非在线打包</div>
-                </div>
+      <div class="mui-scroll-wrapper">
+        <div class="mui-scroll">
+          <div class="mui-control-content mui-active" style="margin-top: 0px">
+            <div
+              class="mui-input-group"
+              style="background: #dcdcdc; padding-top: 0px"
+            >
+              <div class="mui-input-row">
+                <label>托条码</label>
+                <input
+                  id="tray"
+                  type="text"
+                  readonly
+                  required
+                  placeholder="请扫托条码"
+                />
+              </div>
             </div>
+            <form
+              class="mui-input-group"
+              id="trayForm"
+              onsubmit="return false;"
+            ></form>
+            <div class="count">
+              当前托中共<label id="count">0</label>卷，请勿多扫
+            </div>
+            <div class="nobox">不可以扫描盒条码，不适用于非在线打包</div>
+          </div>
         </div>
+      </div>
     </div>
 
     <script type="text/javascript">
-        //根据条码查询单号
-        var infos = App.getServerUrl() + "package/";
-        var onlinePack = App.getServerUrl() + "package/do";
-        var planId = undefined;
-        var weight = 0;
+      //根据条码查询单号
+      var infos = App.getServerUrl() + "package/";
+      var onlinePack = App.getServerUrl() + "package/do";
+      var planId = undefined;
+      var weight = 0;
 
-        mui('.mui-scroll-wrapper').scroll({
-            deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
-        });
+      mui(".mui-scroll-wrapper").scroll({
+        deceleration: 0.0005, //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+      });
 
-        LS.remove("print");
+      LS.remove("print");
 
-        var scanner;
-        App.ready(function () {
-            scanner = new Scanner(parseCode);
-            scanner.scan();
-        });
+      var scanner;
+      App.ready(function () {
+        scanner = new Scanner(parseCode);
+        scanner.scan();
+      });
 
-        function formatCode(code) {
-            try {
-                return code.split(";")[0];
-            } catch (e) {
-                tip("无效条码");
-                return undefined;
-            }
+      function formatCode(code) {
+        try {
+          return code.split(";")[0];
+        } catch (e) {
+          tip("无效条码");
+          return undefined;
         }
+      }
 
-        //TODO 加载卷信息
-        function showRolls(code) {
-            waiting("正在加载托信息");
-            App.ajaxGet(infos + code, function (ajaxData) {
+      //TODO 加载卷信息
+      function showRolls(code) {
+        waiting("正在加载托信息");
+        App.ajaxGet(
+          infos + code,
+          function (ajaxData) {
+            if (ajaxData.ERROR) {
+              tip(ajaxData.MSG);
+              return;
+            }
 
-                if (ajaxData.ERROR) {
-                    tip(ajaxData.MSG);
-                    return;
-                }
+            //是否登记
+            if (!ajaxData.REGISTER) {
+              tip("找不到该托条码信息");
+              return;
+            }
 
-                //是否登记
-                if (!ajaxData.REGISTER) {
-                    tip("找不到该托条码信息");
-                    return;
-                }
-
-                /*//是否已打包
+            /*//是否已打包
                 if(ajaxData.PACKED) {
                     tip("该条码产品已打包过，无法再次打包");
                     return;
                 }*/
 
-                //是否已冻结
-                if (ajaxData.STATE == 3) {
-                    tip("该托产品已冻结，无法打包");
-                    return;
-                }
-                //是否不合格
-                if (ajaxData.STATE == -1) {
-                    tip("该托产品不合格，无法打包");
-                    return;
-                }
+            //是否已冻结
+            if (ajaxData.STATE == 3) {
+              tip("该托产品已冻结，无法打包");
+              return;
+            }
+            //是否不合格
+            if (ajaxData.STATE == -1) {
+              tip("该托产品不合格，无法打包");
+              return;
+            }
 
-                //质量等级
-                if (ajaxData.TRAY.ROLLQUALITYGRADECODE != "A") {
-                    tip("质量等级，要求必须为A级品")
-                    return;
-                }
+            //质量等级
+            if (ajaxData.TRAY.ROLLQUALITYGRADECODE != "A") {
+              tip("质量等级，要求必须为A级品");
+              return;
+            }
 
-                if (ajaxData.ROLLS.length == 0) {
-                    tip("无效托条码");
-                    return;
-                }
-                reset();
-                $("#tray").val(code);
-                planId = ajaxData.WP.ID;
-                for (var i = 0; i < ajaxData.ROLLS.length; i++) {
-                    $("#trayForm").prepend("<div class=\"mui-input-row roll_row\"><label id='" + ajaxData.ROLLS[i].ROLLBARCODE + "'>卷条码</label> <input type=\"text\" class=\"mui-input roll\" value=\"" + ajaxData.ROLLS[i].ROLLBARCODE + "\" readonly> </div>");
-                }
-                $("#count").html(ajaxData.ROLLS.length);
-                $(".count").show();
-            }, function (x, y, z) {
-                tip("系统异常");
-            });
+            if (ajaxData.ROLLS.length == 0) {
+              tip("无效托条码");
+              return;
+            }
+            reset();
+            $("#tray").val(code);
+            planId = ajaxData.WP.ID;
+            for (var i = 0; i < ajaxData.ROLLS.length; i++) {
+              $("#trayForm").prepend(
+                '<div class="mui-input-row roll_row"><label id=\'' +
+                  ajaxData.ROLLS[i].ROLLBARCODE +
+                  '\'>卷条码</label> <input type="text" class="mui-input roll" value="' +
+                  ajaxData.ROLLS[i].ROLLBARCODE +
+                  '" readonly> </div>'
+              );
+            }
+            $("#count").html(ajaxData.ROLLS.length);
+            $(".count").show();
+          },
+          function (x, y, z) {
+            tip("系统异常");
+          }
+        );
+      }
+
+      /**
+       * PDA扫描回调
+       * @param {Object} code
+       */
+      function parseCode(code) {
+        code = formatCode(code);
+        if (!code) return;
+
+        if (code.indexOf("T") == 0) {
+          reset();
+          showRolls(code);
+          return;
         }
 
-        /**
-         * PDA扫描回调
-         * @param {Object} code
-         */
-        function parseCode(code) {
-            code = formatCode(code);
-            if (!code) return;
+        if (code.indexOf("B") == 0) {
+          tip("不可扫描盒条码");
+          return;
+        }
 
-            if (code.indexOf("T") == 0) {
-                reset();
-                showRolls(code);
+        if (code.indexOf("R") == 0) {
+          if (isEmpty($("#tray").val())) {
+            tip("请先扫托条码");
+            return;
+          }
+
+          waiting("正在查询条码信息");
+          //后台查询条码信息
+          App.ajaxGet(
+            infos + code,
+            function (ajaxData) {
+              if (ajaxData.ERROR) {
+                tip(ajaxData.MSG);
                 return;
-            }
+              }
 
-            if (code.indexOf("B") == 0) {
-                tip("不可扫描盒条码")
+              //是否登记
+              if (!ajaxData.REGISTER) {
+                tip("产品尚未登记，无法打包");
                 return;
-            }
+              }
 
-            if (code.indexOf("R") == 0) {
+              //是否已打包
+              if (ajaxData.PACKED) {
+                tip("该条码产品已打包过，无法再次打包");
+                return;
+              }
+              //是否已冻结
+              if (ajaxData.STATE == 3) {
+                tip("该条码产品已冻结，无法打包");
+                return;
+              }
+              //是否不合格
+              if (ajaxData.STATE == -1) {
+                tip("该条码产品不合格，无法打包");
+                return;
+              }
 
-                if (isEmpty($("#tray").val())) {
-                    tip("请先扫托条码");
-                    return;
-                }
-
-                waiting("正在查询条码信息")
-                //后台查询条码信息
-                App.ajaxGet(infos + code, function (ajaxData) {
-
-                    if (ajaxData.ERROR) {
-                        tip(ajaxData.MSG);
-                        return;
-                    }
-
-                    //是否登记
-                    if (!ajaxData.REGISTER) {
-                        tip("产品尚未登记，无法打包");
-                        return;
-                    }
-
-                    //是否已打包
-                    if (ajaxData.PACKED) {
-                        tip("该条码产品已打包过，无法再次打包");
-                        return;
-                    }
-                    //是否已冻结
-                    if (ajaxData.STATE == 3) {
-                        tip("该条码产品已冻结，无法打包");
-                        return;
-                    }
-                    //是否不合格
-                    if (ajaxData.STATE == -1) {
-                        tip("该条码产品不合格，无法打包");
-                        return;
-                    }
-
-                    //是否不在库
-                    if (ajaxData.ROLL.ROLLQUALITYGRADECODE != "A") {
-                        tip("质量等级，要求必须为A级品")
-                        return;
-                    }
-                    if (planId != ajaxData.WP.ID) {
-                        tip("不是同一生产任务产出的，无法打包");
-                        return;
-                    }
-                    mconfirm("在线打包", "已打包 " + $(".roll").length + " 卷,即将打包第 " + ($(".roll").length + 1) + "卷 ,请勿多扫，是否继续打包?", function () {
-                        if ($("#" + code).length == 0) {
-                            $("#count").html(parseInt($("#count").text()) + 1);
-                            $("#trayForm").prepend("<div class=\"mui-input-row roll_row\"><label id='" + code + "'>卷条码</label> <input type=\"text\" class=\"mui-input roll\" value=\"" + code + "\" readonly> </div>");
-                            waiting("正在打包");
-                            if (isEmpty($("#tray").val())) {
-                                tip("信息被清空，无法打包");
-                                closeWaiting();
-                            } else {
-                                App.ajaxGet(onlinePack + "?trayCode=" + $("#tray").val() + "&rollCode=" + code, function (data) {
-                                    if (data.ERROR) {
-                                        tip(data.MSG);
-                                    } else {
-                                        toast("打包成功");
-                                    }
-                                }, function () {
-                                    tip("打包失败");
-                                });
-                            }
-                        } else {
-                            tip("重复扫描");
+              //是否不在库
+              if (ajaxData.ROLL.ROLLQUALITYGRADECODE != "A") {
+                tip("质量等级，要求必须为A级品");
+                return;
+              }
+              if (planId != ajaxData.WP.ID) {
+                tip("不是同一生产任务产出的，无法打包");
+                return;
+              }
+              mconfirm(
+                "在线打包",
+                "已打包 " +
+                  $(".roll").length +
+                  " 卷,即将打包第 " +
+                  ($(".roll").length + 1) +
+                  "卷 ,请勿多扫，是否继续打包?",
+                function () {
+                  if ($("#" + code).length == 0) {
+                    $("#count").html(parseInt($("#count").text()) + 1);
+                    $("#trayForm").prepend(
+                      '<div class="mui-input-row roll_row"><label id=\'' +
+                        code +
+                        '\'>卷条码</label> <input type="text" class="mui-input roll" value="' +
+                        code +
+                        '" readonly> </div>'
+                    );
+                    waiting("正在打包");
+                    if (isEmpty($("#tray").val())) {
+                      tip("信息被清空，无法打包");
+                      closeWaiting();
+                    } else {
+                      App.ajaxGet(
+                        onlinePack +
+                          "?trayCode=" +
+                          $("#tray").val() +
+                          "&rollCode=" +
+                          code,
+                        function (data) {
+                          if (data.ERROR) {
+                            tip(data.MSG);
+                          } else {
+                            toast("打包成功");
+                          }
+                        },
+                        function () {
+                          tip("打包失败");
                         }
-                    });
-
-                }, function (error) {
-                    tip("系统异常，联系管理员");
-                });
+                      );
+                    }
+                  } else {
+                    tip("重复扫描");
+                  }
+                }
+              );
+            },
+            function (error) {
+              tip("系统异常，联系管理员");
             }
+          );
         }
+      }
 
-        //重置页面信息
-        function reset() {
-            $(".roll_row").remove();
-            $("#tray").val("");
-            $(".count").hide();
-            planId = undefined;
-        }
+      //重置页面信息
+      function reset() {
+        $(".roll_row").remove();
+        $("#tray").val("");
+        $(".count").hide();
+        planId = undefined;
+      }
 
-                    //XXX 至于托中的卷是否可删除，待定
-        /*mui("form").on("longtap", ".barcode", function(e) {
+      //XXX 至于托中的卷是否可删除，待定
+      /*mui("form").on("longtap", ".barcode", function(e) {
             var _this = this;
             mconfirm("删除提示", "确认删除？", function() {
                 for(var i = 0; i < rolls.length; i++) {
@@ -292,8 +345,6 @@
                 });
             });
         });*/
-
     </script>
-</body>
-
+  </body>
 </html>
