@@ -1,301 +1,325 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>成品出库</title>
-    <script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
+    <script
+      src="../resources/js/include.js"
+      type="text/javascript"
+      charset="utf-8"
+    ></script>
     <style type="text/css">
-        .deliveryPlanOrders,
-        .StockPosition,
-        .logisticsCompany {
-            word-break: break-all;
-            word-wrap: break-word;
-        }
+      .deliveryPlanOrders,
+      .StockPosition,
+      .logisticsCompany {
+        word-break: break-all;
+        word-wrap: break-word;
+      }
 
-        table {
-            width: 100%;
-            margin: 0;
-            padding: 0;
-        }
+      table {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+      }
 
-        input {
-            width: 100%;
-            margin: 0px;
-            padding: 5px;
-            border: 1px solid darkgreen;
-            height: 35px;
-            color: darkgreen;
-        }
+      input {
+        width: 100%;
+        margin: 0px;
+        padding: 5px;
+        border: 1px solid darkgreen;
+        height: 35px;
+        color: darkgreen;
+      }
 
-        .title {
-            background: lightgray;
-            text-align: right;
-            padding-right: 5px;
-            width: 35%;
-        }
+      .title {
+        background: lightgray;
+        text-align: right;
+        padding-right: 5px;
+        width: 35%;
+      }
 
-        .content {
-            text-align: left;
-            padding-left: 5px;
-            background: white;
-        }
+      .content {
+        text-align: left;
+        padding-left: 5px;
+        background: white;
+      }
 
-        .deliveryPlan {
-        }
+      .deliveryPlan {
+      }
 
-            .deliveryPlan .title {
-                background: cadetblue;
-            }
+      .deliveryPlan .title {
+        background: cadetblue;
+      }
 
-        .logisticsCompany .title {
-            background: cadetblue;
-        }
+      .logisticsCompany .title {
+        background: cadetblue;
+      }
 
-        td {
-            padding: 0;
-        }
+      td {
+        padding: 0;
+      }
 
-        button {
-            background: #059825;
-            border: none;
-            border-radius: 0;
-            color: white;
-            font-weight: bold;
-            font-size: 15px;
-            width: 100%;
-        }
+      button {
+        background: #059825;
+        border: none;
+        border-radius: 0;
+        color: white;
+        font-weight: bold;
+        font-size: 15px;
+        width: 100%;
+      }
 
-        .carNo {
-            border: 1px solid gray;
-            position: absolute;
-            width: 50%;
-            background: white;
-            z-index: 100;
-            max-height: 200px;
-            overflow: hidden;
-            display: none
-        }
+      .carNo {
+        border: 1px solid gray;
+        position: absolute;
+        width: 50%;
+        background: white;
+        z-index: 100;
+        max-height: 200px;
+        overflow: hidden;
+        display: none;
+      }
 
-            .carNo ul {
-                list-style-type: circle;
-                margin: 0;
-                padding: 0;
-            }
+      .carNo ul {
+        list-style-type: circle;
+        margin: 0;
+        padding: 0;
+      }
 
-            .carNo li {
-                padding: 10px;
-                border-bottom: 1px solid gray;
-            }
+      .carNo li {
+        padding: 10px;
+        border-bottom: 1px solid gray;
+      }
 
-        .traycode_item {
-        }
+      .traycode_item {
+      }
 
-            .traycode_item td {
-                height: 40px;
-                padding: 5px;
-                text-align: center;
-                font-weight: bold;
-                color: red;
-                font-size: 22px;
-            }
+      .traycode_item td {
+        height: 40px;
+        padding: 5px;
+        text-align: center;
+        font-weight: bold;
+        color: red;
+        font-size: 22px;
+      }
 
-        .expand {
-            position: relative;
-            z-index: 999;
-        }
+      .expand {
+        position: relative;
+        z-index: 999;
+      }
 
-        .positions {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            right: 0;
-            margin: auto;
-            z-index: 9999;
-            background: white;
-            display: none;
-        }
+      .positions {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        margin: auto;
+        z-index: 9999;
+        background: white;
+        display: none;
+      }
 
-        .positions_title {
-            text-align: center;
-            color: black;
-            background: gray;
-            height: 45px;
-            line-height: 45px;
-        }
+      .positions_title {
+        text-align: center;
+        color: black;
+        background: gray;
+        height: 45px;
+        line-height: 45px;
+      }
 
-        .plist {
-            width: 1800px;
-            margin: auto;
-            border: 1px solid #aaa;
-            border-collapse: collapse;
-        }
+      .plist {
+        width: 1800px;
+        margin: auto;
+        border: 1px solid #aaa;
+        border-collapse: collapse;
+      }
 
-            .plist th,
-            .plist td {
-                width: auto;
-                line-height: 30px;
-                font-size: 16px;
-                font-family: "微软雅黑";
-                border: 3px solid #aaa;
-                text-align: center;
-                padding: 8px;
-            }
+      .plist th,
+      .plist td {
+        width: auto;
+        line-height: 30px;
+        font-size: 16px;
+        font-family: "微软雅黑";
+        border: 3px solid #aaa;
+        text-align: center;
+        padding: 8px;
+      }
 
-            .plist td {
-                padding: 0;
-            }
+      .plist td {
+        padding: 0;
+      }
 
-            .plist tr.headline {
-                background-color: #379;
-                height: 15px;
-            }
+      .plist tr.headline {
+        background-color: #379;
+        height: 15px;
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <header class="mui-bar mui-bar-nav">
-        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-        <h1 class="mui-title">成品出库</h1>
+      <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+      <h1 class="mui-title">成品出库</h1>
     </header>
     <div class="mui-content">
-
-        <div class="mui-input-group" style="position: absolute;z-index:2; height: 40px;">
-            <div class="mui-button-row">
-                <button type="button" onclick="doOut(0)" style="width: 30%;">分批出库</button>
-                <button type="button" onclick="doOut(1)" style="width: 30%;">完成出库</button>
-                <button type="button" onclick="change()" style="width: 30%;">切换信息</button>
-            </div>
+      <div
+        class="mui-input-group"
+        style="position: absolute; z-index: 2; height: 40px"
+      >
+        <div class="mui-button-row">
+          <button type="button" onclick="doOut(0)" style="width: 30%">
+            分批出库
+          </button>
+          <button type="button" onclick="doOut(1)" style="width: 30%">
+            完成出库
+          </button>
+          <button type="button" onclick="change()" style="width: 30%">
+            切换信息
+          </button>
         </div>
+      </div>
 
-        <div id="deliveryPlan" style="position: absolute;z-index:1;top:80px;width:100%;">
+      <div
+        id="deliveryPlan"
+        style="position: absolute; z-index: 1; top: 80px; width: 100%"
+      ></div>
+
+      <div
+        class="mui-scroll-wrapper"
+        style="position: absolute; z-index: 0; width: 100%"
+        id="divscorllblock"
+      >
+        <div
+          class="mui-scroll"
+          style="position: relative; top: 38px; width: 100%; overflow: scroll"
+          id="scorllblock"
+        >
+          <div id="deliveryPlanProduct"></div>
+          <div id="deliveryTrayBarcode">
+            <table class="plist">
+              <thead>
+                <tr class="headline">
+                  <th>删除</th>
+                  <th>条码</th>
+                  <th>产品名称</th>
+                  <th>批次号</th>
+                  <th>订单号</th>
+                  <th>部件名称</th>
+                  <th>产品重量</th>
+                  <th>客户名称</th>
+                  <th>库位信息</th>
+                </tr>
+              </thead>
+              <tbody id="tbMain"></tbody>
+            </table>
+
+            <div
+              style="
+                color: red;
+                text-align: center;
+                font-size: 25px;
+                font-weight: bold;
+                margin-top: 10px;
+              "
+              id="count"
+            ></div>
+
+            <div style="height: 255px"></div>
+          </div>
         </div>
-
-
-        <div class="mui-scroll-wrapper" style="position: absolute;z-index:0;width:100%;" id="divscorllblock">
-
-            <div class="mui-scroll" style="position: relative;top:38px; width: 100%; overflow:scroll;" id="scorllblock">
-
-                <div id="deliveryPlanProduct">
-                </div>
-                <div id="deliveryTrayBarcode">
-                    <table class="plist">
-                        <thead>
-                            <tr class="headline">
-                                <th>删除</th>
-                                <th>条码</th>
-                                <th>产品名称</th>
-                                <th>批次号</th>
-                                <th>订单号</th>
-                                <th>部件名称</th>
-                                <th>产品重量</th>
-                                <th>客户名称</th>
-								<th>库位信息</th>
-                            </tr>
-
-                        </thead>
-                        <tbody id="tbMain"></tbody>
-                    </table>
-
-                    <div style="color:red;text-align: center;font-size: 25px;font-weight: bold;margin-top:10px;" id="count"></div>
-
-
-                    <div style="height: 255px;"></div>
-                </div>
-
-            </div>
+      </div>
+      <div class="positions">
+        <div class="positions_title">
+          库存位置
+          <button
+            style="float: right; width: 80px; height: 45px"
+            onclick="closePosition()"
+          >
+            关闭
+          </button>
         </div>
-        <div class="positions">
-            <div class="positions_title">
-                库存位置
-                <button style="float:right;width:80px;height: 45px;" onclick="closePosition()">关闭</button>
-            </div>
-            <div class="mui-scroll-wrapper">
-                <div class="mui-scroll">
-                    <div id="stock_position_display">
-
-                    </div>
-                </div>
-            </div>
-
-
+        <div class="mui-scroll-wrapper">
+          <div class="mui-scroll">
+            <div id="stock_position_display"></div>
+          </div>
         </div>
+      </div>
     </div>
     <script id="deliveryPlanDetail" type="text/template">
-        {{each data as value i}}
-        <table shrink="true" id="{{value.ID}}" class="deliveryPlan" border="1" cellspacing="0" cellpadding="0" bordercolor="gray" style="BORDER-COLLAPSE: collapse;">
-            <tr>
-                <th class="title">要货单位</th>
-                <th class="content" style="color:red;">{{value.DELIVERYTARGETCOMPANY}}</th>
-            </tr>
-            <tr>
-                <th class="title">出货时间</th>
-                <th class="content" style="color:red;">{{format(value.DELIVERYDATE)}}</th>
-            </tr>
-            <tr>
-                <th class="title">出库单号</th>
-                <th class="content" style="color:red;">{{value.DELIVERYCODE}}-{{value.PN}}</th>
-            </tr>
-            <tr>
-                <th class="title">提单号</th>
-                <th class="content" style="color:red;">{{value.LADINGCODE}}</th>
-            </tr>
-			
-            <!-- <tr>
-                <th class="title">尺码</th>
-                <th class="content">{{value.SIZE}}</th>
-            </tr>
-            <tr>
-                <th class="title" >总发货数量</th>
-                <th class="content" style="color:red;"></th>
-            </tr>-->
-            <tr>
-                <th class="title">已扫描数量</th>
-                <th class="content" id="countScan" style="color:red;"></th>
-            </tr>
-            <tr>
-                <th class="title">已发货数量</th>
-                <th class="content" style="color:red;">{{value.OUTCOUNT}}</th>
-            </tr>
-            <tr>
-                <th class="title">件数</th>
-                <th class="content">{{value.COUNT}}</th>
-            </tr>
-            <tr>
-                <th class="title">毛重</th>
-                <th class="content">{{value.WEIGHT}} KG</th>
-            </tr>
-			<tr>
-                <th class="title">实际箱号</th>
-                <th class="content" style="padding-left: 0;"><input placeholder="请输入实际箱号" id="boxNumber" value="{{value.BOXNUMBER}}"></th>
-            </tr>
-            <tr>
-                <th class="title">车牌号</th>
-                <th class="content" style="padding-left: 0px!important;">
-                    <input placeholder="请输入车牌号" id="plate" value="{{value.PLATE}}" onkeyup="doSearch()">
-                    <div class="carNo">
-                        <ul id="carsList">
-                        </ul>
-                    </div>
-                </th>
-            </tr>
-             <!--   <tr>
-                <th class="title">物流公司</th>
-                <th class="content" style="color: red;">{{value.LOGISTICSCOMPANY}}</th>
-            </tr>
-            <tr>
-                <th class="title">包装方式</th>
-                <th class="content" style="color: red;">{{value.PACKAGINGTYPE}}</th>
-            </tr> -->
-            <tr>
-                <th class="title">注意事项</th>
-                <th class="content">{{value.ATTENTION}}</th>
-            </tr>
-        </table>
-        <button id="expand" action="shrink" style="display: none;" onclick="expand()">↑收起↑</button> {{/each}}
+           {{each data as value i}}
+           <table shrink="true" id="{{value.ID}}" class="deliveryPlan" border="1" cellspacing="0" cellpadding="0" bordercolor="gray" style="BORDER-COLLAPSE: collapse;">
+               <tr>
+                   <th class="title">要货单位</th>
+                   <th class="content" style="color:red;">{{value.DELIVERYTARGETCOMPANY}}</th>
+               </tr>
+               <tr>
+                   <th class="title">出货时间</th>
+                   <th class="content" style="color:red;">{{format(value.DELIVERYDATE)}}</th>
+               </tr>
+               <tr>
+                   <th class="title">出库单号</th>
+                   <th class="content" style="color:red;">{{value.DELIVERYCODE}}-{{value.PN}}</th>
+               </tr>
+               <tr>
+                   <th class="title">提单号</th>
+                   <th class="content" style="color:red;">{{value.LADINGCODE}}</th>
+               </tr>
+
+               <!-- <tr>
+                   <th class="title">尺码</th>
+                   <th class="content">{{value.SIZE}}</th>
+               </tr>
+               <tr>
+                   <th class="title" >总发货数量</th>
+                   <th class="content" style="color:red;"></th>
+               </tr>-->
+               <tr>
+                   <th class="title">已扫描数量</th>
+                   <th class="content" id="countScan" style="color:red;"></th>
+               </tr>
+               <tr>
+                   <th class="title">已发货数量</th>
+                   <th class="content" style="color:red;">{{value.OUTCOUNT}}</th>
+               </tr>
+               <tr>
+                   <th class="title">件数</th>
+                   <th class="content">{{value.COUNT}}</th>
+               </tr>
+               <tr>
+                   <th class="title">毛重</th>
+                   <th class="content">{{value.WEIGHT}} KG</th>
+               </tr>
+      <tr>
+                   <th class="title">实际箱号</th>
+                   <th class="content" style="padding-left: 0;"><input placeholder="请输入实际箱号" id="boxNumber" value="{{value.BOXNUMBER}}"></th>
+               </tr>
+               <tr>
+                   <th class="title">车牌号</th>
+                   <th class="content" style="padding-left: 0px!important;">
+                       <input placeholder="请输入车牌号" id="plate" value="{{value.PLATE}}" onkeyup="doSearch()">
+                       <div class="carNo">
+                           <ul id="carsList">
+                           </ul>
+                       </div>
+                   </th>
+               </tr>
+                <!--   <tr>
+                   <th class="title">物流公司</th>
+                   <th class="content" style="color: red;">{{value.LOGISTICSCOMPANY}}</th>
+               </tr>
+               <tr>
+                   <th class="title">包装方式</th>
+                   <th class="content" style="color: red;">{{value.PACKAGINGTYPE}}</th>
+               </tr> -->
+               <tr>
+                   <th class="title">注意事项</th>
+                   <th class="content">{{value.ATTENTION}}</th>
+               </tr>
+           </table>
+           <button id="expand" action="shrink" style="display: none;" onclick="expand()">↑收起↑</button> {{/each}}
     </script>
     <!--
         作者：golphei@gmail.com
@@ -303,655 +327,758 @@
         描述：发货的产品列表
     -->
     <script id="deliveryPlanOrders" type="text/template">
-        <table class="plist" id="tabdeliveryPlanOrders" border="1" cellspacing="0" cellpadding="0" bordercolor="gray" style="BORDER-COLLAPSE: collapse;">
-            <tr>
-                <th class="title" height="10">订单号</th>
-                <th class="title" height="10">客户订单</th>
-                <th class="title" height="10">批次号</th>
-                <th class="title">客户产品名称</th>
-                <th class="title">厂内名称</th>
-                <th class="title">部件</th>
-                <th class="title">发货数量</th>
-                <th class="title">剩余发货数量</th>
-                <th class="title">扫描数量</th>
-                <th class="title">扫描重量</th>
-				<th class="title">计划产品ID</th>
-                <th class="title">备注</th>
+          <table class="plist" id="tabdeliveryPlanOrders" border="1" cellspacing="0" cellpadding="0" bordercolor="gray" style="BORDER-COLLAPSE: collapse;">
+              <tr>
+                  <th class="title" height="10">订单号</th>
+                  <th class="title" height="10">客户订单</th>
+                  <th class="title" height="10">批次号</th>
+                  <th class="title">客户产品名称</th>
+                  <th class="title">厂内名称</th>
+                  <th class="title">部件</th>
+                  <th class="title">发货数量</th>
+                  <th class="title">剩余发货数量</th>
+                  <th class="title">扫描数量</th>
+                  <th class="title">扫描重量</th>
+      <th class="title">计划产品ID</th>
+                  <th class="title">备注</th>
 
-            </tr>
-            {{each data as value i}}
+              </tr>
+              {{each data as value i}}
 
-            <tr id="{{value.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g,"")}}-{{value.PRODUCTID}}-{{value.BATCHCODE.replace(/[\s*\+\*\/()]+/g, "")}}-{{value.PARTID}}">
+              <tr id="{{value.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g,"")}}-{{value.PRODUCTID}}-{{value.BATCHCODE.replace(/[\s*\+\*\/()]+/g, "")}}-{{value.PARTID}}">
 
-                <td class="content" style="color:red;">{{value.SALESORDERSUBCODE}}</td>
-                <td class="content" style="color:red;">{{value.SALESORDERSUBCODEPRINT}}</td>
-                <td class="content" style="color:red;">{{value.BATCHCODE}}</td>
-                <td class="content">{{value.CONSUMERPRODUCTNAME}}</td>
-                <td class="content">{{value.FACTORYPRODUCTNAME}}</td>
-                <td class="content">{{value.PARTNAME}}</td>
-                <td class="content" style="color:blue;">{{value.DELIVERYCOUNT}}</td>
-                <td class="content" style="color:blue;">{{value.DELIVERYCOUNT-value.OUTDETAILCOUNT}}</td>
-                <td class="content" style="color:blue;" id="sum-{{value.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g,"")}}-{{value.PRODUCTID}}-{{value.BATCHCODE.replace(/[\s*\+\*\/()]+/g, "")}}-{{value.PARTID}}">0</td>
-                <td class="content" id="weight-{{value.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g,"")}}-{{value.PRODUCTID}}-{{value.BATCHCODE.replace(/[\s*\+\*\/()]+/g, "")}}-{{value.PARTID}}" align="left"></td>
-                 <td class="content">{{value.PRODUCTID}}</td>
-				<td class="content">{{value.MEMO}}</td>
+                  <td class="content" style="color:red;">{{value.SALESORDERSUBCODE}}</td>
+                  <td class="content" style="color:red;">{{value.SALESORDERSUBCODEPRINT}}</td>
+                  <td class="content" style="color:red;">{{value.BATCHCODE}}</td>
+                  <td class="content">{{value.CONSUMERPRODUCTNAME}}</td>
+                  <td class="content">{{value.FACTORYPRODUCTNAME}}</td>
+                  <td class="content">{{value.PARTNAME}}</td>
+                  <td class="content" style="color:blue;">{{value.DELIVERYCOUNT}}</td>
+                  <td class="content" style="color:blue;">{{value.DELIVERYCOUNT-value.OUTDETAILCOUNT}}</td>
+                  <td class="content" style="color:blue;" id="sum-{{value.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g,"")}}-{{value.PRODUCTID}}-{{value.BATCHCODE.replace(/[\s*\+\*\/()]+/g, "")}}-{{value.PARTID}}">0</td>
+                  <td class="content" id="weight-{{value.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g,"")}}-{{value.PRODUCTID}}-{{value.BATCHCODE.replace(/[\s*\+\*\/()]+/g, "")}}-{{value.PARTID}}" align="left"></td>
+                   <td class="content">{{value.PRODUCTID}}</td>
+      <td class="content">{{value.MEMO}}</td>
 
-            </tr>
+              </tr>
 
-            {{/each}}
-        </table>
-
-
+              {{/each}}
+          </table>
     </script>
 
-
-
     <script type="text/javascript">
-        var scanner;
-        var barcode1 = "";
-        var tcode = [];
-        var deliveryPlanDetailId = [];
-        var packingNum = "";
-        var color;
-        var id;
-        var pn;
-        var deliveryPlanByIdUrl = App.getServerUrl() + "stock/product/findDeliveryPlan";
-        var deliveryPlanDetailProductUrl = App.getServerUrl() + "stock/product/findDeliveryPlanProduct";
-        var deliveryPlanDetailStockPositionUrl = App.getServerUrl() + "stock/product/stockPosition"; //查找库位
-        var findTrayUrl = App.getServerUrl() + "stock/product/findTray";
-        var findInfoUrl = App.getServerUrl() + "common/infos";
-        var outUrl = App.getServerUrl() + "stock2/product/pOutInBatches";
-        var cars = [];
-        var data_ = null;
+      var scanner;
+      var barcode1 = "";
+      var tcode = [];
+      var deliveryPlanDetailId = [];
+      var packingNum = "";
+      var color;
+      var id;
+      var pn;
+      var deliveryPlanByIdUrl =
+        App.getServerUrl() + "stock/product/findDeliveryPlan";
+      var deliveryPlanDetailProductUrl =
+        App.getServerUrl() + "stock/product/findDeliveryPlanProduct";
+      var deliveryPlanDetailStockPositionUrl =
+        App.getServerUrl() + "stock/product/stockPosition"; //查找库位
+      var findTrayUrl = App.getServerUrl() + "stock/product/findTray";
+      var findInfoUrl = App.getServerUrl() + "common/infos";
+      var outUrl = App.getServerUrl() + "stock2/product/pOutInBatches";
+      var cars = [];
+      var data_ = null;
 
-        var scorllblock = document.getElementById("scorllblock");
-        var divscorllblock = document.getElementById("divscorllblock");
-        var divdeliveryPlan = document.getElementById("deliveryPlan");
+      var scorllblock = document.getElementById("scorllblock");
+      var divscorllblock = document.getElementById("divscorllblock");
+      var divdeliveryPlan = document.getElementById("deliveryPlan");
 
+      var tbody = document.getElementById("tbMain");
+      var rdata = "";
+      var code = [];
+      var pInfoList = [];
+      var total = 0.0;
 
-        var tbody = document.getElementById('tbMain');
-        var rdata = "";
-        var code = [];
-        var pInfoList = [];
-        var total = 0.0;
+      function expand2(stockId) {
+        var html = $("#" + stockId)
+          .children()
+          .clone();
+        $("#stock_position_display").empty();
+        $("#stock_position_display").append(html);
+        $("#stock_position_display").children().show();
+        $(".positions").show();
+      }
 
-        function expand2(stockId) {
-            var html = $("#" + stockId).children().clone();
-            $("#stock_position_display").empty();
-            $("#stock_position_display").append(html);
-            $("#stock_position_display").children().show();
-            $(".positions").show();
-        }
+      App.ready(function () {
+        id = App.param("id_");
+        pn = App.param("pn");
 
-        App.ready(function () {
-            id = App.param("id_");
-            pn = App.param("pn");
-
-            App.ajaxGet(App.getServerUrl() + "stock/product/cars",
-                function (data) {
-                    cars = data;
-                });
-            /**
-             * 加载发货计划信息
-             */
-            App.ajaxGet(deliveryPlanByIdUrl + "?id=" + id + "&" + "pn=" + pn,
-                function (data) {
-                    data_ = JSON.parse(data);
-                    data = JSON.parse(data);
-					
-                    if (data.error != null) {
-                        beep();
-                        return;
-                    }
-                    /*
-                    1.判断此箱号是否正在装箱，且显示谁正在装箱
-                    2.如果正在装箱的PDA识别码和操作人和当前的PDA以及操作人一致，那么可以装箱，否则不可以
-                    2.是否确定装箱，确定之后，其他人无法继续操作此箱号
-                    3.装箱扫描
-                    4.返回时候，确定返回，就取消装箱
-                    */
-                    if (data[0].PDAID != null && data[0].PDAID != plus.device.imei) {
-                        malert("操作提示", data[0].OPTUSER + "正在另外一台PDA使用此箱号:" + data[0].PN, "我已知晓", function () {
-                            plus.webview.currentWebview().close();
-                        });
-                        return;
-                    }
-
-                    //绑定操作人
-                    App.ajaxGet(App.getServerUrl() + "stock/product/bind?id=" + data[0].ID + "&pdaID=" + plus.device.imei +
-                        "&optUser=" + App.getLoginUserName(),
-                        function () {
-                            toast("操作绑定成功");
-                            $("#deliveryPlan").empty();
-                            template.helper("format", function (deliveryDate) {
-                                return deliveryDate.substring(0, 10);
-                            });
-                            var html = template('deliveryPlanDetail', {
-                                "data": data
-                            });
-
-                            $("#deliveryPlan").append(html);
-                            /**
-                             * 加载发货计划明细
-                             */
-                            App.ajaxGet(deliveryPlanDetailProductUrl + "?id=" + id + "&" + "pn=" + pn,
-                                function (data) {
-                                    data = JSON.parse(data);
-                                    if (data.error != null) {
-                                        beep();
-                                        toast(data.error);
-                                        return;
-                                    }
-
-                                    $("#deliveryPlanProduct").empty();
-                                    var htmlProduct = template('deliveryPlanOrders', {
-                                        "data": data
-                                    });
-                                    $("#deliveryPlanProduct").append(htmlProduct);
-
-                                    packingNum = data[0].PACKINGNUMBER;
-
-                                });
-                        },
-                        function () {
-                            malert("操作提示", "PDA操作绑定失败");
-                        });
-                });
-
-            scanner = new Scanner(parseCode);
-            scanner.scan();
-            window.addEventListener('customEvent', function (event) {
-                barCodeInfo = JSON.parse(window.localStorage.getItem('barCodeInfo'));
-                //通过event.detail可获得传递过来的参数内容
-                if (event.detail.code) {
-                    addCode(barCodeInfo);
-                }
-
-                window.localStorage.setItem('barCodeInfo', "");
-            });
-
+        App.ajaxGet(App.getServerUrl() + "stock/product/cars", function (data) {
+          cars = data;
         });
+        /**
+         * 加载发货计划信息
+         */
+        App.ajaxGet(
+          deliveryPlanByIdUrl + "?id=" + id + "&" + "pn=" + pn,
+          function (data) {
+            data_ = JSON.parse(data);
+            data = JSON.parse(data);
 
-
-        function parseCode(data) {
-            rdata = data.split(";");
-
-            for (var i = 0; i < code.length; i++) {
-                if (code[i] == rdata[0]) {
-                    toast("扫描条码重复");
-                    beepAndVibrate();
-                    return;
-                }
+            if (data.error != null) {
+              beep();
+              return;
             }
-
-            var vplanIndex = divdeliveryPlan.style.zIndex;
-            if (vplanIndex == 1) {
-                change();
-            }
-
-            if (rdata != "") {
-                if (rdata.length == 5) {
-                    waiting("正在查询该条码的状态信息");
-                    App.ajaxGet(findInfoUrl + "?barCode=" + rdata[0], function (ajaxData) {
-                        closeWaiting();
-                        if (ajaxData.ERROR) {
-                            tip(ajaxData.MSG);
-                            return;
-                        }
-
-                        for (var i = 0; i < code.length; i++) {
-
-                            if (code[i] == rdata[0]) {
-                                toast("扫描条码重复");
-                                beepAndVibrate();
-                                return;
-                            }
-                        }
-
-                        //判断条码是否产出登记
-                        if (!ajaxData.REGISTER) {
-                            beepAndVibrate();
-                            toast("该条码未产出登记");
-                            return;
-                        }
-
-                        if (!ajaxData.ENDPACK) {
-                            beepAndVibrate();
-                            if (code.indexOf('PCJ') == 0) {
-                                toast("请先裁剪产出登记");
-                            } else {
-                                toast("打包未结束");
-                            }
-                            return;
-                        }
-
-                        if (ajaxData.STOCK != 1) {
-                            beepAndVibrate();
-                            toast("该条码不是入库状态");
-                            return;
-                        }
-
-                        //判断条码是否为胚布(裁剪车间产品)
-                        if ((ajaxData.CONSUMERSIMPLENAME).indexOf("裁剪车间") == 0) {
-                            beepAndVibrate();
-                            toast("该条码是裁剪车间用,胚布无法出库");
-                            return;
-                        }
-                        var productid = ajaxData.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g, "") + "-" + ajaxData.ORDER.PRODUCTID + "-" + ajaxData.CODE.BATCHCODE.replace(/[\s*\+\*\/()]+/g, "") + "-";
-
-                        if (ajaxData.CODE.PARTID != null) {
-                            productid += ajaxData.CODE.PARTID
-                        }
-
-                        if ($("#" + productid).length == 0) {
-                            beepAndVibrate();
-                            toast("该托产品不在出库单中，订单号：" + ajaxData.ORDER.SALESORDERSUBCODE + "，条码产品ID：" + ajaxData.ORDER.PRODUCTID + ",批次号：" + ajaxData.CODE.BATCHCODE.replace(/[\s*\+\*\/()]+/g, ""));
-                            return;
-                        }
-
-                        //限制条码多扫
-                        //剩余发货数量
-                        var deliveryNum = $("#" + productid).find("td:eq(7)").text();
-                        //扫描数量
-                        var scanNum = $("#" + productid).find("td:eq(8)").text();
-
-                        if ((parseInt(scanNum) + 1) > deliveryNum) {
-                            beep();
-                            toast("扫描数量(" + scanNum + ")多于剩余发货数量(" + deliveryNum + ")，请确认剩余发货数量(" + deliveryNum + ")!");
-                            return;
-                        }
-
-                        //判断该托是否为超期产品
-                        var productShelfLife = ajaxData.PRODUCT.PRODUCTSHELFLIFE;
-                        var inTime = new Calendar(ajaxData.INTIME);
-                        var now = new Calendar();
-                        var diff;
-                        try {
-                            diff = Calendar.diff(inTime, now, Calendar.field.DAY) //得出两个日期相差的天数
-                        } catch (error) {
-                            toast(error.message + ",请检查时间是否设置正确");
-                        }
-
-                        //判断是否重复扫描条码
-
-                        if (diff > productShelfLife) {
-
-                            mconfirm("超期产品", "该托为超期产品，确认扫入?", function () {
-                                inBarcode(ajaxData);
-                            });
-
-                        } else {
-                            inBarcode(ajaxData);
-                        }
-
-
-
-                    }, function () {
-                        closeWaiting();
-                        beepAndVibrate();
-                        toast("查询条码信息失败");
-                    });
-                }
-            }
-        }
-
-        function addCode(data) {
-
-            var barcode = data.CODE.BARCODE;
-            for (var i = 0; i < code.length; i++) {
-                if (code[i] == barcode) {
-                    toast("扫描条码重复");
-                    beepAndVibrate();
-                    return;
-                }
-            }
-
-            $("#count").empty();
-            //动态拼条码扫的数据
-            code.push(barcode);
-
-            var productPartName = '';
-            if (isEmpty(data.PRODUCT.FACTORYPRODUCTNAME)) {
-                productPartName = data.PRODUCT.TCPROCBOMVERSIONPARTSNAME;
-            } else {
-                productPartName = data.PRODUCT.FACTORYPRODUCTNAME;
-            }
-
-            var partBatchCode = '';
-            if (isEmpty(data.BATCHCODE)) {
-                partBatchCode = data.CODE.BATCHCODE.replace(/[\s*\+\*\/()]+/g, "");
-            } else {
-                partBatchCode = data.BATCHCODE.replace(/[\s*\+\*\/()]+/g, "");
-            }
-
-            var productid = data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g, "") + "-" + data.ORDER.PRODUCTID +
-                "-" + data.CODE.BATCHCODE.replace(/[\s*\+\*\/()]+/g, "") + "-";
-            if (data.CODE.PARTID != null) {
-                productid += data.CODE.PARTID
-            }
-
-            var mStr = {
-                "newWarehouseCode": data.WAREHOUSENAME,
-                "newWarehousePosCode": data.WAREHOUSEPOSCODE,
-                "barCode": barcode,
-                "productName": productPartName,
-                "batchCode": partBatchCode,
-                "salesOrderCode": data.CODE.SALESORDERCODE,
-                "productWeight": data.TRAY.WEIGHT,
-                "CONSUMERNAME": data.CONSUMERSIMPLENAME,
-                "partName": data.PARTNAME,
-                "productid": productid
-            };
-            pInfoList.push(mStr);
-            addBarcode(mStr);
-            total = total.add(mStr.productWeight);
-            calculate(mStr);
-            $("#countScan").text(pInfoList.length);
-            $("#count").html("总托数：" + pInfoList.length + '\xa0\xa0\xa0' + "总重量：" + total + "KG");
-        }
-
-        function calculate(mStr) {
-            var productid = mStr.productid;
-            var tweight = parseFloat(mStr.productWeight).toFixed(2);
-            var weights = $("#weight-" + productid);
-            var sum = $("#sum-" + productid);
-
-            if (sum.text() == "") {
-                sum.text(1);
-            } else {
-                sum.text(parseInt(sum.text()) + 1);
-            }
-
-            if (weights.text() == "") {
-                weights.text(parseFloat(tweight).toFixed(1));
-            } else {
-                weights.text((parseFloat(weights.text()) + parseFloat(tweight)).toFixed(1));
-            }
-
-        }
-
-        function inBarcode(ajaxData) {
-            window.localStorage.setItem('barCodeInfo', JSON.stringify(ajaxData));
-            App.go("pInfoForDelivery2.html", {
-                url: "pOutDetail2.html"
-            });
-        }
-
-        function addBarcode(h) {
-            var row = document.createElement('tr'); //创建行  
-
-            var button = document.createElement('td'); //创建第一列barCode
-            button.innerHTML = "<input type=\"button\" onclick=\"delRow(this)\" value=\"删除\"/>"; //填充数据  
-            row.appendChild(button); //加入行  ，下面类似   
-
-            var barCodeCell = document.createElement('td'); //创建第一列barCode  
-            barCodeCell.innerHTML = h.barCode; //填充数据  
-            row.appendChild(barCodeCell); //加入行  ，下面类似  
-
-            var productNameCell = document.createElement('td'); //创建第二列productName 
-            productNameCell.innerHTML = h.productName;
-            row.appendChild(productNameCell);
-
-            var batchCodeCell = document.createElement('td'); //创建第三列batchCode 
-            batchCodeCell.innerHTML = h.batchCode;
-            row.appendChild(batchCodeCell);
-
-            var salesOrderCodeCell = document.createElement('td'); //创建第四列salesOrderCode 
-            salesOrderCodeCell.innerHTML = h.salesOrderCode;
-            row.appendChild(salesOrderCodeCell);
-
-            var partNameCell = document.createElement('td'); //创建第五列partName 
-            partNameCell.innerHTML = h.partName;
-            row.appendChild(partNameCell);
-
-            var productWeightCell = document.createElement('td'); //创建第六列productWeight 
-            productWeightCell.innerHTML = h.productWeight;
-            row.appendChild(productWeightCell);
-
-            var CONSUMERNAMECell = document.createElement('td'); //创建第六列CONSUMERNAME
-            CONSUMERNAMECell.innerHTML = h.CONSUMERNAME;
-            row.appendChild(CONSUMERNAMECell);
-			
-			var WarehouseCell = document.createElement('td'); //创建第七列库位信息
-			WarehouseCell.innerHTML = h.newWarehouseCode+","+h.newWarehousePosCode;
-			row.appendChild(WarehouseCell);
-
-            tbody.appendChild(row);
-        }
-
-        function delRow(obj) {
-            var tr = $(obj).parent().parent().children();
-            var vbarcode = tr.eq(1).text();
-            var res = confirm("确定要删除:" + vbarcode + "？");
-            if (res) {
-
-                tr.remove();
-                code.splice(code.indexOf(vbarcode), 1);
-                for (var i = 0; i < pInfoList.length; i++) {
-                    if (pInfoList[i].barCode == vbarcode) {
-                        total = toFixed((total - pInfoList[i].productWeight), 1);
-
-                        var num;
-                        var weight;
-                        var productid = pInfoList[i].productid;
-                        num = $("#sum-" + productid);
-                        weight = $("#weight-" + productid);
-
-                        weight.text(parseFloat(parseFloat(weight.text()).toFixed(1) - pInfoList[i].productWeight.toFixed(1)).toFixed(1));
-                        num.text(parseInt(num.text()) - 1);
-                        pInfoList.splice(i, 1);
-                    }
-                }
-                $("#countScan").text(pInfoList.length);
-                $("#count").html("总托数：" + pInfoList.length + '\xa0\xa0\xa0' + "总重量：" + total + "KG");
-            }
-        }
-
-        //重写toFixed方法
-        function toFixed(num, d) {
-            num *= Math.pow(10, d);
-            num = Math.round(num);
-            return num / (Math.pow(10, d));
-        }
-
-        function doOut(isfinished) { //出库
-
-            var counts = pInfoList.length;
-
-            if (counts == 0) {
-                if (isfinished == 0) {
-                    beep();
-                    toast("实际发货托数为0，请扫描要发货的托!");
-                    return;
-                } else {
-                    mconfirm("警告", "实际发货托数为0,是否完成出库", function () {
-                        outProduct(counts, isfinished);
-                    });
-                }
-            } else {
-                outProduct(counts, isfinished);
-            }
-        }
-
-        function outProduct(counts, isfinished) {
-            var str = "确认出库？";
-            /**
-             * 加载发货计划信息
-             */
-            App.ajaxGet(deliveryPlanByIdUrl + "?id=" + id + "&" + "pn=" + pn,
-                function (data) {
-                    data_ = JSON.parse(data);
-                    data = JSON.parse(data);
-
-                    if (data.error != null) {
-                        beep();
-                        return;
-                    }
-                    /*
+            /*
                     1.判断此箱号是否正在装箱，且显示谁正在装箱
                     2.如果正在装箱的PDA识别码和操作人和当前的PDA以及操作人一致，那么可以装箱，否则不可以
                     2.是否确定装箱，确定之后，其他人无法继续操作此箱号
                     3.装箱扫描
                     4.返回时候，确定返回，就取消装箱
                     */
-                   /* if (data[0].PDAID == null) {
+            if (data[0].PDAID != null && data[0].PDAID != plus.device.imei) {
+              malert(
+                "操作提示",
+                data[0].OPTUSER + "正在另外一台PDA使用此箱号:" + data[0].PN,
+                "我已知晓",
+                function () {
+                  plus.webview.currentWebview().close();
+                }
+              );
+              return;
+            }
+
+            //绑定操作人
+            App.ajaxGet(
+              App.getServerUrl() +
+                "stock/product/bind?id=" +
+                data[0].ID +
+                "&pdaID=" +
+                plus.device.imei +
+                "&optUser=" +
+                App.getLoginUserName(),
+              function () {
+                toast("操作绑定成功");
+                $("#deliveryPlan").empty();
+                template.helper("format", function (deliveryDate) {
+                  return deliveryDate.substring(0, 10);
+                });
+                var html = template("deliveryPlanDetail", {
+                  data: data,
+                });
+
+                $("#deliveryPlan").append(html);
+                /**
+                 * 加载发货计划明细
+                 */
+                App.ajaxGet(
+                  deliveryPlanDetailProductUrl + "?id=" + id + "&" + "pn=" + pn,
+                  function (data) {
+                    data = JSON.parse(data);
+                    if (data.error != null) {
+                      beep();
+                      toast(data.error);
+                      return;
+                    }
+
+                    $("#deliveryPlanProduct").empty();
+                    var htmlProduct = template("deliveryPlanOrders", {
+                      data: data,
+                    });
+                    $("#deliveryPlanProduct").append(htmlProduct);
+
+                    packingNum = data[0].PACKINGNUMBER;
+                  }
+                );
+              },
+              function () {
+                malert("操作提示", "PDA操作绑定失败");
+              }
+            );
+          }
+        );
+
+        scanner = new Scanner(parseCode);
+        scanner.scan();
+        window.addEventListener("customEvent", function (event) {
+          barCodeInfo = JSON.parse(window.localStorage.getItem("barCodeInfo"));
+          //通过event.detail可获得传递过来的参数内容
+          if (event.detail.code) {
+            addCode(barCodeInfo);
+          }
+
+          window.localStorage.setItem("barCodeInfo", "");
+        });
+      });
+
+      function parseCode(data) {
+        rdata = data.split(";");
+
+        for (var i = 0; i < code.length; i++) {
+          if (code[i] == rdata[0]) {
+            toast("扫描条码重复");
+            beepAndVibrate();
+            return;
+          }
+        }
+
+        var vplanIndex = divdeliveryPlan.style.zIndex;
+        if (vplanIndex == 1) {
+          change();
+        }
+
+        if (rdata != "") {
+          if (rdata.length == 5) {
+            waiting("正在查询该条码的状态信息");
+            App.ajaxGet(
+              findInfoUrl + "?barCode=" + rdata[0],
+              function (ajaxData) {
+                closeWaiting();
+                if (ajaxData.ERROR) {
+                  tip(ajaxData.MSG);
+                  return;
+                }
+
+                for (var i = 0; i < code.length; i++) {
+                  if (code[i] == rdata[0]) {
+                    toast("扫描条码重复");
+                    beepAndVibrate();
+                    return;
+                  }
+                }
+
+                //判断条码是否产出登记
+                if (!ajaxData.REGISTER) {
+                  beepAndVibrate();
+                  toast("该条码未产出登记");
+                  return;
+                }
+
+                if (!ajaxData.ENDPACK) {
+                  beepAndVibrate();
+                  if (code.indexOf("PCJ") == 0) {
+                    toast("请先裁剪产出登记");
+                  } else {
+                    toast("打包未结束");
+                  }
+                  return;
+                }
+
+                if (ajaxData.STOCK != 1) {
+                  beepAndVibrate();
+                  toast("该条码不是入库状态");
+                  return;
+                }
+
+                //判断条码是否为胚布(裁剪车间产品)
+                if (ajaxData.CONSUMERSIMPLENAME.indexOf("裁剪车间") == 0) {
+                  beepAndVibrate();
+                  toast("该条码是裁剪车间用,胚布无法出库");
+                  return;
+                }
+                var productid =
+                  ajaxData.ORDER.SALESORDERSUBCODE.replace(
+                    /[\s*\+\*\/()]+/g,
+                    ""
+                  ) +
+                  "-" +
+                  ajaxData.ORDER.PRODUCTID +
+                  "-" +
+                  ajaxData.CODE.BATCHCODE.replace(/[\s*\+\*\/()]+/g, "") +
+                  "-";
+
+                if (ajaxData.CODE.PARTID != null) {
+                  productid += ajaxData.CODE.PARTID;
+                }
+
+                if ($("#" + productid).length == 0) {
+                  beepAndVibrate();
+                  toast(
+                    "该托产品不在出库单中，订单号：" +
+                      ajaxData.ORDER.SALESORDERSUBCODE +
+                      "，条码产品ID：" +
+                      ajaxData.ORDER.PRODUCTID +
+                      ",批次号：" +
+                      ajaxData.CODE.BATCHCODE.replace(/[\s*\+\*\/()]+/g, "")
+                  );
+                  return;
+                }
+
+                //限制条码多扫
+                //剩余发货数量
+                var deliveryNum = $("#" + productid)
+                  .find("td:eq(7)")
+                  .text();
+                //扫描数量
+                var scanNum = $("#" + productid)
+                  .find("td:eq(8)")
+                  .text();
+
+                if (parseInt(scanNum) + 1 > deliveryNum) {
+                  beep();
+                  toast(
+                    "扫描数量(" +
+                      scanNum +
+                      ")多于剩余发货数量(" +
+                      deliveryNum +
+                      ")，请确认剩余发货数量(" +
+                      deliveryNum +
+                      ")!"
+                  );
+                  return;
+                }
+
+                //判断该托是否为超期产品
+                var productShelfLife = ajaxData.PRODUCT.PRODUCTSHELFLIFE;
+                var inTime = new Calendar(ajaxData.INTIME);
+                var now = new Calendar();
+                var diff;
+                try {
+                  diff = Calendar.diff(inTime, now, Calendar.field.DAY); //得出两个日期相差的天数
+                } catch (error) {
+                  toast(error.message + ",请检查时间是否设置正确");
+                }
+
+                //判断是否重复扫描条码
+
+                if (diff > productShelfLife) {
+                  mconfirm(
+                    "超期产品",
+                    "该托为超期产品，确认扫入?",
+                    function () {
+                      inBarcode(ajaxData);
+                    }
+                  );
+                } else {
+                  inBarcode(ajaxData);
+                }
+              },
+              function () {
+                closeWaiting();
+                beepAndVibrate();
+                toast("查询条码信息失败");
+              }
+            );
+          }
+        }
+      }
+
+      function addCode(data) {
+        var barcode = data.CODE.BARCODE;
+        for (var i = 0; i < code.length; i++) {
+          if (code[i] == barcode) {
+            toast("扫描条码重复");
+            beepAndVibrate();
+            return;
+          }
+        }
+
+        $("#count").empty();
+        //动态拼条码扫的数据
+        code.push(barcode);
+
+        var productPartName = "";
+        if (isEmpty(data.PRODUCT.FACTORYPRODUCTNAME)) {
+          productPartName = data.PRODUCT.TCPROCBOMVERSIONPARTSNAME;
+        } else {
+          productPartName = data.PRODUCT.FACTORYPRODUCTNAME;
+        }
+
+        var partBatchCode = "";
+        if (isEmpty(data.BATCHCODE)) {
+          partBatchCode = data.CODE.BATCHCODE.replace(/[\s*\+\*\/()]+/g, "");
+        } else {
+          partBatchCode = data.BATCHCODE.replace(/[\s*\+\*\/()]+/g, "");
+        }
+
+        var productid =
+          data.ORDER.SALESORDERSUBCODE.replace(/[\s*\+\*\/()]+/g, "") +
+          "-" +
+          data.ORDER.PRODUCTID +
+          "-" +
+          data.CODE.BATCHCODE.replace(/[\s*\+\*\/()]+/g, "") +
+          "-";
+        if (data.CODE.PARTID != null) {
+          productid += data.CODE.PARTID;
+        }
+
+        var mStr = {
+          newWarehouseCode: data.WAREHOUSENAME,
+          newWarehousePosCode: data.WAREHOUSEPOSCODE,
+          barCode: barcode,
+          productName: productPartName,
+          batchCode: partBatchCode,
+          salesOrderCode: data.CODE.SALESORDERCODE,
+          productWeight: data.TRAY.WEIGHT,
+          CONSUMERNAME: data.CONSUMERSIMPLENAME,
+          partName: data.PARTNAME,
+          productid: productid,
+        };
+        pInfoList.push(mStr);
+        addBarcode(mStr);
+        total = total.add(mStr.productWeight);
+        calculate(mStr);
+        $("#countScan").text(pInfoList.length);
+        $("#count").html(
+          "总托数：" +
+            pInfoList.length +
+            "\xa0\xa0\xa0" +
+            "总重量：" +
+            total +
+            "KG"
+        );
+      }
+
+      function calculate(mStr) {
+        var productid = mStr.productid;
+        var tweight = parseFloat(mStr.productWeight).toFixed(2);
+        var weights = $("#weight-" + productid);
+        var sum = $("#sum-" + productid);
+
+        if (sum.text() == "") {
+          sum.text(1);
+        } else {
+          sum.text(parseInt(sum.text()) + 1);
+        }
+
+        if (weights.text() == "") {
+          weights.text(parseFloat(tweight).toFixed(1));
+        } else {
+          weights.text(
+            (parseFloat(weights.text()) + parseFloat(tweight)).toFixed(1)
+          );
+        }
+      }
+
+      function inBarcode(ajaxData) {
+        window.localStorage.setItem("barCodeInfo", JSON.stringify(ajaxData));
+        App.go("pInfoForDelivery2.html", {
+          url: "pOutDetail2.html",
+        });
+      }
+
+      function addBarcode(h) {
+        var row = document.createElement("tr"); //创建行
+
+        var button = document.createElement("td"); //创建第一列barCode
+        button.innerHTML =
+          '<input type="button" onclick="delRow(this)" value="删除"/>'; //填充数据
+        row.appendChild(button); //加入行  ，下面类似
+
+        var barCodeCell = document.createElement("td"); //创建第一列barCode
+        barCodeCell.innerHTML = h.barCode; //填充数据
+        row.appendChild(barCodeCell); //加入行  ，下面类似
+
+        var productNameCell = document.createElement("td"); //创建第二列productName
+        productNameCell.innerHTML = h.productName;
+        row.appendChild(productNameCell);
+
+        var batchCodeCell = document.createElement("td"); //创建第三列batchCode
+        batchCodeCell.innerHTML = h.batchCode;
+        row.appendChild(batchCodeCell);
+
+        var salesOrderCodeCell = document.createElement("td"); //创建第四列salesOrderCode
+        salesOrderCodeCell.innerHTML = h.salesOrderCode;
+        row.appendChild(salesOrderCodeCell);
+
+        var partNameCell = document.createElement("td"); //创建第五列partName
+        partNameCell.innerHTML = h.partName;
+        row.appendChild(partNameCell);
+
+        var productWeightCell = document.createElement("td"); //创建第六列productWeight
+        productWeightCell.innerHTML = h.productWeight;
+        row.appendChild(productWeightCell);
+
+        var CONSUMERNAMECell = document.createElement("td"); //创建第六列CONSUMERNAME
+        CONSUMERNAMECell.innerHTML = h.CONSUMERNAME;
+        row.appendChild(CONSUMERNAMECell);
+
+        var WarehouseCell = document.createElement("td"); //创建第七列库位信息
+        WarehouseCell.innerHTML =
+          h.newWarehouseCode + "," + h.newWarehousePosCode;
+        row.appendChild(WarehouseCell);
+
+        tbody.appendChild(row);
+      }
+
+      function delRow(obj) {
+        var tr = $(obj).parent().parent().children();
+        var vbarcode = tr.eq(1).text();
+        var res = confirm("确定要删除:" + vbarcode + "？");
+        if (res) {
+          tr.remove();
+          code.splice(code.indexOf(vbarcode), 1);
+          for (var i = 0; i < pInfoList.length; i++) {
+            if (pInfoList[i].barCode == vbarcode) {
+              total = toFixed(total - pInfoList[i].productWeight, 1);
+
+              var num;
+              var weight;
+              var productid = pInfoList[i].productid;
+              num = $("#sum-" + productid);
+              weight = $("#weight-" + productid);
+
+              weight.text(
+                parseFloat(
+                  parseFloat(weight.text()).toFixed(1) -
+                    pInfoList[i].productWeight.toFixed(1)
+                ).toFixed(1)
+              );
+              num.text(parseInt(num.text()) - 1);
+              pInfoList.splice(i, 1);
+            }
+          }
+          $("#countScan").text(pInfoList.length);
+          $("#count").html(
+            "总托数：" +
+              pInfoList.length +
+              "\xa0\xa0\xa0" +
+              "总重量：" +
+              total +
+              "KG"
+          );
+        }
+      }
+
+      //重写toFixed方法
+      function toFixed(num, d) {
+        num *= Math.pow(10, d);
+        num = Math.round(num);
+        return num / Math.pow(10, d);
+      }
+
+      function doOut(isfinished) {
+        //出库
+
+        var counts = pInfoList.length;
+
+        if (counts == 0) {
+          if (isfinished == 0) {
+            beep();
+            toast("实际发货托数为0，请扫描要发货的托!");
+            return;
+          } else {
+            mconfirm("警告", "实际发货托数为0,是否完成出库", function () {
+              outProduct(counts, isfinished);
+            });
+          }
+        } else {
+          outProduct(counts, isfinished);
+        }
+      }
+
+      function outProduct(counts, isfinished) {
+        var str = "确认出库？";
+        /**
+         * 加载发货计划信息
+         */
+        App.ajaxGet(
+          deliveryPlanByIdUrl + "?id=" + id + "&" + "pn=" + pn,
+          function (data) {
+            data_ = JSON.parse(data);
+            data = JSON.parse(data);
+
+            if (data.error != null) {
+              beep();
+              return;
+            }
+            /*
+                    1.判断此箱号是否正在装箱，且显示谁正在装箱
+                    2.如果正在装箱的PDA识别码和操作人和当前的PDA以及操作人一致，那么可以装箱，否则不可以
+                    2.是否确定装箱，确定之后，其他人无法继续操作此箱号
+                    3.装箱扫描
+                    4.返回时候，确定返回，就取消装箱
+                    */
+            /* if (data[0].PDAID == null) {
                         malert("操作提示", "该任务尚未绑定此PDA", "我已知晓");
                         return;
                     } */
-					if (data[0].PDAID == null) {
-						App.ajaxGet(App.getServerUrl() + "stock/product/bind?id=" + data[0].ID + "&pdaID=" + plus.device.imei +
-							"&optUser=" + App.getLoginUserName());
-						toast("PDA未绑定,重新绑定成功，请再次点击出库");
-						return;
-					}
-
-                    if (data[0].PDAID != null && data[0].PDAID != plus.device.imei) {
-                        malert("操作提示", data[0].OPTUSER + "正在另外一台PDA使用此箱号:" + data[0].PN, "我已知晓", function () {
-                            plus.webview.currentWebview().close();
-                        });
-                        return;
-                    }
-
-
-                    mconfirm('警告', str, function () {
-                        waiting("正在出库", true);
-                        var tStr = {
-                            "codes": code.toString(),
-                            "UserId": App.getLoginUserId(),
-                            "puid": App.getLoginUserId(),
-                            "puname": App.getLoginUserName(),
-                            "packingNum": packingNum,
-                            "plate": $("#plate").val(),
-                            "boxNumber": $("#boxNumber").val(),
-                            "count": counts,
-                            "isfinished": isfinished
-                        };
-
-                        App.ajaxPost(outUrl, tStr, function (data) {
-                            closeWaiting();
-                            if (!isEmpty(data.error)) {
-                                malert("提示", data.error, "确认", function () { });
-                                beep();
-                                return;
-                            } else if (data != "") {
-                                tip(data);
-                            } else {
-                                sucTip("出库成功");
-                                //$(".mui-content").empty();
-                                //mui.back();
-                                var currentWebview = plus.webview.currentWebview();
-                                currentWebview.opener().evalJS("removeDone(" + id + ")");
-                                currentWebview.close();
-                            }
-                            tdata = "";
-                            data = "";
-                            //productIsTc = null;
-                            tcode = [];
-                        }, function (data) {
-                            //失败
-                            closeWaiting();
-                            toast(data.responseText);
-                            beepAndVibrate();
-                        })
-
-                    }, function () {
-                        //closeWaiting();
-                    });
-
-
-
-                });
-        }
-
-        mui(".traycode_item").on("longtap", "td", function () {
-            var _this = this;
-        });
-
-        function change() {
-            var vplanIndex = divdeliveryPlan.style.zIndex;
-            divdeliveryPlan.style.zIndex = divscorllblock.style.zIndex;
-            divscorllblock.style.zIndex = vplanIndex;
-
-            divdeliveryPlan.style.display = "block";
-            divscorllblock.style.display = "block";
-
-            if (divdeliveryPlan.style.zIndex == 0) {
-                divdeliveryPlan.style.display = "none";
+            if (data[0].PDAID == null) {
+              App.ajaxGet(
+                App.getServerUrl() +
+                  "stock/product/bind?id=" +
+                  data[0].ID +
+                  "&pdaID=" +
+                  plus.device.imei +
+                  "&optUser=" +
+                  App.getLoginUserName()
+              );
+              toast("PDA未绑定,重新绑定成功，请再次点击出库");
+              return;
             }
-            if (divscorllblock.style.zIndex == 0) {
-                divscorllblock.style.display = "none";
-            }
-        }
 
-        mui.back = function () {
-            plus.nativeUI.actionSheet({
-                title: "确认返回？",
-                cancel: "取消",
-                buttons: [{
-                    title: "返回"
-                }, {
-                    title: "不返回"
-                }]
-            }, function (e) {
-                if (e.index == 1) {
-                    App.ajaxGet(App.getServerUrl() + "stock/product/unbind?id=" + data_[0].ID, function () {
-                        toast("PDA解绑成功");
-                        plus.webview.currentWebview().close();
-                    });
-                };
-            });
-        };
-
-        mui('.mui-scroll-wrapper').scroll({
-            deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
-        });
-
-        function expand() {
-            var action = $("#expand").attr("action");
-            if (action == "shrink") {
-                $("#expand").text("↓展开↓");
-                $("#expand").attr("action", "expand");
-                $("#expand").addClass("expand");
-                $("[shrink=true]").hide();
-            } else {
-                $("#expand").text("↑收起↑");
-                $("#expand").attr("action", "shrink");
-                $("#expand").removeClass("expand");
-                $("[shrink=true]").show();
-            }
-        }
-
-        function doSearch() {
-            var _cars = [];
-            var keyWord = $("#plate").val();
-            if (keyWord == "") {
-                $(".carNo").hide();
-                return;
-            }
-            $(".carNo").show();
-            var li = "";
-            for (var i = 0; i < cars.length; i++) {
-                if (cars[i].indexOf(keyWord) >= 0) {
-                    li += "<li onclick='carSelected(\"" + cars[i] + "\")'>" + cars[i].replace(keyWord, '<font color=red>' + keyWord + '</font>') + "</li>"
+            if (data[0].PDAID != null && data[0].PDAID != plus.device.imei) {
+              malert(
+                "操作提示",
+                data[0].OPTUSER + "正在另外一台PDA使用此箱号:" + data[0].PN,
+                "我已知晓",
+                function () {
+                  plus.webview.currentWebview().close();
                 }
+              );
+              return;
             }
-            $("#carsList").empty();
-            if (li == "") {
-                $(".carNo").hide();
-                return;
+
+            mconfirm(
+              "警告",
+              str,
+              function () {
+                waiting("正在出库", true);
+                var tStr = {
+                  codes: code.toString(),
+                  UserId: App.getLoginUserId(),
+                  puid: App.getLoginUserId(),
+                  puname: App.getLoginUserName(),
+                  packingNum: packingNum,
+                  plate: $("#plate").val(),
+                  boxNumber: $("#boxNumber").val(),
+                  count: counts,
+                  isfinished: isfinished,
+                };
+
+                App.ajaxPost(
+                  outUrl,
+                  tStr,
+                  function (data) {
+                    closeWaiting();
+                    if (!isEmpty(data.error)) {
+                      malert("提示", data.error, "确认", function () {});
+                      beep();
+                      return;
+                    } else if (data != "") {
+                      tip(data);
+                    } else {
+                      sucTip("出库成功");
+                      //$(".mui-content").empty();
+                      //mui.back();
+                      var currentWebview = plus.webview.currentWebview();
+                      currentWebview.opener().evalJS("removeDone(" + id + ")");
+                      currentWebview.close();
+                    }
+                    tdata = "";
+                    data = "";
+                    //productIsTc = null;
+                    tcode = [];
+                  },
+                  function (data) {
+                    //失败
+                    closeWaiting();
+                    toast(data.responseText);
+                    beepAndVibrate();
+                  }
+                );
+              },
+              function () {
+                //closeWaiting();
+              }
+            );
+          }
+        );
+      }
+
+      mui(".traycode_item").on("longtap", "td", function () {
+        var _this = this;
+      });
+
+      function change() {
+        var vplanIndex = divdeliveryPlan.style.zIndex;
+        divdeliveryPlan.style.zIndex = divscorllblock.style.zIndex;
+        divscorllblock.style.zIndex = vplanIndex;
+
+        divdeliveryPlan.style.display = "block";
+        divscorllblock.style.display = "block";
+
+        if (divdeliveryPlan.style.zIndex == 0) {
+          divdeliveryPlan.style.display = "none";
+        }
+        if (divscorllblock.style.zIndex == 0) {
+          divscorllblock.style.display = "none";
+        }
+      }
+
+      mui.back = function () {
+        plus.nativeUI.actionSheet(
+          {
+            title: "确认返回？",
+            cancel: "取消",
+            buttons: [
+              {
+                title: "返回",
+              },
+              {
+                title: "不返回",
+              },
+            ],
+          },
+          function (e) {
+            if (e.index == 1) {
+              App.ajaxGet(
+                App.getServerUrl() + "stock/product/unbind?id=" + data_[0].ID,
+                function () {
+                  toast("PDA解绑成功");
+                  plus.webview.currentWebview().close();
+                }
+              );
             }
-            $("#carsList").append(li);
-        }
+          }
+        );
+      };
 
-        function carSelected(car) {
-            $(".carNo").hide();
-            $("#plate").val(car);
-        }
+      mui(".mui-scroll-wrapper").scroll({
+        deceleration: 0.0005, //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+      });
 
-
-        function closePosition() {
-            $(".positions").hide();
+      function expand() {
+        var action = $("#expand").attr("action");
+        if (action == "shrink") {
+          $("#expand").text("↓展开↓");
+          $("#expand").attr("action", "expand");
+          $("#expand").addClass("expand");
+          $("[shrink=true]").hide();
+        } else {
+          $("#expand").text("↑收起↑");
+          $("#expand").attr("action", "shrink");
+          $("#expand").removeClass("expand");
+          $("[shrink=true]").show();
         }
+      }
+
+      function doSearch() {
+        var _cars = [];
+        var keyWord = $("#plate").val();
+        if (keyWord == "") {
+          $(".carNo").hide();
+          return;
+        }
+        $(".carNo").show();
+        var li = "";
+        for (var i = 0; i < cars.length; i++) {
+          if (cars[i].indexOf(keyWord) >= 0) {
+            li +=
+              "<li onclick='carSelected(\"" +
+              cars[i] +
+              "\")'>" +
+              cars[i].replace(
+                keyWord,
+                "<font color=red>" + keyWord + "</font>"
+              ) +
+              "</li>";
+          }
+        }
+        $("#carsList").empty();
+        if (li == "") {
+          $(".carNo").hide();
+          return;
+        }
+        $("#carsList").append(li);
+      }
+
+      function carSelected(car) {
+        $(".carNo").hide();
+        $("#plate").val(car);
+      }
+
+      function closePosition() {
+        $(".positions").hide();
+      }
     </script>
-</body>
+  </body>
 </html>

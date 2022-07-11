@@ -1,183 +1,207 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>成品出库</title>
-    <script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
+    <script
+      src="../resources/js/include.js"
+      type="text/javascript"
+      charset="utf-8"
+    ></script>
     <style type="text/css">
-        .mui-input-group,
-        .mui-card-content-inner {
-            border-bottom: 2px solid #007aff;
-        }
+      .mui-input-group,
+      .mui-card-content-inner {
+        border-bottom: 2px solid #007aff;
+      }
 
-            .mui-card-content-inner:active {
-                background: gray;
-            }
+      .mui-card-content-inner:active {
+        background: gray;
+      }
 
-        .deliveryPlan {
-            word-break: break-all;
-            word-wrap: break-word;
-        }
+      .deliveryPlan {
+        word-break: break-all;
+        word-wrap: break-word;
+      }
 
-        table {
-            width: 100%;
-            margin: 0;
-            padding: 0;
-        }
+      table {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+      }
 
-        td {
-            padding: 0;
-        }
+      td {
+        padding: 0;
+      }
 
-        .title {
-            background: lightgray;
-            text-align: right;
-            padding-right: 5px;
-            width: 25%;
-        }
+      .title {
+        background: lightgray;
+        text-align: right;
+        padding-right: 5px;
+        width: 25%;
+      }
 
-        .content {
-            text-align: left;
-            padding-left: 5px;
-            background: white;
-        }
+      .content {
+        text-align: left;
+        padding-left: 5px;
+        background: white;
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <header class="mui-bar mui-bar-nav">
-        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-        <h1 class="mui-title">成品出库</h1>
+      <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+      <h1 class="mui-title">成品出库</h1>
     </header>
     <div class="mui-content">
-        <div class="mui-scroll-wrapper">
-            <div class="mui-scroll">
-                <div class="mui-card">
-                    <div class="mui-card-header">
-                        <form class="mui-input-group" id="formID" style="background:#dcdcdc;">
-                            <div class="mui-input-row">
-                                <label>搜索项目</label>
-                                <select id="project">
-                                    <option value="deliveryCode">出货单号</option>
-                                    <option value="deliveryTargetCompany">要货单位</option>
-                                    <option value="ladingCode">提单号</option>
-                                    <option value="boxNumber">箱号</option>
-                                </select>
-                            </div>
-                            <div class="mui-input-row">
-                                <label>搜索内容</label>
-                                <input id="content" type="text" required placeholder="请输入搜索内容">
-                            </div>
-
-                        </form>
-                    </div>
+      <div class="mui-scroll-wrapper">
+        <div class="mui-scroll">
+          <div class="mui-card">
+            <div class="mui-card-header">
+              <form
+                class="mui-input-group"
+                id="formID"
+                style="background: #dcdcdc"
+              >
+                <div class="mui-input-row">
+                  <label>搜索项目</label>
+                  <select id="project">
+                    <option value="deliveryCode">出货单号</option>
+                    <option value="deliveryTargetCompany">要货单位</option>
+                    <option value="ladingCode">提单号</option>
+                    <option value="boxNumber">箱号</option>
+                  </select>
                 </div>
-                <div class="mui-button-row">
-                    <button type="button" class="mui-btn mui-btn-primary" onclick="doSearch()">搜索</button>
+                <div class="mui-input-row">
+                  <label>搜索内容</label>
+                  <input
+                    id="content"
+                    type="text"
+                    required
+                    placeholder="请输入搜索内容"
+                  />
                 </div>
-                <div id="deliveryPlans">
-                </div>
+              </form>
             </div>
+          </div>
+          <div class="mui-button-row">
+            <button
+              type="button"
+              class="mui-btn mui-btn-primary"
+              onclick="doSearch()"
+            >
+              搜索
+            </button>
+          </div>
+          <div id="deliveryPlans"></div>
         </div>
+      </div>
     </div>
 
     <script id="deliveryPlanDetails" type="text/template">
-        {{each data as value i}}
-        <br>
-        <table id="{{value.ID}}" class="deliveryPlan" border="1" cellspacing="0" cellpadding="0" bordercolor="gray" style="BORDER-COLLAPSE: collapse">
-            <tr style="height:20px;">
-                <th class="title">要货单位</th>
-                <th class="content" style="color:blue;">{{value.DELIVERYTARGETCOMPANY}}</th>
-            </tr>
-            <tr>
-                <th class="title">车牌号</th>
-                <th class="content">{{value.PLATE}}</th>
-            </tr>
-            <tr id="{{value.PN}}">
-                <th class="title">出货时间</th>
-                <th id="deliveryDate" class="content" style="color:red;">{{format(value.DELIVERYDATE)}}</th>
-            </tr>
-            <tr>
-                <th class="title">出库单号</th>
-                <th class="content" style="word-break:break-all; word-wrap: break-word;color:red;">{{value.DELIVERYCODE}}-{{value.PN}}</th>
-            </tr>
-            <tr>
-                <th class="title">提单号</th>
-                <th class="content" style="color:red;">{{value.LADINGCODE}}</th>
-            </tr>
-            <tr>
-                <th class="title">实际箱号</th>
-                <th class="content">{{value.BOXNUMBER}}</th>
-            </tr>
-        </table>
-        {{/each}}
+      {{each data as value i}}
+      <br>
+      <table id="{{value.ID}}" class="deliveryPlan" border="1" cellspacing="0" cellpadding="0" bordercolor="gray" style="BORDER-COLLAPSE: collapse">
+          <tr style="height:20px;">
+              <th class="title">要货单位</th>
+              <th class="content" style="color:blue;">{{value.DELIVERYTARGETCOMPANY}}</th>
+          </tr>
+          <tr>
+              <th class="title">车牌号</th>
+              <th class="content">{{value.PLATE}}</th>
+          </tr>
+          <tr id="{{value.PN}}">
+              <th class="title">出货时间</th>
+              <th id="deliveryDate" class="content" style="color:red;">{{format(value.DELIVERYDATE)}}</th>
+          </tr>
+          <tr>
+              <th class="title">出库单号</th>
+              <th class="content" style="word-break:break-all; word-wrap: break-word;color:red;">{{value.DELIVERYCODE}}-{{value.PN}}</th>
+          </tr>
+          <tr>
+              <th class="title">提单号</th>
+              <th class="content" style="color:red;">{{value.LADINGCODE}}</th>
+          </tr>
+          <tr>
+              <th class="title">实际箱号</th>
+              <th class="content">{{value.BOXNUMBER}}</th>
+          </tr>
+      </table>
+      {{/each}}
     </script>
 
     <script type="text/javascript">
-        var deliveryPlanDetailUrl = App.getServerUrl() + "stock/product/findDeliveryPlanDetail";
+      var deliveryPlanDetailUrl =
+        App.getServerUrl() + "stock/product/findDeliveryPlanDetail";
 
-        function doSearch() {
-            var project = $("#project").val();
-            var content = $("#content").val();
-            if (project == null || project == undefined || project == "1") {
-                toast("请选择搜索项目");
-                beepAndVibrate();
-                return;
-            }
-            App.ajaxGet(deliveryPlanDetailUrl + "?project=" + project + "&" + "content=" + content,
-                function (data) {
-                    data = JSON.parse(data);
-                    if (data.length == 0) {
-                        beep();
-                        toast("未搜索到相关的内容");
-                    }
-                    if (data.error != null) {
-                        beep();
-                        toast(data.error);
-                        return;
-                    }
-                    $("#deliveryPlans").empty();
-                    template.helper("format", function (deliveryDate) {
-                        return deliveryDate.substring(0, 10);
-                    });
-                    var html = template('deliveryPlanDetails', {
-                        "data": data
-                    });
-                    $("#deliveryPlans").append(html);
-                })
+      function doSearch() {
+        var project = $("#project").val();
+        var content = $("#content").val();
+        if (project == null || project == undefined || project == "1") {
+          toast("请选择搜索项目");
+          beepAndVibrate();
+          return;
         }
-
-        mui("#deliveryPlans").on("tap", ".deliveryPlan", function () {
-            App.go("pOutDetail2.html", {
-                id_: $(this).attr("id"),
-                pn: $(this).find("tr").eq(2).attr("id")
+        App.ajaxGet(
+          deliveryPlanDetailUrl +
+            "?project=" +
+            project +
+            "&" +
+            "content=" +
+            content,
+          function (data) {
+            data = JSON.parse(data);
+            if (data.length == 0) {
+              beep();
+              toast("未搜索到相关的内容");
+            }
+            if (data.error != null) {
+              beep();
+              toast(data.error);
+              return;
+            }
+            $("#deliveryPlans").empty();
+            template.helper("format", function (deliveryDate) {
+              return deliveryDate.substring(0, 10);
             });
-        });
+            var html = template("deliveryPlanDetails", {
+              data: data,
+            });
+            $("#deliveryPlans").append(html);
+          }
+        );
+      }
 
-        mui('.mui-scroll-wrapper').scroll({
-            deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+      mui("#deliveryPlans").on("tap", ".deliveryPlan", function () {
+        App.go("pOutDetail2.html", {
+          id_: $(this).attr("id"),
+          pn: $(this).find("tr").eq(2).attr("id"),
         });
+      });
 
-        function removeDone(id) {
-            $("#" + id).remove();
+      mui(".mui-scroll-wrapper").scroll({
+        deceleration: 0.0005, //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+      });
+
+      function removeDone(id) {
+        $("#" + id).remove();
+      }
+      var scanner;
+      App.ready(function () {
+        scanner = new Scanner(parseCode);
+        scanner.scan();
+      });
+      function parseCode(code) {
+        if (code.indexOf("WX") == 0 || code.indexOf("NX") == 0) {
+          var project = $("#project").val();
+          if (project != "deliveryCode") {
+            toast("请扫发货单编号二维码");
+          }
+          code = code.split(";")[0];
+          $("#content").val(code);
+          doSearch();
         }
-        var scanner;
-        App.ready(function () {
-            scanner = new Scanner(parseCode);
-            scanner.scan();
-        });
-        function parseCode(code) {
-            if (code.indexOf("WX") == 0 || code.indexOf("NX") == 0) {
-                var project = $("#project").val();
-                if (project != "deliveryCode") {
-                    toast("请扫发货单编号二维码");
-                }
-                code = code.split(";")[0];
-                $("#content").val(code);
-                doSearch();
-            }
-        }
+      }
     </script>
-</body>
+  </body>
 </html>
