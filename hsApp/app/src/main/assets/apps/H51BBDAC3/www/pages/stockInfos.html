@@ -1,122 +1,145 @@
 ﻿<!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>库位查询</title>
-    <script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
+    <script
+      src="../resources/js/include.js"
+      type="text/javascript"
+      charset="utf-8"
+    ></script>
     <style type="text/css">
-        .mui-input-row select {
-            font-size: 17px;
-            height: 37px;
-            padding: 27px;
-        }
+      .mui-input-row select {
+        font-size: 17px;
+        height: 37px;
+        padding: 27px;
+      }
 
-        select {
-            background: white;
-        }
+      select {
+        background: white;
+      }
 
-            select:active {
-                background: #e4e0e0;
-            }
+      select:active {
+        background: #e4e0e0;
+      }
 
-        .mui-active {
-            background: #e4e0e0 !important;
-        }
+      .mui-active {
+        background: #e4e0e0 !important;
+      }
 
-        .mui-card-header,
-        .mui-card-content-inner {
-            border-bottom: 1px solid darkslategray;
-        }
+      .mui-card-header,
+      .mui-card-content-inner {
+        border-bottom: 1px solid darkslategray;
+      }
 
-            .mui-card-content-inner:active {
-                background: gray;
-            }
+      .mui-card-content-inner:active {
+        background: gray;
+      }
 
-        .mui-table-view .mui-input-row label {
-            line-height: 50px;
-            font-size: 22px;
-            float: left;
-            text-align: right;
-            font-weight: bold;
-            width: 35%;
-            padding-left: 10px;
-        }
+      .mui-table-view .mui-input-row label {
+        line-height: 50px;
+        font-size: 22px;
+        float: left;
+        text-align: right;
+        font-weight: bold;
+        width: 35%;
+        padding-left: 10px;
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <header class="mui-bar mui-bar-nav">
-        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-        <h1 class="mui-title">库位查询</h1>
+      <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+      <h1 class="mui-title">库位查询</h1>
     </header>
     <div class="mui-content">
-        <div class="mui-scroll-wrapper">
-            <div class="mui-scroll">
-                <ul class="mui-table-view">
-                    <li class="mui-table-view-cell  mui-input-row">
-                        <label>仓库</label>
-                        <input id="warehouseCode" type="text" readonly placeholder="请扫描库位条码">
-                    </li>
-                    <li class="mui-table-view-cell  mui-input-row">
-                        <label>库位</label>
-                        <input id="warehousePosCode" type="text" readonly placeholder="请扫描库位条码">
-                    </li>
-
-                </ul>
-                <div class="mui-card-content" id="list">
-                </div>
-
-            </div>
+      <div class="mui-scroll-wrapper">
+        <div class="mui-scroll">
+          <ul class="mui-table-view">
+            <li class="mui-table-view-cell mui-input-row">
+              <label>仓库</label>
+              <input
+                id="warehouseCode"
+                type="text"
+                readonly
+                placeholder="请扫描库位条码"
+              />
+            </li>
+            <li class="mui-table-view-cell mui-input-row">
+              <label>库位</label>
+              <input
+                id="warehousePosCode"
+                type="text"
+                readonly
+                placeholder="请扫描库位条码"
+              />
+            </li>
+          </ul>
+          <div class="mui-card-content" id="list"></div>
         </div>
+      </div>
     </div>
 
     <script type="text/javascript">
-        var queryBarcode = App.getServerUrl() + "stock/product/queryTrayBarcode";
+      var queryBarcode = App.getServerUrl() + "stock/product/queryTrayBarcode";
 
-        function parseCode(data1) {
-            var data = data1.split(";");
-            if (data.length == 2) {
-                //库房库位扫的数据
-                $("#warehouseCode").val(data[0]);
-                $("#warehousePosCode").val(data[1]);
-                //查询仓库中该库位所有的托条码
-                App.ajaxGet(queryBarcode + "?warehouseCode=" + data[0] + "&warehousePosCode=" + data[1], function (data) {
-                    addBarcode(data);
-                })
-            } else {
-                tip("未知条码");
+      function parseCode(data1) {
+        var data = data1.split(";");
+        if (data.length == 2) {
+          //库房库位扫的数据
+          $("#warehouseCode").val(data[0]);
+          $("#warehousePosCode").val(data[1]);
+          //查询仓库中该库位所有的托条码
+          App.ajaxGet(
+            queryBarcode +
+              "?warehouseCode=" +
+              data[0] +
+              "&warehousePosCode=" +
+              data[1],
+            function (data) {
+              addBarcode(data);
             }
+          );
+        } else {
+          tip("未知条码");
         }
-        App.ready(function () {
-            scanner = new Scanner(parseCode);
-            scanner.scan();
-
-        });
-        mui('.mui-scroll-wrapper').scroll({
-            deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
-        });
-        function addBarcode(data) {
-            var str = "";
-            for (var a = 0; a < data.length; a++) {
-                str += '<div class="mui-card-content-inner" id="' + data[a].BARCODE + '">';
-                str += '<div class="mui-input-row">';
-                str += '<label>条码</label>';
-                str += '<input type="text" required readonly class="mui-input-clear" value=' + data[a].BARCODE + '>';
-                str += '</div>';
-                str += '</div>';
-
-            }
-
-            $("#list").append(str);
-
+      }
+      App.ready(function () {
+        scanner = new Scanner(parseCode);
+        scanner.scan();
+      });
+      mui(".mui-scroll-wrapper").scroll({
+        deceleration: 0.0005, //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+      });
+      function addBarcode(data) {
+        var str = "";
+        for (var a = 0; a < data.length; a++) {
+          str +=
+            '<div class="mui-card-content-inner" id="' + data[a].BARCODE + '">';
+          str += '<div class="mui-input-row">';
+          str += "<label>条码</label>";
+          str +=
+            '<input type="text" required readonly class="mui-input-clear" value=' +
+            data[a].BARCODE +
+            ">";
+          str += "</div>";
+          str += "</div>";
         }
-        mui("#list").on("tap", ".mui-card-content-inner", function () {
-            var _this = this;
-            var id = this.getAttribute("id");
-            App.go("pInfo.html", {
-                code: id
-            }, true);
-        });
+
+        $("#list").append(str);
+      }
+      mui("#list").on("tap", ".mui-card-content-inner", function () {
+        var _this = this;
+        var id = this.getAttribute("id");
+        App.go(
+          "pInfo.html",
+          {
+            code: id,
+          },
+          true
+        );
+      });
     </script>
-</body>
+  </body>
 </html>

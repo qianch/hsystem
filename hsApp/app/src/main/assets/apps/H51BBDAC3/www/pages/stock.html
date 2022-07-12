@@ -1,216 +1,228 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>库存页面</title>
     <script src="../resources/js/include.js"></script>
     <style type="text/css">
-        .mui-table-view-cell:after {
-            position: absolute;
-            right: 0;
-            bottom: 0;
-            left: 15px;
-            height: 1px;
-            content: '';
-            -webkit-transform: scaleY(.5);
-            transform: scaleY(.5);
-        }
+      .mui-table-view-cell:after {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 15px;
+        height: 1px;
+        content: "";
+        -webkit-transform: scaleY(0.5);
+        transform: scaleY(0.5);
+      }
 
-        .mui-table-view {
-            position: relative;
-            margin-top: 0;
-            margin-bottom: 0;
-            padding-left: 0;
-            list-style: none;
-            background-color: #efeff4 !important;
-        }
+      .mui-table-view {
+        position: relative;
+        margin-top: 0;
+        margin-bottom: 0;
+        padding-left: 0;
+        list-style: none;
+        background-color: #efeff4 !important;
+      }
 
-            .mui-table-view:before {
-                height: 0px;
-            }
+      .mui-table-view:before {
+        height: 0px;
+      }
 
-            .mui-table-view:after {
-                height: 0px;
-            }
+      .mui-table-view:after {
+        height: 0px;
+      }
 
-        .mui-table-view-cell:after {
-            height: 0px;
-        }
+      .mui-table-view-cell:after {
+        height: 0px;
+      }
 
-        .mui-scroll-wrapper {
-            top: 44px;
-            padding-bottom: 20px;
-        }
+      .mui-scroll-wrapper {
+        top: 44px;
+        padding-bottom: 20px;
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <header class="mui-bar mui-bar-nav">
-        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-        <h1 class="mui-title">库存模块</h1>
+      <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+      <h1 class="mui-title">库存模块</h1>
     </header>
     <div class="mui-content">
-        <div>
-            <div id="segmentedControl" class="mui-segmented-control">
-                <a class="mui-control-item mui-active" href="#item1" index="1">
-                    原料
-                </a>
-                <a class="mui-control-item" href="#item2" index="2">
-                    成品
-                </a>
-                <a class="mui-control-item" href="#item3" index="3">
-                    胚布
-                </a>
-            </div>
+      <div>
+        <div id="segmentedControl" class="mui-segmented-control">
+          <a class="mui-control-item mui-active" href="#item1" index="1">
+            原料
+          </a>
+          <a class="mui-control-item" href="#item2" index="2"> 成品 </a>
+          <a class="mui-control-item" href="#item3" index="3"> 胚布 </a>
         </div>
-        <div>
-            <div class="mui-scroll-wrapper">
-                <div class="mui-scroll">
-                    <div id="item1" class="mui-control-content mui-active">
-                        <ul class="mui-table-view" topIndex="1">
-                            <li class="mui-table-view-cell" index="1" href="mIn.html">
-                                巨石原料入库
-                            </li>
-                            <li class="mui-table-view-cell" index="2" href="mForceOut.html">
-                                巨石原料退回
-                            </li>
-                            <li class="mui-table-view-cell" index="3" href="mIn2.html">
-                                车间退料
-                            </li>
-                            <li class="mui-table-view-cell" index="4" href="mOut.html">
-                                原料出库
-                            </li>
-                            <li class="mui-table-view-cell" index="5" href="mMove.html">
-                                原料移库
-                            </li>
-                            <li class="mui-table-view-cell" index="6" href="mCheck.html">
-                                原料盘库
-                            </li>
-                        </ul>
-                    </div>
-                    <div id="item2" class="mui-control-content">
-                        <ul class="mui-table-view" topIndex="2">
-                            <li class="mui-table-view-cell" index="1" href="pOnTheWay.html">
-                                出库存调拨单
-                            </li>
-                            <li class="mui-table-view-cell"   index="" href="pIns.html">
-                                成品批量入库
-                            </li>
-                            <li class="mui-table-view-cell" index="" href="pIn2.html">
-                                成品入库
-                            </li>
-                            <li class="mui-table-view-cell" index="2" href="pForceOut.html">
-                                异常退回车间
-                            </li>
-                            <li class="mui-table-view-cell" index="3" href="pOut.html">
-                                非套材出库
-                            </li>
-                            <li class="mui-table-view-cell" index="3" href="pOut2.html">
-                                套材批量出库
-                            </li>
-                            <li class="mui-table-view-cell" index="4" href="pMove.html">
-                                移库入库
-                            </li>
-                            <li class="mui-table-view-cell" index="4" href="pBack.html">
-                                成品回库
-                            </li>
-                            <li class="mui-table-view-cell" index="5" href="pCheck.html">
-                                成品盘库
-                            </li>
-                            <li class="mui-table-view-cell" index="6" href="stockInfos.html">
-                                库位查询
-                            </li>
-                            <li class="mui-table-view-cell" index="6" href="stockInfos2.html">
-                                成品仓库
-                            </li>
-                        </ul>
-                    </div>
-                    <div id="item3" class="mui-control-content">
-                        <ul class="mui-table-view" topIndex="3">
-
-                            <li class="mui-table-view-cell" index="2" href="pbIn.html">
-                                入编织胚布库
-                            </li>
-                            <!-- <li class="mui-table-view-cell" index="2" href="pbIns.html">
+      </div>
+      <div>
+        <div class="mui-scroll-wrapper">
+          <div class="mui-scroll">
+            <div id="item1" class="mui-control-content mui-active">
+              <ul class="mui-table-view" topIndex="1">
+                <li class="mui-table-view-cell" index="1" href="mIn.html">
+                  巨石原料入库
+                </li>
+                <li class="mui-table-view-cell" index="2" href="mForceOut.html">
+                  巨石原料退回
+                </li>
+                <li class="mui-table-view-cell" index="3" href="mIn2.html">
+                  车间退料
+                </li>
+                <li class="mui-table-view-cell" index="4" href="mOut.html">
+                  原料出库
+                </li>
+                <li class="mui-table-view-cell" index="5" href="mMove.html">
+                  原料移库
+                </li>
+                <li class="mui-table-view-cell" index="6" href="mCheck.html">
+                  原料盘库
+                </li>
+              </ul>
+            </div>
+            <div id="item2" class="mui-control-content">
+              <ul class="mui-table-view" topIndex="2">
+                <li class="mui-table-view-cell" index="1" href="pOnTheWay.html">
+                  出库存调拨单
+                </li>
+                <li class="mui-table-view-cell" index="" href="pIns.html">
+                  成品批量入库
+                </li>
+                <li class="mui-table-view-cell" index="" href="pIn2.html">
+                  成品入库
+                </li>
+                <li class="mui-table-view-cell" index="2" href="pForceOut.html">
+                  异常退回车间
+                </li>
+                <li class="mui-table-view-cell" index="3" href="pOut.html">
+                  非套材出库
+                </li>
+                <li class="mui-table-view-cell" index="3" href="pOut2.html">
+                  套材批量出库
+                </li>
+                <li class="mui-table-view-cell" index="4" href="pMove.html">
+                  移库入库
+                </li>
+                <li class="mui-table-view-cell" index="4" href="pBack.html">
+                  成品回库
+                </li>
+                <li class="mui-table-view-cell" index="5" href="pCheck.html">
+                  成品盘库
+                </li>
+                <li
+                  class="mui-table-view-cell"
+                  index="6"
+                  href="stockInfos.html"
+                >
+                  库位查询
+                </li>
+                <li
+                  class="mui-table-view-cell"
+                  index="6"
+                  href="stockInfos2.html"
+                >
+                  成品仓库
+                </li>
+              </ul>
+            </div>
+            <div id="item3" class="mui-control-content">
+              <ul class="mui-table-view" topIndex="3">
+                <li class="mui-table-view-cell" index="2" href="pbIn.html">
+                  入编织胚布库
+                </li>
+                <!-- <li class="mui-table-view-cell" index="2" href="pbIns.html">
                                 胚布批量入库
                             </li> -->
-                            <!-- <li class="mui-table-view-cell" index="3" href="pbPicking.html">
+                <!-- <li class="mui-table-view-cell" index="3" href="pbPicking.html">
                                 胚布领料
                             </li> -->
-							<li class="mui-table-view-cell" index="3" href="pbMove.html">
-							    编织胚布移库
-							</li>
-                            <li class="mui-table-view-cell" index="4" href="pbPick.html">
-                                入胚布待领料库
-                            </li>
-                            <li class="mui-table-view-cell" index="5" href="pbMove.html">
-                                入裁剪胚布库
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+                <li class="mui-table-view-cell" index="3" href="pbMove.html">
+                  编织胚布移库
+                </li>
+                <li class="mui-table-view-cell" index="4" href="pbPick.html">
+                  入胚布待领料库
+                </li>
+                <li class="mui-table-view-cell" index="5" href="pbMove.html">
+                  入裁剪胚布库
+                </li>
+              </ul>
             </div>
+          </div>
         </div>
+      </div>
     </div>
 
     <script type="text/javascript">
-        /**
-         * 设置键盘事件
-         */
-        $(document).keydown(function (e) {
+      /**
+       * 设置键盘事件
+       */
+      $(document).keydown(function (e) {
+        if (e.keyCode == 37 || e.keyCode == 39) {
+          $(".mui-segmented-control a").toggleClass("mui-active");
+          $(".mui-control-content").toggleClass("mui-active");
+        }
 
-            if (e.keyCode == 37 || e.keyCode == 39) {
-                $(".mui-segmented-control a").toggleClass("mui-active");
-                $(".mui-control-content").toggleClass("mui-active");
+        if (e.keyCode == 40 || e.keyCode == 38) {
+          //判断方向键
+          var direction = e.keyCode == 40 ? 1 : -1;
+
+          //获取当前的tab的索引
+          var topIndex = $(".mui-control-item.mui-active").attr("index");
+          //如果没有选中项，那么选择第一项
+          if ($("ul[topIndex=" + topIndex + "] .mui-item-active").length == 0) {
+            $("li[index=1]").addClass("mui-item-active");
+          } else {
+            //获取当前选中项的index
+            var itemIndex = parseInt(
+              $("ul[topIndex=" + topIndex + "] .mui-item-active").attr("index")
+            );
+
+            //根据方向键，计算下一项item的index
+            var nextIndex = itemIndex + direction;
+
+            //如果根据索引，找不到下一个选中项，那么就返回，不执行后续操作
+            if (
+              $("ul[topIndex=" + topIndex + "] li[index=" + nextIndex + "]")
+                .length == 0
+            ) {
+              return;
             }
 
-            if (e.keyCode == 40 || e.keyCode == 38) {
-
-                //判断方向键
-                var direction = e.keyCode == 40 ? 1 : -1;
-
-                //获取当前的tab的索引
-                var topIndex = $(".mui-control-item.mui-active").attr("index");
-                //如果没有选中项，那么选择第一项
-                if ($("ul[topIndex=" + topIndex + "] .mui-item-active").length == 0) {
-                    $("li[index=1]").addClass("mui-item-active");
-                } else {
-                    //获取当前选中项的index
-                    var itemIndex = parseInt($("ul[topIndex=" + topIndex + "] .mui-item-active").attr("index"));
-
-                    //根据方向键，计算下一项item的index
-                    var nextIndex = itemIndex + direction;
-
-                    //如果根据索引，找不到下一个选中项，那么就返回，不执行后续操作
-                    if ($("ul[topIndex=" + topIndex + "] li[index=" + nextIndex + "]").length == 0) {
-                        return;
-                    }
-
-                    $("ul[topIndex=" + topIndex + "] li").removeClass("mui-item-active");
-                    $("ul[topIndex=" + topIndex + "] li[index=" + nextIndex + "]").addClass("mui-item-active");
-                }
-            }
-            if (e.keyCode == 13) {
-                var topIndex = $(".mui-control-item.mui-active").attr("index");
-                if ($("ul[topIndex=" + topIndex + "] .mui-item-active").length == 0) {
-                    $("li[index=1]").addClass("mui-item-active");
-                }
-                App.go($("ul[topIndex=" + topIndex + "] .mui-item-active").attr("href"));
-            }
-        });
-        /**
-         * 设置触摸事件
-         */
-        mui(".mui-control-content").on('tap', "li", function () {
-            //获取当前的tab的索引
-            var topIndex = $(".mui-control-item.mui-active").attr("index");
-            $("ul[topIndex=" + topIndex + "] li").removeClass("mui-item-active");
-            $(this).addClass("mui-item-active");
-            App.go($(this).attr("href"));
-        });
-        mui('.mui-scroll-wrapper').scroll({
-            deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
-        });
+            $("ul[topIndex=" + topIndex + "] li").removeClass(
+              "mui-item-active"
+            );
+            $(
+              "ul[topIndex=" + topIndex + "] li[index=" + nextIndex + "]"
+            ).addClass("mui-item-active");
+          }
+        }
+        if (e.keyCode == 13) {
+          var topIndex = $(".mui-control-item.mui-active").attr("index");
+          if ($("ul[topIndex=" + topIndex + "] .mui-item-active").length == 0) {
+            $("li[index=1]").addClass("mui-item-active");
+          }
+          App.go(
+            $("ul[topIndex=" + topIndex + "] .mui-item-active").attr("href")
+          );
+        }
+      });
+      /**
+       * 设置触摸事件
+       */
+      mui(".mui-control-content").on("tap", "li", function () {
+        //获取当前的tab的索引
+        var topIndex = $(".mui-control-item.mui-active").attr("index");
+        $("ul[topIndex=" + topIndex + "] li").removeClass("mui-item-active");
+        $(this).addClass("mui-item-active");
+        App.go($(this).attr("href"));
+      });
+      mui(".mui-scroll-wrapper").scroll({
+        deceleration: 0.0005, //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+      });
     </script>
-</body>
+  </body>
 </html>

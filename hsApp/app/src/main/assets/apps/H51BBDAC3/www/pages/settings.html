@@ -1,79 +1,92 @@
 ﻿<!DOCTYPE html>
 <html>
-
-<head>
-    <meta charset="UTF-8">
-    <script src="../resources/js/include.js" type="text/javascript" charset="utf-8"></script>
+  <head>
+    <meta charset="UTF-8" />
+    <script
+      src="../resources/js/include.js"
+      type="text/javascript"
+      charset="utf-8"
+    ></script>
     <title>系统设置</title>
-</head>
+  </head>
 
-<body>
+  <body>
     <header class="mui-bar mui-bar-nav nouser nomenu">
-        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-        <h1 class="mui-title">系统设置</h1>
+      <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+      <h1 class="mui-title">系统设置</h1>
     </header>
     <div class="mui-content">
-        <form class="mui-input-group">
-            <div class="mui-input-row">
-                <label>屏幕常亮</label>
-                <div id="wakelock" class="mui-switch">
-                    <div class="mui-switch-handle"></div>
-                </div>
-            </div>
-            <div class="mui-input-row">
-                <label>服务器IP</label>
-                <input id="ip" type="text" placeholder="IP地址">
-            </div>
-            <div id="button" style="padding: 10px;text-align: center;">
-                <button type="button" class="mui-btn mui-btn-blue" style="width:40%;">保存</button>
-                <button type="button" class="mui-btn mui-btn-danger" style="width:40%;">恢复默认</button>
-            </div>
-        </form>
-
+      <form class="mui-input-group">
+        <div class="mui-input-row">
+          <label>屏幕常亮</label>
+          <div id="wakelock" class="mui-switch">
+            <div class="mui-switch-handle"></div>
+          </div>
+        </div>
+        <div class="mui-input-row">
+          <label>服务器IP</label>
+          <input id="ip" type="text" placeholder="IP地址" />
+        </div>
+        <div id="button" style="padding: 10px; text-align: center">
+          <button type="button" class="mui-btn mui-btn-blue" style="width: 40%">
+            保存
+          </button>
+          <button
+            type="button"
+            class="mui-btn mui-btn-danger"
+            style="width: 40%"
+          >
+            恢复默认
+          </button>
+        </div>
+      </form>
     </div>
 
     <script type="text/javascript">
-        //IP初始值
-        document.getElementById("ip").value = isEmpty(LS.get(KEY.SERVER_IP)) ? SERVER_IP : LS.get(KEY.SERVER_IP);
-        /*setTimeout(function(){mui("#wakelock").switch().toggle();},1000)
+      //IP初始值
+      document.getElementById("ip").value = isEmpty(LS.get(KEY.SERVER_IP))
+        ? SERVER_IP
+        : LS.get(KEY.SERVER_IP);
+      /*setTimeout(function(){mui("#wakelock").switch().toggle();},1000)
         setTimeout(function(){mui("#wakelock").switch().toggle();},2000)*/
-        //屏幕常亮状态设置
-        if (!isEmpty(LS.get(KEY.WAKE_UP))) {
-            if (LS.get(KEY.WAKE_UP)) {
-                document.getElementById("wakelock").className += " mui-active";
-            }
+      //屏幕常亮状态设置
+      if (!isEmpty(LS.get(KEY.WAKE_UP))) {
+        if (LS.get(KEY.WAKE_UP)) {
+          document.getElementById("wakelock").className += " mui-active";
         }
+      }
 
-        //保存
-        mui("#button").on("tap", ".mui-btn-blue", function () {
-            if (!isIp(document.getElementById("ip").value)) {
-                toast("IP地址格式不正确");
-                return;
-            }
-            var isActive = document.getElementById("wakelock").classList.contains("mui-active");
-            if (isActive) {
-                //设置屏幕常亮
-                plus.device.setWakelock(true);
-            } else {
-                plus.device.setWakelock(false);
-            }
-            LS.set(KEY.WAKE_UP, isActive);
-            LS.set(KEY.SERVER_IP, document.getElementById("ip").value)
-            toast("保存成功");
-        });
-        //恢复默认
-        mui("#button").on("tap", ".mui-btn-danger", function () {
-            var isActive = document.getElementById("wakelock").classList.contains("mui-active");
-            if (isActive)
-                mui("#wakelock").switch().toggle();
-            plus.device.setWakelock(false);
-            document.getElementById("ip").value = SERVER_IP;
-            LS.remove(KEY.SERVER_IP);
-            LS.remove(KEY.WAKE_UP);
-            toast("已重置为默认");
-        });
+      //保存
+      mui("#button").on("tap", ".mui-btn-blue", function () {
+        if (!isIp(document.getElementById("ip").value)) {
+          toast("IP地址格式不正确");
+          return;
+        }
+        var isActive = document
+          .getElementById("wakelock")
+          .classList.contains("mui-active");
+        if (isActive) {
+          //设置屏幕常亮
+          plus.device.setWakelock(true);
+        } else {
+          plus.device.setWakelock(false);
+        }
+        LS.set(KEY.WAKE_UP, isActive);
+        LS.set(KEY.SERVER_IP, document.getElementById("ip").value);
+        toast("保存成功");
+      });
+      //恢复默认
+      mui("#button").on("tap", ".mui-btn-danger", function () {
+        var isActive = document
+          .getElementById("wakelock")
+          .classList.contains("mui-active");
+        if (isActive) mui("#wakelock").switch().toggle();
+        plus.device.setWakelock(false);
+        document.getElementById("ip").value = SERVER_IP;
+        LS.remove(KEY.SERVER_IP);
+        LS.remove(KEY.WAKE_UP);
+        toast("已重置为默认");
+      });
     </script>
-
-</body>
-
+  </body>
 </html>
