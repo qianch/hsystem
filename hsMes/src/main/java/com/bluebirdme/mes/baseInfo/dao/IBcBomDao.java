@@ -14,15 +14,18 @@ import com.bluebirdme.mes.core.base.dao.IBaseDao;
 import com.bluebirdme.mes.core.sql.SQLTemplateException;
 
 import org.springframework.stereotype.Repository;
+
 /**
- * 
  * @author 徐波
  * @Date 2016-10-8 16:53:24
  */
 
 public interface IBcBomDao extends IBaseDao {
-	public void delete(String ids) throws Exception ;
-	public List<Map<String, Object>> getBcBomJson(String data)throws SQLTemplateException;
-	public List<Map<String, Object>> getBcBomJsonTest(String data) throws SQLTemplateException;
-	public List<Map<String, Object>> getBcBomJsonTest1(String data) throws SQLTemplateException;
+    void delete(String ids) throws Exception;
+
+    List<Map<String, Object>> getBcBomJson(String data) throws SQLTemplateException;
+
+    List<Map<String, Object>> getBcBomJsonTest(String data) throws SQLTemplateException;
+
+    List<Map<String, Object>> getBcBomJsonTest1(String data) throws SQLTemplateException;
 }

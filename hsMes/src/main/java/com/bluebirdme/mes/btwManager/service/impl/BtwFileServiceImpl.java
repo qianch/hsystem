@@ -6,17 +6,14 @@
  */
 package com.bluebirdme.mes.btwManager.service.impl;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
+import com.bluebirdme.mes.btwManager.dao.IBtwFileDao;
 import com.bluebirdme.mes.btwManager.entity.BtwFile;
+import com.bluebirdme.mes.btwManager.service.IBtwFileService;
 import com.bluebirdme.mes.core.annotation.AnyExceptionRollback;
-
-import com.bluebirdme.mes.core.constant.Constant;
+import com.bluebirdme.mes.core.base.dao.IBaseDao;
+import com.bluebirdme.mes.core.base.entity.Filter;
+import com.bluebirdme.mes.core.base.entity.Page;
+import com.bluebirdme.mes.core.base.service.BaseServiceImpl;
 import com.bluebirdme.mes.planner.weave.entity.WeavePlan;
 import com.bluebirdme.mes.printer.entity.BarCodePrintRecord;
 import com.bluebirdme.mes.printer.service.impl.MergePrinterServiceImpl;
@@ -29,19 +26,17 @@ import com.bluebirdme.mes.store.entity.*;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.springframework.stereotype.Service;
-
-import com.bluebirdme.mes.core.base.dao.IBaseDao;
-import com.bluebirdme.mes.core.base.entity.Filter;
-import com.bluebirdme.mes.core.base.entity.Page;
-import com.bluebirdme.mes.core.base.service.BaseServiceImpl;
-import com.bluebirdme.mes.btwManager.service.IBtwFileService;
-import com.bluebirdme.mes.btwManager.dao.IBtwFileDao;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
-import org.xdemo.superutil.j2se.MD5Utils;
 import org.xdemo.superutil.j2se.PathUtils;
 import org.xdemo.superutil.j2se.StringUtils;
 import org.xdemo.superutil.thirdparty.gson.GsonTools;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @author 徐波
@@ -81,29 +76,21 @@ public class BtwFileServiceImpl extends BaseServiceImpl implements IBtwFileServi
 
     @Override
     public String queryBtwFile(String weavePlanId, String type) throws Exception {
-        long consumerId = 0;
         if (StringUtils.isBlank(weavePlanId)) {
             return "";
         }
-
         // 先根据id查询出信息
         WeavePlan w = findById(WeavePlan.class, Long.parseLong(weavePlanId));
         FinishedProduct fp = findById(FinishedProduct.class, w.getProductId());
-        consumerId = fp.getProductConsumerId();
-//		if (w.getPartId() != null&&type.equals("roll")) {
-//			type = "roll_peibu";
-//		}
-
+        long consumerId = fp.getProductConsumerId();
         List<Map<String, Object>> list = btwFileDao.queryBtwFilebyCustomerId(consumerId, type);
-        List<Map<String, Object>> combobox = new ArrayList<Map<String, Object>>();
-        Map<String, Object> map;
-        map = new HashMap<String, Object>();
+        List<Map<String, Object>> combobox = new ArrayList<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("t", "标准版");
         map.put("v", "0");
         combobox.add(map);
-
         for (Map<String, Object> m : list) {
-            map = new HashMap<String, Object>();
+            map = new HashMap<>();
             map.put("t", m.get("TAGNAME"));
             map.put("v", m.get("ID"));
             combobox.add(map);
@@ -112,28 +99,22 @@ public class BtwFileServiceImpl extends BaseServiceImpl implements IBtwFileServi
     }
 
     @Override
-    public List<Map<String, Object>> getBtwFilebyCustomerId(String customerId , String type, Boolean hasStandard) throws Exception {
-    	System.out.println("customerId="+customerId);
-    	
-    	Long long_customerId =0L;
-    	if(!StringUtils.isEmpty(customerId)) {
-    		long_customerId = Long.parseLong(customerId);
-    	}
-    	
-    	
+    public List<Map<String, Object>> getBtwFilebyCustomerId(String customerId, String type, Boolean hasStandard) throws Exception {
+        long long_customerId = 0L;
+        if (!StringUtils.isEmpty(customerId)) {
+            long_customerId = Long.parseLong(customerId);
+        }
         List<Map<String, Object>> list = btwFileDao.queryBtwFilebyCustomerId(long_customerId, type);
-        List<Map<String, Object>> combobox = new ArrayList<Map<String, Object>>();
+        List<Map<String, Object>> combobox = new ArrayList<>();
         Map<String, Object> map;
-
         if (hasStandard) {
-            map = new HashMap<String, Object>();
+            map = new HashMap<>();
             map.put("t", "标准版");
             map.put("v", "0");
             combobox.add(map);
         }
-
         for (Map<String, Object> m : list) {
-            map = new HashMap<String, Object>();
+            map = new HashMap<>();
             map.put("t", m.get("TAGNAME"));
             map.put("v", m.get("ID"));
             combobox.add(map);
@@ -141,22 +122,18 @@ public class BtwFileServiceImpl extends BaseServiceImpl implements IBtwFileServi
         return combobox;
     }
 
-
     @Override
     public String editBacode(IBarcode iBarcode, Integer customerBarCodeRecord, Integer agentBarCodeRecord, long btwfileId) {
         if (iBarcode.getIndividualOutPutString() == null || iBarcode.getIndividualOutPutString() == "") {
             return "个性化条码不存在，请先打印个性化条码";
         }
-
         BtwFile btwFile = findById(BtwFile.class, btwfileId);
-
         if (customerBarCodeRecord > 0) {
             if (customerBarCodeRecord > btwFile.getConsumerBarCodeRecord()) {
                 return "客户条码不能大于" + btwFile.getTagName() + btwFile.getConsumerBarCodeRecord();
             }
             String customerBarCode = MergePrinterServiceImpl.GetMaxBarCode(btwFile.getConsumerBarCodePrefix() == null ? "" : btwFile.getConsumerBarCodePrefix(), customerBarCodeRecord, btwFile.getConsumerBarCodeDigit() == null ? 0 : btwFile.getConsumerBarCodeDigit());
-
-            Map<String, Object> map = new HashMap<String, Object>();
+            Map<String, Object> map = new HashMap<>();
             map.put("btwfileId", btwfileId);
             map.put("customerBarCode", customerBarCode);
             List<RollBarcode> list = this.findListByMap(RollBarcode.class, map);
@@ -170,8 +147,7 @@ public class BtwFileServiceImpl extends BaseServiceImpl implements IBtwFileServi
                 return "供销商条码不能大于" + btwFile.getTagName() + btwFile.getAgentBarCodeRecord();
             }
             String agentBarCode = MergePrinterServiceImpl.GetMaxBarCode(btwFile.getAgentBarCodePrefix() == null ? "" : btwFile.getAgentBarCodePrefix(), agentBarCodeRecord, btwFile.getAgentBarCodeDigit() == null ? 0 : btwFile.getAgentBarCodeDigit());
-
-            Map<String, Object> map = new HashMap<String, Object>();
+            Map<String, Object> map = new HashMap<>();
             map.put("btwfileId", btwfileId);
             map.put("agentBarCode", agentBarCode);
             List<RollBarcode> list = this.findListByMap(RollBarcode.class, map);
@@ -183,17 +159,17 @@ public class BtwFileServiceImpl extends BaseServiceImpl implements IBtwFileServi
         Gson gson = new Gson();
         List<BarCodePrintRecord> list = gson.fromJson(iBarcode.getIndividualOutPutString(), new TypeToken<List<BarCodePrintRecord>>() {
         }.getType());
-        List<BarCodePrintRecord> barCodePrintRecordDatas = new ArrayList<BarCodePrintRecord>();
+        List<BarCodePrintRecord> barCodePrintRecordData = new ArrayList<>();
         for (BarCodePrintRecord barCodePrintRecord : list) {
             if (barCodePrintRecord.getKey() == "CustomerBarCode" || barCodePrintRecord.getKey() == "AgentBarCode") {
                 continue;
             }
-            barCodePrintRecordDatas.add(barCodePrintRecord);
+            barCodePrintRecordData.add(barCodePrintRecord);
         }
 
-        barCodePrintRecordDatas.add(new BarCodePrintRecord("CustomerBarCode", iBarcode.getCustomerBarCode()));
-        barCodePrintRecordDatas.add(new BarCodePrintRecord("AgentBarCode", iBarcode.getAgentBarCode()));
-        iBarcode.setIndividualOutPutString(GsonTools.toJson(barCodePrintRecordDatas));
+        barCodePrintRecordData.add(new BarCodePrintRecord("CustomerBarCode", iBarcode.getCustomerBarCode()));
+        barCodePrintRecordData.add(new BarCodePrintRecord("AgentBarCode", iBarcode.getAgentBarCode()));
+        iBarcode.setIndividualOutPutString(GsonTools.toJson(barCodePrintRecordData));
         iBarcode.setBtwfileId(btwfileId);
         if (iBarcode instanceof RollBarcode) {
             update((RollBarcode) iBarcode);
@@ -204,13 +180,11 @@ public class BtwFileServiceImpl extends BaseServiceImpl implements IBtwFileServi
         } else if (iBarcode instanceof PartBarcode) {
             update((PartBarcode) iBarcode);
         }
-
         return "更新条码成功";
     }
 
     @Override
-    public String clearBacode(IBarcode iBarcode) throws Exception {
-
+    public String clearBacode(IBarcode iBarcode) {
         iBarcode.setCustomerBarCode("");
         iBarcode.setAgentBarCode("");
         iBarcode.setIndividualOutPutString(null);
@@ -227,7 +201,6 @@ public class BtwFileServiceImpl extends BaseServiceImpl implements IBtwFileServi
         if (iBarcode.getBtwfileId() != null) {
             BtwFile btwFile = findById(BtwFile.class, iBarcode.getBtwfileId());
             if (btwFile != null) {
-
                 List<Map<String, Object>> list = new ArrayList<>();
                 if (iBarcode instanceof RollBarcode) {
                     list = rollBarcodeDao.findMaxRollBarCode(iBarcode.getBtwfileId());
@@ -238,39 +211,28 @@ public class BtwFileServiceImpl extends BaseServiceImpl implements IBtwFileServi
                 } else if (iBarcode instanceof PartBarcode) {
                     list = partBarcodeDao.findMaxPartBarCode(iBarcode.getBtwfileId());
                 }
-
                 String maxAgentBarCode = list.get(0).get("MAXAGENTBARCODE").toString();
                 String maxCustomerBarCode = list.get(0).get("MAXCUSTOMERBARCODE").toString();
                 maxAgentBarCode = maxAgentBarCode.replace(btwFile.getAgentBarCodePrefix(), "").toString();
                 maxAgentBarCode = maxAgentBarCode.equals("") ? "0" : maxAgentBarCode;
-
                 maxCustomerBarCode = maxCustomerBarCode.replace(btwFile.getConsumerBarCodePrefix(), "").toString();
                 maxCustomerBarCode = maxCustomerBarCode.equals("") ? "0" : maxCustomerBarCode;
-
                 btwFile.setAgentBarCodeRecord(Integer.parseInt(maxAgentBarCode));
                 btwFile.setConsumerBarCodeRecord(Integer.parseInt(maxCustomerBarCode));
-
                 update(btwFile);
             }
-
-
         }
-
-
         return "";
     }
 
     @Override
-    public String saveBtwFilePrints(BtwFile btwFile, String userId) throws Exception {
-
+    public String saveBtwFilePrints(BtwFile btwFile, String userId) {
         if (btwFile.getId() == null) {
             btwFile.setCreateTime(new Date());
             btwFile.setCreater(userId);
         }
-
         btwFile.setModifyTime(new Date());
         btwFile.setModifyUser(userId);
-
         if (btwFile.getConsumerId() == null) {
             return "请选择客户";
         }
@@ -299,7 +261,6 @@ public class BtwFileServiceImpl extends BaseServiceImpl implements IBtwFileServi
         if (has(BtwFile.class, map, btwFile.getId())) {
             return "该用户已有该标签类型的供销商条码前缀，请先作废后重新上传模版，重新上传模版时候记录数和原模版要保持一致";
         }
-
         map.clear();
         map.put("consumerId", btwFile.getConsumerId());
         map.put("tagType", btwFile.getTagType());
@@ -308,26 +269,21 @@ public class BtwFileServiceImpl extends BaseServiceImpl implements IBtwFileServi
         if (has(BtwFile.class, map, btwFile.getId())) {
             return "该用户已有该标签类型的客户条码前缀，请先作废后重新上传模版，重新上传模版时候记录数和原模版要保持一致";
         }
-
         if (btwFile.getId() == null) {
             save(btwFile);
         } else {
             update(btwFile);
         }
-
         return "ok";
     }
 
     @Override
     public String importbtwFileUpload(MultipartFile file, long btwFileId, String userId, HttpServletRequest request) throws Exception {
         BtwFile btwFile = findById(BtwFile.class, btwFileId);
-
         Date d = new Date();
         System.out.println(d);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-        String fileName =btwFile.getTagName()+ sdf.format(d)+".btw";
-
-
+        String fileName = btwFile.getTagName() + sdf.format(d) + ".btw";
         if (UPLOAD_PATH == null) {
             UPLOAD_PATH = request.getSession().getServletContext().getRealPath("/") + File.separator;
             File _file = new File(UPLOAD_PATH);
@@ -335,23 +291,18 @@ public class BtwFileServiceImpl extends BaseServiceImpl implements IBtwFileServi
                 _file.mkdirs();
             }
         }
-
         String filePath = UPLOAD_PATH + btwFile.getConsumerCode() + "\\";
         if (!new File(filePath).exists()) {
             new File(filePath).mkdirs();
         }
         filePath += fileName;
-
         File target = new File(filePath);
         byte[] bytes = file.getBytes();
         FileCopyUtils.copy(bytes, target);
-
         btwFile.setTagActName(fileName);
         btwFile.setUploadDate(new Date());
         btwFile.setUploadUser(userId);
         update(btwFile);
-
         return "ok";
     }
-
 }

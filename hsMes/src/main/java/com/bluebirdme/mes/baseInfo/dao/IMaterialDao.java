@@ -6,17 +6,15 @@
  */
 package com.bluebirdme.mes.baseInfo.dao;
 
-import java.util.Map;
-
 import com.bluebirdme.mes.core.base.dao.IBaseDao;
 
-import org.springframework.stereotype.Repository;
+import java.util.Map;
+
 /**
- * 
  * @author 高飞
  * @Date 2016-10-12 11:06:09
  */
 
 public interface IMaterialDao extends IBaseDao {
-	public Map<String,Object> materialInfo(String code);
+    Map<String, Object> materialInfo(String code);
 }

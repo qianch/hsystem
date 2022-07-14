@@ -6,19 +6,15 @@
  */
 package com.bluebirdme.mes.baseInfo.dao;
 
-import java.util.List;
-
-import com.bluebirdme.mes.baseInfo.entity.BcBomVersionDetail;
 import com.bluebirdme.mes.core.base.dao.IBaseDao;
 
-import org.springframework.stereotype.Repository;
 /**
- * 
  * @author 徐秦冬
  * @Date 2017-12-6 16:26:52
  */
 
 public interface IFtcBcBomVersionDetailDao extends IBaseDao {
-	public void delete(String ids) throws Exception ;
-	public void deleteByPid();
+    void delete(String ids) throws Exception;
+
+    void deleteByPid();
 }

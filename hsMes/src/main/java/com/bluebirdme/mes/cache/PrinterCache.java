@@ -15,26 +15,20 @@ public class PrinterCache {
         return instance;
     }
 
-    private static final Map<String, Printer> printerMap = new HashMap<String, Printer>();
+    private static final Map<String, Printer> printerMap = new HashMap<>();
 
     public static Map<String, Printer> getPrinterList() {
 
         if (printerMap.size() > 0) {
             return printerMap;
         }
-
         //清空缓存数据
         printerMap.clear();
-
         IPrinterService printerService = SpringContextHolder.getBean(IPrinterService.class);
         List<Printer> listPrinter = printerService.findAll(Printer.class);
         for (Printer entity : listPrinter) {
-
             printerMap.put(entity.getPrinterName(), entity);
         }
-
         return printerMap;
     }
-
-
 }

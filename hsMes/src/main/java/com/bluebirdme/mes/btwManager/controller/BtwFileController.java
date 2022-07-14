@@ -26,14 +26,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-import org.xdemo.superutil.j2se.MD5Utils;
 import org.xdemo.superutil.j2se.PathUtils;
 import org.xdemo.superutil.thirdparty.gson.GsonTools;
 
 import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.security.DigestException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
@@ -51,7 +49,6 @@ import java.util.Map;
 @RequestMapping("/btwFile")
 @Journal(name = "btw文件")
 public class BtwFileController extends BaseController {
-
     // btw文件页面
     final String index = "btwManager/btwFile";
     final String addOrEdit = "btwManager/btwFileAddOrEdit";
@@ -111,9 +108,8 @@ public class BtwFileController extends BaseController {
     @RequestMapping(value = "delete", method = RequestMethod.POST)
     public String delete(String ids) throws Exception {
         String ids_temp[] = ids.split(",");
-        Serializable ids_target[] = new Serializable[ids_temp.length];
-        for (int i = 0; i < ids_temp.length; i++) {
-            BtwFile btwFile = btwFileService.findById(BtwFile.class, Long.parseLong(ids_temp[i]));
+        for (String s : ids_temp) {
+            BtwFile btwFile = btwFileService.findById(BtwFile.class, Long.parseLong(s));
             btwFile.setState(2);
             btwFileService.update(btwFile);
         }
@@ -147,14 +143,7 @@ public class BtwFileController extends BaseController {
             System.out.println("保存" + c.getConsumerName());
             btwFileService.save(btw);
         }
-
         return ajaxSuccess();
-    }
-
-    public static void main(String args[]) {
-        File f = new File(PathUtils.getClassPath() + "BtwFiles" + File.separator + "ceshi.btw");
-        System.out.print(f.exists());
-
     }
 
     public static String UPLOAD_PATH = new File(PathUtils.getClassPath()) + File.separator + "BtwFiles" + File.separator;
@@ -172,8 +161,6 @@ public class BtwFileController extends BaseController {
             }
         }
         String fileName = file.getOriginalFilename();
-        Long size = file.getSize();
-        String suffix = fileName.lastIndexOf(".") == -1 ? "" : fileName.substring(fileName.lastIndexOf(".") + 1);
         String filePath = UPLOAD_PATH + path + "\\";
         if (!new File(filePath).exists()) {
             new File(filePath).mkdirs();
@@ -184,8 +171,7 @@ public class BtwFileController extends BaseController {
         byte[] bytes = file.getBytes();
         FileCopyUtils.copy(bytes, target);
 
-        String md5 = MD5Utils.getFileMD5(filePath);
-        HashMap<String, Object> map = new HashMap<String, Object>();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("fileName", file.getOriginalFilename().substring(0, file.getOriginalFilename().lastIndexOf(".")));
         map.put("uploadUser", session.getAttribute(Constant.CURRENT_USER_ID));
         map.put("uploadDate", new Date());
@@ -229,9 +215,8 @@ public class BtwFileController extends BaseController {
     @ResponseBody
     @Journal(name = "导入btw", logType = LogType.DB)
     @RequestMapping(value = "importbtwFileUpload")
-    public String importbtwFileUpload(@RequestParam(value = "file") MultipartFile file,long btwFileId) throws Exception {
+    public String importbtwFileUpload(@RequestParam(value = "file") MultipartFile file, long btwFileId) throws Exception {
         String userId = session.getAttribute(Constant.CURRENT_USER_ID).toString();
-        return GsonTools.toJson(btwFileService.importbtwFileUpload(file,btwFileId,userId,request));
+        return GsonTools.toJson(btwFileService.importbtwFileUpload(file, btwFileId, userId, request));
     }
-
 }

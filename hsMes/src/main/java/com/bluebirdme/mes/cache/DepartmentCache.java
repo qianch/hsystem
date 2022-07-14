@@ -26,10 +26,8 @@ public class DepartmentCache {
         IDepartmentService departmentService = SpringContextHolder.getBean(IDepartmentService.class);
         List<Department> listDepartment = departmentService.findAll(Department.class);
         for (Department department : listDepartment) {
-
             departmentMap.put(department.getCode(), department);
         }
-
         return departmentMap;
     }
 }

@@ -8,20 +8,17 @@ package com.bluebirdme.mes.btwManager.service;
 
 import com.bluebirdme.mes.btwManager.entity.BtwFile;
 import com.bluebirdme.mes.core.base.service.IBaseService;
-import com.bluebirdme.mes.planner.produce.entity.ProducePlan;
-import com.bluebirdme.mes.store.entity.IBarcode;
 
 import java.util.List;
 import java.util.Map;
 
 /**
- *
  * @author 徐波
  * @Date 2016-11-26 23:01:35
  */
 public interface IBtwFilePrintService extends IBaseService {
 
-    public List<Map<String, Object>> findBtwFilePrints(Long btwFileId) throws Exception;
+    List<Map<String, Object>> findBtwFilePrints(Long btwFileId) throws Exception;
 
-    public boolean saveBtwFilePrints(BtwFile btwFile, String userId);
+    boolean saveBtwFilePrints(BtwFile btwFile, String userId);
 }

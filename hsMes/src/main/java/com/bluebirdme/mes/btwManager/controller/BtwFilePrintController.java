@@ -10,11 +10,9 @@ import com.bluebirdme.mes.btwManager.entity.BtwFile;
 import com.bluebirdme.mes.btwManager.entity.BtwFilePrint;
 import com.bluebirdme.mes.btwManager.service.IBtwFilePrintService;
 import com.bluebirdme.mes.core.annotation.Journal;
-import com.bluebirdme.mes.core.annotation.NoAuth;
 import com.bluebirdme.mes.core.annotation.support.LogType;
 import com.bluebirdme.mes.core.base.controller.BaseController;
 import com.bluebirdme.mes.core.constant.Constant;
-import com.bluebirdme.mes.planner.produce.entity.ProducePlanDetail;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +22,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.xdemo.superutil.thirdparty.gson.GsonTools;
 
 import javax.annotation.Resource;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 /**
@@ -37,7 +34,6 @@ import java.util.List;
 @RequestMapping("/btwManager/BtwFilePrint")
 @Journal(name = "btw文件")
 public class BtwFilePrintController extends BaseController {
-
     // btw文件页面
     final String index = "btwManager/btwFile";
     final String btwFilePrintAddOrEditUrl = "btwManager/btwFilePrintAddOrEdit";
@@ -56,17 +52,15 @@ public class BtwFilePrintController extends BaseController {
     @Journal(name = "查询标签下面的打印属性", logType = LogType.DB)
     @RequestMapping(value = "findBtwFilePrints", method = RequestMethod.POST)
     public String findBtwFilePrints(Long btwFileId) throws Exception {
-
         return GsonTools.toJson(btwFilePrintService.findBtwFilePrints(btwFileId));
     }
 
     @Journal(name = "加载计划打印明细页面")
     @RequestMapping(value = "btwFilePrintAddOrEdit", method = RequestMethod.GET)
-    public ModelAndView btwFilePrintAddOrEdit(Long btwFileId) throws Exception {
-
-        BtwFile entity = btwFilePrintService.findById(BtwFile.class,btwFileId);
-        List<BtwFilePrint> listBtwFilePrint=btwFilePrintService.find(BtwFilePrint.class,"btwFileId",btwFileId);
-        if(entity!=null) {
+    public ModelAndView btwFilePrintAddOrEdit(Long btwFileId) {
+        BtwFile entity = btwFilePrintService.findById(BtwFile.class, btwFileId);
+        List<BtwFilePrint> listBtwFilePrint = btwFilePrintService.find(BtwFilePrint.class, "btwFileId", btwFileId);
+        if (entity != null) {
             entity.setListBtwFilePrint(listBtwFilePrint);
         }
         return new ModelAndView(btwFilePrintAddOrEditUrl, model.addAttribute("btwFile", entity));
@@ -75,8 +69,7 @@ public class BtwFilePrintController extends BaseController {
     @ResponseBody
     @Journal(name = "保存标签打印属性", logType = LogType.DB)
     @RequestMapping(value = "saveBtwFilePrints", method = RequestMethod.POST)
-    public String saveBtwFilePrints(@RequestBody BtwFile btwFile) throws Exception {
-
+    public String saveBtwFilePrints(@RequestBody BtwFile btwFile) {
         String userId = session.getAttribute(Constant.CURRENT_USER_ID).toString();
         return GsonTools.toJson(btwFilePrintService.saveBtwFilePrints(btwFile, userId));
     }

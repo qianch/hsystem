@@ -6,22 +6,21 @@
  */
 package com.bluebirdme.mes.baseInfo.dao;
 
-import java.util.List;
-import java.util.Map;
-
-import com.bluebirdme.mes.baseInfo.entity.BCBomVersion;
 import com.bluebirdme.mes.core.base.dao.IBaseDao;
 import com.bluebirdme.mes.core.sql.SQLTemplateException;
 
-import org.springframework.stereotype.Repository;
+import java.util.List;
+import java.util.Map;
+
 /**
- * 
  * @author 徐波
  * @Date 2016-10-8 16:53:24
  */
 
 public interface IBCBomVersionDao extends IBaseDao {
-	public void delete(String ids) throws Exception ;
-	public void deleteByPid(String ids);
-	public List<Map<String, Object>> getBcBomJson(String id)throws SQLTemplateException;
+    void delete(String ids) throws Exception;
+
+    void deleteByPid(String ids);
+
+    List<Map<String, Object>> getBcBomJson(String id) throws SQLTemplateException;
 }
