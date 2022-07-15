@@ -6,15 +6,12 @@
  */
 package com.bluebirdme.mes.complaint.service;
 
-import java.util.Date;
-
 import com.bluebirdme.mes.core.base.service.IBaseService;
 
 /**
- * 
  * @author 高飞
  * @Date 2016-11-25 15:40:05
  */
 public interface IComplaintService extends IBaseService {
-	public int getSerial(String code,String year);
+    public int getSerial(String code, String year);
 }

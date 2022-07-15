@@ -25,7 +25,7 @@ public class MessageCreateServiceImp extends MessageServiceImpl implements IMess
     public void createOrderFinish(SalesOrderDetail so) {
         Date now = new Date();
         String content = "订单号：" + so.getSalesOrderSubCode() + "，产品厂内名称：" + so.getFactoryProductName() + "，已完成，时间：" + sdf.format(now);
-        super.createMessage(content, MessageType.ORDER_FINISH, -1l, "系统通知", new Long[]{-1L}, UUID.randomUUID().toString());
+        super.createMessage(content, MessageType.ORDER_FINISH, -1L, "系统通知", new Long[]{-1L}, UUID.randomUUID().toString());
     }
 
     public void createAuditMessage(AuditInstance audit, String type, boolean isAllUser) {
@@ -36,14 +36,14 @@ public class MessageCreateServiceImp extends MessageServiceImpl implements IMess
         String auditResult = "未通过";
         Long[] toUser = new Long[]{audit.getCreateUserId()};
         if (isAllUser && audit.getFinalResult() != null && audit.getFinalResult() == 2) {
-            toUser = new Long[]{-1l};
+            toUser = new Long[]{-1L};
         }
         if (audit.getFinalResult() != null && audit.getFinalResult() == 2) {
             auditResult = "已通过";
         }
 
         String content = audit.getAuditTitle() + "，审核已完成，审核结果：" + auditResult + "，时间：" + sdf.format(now);
-        super.createMessage(content, type, -1l, "系统通知", toUser, UUID.randomUUID().toString());
+        super.createMessage(content, type, -1L, "系统通知", toUser, UUID.randomUUID().toString());
     }
 
     @Override
@@ -52,9 +52,7 @@ public class MessageCreateServiceImp extends MessageServiceImpl implements IMess
             case AuditConstant.CODE.XS:
             case AuditConstant.CODE.XS1:
             case AuditConstant.CODE.XS2:
-
             case AuditConstant.CODE.XS1BG:
-
             case AuditConstant.CODE.XS2BG:
                 createAuditMessage(audit, MessageType.ORDER_AUDIT, true);
                 break;
@@ -83,8 +81,6 @@ public class MessageCreateServiceImp extends MessageServiceImpl implements IMess
             case AuditConstant.CODE.FTCBC:
             case AuditConstant.CODE.FTCBC1:
             case AuditConstant.CODE.FTCBC2:
-                createAuditMessage(audit, MessageType.BOM_AUDIT, false);
-                break;
             case AuditConstant.CODE.BC2:
                 createAuditMessage(audit, MessageType.BOM_AUDIT, false);
                 break;
@@ -115,7 +111,7 @@ public class MessageCreateServiceImp extends MessageServiceImpl implements IMess
         Date date = new Date();// 取时间
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(date);
-        calendar.add(calendar.DATE, 2);// 把日期往后增加一天.整数往后推,负数往前移动
+        calendar.add(Calendar.DATE, 2);// 把日期往后增加一天.整数往后推,负数往前移动
         date = calendar.getTime();
         if (dp.getDeliveryDate().before(date) && dp.getDeliveryDate().after(new Date())) {
             String comment = "出货计划发货提醒，发货单号：" + dp.getDeliveryCode() + "，发货时间：" + sdf.format(dp.getDeliveryDate());
@@ -133,7 +129,7 @@ public class MessageCreateServiceImp extends MessageServiceImpl implements IMess
         Date date = new Date();// 取时间
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(date);
-        calendar.add(calendar.DATE, 2);// 把日期往后增加一天.整数往后推,负数往前移动
+        calendar.add(Calendar.DATE, 2);// 把日期往后增加一天.整数往后推,负数往前移动
         date = calendar.getTime();
         if (sod.getDeliveryTime().before(date) && sod.getDeliveryTime().after(new Date())) {
             String comment = "订单发货提醒，订单号：" + sod.getSalesOrderSubCode() + "，客户产品名称：" + sod.getConsumerProductName() + "，发货时间：" + sdf.format(sod.getDeliveryTime());

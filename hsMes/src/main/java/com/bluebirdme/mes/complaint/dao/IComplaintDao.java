@@ -8,13 +8,11 @@ package com.bluebirdme.mes.complaint.dao;
 
 import com.bluebirdme.mes.core.base.dao.IBaseDao;
 
-import org.springframework.stereotype.Repository;
 /**
- * 
  * @author 高飞
  * @Date 2016-11-25 15:40:05
  */
 
 public interface IComplaintDao extends IBaseDao {
-	public int getSerial(String code,String year);
+    int getSerial(String code, String year);
 }

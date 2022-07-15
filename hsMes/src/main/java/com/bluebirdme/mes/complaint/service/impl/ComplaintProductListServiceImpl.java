@@ -6,38 +6,35 @@
  */
 package com.bluebirdme.mes.complaint.service.impl;
 
-import java.util.Map;
-
-import javax.annotation.Resource;
+import com.bluebirdme.mes.complaint.dao.IComplaintProductListDao;
+import com.bluebirdme.mes.complaint.service.IComplaintProductListService;
 import com.bluebirdme.mes.core.annotation.AnyExceptionRollback;
-
-import org.springframework.stereotype.Service;
-
 import com.bluebirdme.mes.core.base.dao.IBaseDao;
 import com.bluebirdme.mes.core.base.entity.Filter;
 import com.bluebirdme.mes.core.base.entity.Page;
 import com.bluebirdme.mes.core.base.service.BaseServiceImpl;
-import com.bluebirdme.mes.complaint.service.IComplaintProductListService;
-import com.bluebirdme.mes.complaint.dao.IComplaintProductListDao;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.Map;
 
 /**
- * 
  * @author 徐波
  * @Date 2016-10-13 10:27:03
  */
 @Service
 @AnyExceptionRollback
 public class ComplaintProductListServiceImpl extends BaseServiceImpl implements IComplaintProductListService {
-	
-	@Resource IComplaintProductListDao complaintProductListDao;
-	@Override
-	protected IBaseDao getBaseDao() {
-		return complaintProductListDao;
-	}
+    @Resource
+    IComplaintProductListDao complaintProductListDao;
 
-	@Override
-	public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-		return complaintProductListDao.findPageInfo(filter,page);
-	}
+    @Override
+    protected IBaseDao getBaseDao() {
+        return complaintProductListDao;
+    }
 
+    @Override
+    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+        return complaintProductListDao.findPageInfo(filter, page);
+    }
 }

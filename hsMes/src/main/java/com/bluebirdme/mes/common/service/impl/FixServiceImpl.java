@@ -42,16 +42,12 @@ import java.util.*;
 public class FixServiceImpl extends BaseServiceImpl implements IFixService {
     @Resource
     IFixDao fixDao;
-
     @Resource
     IBarCodeService barcodeService;
-
     @Resource
     IBomService bomService;
-
     @Resource
     ISalesOrderService orderService;
-
     @Resource
     IWeavePlanService weaveService;
 
@@ -225,11 +221,11 @@ public class FixServiceImpl extends BaseServiceImpl implements IFixService {
                         abstractPPD.setProcReq(ppd.getProcReq());
                         abstractPPD.setProcBomId(tcfp.getProcBomId());
                         abstractPPD.setClosed(0);
-                        Double planWeight;
+                        double planWeight;
                         map.clear();
                         map.put("ftcBomVersionId", abstractPPD.getProcBomId());
                         bomDetails = findListByMap(FtcBomDetail.class, map);
-                        Double bomWeight = 0D;
+                        double bomWeight = 0D;
                         for (FtcBomDetail d : bomDetails) {
                             bomWeight += d.getFtcBomDetailWeightPerSquareMetre() == null ? 0D : d.getFtcBomDetailWeightPerSquareMetre();
                         }

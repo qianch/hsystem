@@ -8,9 +8,7 @@ package com.bluebirdme.mes.complaint.dao;
 
 import com.bluebirdme.mes.core.base.dao.IBaseDao;
 
-import org.springframework.stereotype.Repository;
 /**
- * 
  * @author 徐波
  * @Date 2016-10-13 10:27:03
  */

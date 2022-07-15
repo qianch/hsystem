@@ -58,23 +58,13 @@ public class CommonServiceImpl extends BaseServiceImpl implements ICommonService
 
     public void close(String ids, String type) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
         Class clazz = null;
-        String title = "";
-        String content = "";
         switch (type.toUpperCase()) {
-            case "ORDER":
-                clazz = SalesOrderDetail.class;
-                break;
-            case "PRODUCE":
-                clazz = ProducePlanDetail.class;
-                break;
-            case "WEAVE":
-                clazz = WeavePlan.class;
-                break;
-            case "CUT":
-                clazz = CutPlan.class;
-                break;
-            default:
-                break;
+            case "ORDER" -> clazz = SalesOrderDetail.class;
+            case "PRODUCE" -> clazz = ProducePlanDetail.class;
+            case "WEAVE" -> clazz = WeavePlan.class;
+            case "CUT" -> clazz = CutPlan.class;
+            default -> {
+            }
         }
 
         Object obj;
@@ -94,22 +84,20 @@ public class CommonServiceImpl extends BaseServiceImpl implements ICommonService
             Map<String, Object> param = new HashMap<>();
 
             switch (type.toUpperCase()) {
-                case "ORDER": {
+                case "ORDER" -> {
                     String order = (String) obj.getClass().getMethod("getSalesOrderSubCode", null).invoke(obj, new Object[]{});
                     String factoryProductName = (String) obj.getClass().getMethod("getFactoryProductName", null).invoke(obj, new Object[]{});
                     String comment = "订单关闭通知," + "订单号:" + order + ",产品:" + factoryProductName;
                     msgCreateService.createClose(comment, MessageType.ORDER_CLOSE);
                 }
-                break;
-                case "PRODUCE": {
+                case "PRODUCE" -> {
                     String code = (String) obj.getClass().getMethod("getPlanCode", null).invoke(obj, new Object[]{});
                     String factoryProductName = (String) obj.getClass().getMethod("getFactoryProductName", null).invoke(obj, new Object[]{});
                     String batch = (String) obj.getClass().getMethod("getBatchCode", null).invoke(obj, new Object[]{});
                     String comment = "生产计划关闭通知," + "计划单号:" + code + ",产品:" + factoryProductName + "，批次号:" + batch;
                     msgCreateService.createClose(comment, MessageType.PRODUCE_PLAN_CLOSE);
                 }
-                break;
-                case "WEAVE": {
+                case "WEAVE" -> {
                     String code = (String) obj.getClass().getMethod("getPlanCode", null).invoke(obj, new Object[]{});
                     String factoryProductName = (String) obj.getClass().getMethod("getProductName", null).invoke(obj, new Object[]{});
                     String batch = (String) obj.getClass().getMethod("getBatchCode", null).invoke(obj, new Object[]{});
@@ -119,17 +107,15 @@ public class CommonServiceImpl extends BaseServiceImpl implements ICommonService
                     param.put("weavePlanId", Long.parseLong(id));
                     delete(WeavePlanDevices.class, param);
                 }
-                break;
-                case "CUT": {
+                case "CUT" -> {
                     String code = (String) obj.getClass().getMethod("getPlanCode", null).invoke(obj, new Object[]{});
                     String factoryProductName = (String) obj.getClass().getMethod("getProductName", null).invoke(obj, new Object[]{});
                     String batch = (String) obj.getClass().getMethod("getBatchCode", null).invoke(obj, new Object[]{});
                     String comment = "裁剪计划关闭通知," + "计划单号:" + code + ",产品:" + factoryProductName + "，批次号:" + batch;
                     msgCreateService.createClose(comment, MessageType.CUTDAILY_PLAN_CLOSE);
                 }
-                break;
-                default:
-                    break;
+                default -> {
+                }
             }
         }
     }
