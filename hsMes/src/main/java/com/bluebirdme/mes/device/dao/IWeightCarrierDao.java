@@ -6,20 +6,20 @@
  */
 package com.bluebirdme.mes.device.dao;
 
-import java.util.List;
-
 import com.bluebirdme.mes.core.base.dao.IBaseDao;
 import com.bluebirdme.mes.device.entity.WeightCarrier;
 
-import org.springframework.stereotype.Repository;
+import java.util.List;
+
 /**
- * 
  * @author 孙利
  * @Date 2017-7-10 8:44:34
  */
 
 public interface IWeightCarrierDao extends IBaseDao {
-	public List<String> getWeightCodes() ;
-	public WeightCarrier getCarrierById(int id);
-	public WeightCarrier findByCode(String carrierCode);
+    List<String> getWeightCodes();
+
+    WeightCarrier getCarrierById(int id);
+
+    WeightCarrier findByCode(String carrierCode);
 }

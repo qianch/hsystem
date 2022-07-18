@@ -17,11 +17,9 @@ import com.bluebirdme.mes.core.constant.Constant;
 import com.bluebirdme.mes.core.valid.annotations.Valid;
 import com.bluebirdme.mes.device.entity.WeightCarrier;
 import com.bluebirdme.mes.device.service.IWeightCarrierService;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -42,8 +40,9 @@ import java.util.Date;
 @RequestMapping("/weightCarrier")
 @Journal(name = "称重载具")
 public class WeightCarrierController extends BaseController {
-
-    // 称重载具页面
+    /**
+     * 称重载具页面
+     */
     final String index = "device/weightCarrier";
     final String addOrEdit = "device/weightCarrierAddOrEdit";
 
@@ -123,11 +122,9 @@ public class WeightCarrierController extends BaseController {
         cellStyle.setBorderRight(BorderStyle.THIN);
         cellStyle.setBorderLeft(BorderStyle.THIN);
         cellStyle.setWrapText(true);
-
         Sheet sheet = wb.createSheet();
-        // sheet.setDisplayGridlines(true);
-        Row row = null;
-        Cell cell = null;
+        Row row;
+        Cell cell;
         String columnName[] = new String[]{"载具代码", "使用部门", "设备名称", "重量(kg)"};
         int r = 0;// 从第1行开始写数据
         row = sheet.createRow(r);
@@ -147,8 +144,8 @@ public class WeightCarrierController extends BaseController {
             cell.setCellStyle(cellStyle);
         }
 
-        for (int i = 0; i < id.length; i++) {
-            WeightCarrier carrier = weightCarrierService.findById(WeightCarrier.class, id[i]);
+        for (String s : id) {
+            WeightCarrier carrier = weightCarrierService.findById(WeightCarrier.class, s);
             r++;
             row = sheet.createRow(r);
             for (int j = 0; j < columnName.length; j++) {

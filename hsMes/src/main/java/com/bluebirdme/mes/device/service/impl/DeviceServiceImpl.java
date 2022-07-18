@@ -102,15 +102,7 @@ public class DeviceServiceImpl extends BaseServiceImpl implements IDeviceService
 	}
 
 	public Map<String, Object> findAllDevicePlans(Filter filter, Page page) throws Exception{
-		Map<String,Object> ret=deviceDao.findAllDevicePlans(filter, page);
-		/*List<Map<String,Object>> list=(List<Map<String, Object>>) ret.get("rows");
-		Map<String, Object> count=null;
-		for(Map<String,Object> map:list){
-			count=wpService.countRollsAndTrays(MapUtils.getAsLong(map, "ID"));
-			map.put("RC", MapUtils.getAsLong(count, "RC"));
-			map.put("TC", MapUtils.getAsLong(count, "TC"));
-		}*/
-		return ret;
+		return deviceDao.findAllDevicePlans(filter, page);
 	}
 	
 	public List<Map<String,Object>> findDevicePlans(Long did){

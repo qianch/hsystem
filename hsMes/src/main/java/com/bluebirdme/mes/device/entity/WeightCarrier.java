@@ -1,21 +1,20 @@
 package com.bluebirdme.mes.device.entity;
 
-import java.util.Date;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.DynamicInsert;
 import com.bluebirdme.mes.core.annotation.Desc;
 import com.bluebirdme.mes.core.base.entity.BaseEntity;
 import com.bluebirdme.mes.core.dev.DevHelper;
+import org.hibernate.annotations.DynamicInsert;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.util.Date;
 
 @Desc("称重载具")
 @Entity
 @Table(name = "HS_WEIGHTCARRIER")
 @DynamicInsert
 public class WeightCarrier extends BaseEntity {
-
     @Desc("载具编号")
     @Column(nullable = false, unique = true)
     private String carrierCode;
