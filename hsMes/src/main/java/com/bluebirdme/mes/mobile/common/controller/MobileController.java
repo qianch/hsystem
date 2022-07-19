@@ -1,19 +1,5 @@
 package com.bluebirdme.mes.mobile.common.controller;
 
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.xdemo.superutil.j2se.MD5Utils;
-import org.xdemo.superutil.thirdparty.gson.GsonTools;
-
 import com.bluebirdme.mes.audit.service.IAuditInstanceService;
 import com.bluebirdme.mes.common.service.ICommonService;
 import com.bluebirdme.mes.core.annotation.Journal;
@@ -27,8 +13,18 @@ import com.bluebirdme.mes.mobile.common.entity.AppVersion;
 import com.bluebirdme.mes.mobile.common.service.IAppVersionService;
 import com.bluebirdme.mes.platform.entity.Department;
 import com.bluebirdme.mes.platform.entity.User;
-import com.bluebirdme.mes.platform.service.INoticeService;
 import com.bluebirdme.mes.platform.service.IUserService;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.xdemo.superutil.j2se.MD5Utils;
+import org.xdemo.superutil.thirdparty.gson.GsonTools;
+
+import javax.annotation.Resource;
+import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Goofy

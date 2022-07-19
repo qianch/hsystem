@@ -2,7 +2,6 @@ package com.bluebirdme.mes.mobile.common.controller;
 
 import com.bluebirdme.mes.audit.entity.AuditConstant;
 import com.bluebirdme.mes.baseInfo.entity.TcBomVersionParts;
-import com.bluebirdme.mes.baseInfo.entityMirror.TcBomVersionPartsDetailMirror;
 import com.bluebirdme.mes.baseInfo.entityMirror.TcBomVersionPartsMirror;
 import com.bluebirdme.mes.core.annotation.Journal;
 import com.bluebirdme.mes.core.annotation.NoLogin;
@@ -59,7 +58,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/mobile/common/")
 public class MobileCommonController extends MobileBaseController {
-    private static Logger log = LoggerFactory.getLogger(MobileCommonController.class);
+    private static final Logger log = LoggerFactory.getLogger(MobileCommonController.class);
     @Resource
     IExceptionMessageService exceptionService;
     @Resource
@@ -98,58 +97,43 @@ public class MobileCommonController extends MobileBaseController {
     public String boxInfo(@PathVariable("code") String boxCode) {
         // 产出计划ID[编织计划，翻包计划，裁剪计划],是否打包结束，是否成品胚布,含有的卷条码,部件ID，部件名称，是否空条码
         Map<String, Object> param = new HashMap<String, Object>();
-
         param.put("barcode", boxCode);
         // 盒条码
         BoxBarcode bbc = mobileService.findUniqueByMap(BoxBarcode.class, param);
-
         param.clear();
         param.put("boxBarcode", boxCode);
         // 盒信息
         Box box = mobileService.findUniqueByMap(Box.class, param);
-
         Map<String, Object> ret = new HashMap<String, Object>();
-
         param.clear();
         param.put("boxBarcode", boxCode);
-
         // 卷条码
         List<BoxRoll> brs = mobileService.findListByMap(BoxRoll.class, param);
         // 含有的卷条码
         ret.put("CHILDREN", brs);
-
         if (bbc == null) {
             return ajaxError("无效条码");
         }
-
         ret.put("ISOPENED", bbc.getIsOpened());
         ret.put("CODE", boxCode);
-
         // 空的盒条码
         if (box == null) {
             ret.put("EMPTY", true);
         } else {
-
             ret.put("EMPTY", false);
-
             param.clear();
             param.put("boxBarcode", boxCode);
             boolean packedToTray = mobileService.isExist(TrayBoxRoll.class, param, true);
-
             // 是否已打包
             ret.put("PACKED", packedToTray);
-
             // 状态
             ret.put("FROZEN", totalStatisticsService.isFrozen(boxCode));
-
             // 等级
             ret.put("GRADE", box.getRollQualityGradeCode());
-
             // 订单
             ret.put("ORDER", bbc.getSalesOrderCode());
             // 批次
             ret.put("BATCH", bbc.getBatchCode());
-
             if (box.getEndPack().intValue() == 0) {
                 // 打包结束
                 ret.put("ENDPACK", false);
@@ -162,11 +146,8 @@ public class MobileCommonController extends MobileBaseController {
                     ret.put("PARTID", null);
                     // 部件名称
                     ret.put("PARTNAME", "");
-                    /*ret.put("ORDER", null);*/
-                    /*ret.put("BATCH", null);*/
                 } else {
                     TcBomVersionParts part = mobileService.findById(TcBomVersionParts.class, bbc.getPartId());
-
                     // 是否是成品胚布
                     ret.put("DXB", part.getTcProcBomVersionPartsType().equals("成品胚布") ? -1 : 1);
                     // 部件ID
@@ -189,7 +170,6 @@ public class MobileCommonController extends MobileBaseController {
                     ret.put("PARTNAME", "");
                 } else {
                     TcBomVersionParts part = mobileService.findById(TcBomVersionParts.class, bbc.getPartId());
-
                     // 是否是成品胚布
                     ret.put("DXB", part.getTcProcBomVersionPartsType().equals("成品胚布") ? -1 : 1);
                     // 部件ID
@@ -199,7 +179,6 @@ public class MobileCommonController extends MobileBaseController {
                 }
             }
         }
-
         return GsonTools.toJson(ret);
     }
 
@@ -210,20 +189,16 @@ public class MobileCommonController extends MobileBaseController {
         // 产出计划ID[编织计划，翻包计划，裁剪计划],是否已打包，是否成品胚布,含有的卷条码,部件ID，部件名称
         Map<String, Object> param = new HashMap<String, Object>();
         Map<String, Object> ret = new HashMap<String, Object>();
-
         param.put("barcode", rollCode);
         // 卷条码
         RollBarcode rbc = mobileService.findUniqueByMap(RollBarcode.class, param);
         PartBarcode pbc = mobileService.findUniqueByMap(PartBarcode.class, param);
-
         List<ProductStockState> psss = mobileService.findListByMap(ProductStockState.class, param);
         //是否入库
         if (psss.size() > 0 && psss.get(psss.size() - 1).getStockState() == 1) {
             ret.put("IN", 1);
         }
-
         IBarcode barcode;
-
         if (rollCode.startsWith("R")) {
             barcode = rbc;
             if (rbc.getIsAbandon() == 1) {
@@ -258,10 +233,8 @@ public class MobileCommonController extends MobileBaseController {
             // 是否已打包
             ret.put("PACKED", packedToBox || packedToTray);
         }
-
         param.clear();
         param.put("boxBarcode", rollCode);
-
         ret.put("CODE", rollCode);
         // 空的卷条码
         if (roll == null) {
@@ -309,7 +282,6 @@ public class MobileCommonController extends MobileBaseController {
         // 卷条码
         RollBarcode rbc = mobileService.findUniqueByMap(RollBarcode.class, param);
         PartBarcode pbc = mobileService.findUniqueByMap(PartBarcode.class, param);
-
         List<ProductStockState> psss = mobileService.findListByMap(ProductStockState.class, param);
         //是否入库
         if (psss.size() > 0 && psss.get(psss.size() - 1).getStockState() == 1) {
@@ -387,7 +359,6 @@ public class MobileCommonController extends MobileBaseController {
                 ret.put("PARTNAME", part.getTcProcBomVersionPartsName());
             }
         }
-
         return GsonTools.toJson(ret);
     }
 
@@ -408,10 +379,10 @@ public class MobileCommonController extends MobileBaseController {
         if (tbc == null) {
             return ajaxError("无效条码");
         } else {
-            if (tbc.getProducePlanDetailId() != null){
+            if (tbc.getProducePlanDetailId() != null) {
                 ProducePlanDetail producePlanDetail = mobileService.findById(ProducePlanDetail.class, tbc.getProducePlanDetailId());
-                if(producePlanDetail.getIsTurnBagPlan().equals("翻包")){
-                    ret.put("TURNBAG",true);
+                if (producePlanDetail.getIsTurnBagPlan().equals("翻包")) {
+                    ret.put("TURNBAG", true);
                 }
             }
         }
@@ -924,9 +895,9 @@ public class MobileCommonController extends MobileBaseController {
                 ret.put(CODE, rbc);
                 if (rbc != null) {
                     //查询部件下的胚布检验情况
-                    Map<String,Object> produceDetailMap = new HashMap<>();
-                    produceDetailMap.put("batchCode",rbc.getBatchCode());
-                    produceDetailMap.put("partId",rbc.getPartId());
+                    Map<String, Object> produceDetailMap = new HashMap<>();
+                    produceDetailMap.put("batchCode", rbc.getBatchCode());
+                    produceDetailMap.put("partId", rbc.getPartId());
                     List<ProducePlanDetail> producePlanDetails = mobileService.findListByMap(ProducePlanDetail.class, produceDetailMap);
                     ret.put(PRODUCEPLAN, producePlanDetails);
                     SalesOrderDetail salesOrderDetail = mobileService.findById(SalesOrderDetail.class, rbc.getSalesOrderDetailId());
@@ -1164,7 +1135,7 @@ public class MobileCommonController extends MobileBaseController {
                         }
                         // 裁剪计划明细
                         ret.put(CUTPLAN, cp);
-                       // ProducePlanDetail ppd = mobileService.findById(ProducePlanDetail.class, cp.getProducePlanDetailId());
+                        // ProducePlanDetail ppd = mobileService.findById(ProducePlanDetail.class, cp.getProducePlanDetailId());
                         // 生产计划明细
                         //ret.put(PRODUCEPLAN, ppd);
                         ret.put(BOX, null);

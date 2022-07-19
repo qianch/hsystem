@@ -6,18 +6,20 @@
  */
 package com.bluebirdme.mes.device.service;
 
-import java.util.List;
-
 import com.bluebirdme.mes.core.base.service.IBaseService;
 import com.bluebirdme.mes.device.entity.WeightCarrier;
 
+import java.util.List;
+
 /**
- * 
  * @author 孙利
  * @Date 2017-7-10 8:44:34
  */
 public interface IWeightCarrierService extends IBaseService {
-	public List<String> getWeightCodes() ;
-	public WeightCarrier findByCode(String carrierCode) ;
-	public WeightCarrier findCarrierById(int id);
+    List<String> getWeightCodes();
+
+
+    WeightCarrier findByCode(String carrierCode);
+
+    WeightCarrier findCarrierById(int id);
 }

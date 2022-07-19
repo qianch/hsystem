@@ -10,10 +10,9 @@ import com.bluebirdme.mes.core.base.service.IBaseService;
 import com.bluebirdme.mes.mobile.common.entity.AppVersion;
 
 /**
- * 
  * @author 高飞
  * @Date 2016-11-6 10:22:52
  */
 public interface IAppVersionService extends IBaseService {
-	public void save(AppVersion app);
+    void save(AppVersion app);
 }

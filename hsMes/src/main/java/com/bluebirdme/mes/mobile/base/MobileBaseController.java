@@ -1,15 +1,10 @@
 package com.bluebirdme.mes.mobile.base;
 
-import java.io.PrintWriter;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
+import com.bluebirdme.mes.core.base.controller.DateEditor;
+import com.bluebirdme.mes.core.constant.RuntimeVariable;
+import com.bluebirdme.mes.core.exception.BusinessException;
+import com.bluebirdme.mes.platform.entity.ExceptionMessage;
+import com.bluebirdme.mes.platform.service.IExceptionMessageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ui.ModelMap;
@@ -19,18 +14,21 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.bluebirdme.mes.core.base.controller.DateEditor;
-import com.bluebirdme.mes.core.constant.RuntimeVariable;
-import com.bluebirdme.mes.core.exception.BusinessException;
-import com.bluebirdme.mes.platform.entity.ExceptionMessage;
-import com.bluebirdme.mes.platform.service.IExceptionMessageService;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.PrintWriter;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Goofy
  * @Date 2016年10月28日 上午9:22:51
  */
 public class MobileBaseController {
-    private static Logger log = LoggerFactory.getLogger(MobileBaseController.class);
+    private static final Logger log = LoggerFactory.getLogger(MobileBaseController.class);
     protected HttpServletRequest request;
     protected HttpServletResponse response;
     protected HttpSession session;

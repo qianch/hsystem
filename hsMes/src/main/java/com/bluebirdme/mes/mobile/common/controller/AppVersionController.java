@@ -6,26 +6,6 @@
  */
 package com.bluebirdme.mes.mobile.common.controller;
 
-import com.bluebirdme.mes.core.base.controller.BaseController;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import com.bluebirdme.mes.core.annotation.Journal;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
-import org.xdemo.superutil.j2se.RunTimeUtils;
-import org.xdemo.superutil.j2se.StringUtils;
-
 import com.bluebirdme.mes.core.annotation.Journal;
 import com.bluebirdme.mes.core.annotation.NoAuth;
 import com.bluebirdme.mes.core.annotation.NoLogin;
@@ -33,14 +13,20 @@ import com.bluebirdme.mes.core.annotation.support.LogType;
 import com.bluebirdme.mes.core.base.controller.BaseController;
 import com.bluebirdme.mes.core.base.entity.Filter;
 import com.bluebirdme.mes.core.base.entity.Page;
-import com.bluebirdme.mes.core.exception.BusinessException;
-import com.bluebirdme.mes.core.valid.annotations.Valid;
 import com.bluebirdme.mes.core.constant.Constant;
+import com.bluebirdme.mes.core.valid.annotations.Valid;
 import com.bluebirdme.mes.mobile.common.entity.AppVersion;
 import com.bluebirdme.mes.mobile.common.service.IAppVersionService;
-import com.google.gson.GsonBuilder;
-
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 import org.xdemo.superutil.thirdparty.gson.GsonTools;
+
+import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * PDA终端版本Controller
@@ -52,7 +38,9 @@ import org.xdemo.superutil.thirdparty.gson.GsonTools;
 @RequestMapping("/app")
 @Journal(name = "PDA终端版本")
 public class AppVersionController extends BaseController {
-    // PDA终端版本页面
+    /**
+     * PDA终端版本页面
+     */
     final String index = "app/version";
     final String addOrEdit = "app/versionAddOrEdit";
 

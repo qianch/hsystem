@@ -1,15 +1,11 @@
 package com.bluebirdme.mes.excel.export;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
+import com.bluebirdme.mes.core.base.entity.Filter;
+import com.bluebirdme.mes.core.base.entity.Page;
+import com.bluebirdme.mes.core.excel.ExcelContent;
+import com.bluebirdme.mes.core.excel.ExcelExportHandler;
+import com.bluebirdme.mes.core.spring.SpringCtx;
+import com.bluebirdme.mes.planner.weave.service.IWeavePlanService;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -19,13 +15,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xdemo.superutil.j2se.PathUtils;
 
-import com.bluebirdme.mes.complaint.service.IComplaintService;
-import com.bluebirdme.mes.core.base.entity.Filter;
-import com.bluebirdme.mes.core.base.entity.Page;
-import com.bluebirdme.mes.core.excel.ExcelContent;
-import com.bluebirdme.mes.core.excel.ExcelExportHandler;
-import com.bluebirdme.mes.core.spring.SpringCtx;
-import com.bluebirdme.mes.planner.weave.service.IWeavePlanService;
+import java.io.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 投诉编制计划功能
@@ -34,7 +26,7 @@ import com.bluebirdme.mes.planner.weave.service.IWeavePlanService;
  * @Date 2016年11月26日 下午12:43:28
  */
 public class PlanExportHandler extends ExcelExportHandler {
-    private static Logger logger = LoggerFactory.getLogger(PlanExportHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(PlanExportHandler.class);
 
     @Override
     public ExcelContent getContent() {

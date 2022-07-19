@@ -6,34 +6,9 @@
  */
 package com.bluebirdme.mes.mobile.produce.controller;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import com.bluebirdme.mes.core.annotation.NoLogin;
-import com.bluebirdme.mes.utils.HttpUtils;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
-import org.xdemo.superutil.thirdparty.gson.GsonTools;
-
 import com.bluebirdme.mes.core.annotation.Journal;
 import com.bluebirdme.mes.core.annotation.NoAuth;
+import com.bluebirdme.mes.core.annotation.NoLogin;
 import com.bluebirdme.mes.core.annotation.support.LogType;
 import com.bluebirdme.mes.core.base.controller.BaseController;
 import com.bluebirdme.mes.core.base.entity.Filter;
@@ -43,7 +18,23 @@ import com.bluebirdme.mes.core.valid.annotations.Valid;
 import com.bluebirdme.mes.mobile.produce.entity.FeedingRecord;
 import com.bluebirdme.mes.mobile.produce.service.IFeedingRecordService;
 import com.bluebirdme.mes.printer.entity.MyException;
-import com.bluebirdme.mes.stock.entity.ProductStockState;
+import com.bluebirdme.mes.utils.HttpUtils;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+import org.xdemo.superutil.thirdparty.gson.GsonTools;
+
+import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 投料记录Controller
@@ -55,8 +46,10 @@ import com.bluebirdme.mes.stock.entity.ProductStockState;
 @RequestMapping("/feedingRecord")
 @Journal(name = "投料记录")
 public class FeedingRecordController extends BaseController {
-    private static Logger logger = LoggerFactory.getLogger(FeedingRecordController.class);
-    // 投料记录页面
+    private static final Logger logger = LoggerFactory.getLogger(FeedingRecordController.class);
+    /**
+     * 投料记录页面
+     */
     final String index = "produce/feeding/weave/feedingRecord1";
     final String addOrEdit = "produce/feeding/weave/feedingRecordAddOrEdit";
     final String index2 = "produce/feeding/cut/feedingRecord1";
@@ -163,9 +156,8 @@ public class FeedingRecordController extends BaseController {
         cellStyle.setWrapText(true);
 
         Sheet sheet = wb.createSheet();
-        // sheet.setDisplayGridlines(true);
-        Row row = null;
-        Cell cell = null;
+        Row row;
+        Cell cell;
         String columnName[] = new String[]{"客户简称", "订单", "批次号", "计划号", "产品型号", "产品名称", "胚布条码", "胚布名称", "机台", "操作人", "投料日期"};
         int r = 0;// 从第1行开始写数据
         row = sheet.createRow(r);
@@ -306,9 +298,8 @@ public class FeedingRecordController extends BaseController {
         cellStyle.setWrapText(true);
 
         Sheet sheet = wb.createSheet();
-        // sheet.setDisplayGridlines(true);
-        Row row = null;
-        Cell cell = null;
+        Row row;
+        Cell cell;
         String columnName[] = new String[]{"客户简称", "订单", "批次号", "计划号", "产品型号", "产品名称", "原料条码", "原料型号", "机台", "操作人", "投料日期", "重量(KG)"};
         int r = 0;// 从第1行开始写数据
         row = sheet.createRow(r);
