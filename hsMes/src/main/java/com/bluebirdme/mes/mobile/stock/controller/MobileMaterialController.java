@@ -1,25 +1,5 @@
 package com.bluebirdme.mes.mobile.stock.controller;
 
-import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.xdemo.superutil.j2se.StringUtils;
-import org.xdemo.superutil.thirdparty.gson.GsonTools;
-
 import com.bluebirdme.mes.baseInfo.entity.Material;
 import com.bluebirdme.mes.baseInfo.service.IMaterialService;
 import com.bluebirdme.mes.core.annotation.Journal;
@@ -28,14 +8,21 @@ import com.bluebirdme.mes.core.annotation.support.LogType;
 import com.bluebirdme.mes.mobile.base.MobileBaseController;
 import com.bluebirdme.mes.platform.entity.ExceptionMessage;
 import com.bluebirdme.mes.platform.service.IExceptionMessageService;
-import com.bluebirdme.mes.stock.entity.MaterialForceOutRecord;
-import com.bluebirdme.mes.stock.entity.MaterialInRecord;
-import com.bluebirdme.mes.stock.entity.MaterialOutOrderDetail;
-import com.bluebirdme.mes.stock.entity.MaterialStockOut;
-import com.bluebirdme.mes.stock.entity.MaterialStockState;
-import com.bluebirdme.mes.stock.entity.StockCheck;
-import com.bluebirdme.mes.stock.entity.StockCheckResult;
+import com.bluebirdme.mes.stock.entity.*;
 import com.bluebirdme.mes.stock.service.IMaterialStockService;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.*;
+import org.xdemo.superutil.j2se.StringUtils;
+import org.xdemo.superutil.thirdparty.gson.GsonTools;
+
+import javax.annotation.Resource;
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 调用巨石原料的webservice接口
@@ -71,7 +58,7 @@ public class MobileMaterialController extends MobileBaseController {
             jushi = doc.getElementsByTag("string").text();
             //jushi = "Direct Roving,E6DR13-300-380YF,1411612272099WX,1039.00,2016-12-28 01:13:14,-1~1,48-12K1;0";
         } catch (Exception e) {
-            log.error(e.getLocalizedMessage(),e);
+            log.error(e.getLocalizedMessage(), e);
             return error(e.getMessage());
         }
 

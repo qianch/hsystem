@@ -1,19 +1,7 @@
 package com.bluebirdme.mes.mobile.produce.service.impl;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import com.bluebirdme.mes.core.annotation.AnyExceptionRollback;
-
-import com.bluebirdme.mes.sales.entity.SalesOrderDetail;
-import org.springframework.stereotype.Service;
-
 import com.bluebirdme.mes.baseInfo.entity.TcBomVersionParts;
-import com.bluebirdme.mes.common.service.IProcessService;
+import com.bluebirdme.mes.core.annotation.AnyExceptionRollback;
 import com.bluebirdme.mes.core.base.dao.IBaseDao;
 import com.bluebirdme.mes.core.base.entity.Filter;
 import com.bluebirdme.mes.core.base.entity.Page;
@@ -24,17 +12,23 @@ import com.bluebirdme.mes.mobile.produce.dao.IFeedingRecordDao;
 import com.bluebirdme.mes.mobile.produce.service.IMobileProduceService;
 import com.bluebirdme.mes.planner.cut.entity.CutPlan;
 import com.bluebirdme.mes.planner.cut.entity.Iplan;
-import com.bluebirdme.mes.planner.produce.entity.PlannerCodesUtil;
 import com.bluebirdme.mes.planner.produce.entity.ProducePlanDetail;
 import com.bluebirdme.mes.planner.weave.entity.WeavePlan;
-import com.bluebirdme.mes.planner.weave.entity.WeavePlanDevices;
 import com.bluebirdme.mes.platform.entity.Department;
 import com.bluebirdme.mes.platform.entity.User;
 import com.bluebirdme.mes.produce.entity.FinishedProduct;
+import com.bluebirdme.mes.sales.entity.SalesOrderDetail;
 import com.bluebirdme.mes.statistics.entity.TotalStatistics;
 import com.bluebirdme.mes.store.entity.PartBarcode;
 import com.bluebirdme.mes.store.entity.Roll;
 import com.bluebirdme.mes.utils.ProductState;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @AnyExceptionRollback
@@ -73,11 +67,8 @@ public class MobileProduceService extends BaseServiceImpl implements IMobileProd
             Map<String, Object> map = new HashMap<>();
             map.put("deviceCode", roll.getRollDeviceCode());
             Device device = findUniqueByMap(Device.class, map);
-
             deviceService.setProducing(device.getId(), w.getId());
-
             roll.setRollOutputTime(new Date());
-
             // 保存卷信息
             feedingRecordDao.save(roll);
             TotalStatistics ts = new TotalStatistics();
@@ -179,32 +170,26 @@ public class MobileProduceService extends BaseServiceImpl implements IMobileProd
 
     @Override
     public List<Map<String, Object>> querylist(String deviceCode) {
-        // TODO Auto-generated method stub
         return feedingRecordDao.querylist(deviceCode);
     }
 
     @Override
     public void editInfo(String weaveid, String userid, String tlids) {
-        // TODO Auto-generated method stub
         feedingRecordDao.editInfo(weaveid, userid, tlids);
     }
 
     @Override
     public List<Map<String, Object>> querylist2(String deviceCode) {
-        // TODO Auto-generated method stub
         return feedingRecordDao.querylist2(deviceCode);
     }
 
     @Override
     public List<Map<String, Object>> queryYlbh(String ylbh, String oldweaveId, String deviceCode) {
-        // TODO Auto-generated method stub
         return feedingRecordDao.queryYlbh(ylbh, oldweaveId, deviceCode);
     }
 
     @Override
     public void deleteYlbh(String ylbh, String oldweaveId, String deviceCode) {
-        // TODO Auto-generated method stub
         feedingRecordDao.deleteYlbh(ylbh, oldweaveId, deviceCode);
     }
-
 }

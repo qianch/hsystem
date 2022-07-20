@@ -1,25 +1,5 @@
 package com.bluebirdme.mes.mobile.produce.controller;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import com.bluebirdme.mes.produce.entity.FinishedProductMirror;
-import com.bluebirdme.mes.sales.entity.SalesOrderDetail;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.xdemo.superutil.j2se.MathUtils;
-import org.xdemo.superutil.thirdparty.gson.GsonTools;
-
 import com.bluebirdme.mes.core.annotation.Journal;
 import com.bluebirdme.mes.core.annotation.NoLogin;
 import com.bluebirdme.mes.core.annotation.support.LogType;
@@ -27,16 +7,26 @@ import com.bluebirdme.mes.device.entity.WeightCarrier;
 import com.bluebirdme.mes.device.service.IWeightCarrierService;
 import com.bluebirdme.mes.mobile.base.MobileBaseController;
 import com.bluebirdme.mes.mobile.produce.service.IWeighService;
-import com.bluebirdme.mes.planner.produce.entity.ProducePlan;
-import com.bluebirdme.mes.planner.produce.entity.ProducePlanDetail;
 import com.bluebirdme.mes.planner.weave.entity.WeavePlan;
 import com.bluebirdme.mes.produce.entity.FinishedProduct;
-import com.bluebirdme.mes.statistics.entity.TotalStatistics;
+import com.bluebirdme.mes.produce.entity.FinishedProductMirror;
+import com.bluebirdme.mes.sales.entity.SalesOrderDetail;
 import com.bluebirdme.mes.store.entity.BarCodeRegType;
 import com.bluebirdme.mes.store.entity.BarCodeType;
 import com.bluebirdme.mes.store.entity.Roll;
 import com.bluebirdme.mes.store.entity.RollBarcode;
 import com.bluebirdme.mes.store.service.IBarCodeService;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.xdemo.superutil.j2se.MathUtils;
+import org.xdemo.superutil.thirdparty.gson.GsonTools;
+
+import javax.annotation.Resource;
+import java.text.ParseException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 称重设备重量

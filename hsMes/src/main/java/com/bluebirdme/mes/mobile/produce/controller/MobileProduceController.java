@@ -164,10 +164,10 @@ public class MobileProduceController extends MobileBaseController {
             String materialCode = MobileMaterialController.parseMaterialCode(feedingRecord.getMaterialCode());
             feedingRecord.setMaterialCode(materialCode);
             map.put("materialCode", materialCode);
-            map.put("deviceCode",feedingRecord.getDeviceCode());
+            map.put("deviceCode", feedingRecord.getDeviceCode());
         } else {
             map.put("rollCode", feedingRecord.getRollCode());
-            map.put("deviceCode",feedingRecord.getDeviceCode());
+            map.put("deviceCode", feedingRecord.getDeviceCode());
         }
         FeedingRecord feedingRecord1 = feedingRecordService.findUniqueByMap(FeedingRecord.class, map);
         if (feedingRecord1 != null) {
@@ -175,7 +175,7 @@ public class MobileProduceController extends MobileBaseController {
         }
 
         HashMap<String, Object> param = new HashMap();
-        if(feedingRecord.getRollCode() != null){
+        if (feedingRecord.getRollCode() != null) {
             param.put("barCode", feedingRecord.getRollCode());
             List<ProductStockState> psss = feedingRecordService.findListByMap(ProductStockState.class, param);
             //裁剪投料后卷条码改成不在库
