@@ -1,33 +1,26 @@
 package com.bluebirdme.mes.mobile.stock.controller;
 
-import java.io.IOException;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
+import com.bluebirdme.mes.core.annotation.Journal;
+import com.bluebirdme.mes.core.annotation.NoLogin;
+import com.bluebirdme.mes.core.annotation.support.LogType;
+import com.bluebirdme.mes.mobile.base.MobileBaseController;
+import com.bluebirdme.mes.mobile.common.service.IMobileService;
 import com.bluebirdme.mes.mobile.stock.service.IMobilePackage2Service;
+import com.bluebirdme.mes.mobile.stock.service.IMobilePackageService;
+import com.bluebirdme.mes.planner.pack.service.IPackTaskService;
+import com.bluebirdme.mes.store.entity.Box;
+import com.bluebirdme.mes.store.entity.RollBarcode;
+import com.bluebirdme.mes.store.entity.Tray;
+import com.bluebirdme.mes.store.entity.TrayBarCode;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.xdemo.superutil.thirdparty.gson.GsonTools;
 
-import com.bluebirdme.mes.core.annotation.Journal;
-import com.bluebirdme.mes.core.annotation.NoLogin;
-import com.bluebirdme.mes.core.annotation.support.LogType;
-import com.bluebirdme.mes.core.base.controller.BaseController;
-import com.bluebirdme.mes.mobile.base.MobileBaseController;
-import com.bluebirdme.mes.mobile.common.service.IMobileService;
-import com.bluebirdme.mes.mobile.stock.service.IMobilePackageService;
-import com.bluebirdme.mes.planner.pack.service.IPackTaskService;
-import com.bluebirdme.mes.store.entity.BarCodeType;
-import com.bluebirdme.mes.store.entity.Box;
-import com.bluebirdme.mes.store.entity.BoxBarcode;
-import com.bluebirdme.mes.store.entity.RollBarcode;
-import com.bluebirdme.mes.store.entity.Tray;
-import com.bluebirdme.mes.store.entity.TrayBarCode;
+import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * PDA打包
@@ -73,7 +66,6 @@ public class MobilePackageController2 extends MobileBaseController {
      * 拆包
      *
      * @param code 条码号
-     * @return
      */
     @NoLogin
     @Journal(name = "拆包", logType = LogType.DB)
@@ -96,8 +88,6 @@ public class MobilePackageController2 extends MobileBaseController {
      *
      * @param type [box，tray]
      * @param id   条码对应关系的ID
-     * @return
-     * @throws Exception
      */
     @NoLogin
     @Journal(name = "删除托、盒中的信息", logType = LogType.DB)

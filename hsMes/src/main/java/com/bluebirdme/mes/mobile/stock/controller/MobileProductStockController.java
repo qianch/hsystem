@@ -1,29 +1,5 @@
 package com.bluebirdme.mes.mobile.stock.controller;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import com.bluebirdme.mes.planner.delivery.entity.*;
-import com.bluebirdme.mes.planner.delivery.entity.DeliveryPlan;
-import com.bluebirdme.mes.planner.delivery.entity.DeliveryPlanDetails;
-import com.bluebirdme.mes.stock.entity.*;
-import com.bluebirdme.mes.store.entity.Roll;
-import com.bluebirdme.mes.utils.StockState;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.xdemo.superutil.thirdparty.gson.GsonTools;
-
 import com.bluebirdme.mes.core.annotation.Journal;
 import com.bluebirdme.mes.core.annotation.NoLogin;
 import com.bluebirdme.mes.core.annotation.support.LogType;
@@ -32,15 +8,28 @@ import com.bluebirdme.mes.core.base.entity.Filter;
 import com.bluebirdme.mes.core.base.entity.Page;
 import com.bluebirdme.mes.core.constant.Constant;
 import com.bluebirdme.mes.mobile.stock.service.IMobileProductStockService;
+import com.bluebirdme.mes.planner.delivery.entity.DeliveryPlan;
+import com.bluebirdme.mes.planner.delivery.entity.DeliveryPlanDetails;
+import com.bluebirdme.mes.planner.delivery.entity.DeliveryPlanSalesOrders;
 import com.bluebirdme.mes.planner.delivery.service.IDeliveryPlanService;
 import com.bluebirdme.mes.platform.entity.Department;
 import com.bluebirdme.mes.platform.entity.User;
 import com.bluebirdme.mes.statistics.entity.TotalStatistics;
 import com.bluebirdme.mes.statistics.service.ITotalStatisticsService;
+import com.bluebirdme.mes.stock.entity.*;
 import com.bluebirdme.mes.stock.service.IProductStockService;
+import com.bluebirdme.mes.store.entity.Roll;
 import com.bluebirdme.mes.store.entity.Tray;
 import com.bluebirdme.mes.store.service.ITrayBarCodeService;
 import com.bluebirdme.mes.utils.ProductState;
+import com.bluebirdme.mes.utils.StockState;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.*;
+import org.xdemo.superutil.thirdparty.gson.GsonTools;
+
+import javax.annotation.Resource;
+import java.util.*;
 
 /**
  * 成品库存操作
@@ -51,7 +40,7 @@ import com.bluebirdme.mes.utils.ProductState;
 @RestController
 @RequestMapping("/mobile/stock/product")
 public class MobileProductStockController extends BaseController {
-    private static Logger log = LoggerFactory.getLogger(MobileProductStockController.class);
+    private static final Logger log = LoggerFactory.getLogger(MobileProductStockController.class);
     @Resource
     IProductStockService productStockService;
     @Resource
@@ -86,26 +75,27 @@ public class MobileProductStockController extends BaseController {
     public String pOut(String puname, String codes, Long UserId, String packingNum, String plate, String boxNumber, Double count) throws Exception {
         boolean flag = false;
         //不为合格或者退货的原料编码
-        String errorCode = "";
+        StringBuilder errorCode = new StringBuilder();
         Map<String, Object> map = new HashMap<String, Object>();
         String[] _codes = codes.split(",");
         Tray tray = new Tray();
-        for (int i = 0; i < _codes.length; i++) {
+        for (String code : _codes) {
             map.clear();
-            map.put("trayBarcode", _codes[i]);
+            map.put("trayBarcode", code);
             tray = productStockService.findUniqueByMap(Tray.class, map);
+            String s = errorCode.toString().equals("") ? code : "," + code;
             if (tray != null && !tray.getRollQualityGradeCode().equals("A")) {
                 //拼接异常的条码
-                errorCode += errorCode == "" ? _codes[i] : "," + _codes[i];
+                errorCode.append(s);
                 flag = true;
             }
 
             map.clear();
-            map.put("partBarcode", _codes[i]);
+            map.put("partBarcode", code);
             Roll roll = productStockService.findUniqueByMap(Roll.class, map);
             if (roll != null && !roll.getRollQualityGradeCode().equals("A")) {
                 //拼接异常的条码
-                errorCode += errorCode == "" ? _codes[i] : "," + _codes[i];
+                errorCode.append(s);
                 flag = true;
             }
         }
@@ -124,7 +114,8 @@ public class MobileProductStockController extends BaseController {
         if (stockMove.getNewWarehouseCode() == null || "".equals(stockMove.getNewWarehouseCode()) || stockMove.getNewWarehousePosCode() == null || "".equals(stockMove.getNewWarehousePosCode())) {
             return GsonTools.toJson("请选择库位");
         }
-        return GsonTools.toJson(productStockService.saveAndUpdate(stockMove, code));//edit by jxl 老移库
+        //edit by jxl 老移库
+        return GsonTools.toJson(productStockService.saveAndUpdate(stockMove, code));
     }
 
     @NoLogin
@@ -170,7 +161,7 @@ public class MobileProductStockController extends BaseController {
     @NoLogin
     @Journal(name = "根据条码查看库存信息")
     @RequestMapping(value = "checkState", method = RequestMethod.POST)
-    public String checkState(String code) throws Exception {
+    public String checkState(String code) {
         HashMap<String, Object> map = new HashMap();
         map.put("barCode", code);
         if (!productStockService.isExist(ProductStockState.class, map)) {
@@ -291,14 +282,7 @@ public class MobileProductStockController extends BaseController {
             map.clear();
             map.put("barcode", barcode);
             // 检查条码的在库状态
-            if (productStockService.isExist(ProductStockState.class, map)) {
-                ProductStockState state = productStockService.findUniqueByMap(ProductStockState.class, map);
-                /*
-                 * if(state.getState()!=StockState.IN){
-                 * if(outBarcode.length()==0){ outBarcode=barcode; }else{
-                 * outBarcode+=","+outBarcode; } }
-                 */
-            } else {
+            if (!productStockService.isExist(ProductStockState.class, map)) {
                 isCanSave = false;
                 if (unKnowBarcode.length() == 0) {
                     unKnowBarcode = barcode;
@@ -314,9 +298,6 @@ public class MobileProductStockController extends BaseController {
             String result = "";
             if (unKnowBarcode.length() > 0) {
                 result = unKnowBarcode + " 未入库</br>";
-            }
-            if (outBarcode.length() > 0) {
-                result += outBarcode + "已出库</br>";
             }
             if (noProduce.length() > 0) {
                 result += noProduce + "未产出登记";
@@ -390,7 +371,7 @@ public class MobileProductStockController extends BaseController {
     @Journal(name = "查询仓库库位的托条码")
     @RequestMapping("queryTrayBarcode")
     public String queryTrayBarcode(String warehouseCode, String warehousePosCode) {
-        HashMap<String, Object> map = new HashMap<String, Object>();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("warehouseCode", warehouseCode);
         map.put("warehousePosCode", warehousePosCode);
         map.put("stockState", 1);
@@ -403,7 +384,7 @@ public class MobileProductStockController extends BaseController {
     @RequestMapping("backToWorkShop")
     public String backToWorkShop(ProductForceOutRecord pfr) {
         mobileProductStockService.save(pfr);
-        HashMap<String, Object> param = new HashMap<String, Object>();
+        HashMap<String, Object> param = new HashMap<>();
         param.put("trayBarcode", pfr.getBarcode());
         Tray tray = mobileProductStockService.findUniqueByMap(Tray.class, param);
         if (tray != null) {
@@ -413,7 +394,7 @@ public class MobileProductStockController extends BaseController {
             pfr.setOutTime(new Date());
             mobileProductStockService.update(pfr);
         }
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         map.put("barCode", pfr.getBarcode());
         ProductStockState pss = mobileProductStockService.findUniqueByMap(ProductStockState.class, map);
         if (null == pss) {
@@ -428,7 +409,7 @@ public class MobileProductStockController extends BaseController {
             ts.setState(0);
             mobileProductStockService.update(ts);
         } catch (Exception e) {
-            log.error(e.getLocalizedMessage(),e);
+            log.error(e.getLocalizedMessage(), e);
         }
         return ajaxSuccess();
     }

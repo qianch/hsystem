@@ -1,27 +1,5 @@
 package com.bluebirdme.mes.mobile.stock.service.impl;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.Resource;
-
-import com.bluebirdme.mes.platform.entity.Log;
-import com.bluebirdme.mes.platform.service.ILogService;
-import com.bluebirdme.mes.store.entity.*;
-import com.bluebirdme.mes.store.service.ITrayService;
-import org.springframework.stereotype.Service;
-import org.xdemo.superutil.j2se.MathUtils;
-import org.xdemo.superutil.j2se.StringUtils;
-import org.xdemo.superutil.thirdparty.gson.GsonTools;
-
 import com.bluebirdme.mes.common.service.IProcessService;
 import com.bluebirdme.mes.core.annotation.AnyExceptionRollback;
 import com.bluebirdme.mes.core.base.dao.IBaseDao;
@@ -37,14 +15,28 @@ import com.bluebirdme.mes.planner.produce.entity.ProducePlanDetail;
 import com.bluebirdme.mes.planner.turnbag.service.ITurnBagPlanService;
 import com.bluebirdme.mes.planner.weave.entity.WeavePlan;
 import com.bluebirdme.mes.platform.entity.Department;
+import com.bluebirdme.mes.platform.entity.Log;
 import com.bluebirdme.mes.platform.entity.User;
+import com.bluebirdme.mes.platform.service.ILogService;
 import com.bluebirdme.mes.produce.entity.FinishedProduct;
 import com.bluebirdme.mes.sales.entity.Consumer;
 import com.bluebirdme.mes.sales.entity.SalesOrderDetail;
 import com.bluebirdme.mes.statistics.entity.TotalStatistics;
 import com.bluebirdme.mes.statistics.service.ITotalStatisticsService;
+import com.bluebirdme.mes.store.entity.*;
 import com.bluebirdme.mes.store.service.IBarCodeService;
+import com.bluebirdme.mes.store.service.ITrayService;
 import com.bluebirdme.mes.utils.ProductState;
+import org.springframework.stereotype.Service;
+import org.xdemo.superutil.j2se.MathUtils;
+import org.xdemo.superutil.j2se.StringUtils;
+import org.xdemo.superutil.thirdparty.gson.GsonTools;
+
+import javax.annotation.Resource;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.*;
 
 /**
  * 打包Service
@@ -108,14 +100,14 @@ public class MobilePackageServiceImpl extends BaseServiceImpl implements IMobile
     }
 
     public List<Map<String, Object>> isPackedRoll(String rollCodes) {
-        String rolls[] = rollCodes.split(",");
+        String[] rolls = rollCodes.split(",");
         return packageDao.isPackedRoll(rolls);
     }
 
     @Override
     public List<Map<String, Object>> isPackedBoxRoll(String rollCodes, String boxCodes) {
-        String rolls[] = rollCodes.split(",");
-        String boxs[] = boxCodes.split(",");
+        String[] rolls = rollCodes.split(",");
+        String[] boxs = boxCodes.split(",");
         return packageDao.isPackedBoxRoll(rolls, boxs);
     }
 
@@ -134,7 +126,6 @@ public class MobilePackageServiceImpl extends BaseServiceImpl implements IMobile
             if (has(TrayBoxRoll.class, param)) {
                 throw new Exception("条码号重复");
             }
-
             BoxBarcode boxBarcode = findOne(BoxBarcode.class, "barCode", code);
             if (boxBarcode != null) {
                 if (StringUtils.isBlank(firstBatchCode)) {
@@ -157,7 +148,6 @@ public class MobilePackageServiceImpl extends BaseServiceImpl implements IMobile
                         throw new Exception("条码号：" + rb.getBarcode() + "，已经被" + listTrayBoxRoll.get(0).getTrayBarcode() + "打包");
                     }
                 }
-
                 rb.setIsPackage(1);
                 mService.update(rb);
                 //校验批次号，只有同一个批次号的卷才能打成一托
@@ -176,7 +166,6 @@ public class MobilePackageServiceImpl extends BaseServiceImpl implements IMobile
             if (has(TrayBoxRoll.class, param)) {
                 throw new Exception("条码号重复");
             }
-
             param.clear();
             param.put("trayBarcode", trayCode);
             param.put("partBarcode", code);
@@ -184,7 +173,6 @@ public class MobilePackageServiceImpl extends BaseServiceImpl implements IMobile
                 throw new Exception("条码号重复");
             }
         }
-
         param.clear();
         param.put("barcode", trayCode);
         TrayBarCode tbc = findUniqueByMap(TrayBarCode.class, param);
@@ -199,7 +187,7 @@ public class MobilePackageServiceImpl extends BaseServiceImpl implements IMobile
             tray.setRollQualityGradeCode("A");
             tray.setState(ProductState.VALID);
             tray.setEndPack(0);
-            String bladeProfile="";
+            String bladeProfile = "";
             if (!StringUtils.isBlank(rollCodes)) {
                 String _rb = rollCodes.split(",")[0];
                 RollBarcode rollbarcode;
@@ -218,14 +206,12 @@ public class MobilePackageServiceImpl extends BaseServiceImpl implements IMobile
                     ppd = findById(ProducePlanDetail.class, cp.getProducePlanDetailId());
                 }
 
-
-                if (ppd.getPartId() != null){
+                if (ppd.getPartId() != null) {
                     SalesOrderDetail salesOrderDetail = mService.findById(SalesOrderDetail.class, ppd.getFromSalesOrderDetailId());
                     bladeProfile = salesOrderDetail.getBladeProfile();
-                }else if(ppd.getProductIsTc()==1){
+                } else if (ppd.getProductIsTc() == 1) {
                     bladeProfile = ppd.getConsumerProductName();
                 }
-
                 tbc.setSalesOrderCode(ib.getSalesOrderCode());
                 tbc.setBatchCode(ib.getBatchCode());
                 tbc.setPartName(partName);
@@ -246,7 +232,7 @@ public class MobilePackageServiceImpl extends BaseServiceImpl implements IMobile
                 List<BoxRoll> boxRolls = findListByMap(BoxRoll.class, param);
 
                 String _rb = boxRolls.get(0).getRollBarcode();
-                ProducePlanDetail ppd = null;
+                ProducePlanDetail ppd;
                 if (_rb != null) {
                     WeavePlan wp = findById(WeavePlan.class, planId);
                     ppd = findById(ProducePlanDetail.class, wp.getProducePlanDetailId());
@@ -255,10 +241,10 @@ public class MobilePackageServiceImpl extends BaseServiceImpl implements IMobile
                     ppd = findById(ProducePlanDetail.class, cp.getProducePlanDetailId());
                 }
 
-                if (ppd.getPartId() != null){
+                if (ppd.getPartId() != null) {
                     SalesOrderDetail salesOrderDetail = mService.findById(SalesOrderDetail.class, ppd.getFromSalesOrderDetailId());
                     bladeProfile = salesOrderDetail.getBladeProfile();
-                }else if(ppd.getProductIsTc()==1){
+                } else if (ppd.getProductIsTc() == 1) {
                     bladeProfile = ppd.getConsumerProductName();
                 }
 
@@ -284,14 +270,12 @@ public class MobilePackageServiceImpl extends BaseServiceImpl implements IMobile
             }
             update(tbc);
 
-            List<TrayBoxRoll> list = new ArrayList<TrayBoxRoll>();
+            List<TrayBoxRoll> list = new ArrayList<>();
             TrayBoxRoll tbr = new TrayBoxRoll();
-            Box box = null;
-            Roll roll = null;
-
-            Double boxTotalWeight = 0D;
-            Double rollTotalWeight = 0D;
-
+            Box box;
+            Roll roll;
+            double boxTotalWeight = 0D;
+            double rollTotalWeight = 0D;
             if (!StringUtils.isBlank(boxCodes)) {
                 String[] boxes = boxCodes.split(",");
                 for (String boxCode : boxes) {
@@ -333,33 +317,29 @@ public class MobilePackageServiceImpl extends BaseServiceImpl implements IMobile
                     if (totalStatisticsService.isFrozen(rollCode) == ProductState.FROZEN) {
                         return GsonTools.toJson("条码：" + rollCode + "已冻结，不能打包");
                     }
-
                     tbr = new TrayBoxRoll();
                     tbr.setRollBarcode(rollCode);
                     tbr.setTrayBarcode(trayCode);
                     tbr.setPackagingStaff(packagingStaff);
                     tbr.setPackagingTime(new Date());
                     list.add(tbr);
-                    IBarcode r = null;
+                    IBarcode r;
                     HashMap<String, Object> map1 = new HashMap();
                     map1.put("barcode", rollCode);
                     r = findUniqueByMap(RollBarcode.class, map1);
                     param.clear();
                     param.put("rollBarcode", rollCode);
                     roll = findUniqueByMap(Roll.class, param);
-
                     if (roll == null) {
                         param.clear();
                         param.put("partBarcode", rollCode);
                         roll = findUniqueByMap(Roll.class, param);
                         r = findUniqueByMap(PartBarcode.class, map1);
                     }
-
                     BigDecimal rollWeight = new BigDecimal(roll.getRollWeight() == null ? "0" : roll.getRollWeight().toString());
                     if (rollWeight.compareTo(new BigDecimal(0)) == 0) {
                         throw new Exception("条码：" + roll.getRollBarcode() + "还未称重，不能打包");
                     }
-
                     rollTotalWeight = MathUtils.add(roll.getRollWeight(), rollTotalWeight, 1);
                     FinishedProduct fp = packageDao.findById(FinishedProduct.class, r.getSalesProductId());
                     tray.setProductModel(fp.getProductModel());
@@ -372,7 +352,6 @@ public class MobilePackageServiceImpl extends BaseServiceImpl implements IMobile
                     ts.setProductName(fp.getFactoryProductName());
                     ts.setSalesOrderCode(r.getSalesOrderCode());
                     planId = r.getPlanId();
-
                     TotalStatistics tsRoll = findOne(TotalStatistics.class, "rollBarcode", rollCode);
                     if (tsRoll != null) {
                         tsRoll.setIsPacked(1);
@@ -463,9 +442,7 @@ public class MobilePackageServiceImpl extends BaseServiceImpl implements IMobile
                     List<TotalStatistics> _tss = totalStatisticsService.find(TotalStatistics.class, "rollBarcode", box.getBoxBarcode());
                     for (TotalStatistics t : _tss) {
                         if (t.getDeviceCode() != null) {
-                            for (String c : t.getDeviceCode().split(",")) {
-                                deviceCodes.add(c);
-                            }
+                            Collections.addAll(deviceCodes, t.getDeviceCode().split(","));
                         }
                     }
                 }
@@ -500,11 +477,11 @@ public class MobilePackageServiceImpl extends BaseServiceImpl implements IMobile
                 User u = findById(User.class, packagingStaff);
                 ts.setLoginName(u.getUserName());
                 ProducePlanDetail ppd = findById(ProducePlanDetail.class, tbc.getProducePlanDetailId());
-                String bladeProfile="";
-                if (ppd.getPartId() != null){
+                String bladeProfile = "";
+                if (ppd.getPartId() != null) {
                     SalesOrderDetail salesOrderDetail = tbService.findById(SalesOrderDetail.class, ppd.getFromSalesOrderDetailId());
                     bladeProfile = salesOrderDetail.getBladeProfile();
-                }else if(ppd.getProductIsTc()==1){
+                } else if (ppd.getProductIsTc() == 1) {
                     bladeProfile = ppd.getConsumerProductName();
                 }
                 ProducePlan produce = findById(ProducePlan.class, ppd.getProducePlanId());
@@ -550,26 +527,22 @@ public class MobilePackageServiceImpl extends BaseServiceImpl implements IMobile
                     throw new Exception("条码号：" + rollBarcode.getBarcode() + "，批次号：" + rollBarcode.getBatchCode() + "，与其他卷的批次号:" + firstBatchCode + "不一致");
                 }
             }
-
             param.clear();
             param.put("rollBarcode", code);
             if (has(BoxRoll.class, param)) {
                 throw new Exception(code + "已被打包");
             }
-
             param.clear();
             param.put("partBarcode", code);
             if (has(BoxRoll.class, param)) {
                 throw new Exception(code + "已被打包");
             }
-
             param.clear();
             param.put("boxBarcode", boxCode);
             param.put("rollBarcode", code);
             if (has(BoxRoll.class, param)) {
                 throw new Exception("条码号重复");
             }
-
             param.clear();
             param.put("boxBarcode", boxCode);
             param.put("partBarcode", code);
@@ -581,22 +554,18 @@ public class MobilePackageServiceImpl extends BaseServiceImpl implements IMobile
         param.put("barcode", boxCode);
         BoxBarcode bbc = findUniqueByMap(BoxBarcode.class, param);
         param.clear();
-
         if (bbc.getPlanId() == null) {
             String _rb = rollCodes.split(",")[0];
             RollBarcode rollbarcode;
             PartBarcode partBarcode;
-
             rollbarcode = mService.findBarcodeInfo(BarCodeType.ROLL, _rb);
             partBarcode = mService.findBarcodeInfo(BarCodeType.PART, _rb);
-
             IBarcode ib;
             if (rollbarcode != null) {
                 ib = rollbarcode;
             } else {
                 ib = partBarcode;
             }
-
             bbc.setSalesProductId(ib.getSalesProductId());
             bbc.setSalesOrderCode(ib.getSalesOrderCode());
             bbc.setBatchCode(ib.getBatchCode());
@@ -611,21 +580,18 @@ public class MobilePackageServiceImpl extends BaseServiceImpl implements IMobile
             box.setPackagingStaff(packagingStaff);
             box.setPackagingTime(new Date());
             box.setBatchCode(ib.getBatchCode());
-
             param.clear();
-            // box.setBatchCode();
             box.setRollQualityGradeCode("A");
             box.setState(ProductState.VALID);
-            String rolls[] = rollCodes.split(",");
+            String[] rolls = rollCodes.split(",");
             BoxRoll[] brs = new BoxRoll[rolls.length];
             BoxRoll boxRoll;
             Map<String, Object> map1 = new HashMap<String, Object>();
-            String consumerName = "";
             int type = 1;
-            Double weight = 0D;
+            double weight = 0D;
             IBarcode r = null;
             TotalStatistics ts = new TotalStatistics();
-            HashMap<String, HashSet<String>> model = new HashMap<String, HashSet<String>>();
+            HashMap<String, HashSet<String>> model = new HashMap<>();
             for (int i = 0; i < brs.length; i++) {
                 boxRoll = new BoxRoll();
                 boxRoll.setBoxBarcode(boxCode);
@@ -698,50 +664,49 @@ public class MobilePackageServiceImpl extends BaseServiceImpl implements IMobile
             saveBoxRoll(box, brs, planId, partName);
             ts.setIsLocked(-1);
             if (model.containsKey("device")) {
-                String deviceCode = "";
+                StringBuilder deviceCode = new StringBuilder();
                 for (String dcode : model.get("device")) {
                     if (deviceCode.length() == 0) {
-                        deviceCode = dcode;
+                        deviceCode = new StringBuilder(dcode);
                     } else {
-                        deviceCode += "," + dcode;
+                        deviceCode.append(",").append(dcode);
                     }
                 }
-                ts.setDeviceCode(deviceCode);
+                ts.setDeviceCode(deviceCode.toString());
             }
             if (model.containsKey("consumer")) {
-                String deviceCode = "";
+                StringBuilder deviceCode = new StringBuilder();
                 for (String dcode : model.get("consumer")) {
                     if (deviceCode.length() == 0) {
-                        deviceCode = dcode;
+                        deviceCode = new StringBuilder(dcode);
                     } else {
-                        deviceCode += "," + dcode;
+                        deviceCode.append(",").append(dcode);
                     }
                 }
-                ts.setCONSUMERNAME(deviceCode);
+                ts.setCONSUMERNAME(deviceCode.toString());
             }
             if (model.containsKey("pmodel")) {
-                String deviceCode = "";
+                StringBuilder deviceCode = new StringBuilder();
                 for (String dcode : model.get("pmodel")) {
                     if (deviceCode.length() == 0) {
-                        deviceCode = dcode;
+                        deviceCode = new StringBuilder(dcode);
                     } else {
-                        deviceCode += "," + dcode;
+                        deviceCode.append(",").append(dcode);
                     }
                 }
-                ts.setProductModel(deviceCode);
+                ts.setProductModel(deviceCode.toString());
             }
             if (model.containsKey("pName")) {
-                String deviceCode = "";
+                StringBuilder deviceCode = new StringBuilder();
                 for (String dcode : model.get("pName")) {
                     if (deviceCode.length() == 0) {
-                        deviceCode = dcode;
+                        deviceCode = new StringBuilder(dcode);
                     } else {
-                        deviceCode += "," + dcode;
+                        deviceCode.append(",").append(dcode);
                     }
                 }
-                ts.setProductName(deviceCode);
+                ts.setProductName(deviceCode.toString());
             }
-            // ts.setProductName(fp.getFactoryProductName());
             ts.setBarcodeType("box");
             ts.setRollBarcode(boxCode);
             ts.setBatchCode(box.getBatchCode());
@@ -757,11 +722,11 @@ public class MobilePackageServiceImpl extends BaseServiceImpl implements IMobile
             if (type == 1) {
                 WeavePlan weavePlan = processService.findById(WeavePlan.class, planId);
                 ProducePlanDetail ppd = processService.findById(ProducePlanDetail.class, weavePlan.getProducePlanDetailId());
-                String bladeProfile="";
-                if (ppd.getPartId() != null){
+                String bladeProfile = "";
+                if (ppd.getPartId() != null) {
                     SalesOrderDetail salesOrderDetail = processService.findById(SalesOrderDetail.class, ppd.getFromSalesOrderDetailId());
                     bladeProfile = salesOrderDetail.getBladeProfile();
-                }else if(ppd.getProductIsTc()==1){
+                } else if (ppd.getProductIsTc() == 1) {
                     bladeProfile = ppd.getConsumerProductName();
                 }
                 ts.setProductLength(weavePlan.getProductLength());
@@ -785,8 +750,8 @@ public class MobilePackageServiceImpl extends BaseServiceImpl implements IMobile
             param.put("boxBarcode", boxCode);
             Box box = findUniqueByMap(Box.class, param);
             double weight = 0D;
-            String _rolls[] = rollCodes.split(",");
-            BoxRoll brs[] = new BoxRoll[_rolls.length];
+            String[] _rolls = rollCodes.split(",");
+            BoxRoll[] brs = new BoxRoll[_rolls.length];
             BoxRoll br;
             Roll roll;
             int i = 0;
@@ -838,11 +803,11 @@ public class MobilePackageServiceImpl extends BaseServiceImpl implements IMobile
                 User u = findById(User.class, packagingStaff);
                 ts.setLoginName(u.getUserName());
                 ProducePlanDetail ppd = findById(ProducePlanDetail.class, bbc.getProducePlanDetailId());
-                String bladeProfile="";
-                if (ppd.getPartId() != null){
+                String bladeProfile = "";
+                if (ppd.getPartId() != null) {
                     SalesOrderDetail salesOrderDetail = processService.findById(SalesOrderDetail.class, ppd.getFromSalesOrderDetailId());
                     bladeProfile = salesOrderDetail.getBladeProfile();
-                }else if(ppd.getProductIsTc()==1){
+                } else if (ppd.getProductIsTc() == 1) {
                     bladeProfile = ppd.getConsumerProductName();
                 }
                 ProducePlan produce = findById(ProducePlan.class, ppd.getProducePlanId());
@@ -873,22 +838,18 @@ public class MobilePackageServiceImpl extends BaseServiceImpl implements IMobile
     }
 
     public void updateTrayInfo(String trayCode, String rollCode) throws Exception {
-        Map<String, Object> con = new HashMap<String, Object>();
+        Map<String, Object> con = new HashMap<>();
         con.put("rollBarcode", rollCode);
         Roll r = findUniqueByMap(Roll.class, con);
-
         if (!r.getRollQualityGradeCode().equals("A")) {
             throw new Exception(rollCode + ":质量等级不合格");
         }
-
         if (r.getState() == ProductState.FROZEN) {
             throw new Exception(rollCode + ":已冻结");
         }
-
         if (r.getState() == ProductState.INVALID) {
             throw new Exception(rollCode + ":不合格");
         }
-
         con.clear();
         con.put("trayBarcode", trayCode);
         Tray t = findUniqueByMap(Tray.class, con);
@@ -899,9 +860,8 @@ public class MobilePackageServiceImpl extends BaseServiceImpl implements IMobile
         TrayBoxRoll tbr = new TrayBoxRoll();
         tbr.setRollBarcode(rollCode);
         tbr.setTrayBarcode(trayCode);
-
         save(tbr);
-        HashMap<String, Object> map1 = new HashMap<String, Object>();
+        HashMap<String, Object> map1 = new HashMap<>();
         map1.put("rollBarcode", t.getTrayBarcode());
         TotalStatistics ts = findUniqueByMap(TotalStatistics.class, map1);
         ts.setProductWeight(t.getWeight());
@@ -909,8 +869,8 @@ public class MobilePackageServiceImpl extends BaseServiceImpl implements IMobile
     }
 
     @Override
-    public String endPack(String code) throws IOException {
-        Map<String, Object> map = new HashMap<String, Object>();
+    public String endPack(String code) {
+        Map<String, Object> map = new HashMap<>();
         if (code.startsWith("B")) {
             map.put("boxBarcode", code);
             Box box = mService.findUniqueByMap(Box.class, map);
@@ -931,7 +891,6 @@ public class MobilePackageServiceImpl extends BaseServiceImpl implements IMobile
                     rollBoxWeight = rollBoxWeight.add(new BigDecimal(rollBox.get("BOXWEIGHT").toString()));
                     rollBoxWeight = rollBoxWeight.add(new BigDecimal(rollBox.get("ROLLWEIGHT").toString()));
                 }
-
                 rollBoxWeight = rollBoxWeight.setScale(1, RoundingMode.HALF_UP);
                 BigDecimal trayWeight = new BigDecimal(tray.getWeight().toString()).setScale(1, RoundingMode.HALF_UP);
                 Log log = checkWeightLog();
@@ -963,7 +922,7 @@ public class MobilePackageServiceImpl extends BaseServiceImpl implements IMobile
      * @param code 条码号
      */
     public void open(String code) {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         // 盒拆包
         if (code.startsWith("B")) {
             BoxBarcode bbc = mService.findBarcodeInfo(BarCodeType.BOX, code);
@@ -996,7 +955,6 @@ public class MobilePackageServiceImpl extends BaseServiceImpl implements IMobile
             if (tbc == null) {
                 return;
             }
-
             // 设置拆包状态
             tbc.setIsOpened(1);
             update(tbc);
@@ -1013,8 +971,7 @@ public class MobilePackageServiceImpl extends BaseServiceImpl implements IMobile
         openPackBarCode.setBarcode(code);
         openPackBarCode.setOperateUserId(operateUserId);
         openPackBarCode.setOpenPackDate(new Date());
-
-        String content = "卷条码:";
+        StringBuilder content = new StringBuilder("卷条码:");
         // 盒拆包
         if (code.startsWith("B")) {
             BoxBarcode bbc = mService.findBarcodeInfo(BarCodeType.BOX, code);
@@ -1029,7 +986,7 @@ public class MobilePackageServiceImpl extends BaseServiceImpl implements IMobile
             List<BoxRoll> list = findListByMap(BoxRoll.class, map);
             if (list != null) {
                 for (BoxRoll rb : list) {
-                    content += rb.getRollBarcode() + ";";
+                    content.append(rb.getRollBarcode()).append(";");
                 }
             }
             // 删除卷、盒关系
@@ -1043,19 +1000,17 @@ public class MobilePackageServiceImpl extends BaseServiceImpl implements IMobile
                     if (_rb == null) {
                         continue;
                     }
-                    content += rb.getRollBarcode() + ";";
+                    content.append(rb.getRollBarcode()).append(";");
                     // 卷条码解除被打托状态
                     _rb.setIsPackage(0);
                     mService.update(_rb);
                 }
             }
-
             // 托拆包
             TrayBarCode tbc = mService.findBarcodeInfo(BarCodeType.TRAY, code);
             if (tbc == null) {
                 return;
             }
-
             // 设置拆包状态
             tbc.setIsOpened(1);
             update(tbc);
@@ -1064,7 +1019,7 @@ public class MobilePackageServiceImpl extends BaseServiceImpl implements IMobile
             // 删除卷、托关系
             delete(TrayBoxRoll.class, map);
         }
-        openPackBarCode.setOpenPackContent(content);
+        openPackBarCode.setOpenPackContent(content.toString());
         save(openPackBarCode);
     }
 
@@ -1075,7 +1030,6 @@ public class MobilePackageServiceImpl extends BaseServiceImpl implements IMobile
         if (type.equals("BOX")) {
             BoxRoll boxRoll = findById(BoxRoll.class, id);
             Box box = mService.findBarCodeReg(BarCodeRegType.BOX, boxRoll.getBoxBarcode());
-            map.clear();
             map.put("rollBarcode", boxRoll.getBoxBarcode());
             TotalStatistics ts = mService.findUniqueByMap(TotalStatistics.class, map);
 
@@ -1098,16 +1052,13 @@ public class MobilePackageServiceImpl extends BaseServiceImpl implements IMobile
                     trays.get(0).setRollCountInTray(trays.get(0).getRollCountInTray() - 1);
                 }
             }
-
             delete(boxRoll);
             update(box);
             update(ts);
         }
-
         if (type.equals("TRAY")) {
             TrayBoxRoll tbr = findById(TrayBoxRoll.class, id);
             Tray tray = mService.findBarCodeReg(BarCodeRegType.TRAY, tbr.getTrayBarcode());
-            map.clear();
             map.put("rollBarcode", tbr.getTrayBarcode());
             TotalStatistics ts = mService.findUniqueByMap(TotalStatistics.class, map);
             if (tbr.getPartBarcode() != null) {
@@ -1129,7 +1080,6 @@ public class MobilePackageServiceImpl extends BaseServiceImpl implements IMobile
                 tray.setRollCountInTray(tray.getRollCountInTray() - BoxRolls.size());
                 ts.setProductWeight(tray.getWeight());
             }
-
             delete(tbr);
             update(tray);
             update(ts);

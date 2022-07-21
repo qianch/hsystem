@@ -1,11 +1,11 @@
 package com.bluebirdme.mes.mobile.stock.dao.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
+import com.bluebirdme.mes.core.base.dao.BaseDaoImpl;
+import com.bluebirdme.mes.core.base.entity.Filter;
+import com.bluebirdme.mes.core.base.entity.Page;
+import com.bluebirdme.mes.core.sql.SQL;
+import com.bluebirdme.mes.core.sql.SQLTemplateException;
+import com.bluebirdme.mes.mobile.stock.dao.IMobileProductStockDao;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -13,12 +13,10 @@ import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
 import org.xdemo.superutil.thirdparty.gson.GsonTools;
 
-import com.bluebirdme.mes.core.base.dao.BaseDaoImpl;
-import com.bluebirdme.mes.core.base.entity.Filter;
-import com.bluebirdme.mes.core.base.entity.Page;
-import com.bluebirdme.mes.core.sql.SQL;
-import com.bluebirdme.mes.core.sql.SQLTemplateException;
-import com.bluebirdme.mes.mobile.stock.dao.IMobileProductStockDao;
+import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Repository
 public class MobileProductStockDaoImpl extends BaseDaoImpl implements IMobileProductStockDao {
@@ -60,9 +58,6 @@ public class MobileProductStockDaoImpl extends BaseDaoImpl implements IMobilePro
         query.setParameter("id", id).setParameter("pn", pn).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
         List<Map<String, Object>> list = query.list();
         for (Map map : list) {
-//		if("0".equals(map.get("DELIVERYCOUNT").toString())){
-//			map.put("DELIVERYCOUNT",map.get("DELIVERYSUITCOUNT"));
-//		}
             if (!"0".equals(map.get("DELIVERYSUITCOUNT").toString())) {
                 map.put("DELIVERYCOUNT", map.get("DELIVERYSUITCOUNT"));
             }
@@ -88,7 +83,7 @@ public class MobileProductStockDaoImpl extends BaseDaoImpl implements IMobilePro
     }
 
     @Override
-    public List<Map<String, Object>> findTrayByBarCode(String barcode) throws Exception {
+    public List<Map<String, Object>> findTrayByBarCode(String barcode) {
         String sql = SQL.get("findTrayByBarCode");
         SQLQuery query = getSession().createSQLQuery(sql);
         query.setParameter("barcode", barcode);
@@ -97,7 +92,7 @@ public class MobileProductStockDaoImpl extends BaseDaoImpl implements IMobilePro
     }
 
     @Override
-    public List<Map<String, Object>> findPartByBarCode(String barcode) throws Exception {
+    public List<Map<String, Object>> findPartByBarCode(String barcode) {
         String sql = SQL.get("findPartByBarCode");
         SQLQuery query = getSession().createSQLQuery(sql);
         query.setParameter("barcode", barcode);

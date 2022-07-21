@@ -11,7 +11,9 @@ import com.bluebirdme.mes.store.entity.Tray;
 import com.bluebirdme.mes.store.entity.Warehouse;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import org.xdemo.superutil.thirdparty.gson.GsonTools;
 
 import javax.annotation.Resource;
@@ -94,16 +96,17 @@ public class MobileProductStock2Controller extends BaseController {
         if (stockMove.getNewWarehouseCode() == null || "".equals(stockMove.getNewWarehouseCode()) || stockMove.getNewWarehousePosCode() == null || "".equals(stockMove.getNewWarehousePosCode())) {
             return GsonTools.toJson("请选择库位");
         }
-        return GsonTools.toJson(productStockService.pMove(stockMove, code));//新移库
+        //新移库
+        return GsonTools.toJson(productStockService.pMove(stockMove, code));
     }
 
     @NoLogin
     @Journal(name = "胚布领料", logType = LogType.DB)
     @RequestMapping(value = "pbPickIn", method = RequestMethod.POST)
     public String pbPickIn(FabricPickRecord fabricPickRecord) throws Exception {
-        List<FabricPickRecord> fabricPickRecordlist = new ArrayList<FabricPickRecord>();
-        fabricPickRecordlist.add(fabricPickRecord);
-        return GsonTools.toJson(productStockService.pbPicks(fabricPickRecordlist));
+        List<FabricPickRecord> records = new ArrayList<>();
+        records.add(fabricPickRecord);
+        return GsonTools.toJson(productStockService.pbPicks(records));
     }
 
     @NoLogin
@@ -135,25 +138,26 @@ public class MobileProductStock2Controller extends BaseController {
     public String pOutInBatches(String puname, String codes, Long UserId, String packingNum, String plate, String boxNumber, Double count, int isfinished) throws Exception {
         boolean flag = false;
         //不为合格或者退货的原料编码
-        String errorCode = "";
-        Map<String, Object> map = new HashMap<String, Object>();
+        StringBuilder errorCode = new StringBuilder();
+        Map<String, Object> map = new HashMap<>();
         String[] _codes = codes.split(",");
         Tray tray = new Tray();
-        for (int i = 0; i < _codes.length; i++) {
+        for (String code : _codes) {
             map.clear();
-            map.put("trayBarcode", _codes[i]);
+            map.put("trayBarcode", code);
             tray = productStockService.findUniqueByMap(Tray.class, map);
+            String s = errorCode.toString().equals("") ? code : "," + code;
             if (tray != null && !tray.getRollQualityGradeCode().equals("A")) {
                 //拼接异常的条码
-                errorCode += errorCode == "" ? _codes[i] : "," + _codes[i];
+                errorCode.append(s);
                 flag = true;
             }
             map.clear();
-            map.put("partBarcode", _codes[i]);
+            map.put("partBarcode", code);
             Roll roll = productStockService.findUniqueByMap(Roll.class, map);
             if (roll != null && !roll.getRollQualityGradeCode().equals("A")) {
                 //拼接异常的条码
-                errorCode += errorCode == "" ? _codes[i] : "," + _codes[i];
+                errorCode.append(s);
                 flag = true;
             }
         }
@@ -175,13 +179,9 @@ public class MobileProductStock2Controller extends BaseController {
     @NoLogin
     @Journal(name = "通过仓库代码获取仓库名字")
     @RequestMapping(value = "queryWarhourse", method = RequestMethod.GET)
-    public String queryWarhourse(String warehouseCode) throws Exception {
-
+    public String queryWarhourse(String warehouseCode) {
         Warehouse warehouse = productStockService.findOne(Warehouse.class, "warehouseCode", warehouseCode);
-        if (warehouse == null) {
-            return GsonTools.toJson("仓库编码不存在:" + warehouseCode);
-        }
-        return GsonTools.toJson(warehouse);
+        return GsonTools.toJson(Objects.requireNonNullElseGet(warehouse, () -> "仓库编码不存在:" + warehouseCode));
     }
 
     @NoLogin

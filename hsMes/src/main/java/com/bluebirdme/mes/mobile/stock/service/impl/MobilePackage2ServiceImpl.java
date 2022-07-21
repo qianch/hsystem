@@ -1,6 +1,5 @@
 package com.bluebirdme.mes.mobile.stock.service.impl;
 
-import com.bluebirdme.mes.common.service.IProcessService;
 import com.bluebirdme.mes.core.annotation.AnyExceptionRollback;
 import com.bluebirdme.mes.core.base.dao.IBaseDao;
 import com.bluebirdme.mes.core.base.entity.Filter;
@@ -13,22 +12,16 @@ import com.bluebirdme.mes.mobile.stock.service.IMobilePackageService;
 import com.bluebirdme.mes.planner.cut.entity.CutPlan;
 import com.bluebirdme.mes.planner.produce.entity.ProducePlan;
 import com.bluebirdme.mes.planner.produce.entity.ProducePlanDetail;
-import com.bluebirdme.mes.planner.turnbag.service.ITurnBagPlanService;
 import com.bluebirdme.mes.planner.weave.entity.WeavePlan;
 import com.bluebirdme.mes.platform.entity.Department;
-import com.bluebirdme.mes.platform.entity.Log;
 import com.bluebirdme.mes.platform.entity.User;
-import com.bluebirdme.mes.platform.service.ILogService;
 import com.bluebirdme.mes.produce.entity.FinishedProduct;
 import com.bluebirdme.mes.sales.entity.Consumer;
 import com.bluebirdme.mes.sales.entity.SalesOrderDetail;
 import com.bluebirdme.mes.statistics.entity.TotalStatistics;
-import com.bluebirdme.mes.statistics.service.ITotalStatisticsService;
-import com.bluebirdme.mes.stock.entity.ProductStockState;
 import com.bluebirdme.mes.store.dao.ITrayBarCodeDao;
 import com.bluebirdme.mes.store.entity.*;
 import com.bluebirdme.mes.store.service.IBarCodeService;
-import com.bluebirdme.mes.store.service.ITrayService;
 import com.bluebirdme.mes.utils.ProductState;
 import org.springframework.stereotype.Service;
 import org.xdemo.superutil.j2se.MathUtils;
@@ -36,9 +29,6 @@ import org.xdemo.superutil.j2se.StringUtils;
 import org.xdemo.superutil.thirdparty.gson.GsonTools;
 
 import javax.annotation.Resource;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.*;
 
 /**
@@ -86,34 +76,28 @@ public class MobilePackage2ServiceImpl extends BaseServiceImpl implements IMobil
 
 
     private String trayRollCodes(String puname, Long packagingStaff, String trayCode, String rollCodes, Long planId, String partName, Long partId) throws Exception {
-        String exception = "";
+        StringBuilder exception = new StringBuilder();
         String[] _rolles = rollCodes.split(",");
-
         if (StringUtils.isBlank(rollCodes)) {
             throw new Exception("卷条码为空");
         }
-
         Map<String, Object> param = new HashMap();
-
         List<Map<String, Object>> ibarcodeByBarcodelist = trayBarCodeDao.findIbarcodeByBarcode(rollCodes);
-
         if (ibarcodeByBarcodelist == null || ibarcodeByBarcodelist.size() == 0) {
             throw new Exception("不存在条码信息");
         }
-
         if (ibarcodeByBarcodelist.size() > 1) {
             throw new Exception("不是同一批次的条码不能打包!");
         }
-
         List<Map<String, Object>> listTrayBoxlist = trayBarCodeDao.findTrayBoxRollByBarcode(rollCodes);
         if (listTrayBoxlist != null && listTrayBoxlist.size() > 0) {
-            exception += "条码已经打包:";
+            exception.append("条码已经打包:");
             for (Map<String, Object> trayboxroll : listTrayBoxlist) {
                 String barCode = (trayboxroll.get("ROLLBARCODE") == null ? "" : trayboxroll.get("ROLLBARCODE").toString()) + (trayboxroll.get("PARTBARCODE") == null ? "" : trayboxroll.get("PARTBARCODE").toString());
                 String trayBarcode = trayboxroll.get("TRAYBARCODE") == null ? "" : trayboxroll.get("TRAYBARCODE").toString();
-                exception += trayBarcode + ":" + barCode + ";";
+                exception.append(trayBarcode).append(":").append(barCode).append(";");
             }
-            throw new Exception(exception);
+            throw new Exception(exception.toString());
         }
 
         String type = ibarcodeByBarcodelist.get(0).get("TYPE").toString();
@@ -121,7 +105,6 @@ public class MobilePackage2ServiceImpl extends BaseServiceImpl implements IMobil
         String _SalesOrderCode = ibarcodeByBarcodelist.get(0).get("SALESORDERCODE").toString();
         String _BatchCode = ibarcodeByBarcodelist.get(0).get("BATCHCODE").toString();
 
-        param.clear();
         param.put("barcode", trayCode);
         TrayBarCode tbc = findUniqueByMap(TrayBarCode.class, param);
 
@@ -129,28 +112,26 @@ public class MobilePackage2ServiceImpl extends BaseServiceImpl implements IMobil
         FinishedProduct fp = packageDao.findById(FinishedProduct.class, sod.getProductId());
         Consumer consumer = packageDao.findById(Consumer.class, fp.getProductConsumerId());
         User user = packageDao.findById(User.class, packagingStaff);
-
         double weight = 0D;
-        List<TrayBoxRoll> trayBoxRolllist = new ArrayList<TrayBoxRoll>();
-
+        List<TrayBoxRoll> trayBoxRolllist = new ArrayList<>();
         ProducePlanDetail ppd = null;
         switch (type) {
-            case "rollbarcode":
+            case "rollbarcode" -> {
                 WeavePlan wp = findById(WeavePlan.class, planId);
                 ppd = findById(ProducePlanDetail.class, wp.getProducePlanDetailId());
-                break;
-            case "partbarcode":
+            }
+            case "partbarcode" -> {
                 CutPlan cp = findById(CutPlan.class, planId);
                 ppd = findById(ProducePlanDetail.class, cp.getProducePlanDetailId());
-                break;
-            default:
-                break;
+            }
+            default -> {
+            }
         }
-        String bladeProfile="";
-        if(ppd != null && ppd.getPartId() != null){
+        String bladeProfile = "";
+        if (ppd != null && ppd.getPartId() != null) {
             SalesOrderDetail salesOrderDetail = packageDao.findById(SalesOrderDetail.class, ppd.getFromSalesOrderDetailId());
             bladeProfile = salesOrderDetail.getBladeProfile();
-        }else if(ppd.getProductIsTc()==1){
+        } else if (ppd.getProductIsTc() == 1) {
             bladeProfile = ppd.getConsumerProductName();
         }
 
@@ -172,7 +153,7 @@ public class MobilePackage2ServiceImpl extends BaseServiceImpl implements IMobil
         for (String rollCode : _rolles) {
             Roll roll = new Roll();
             switch (type) {
-                case "rollbarcode":
+                case "rollbarcode" -> {
                     roll = findOne(Roll.class, "rollBarcode", rollCode);
                     RollBarcode rb = findOne(RollBarcode.class, "barcode", rollCode);
                     if (rb != null) {
@@ -185,12 +166,10 @@ public class MobilePackage2ServiceImpl extends BaseServiceImpl implements IMobil
                         rb.setIsPackage(1);
                         update(rb);
                     }
-                    break;
-                case "partbarcode":
-                    roll = findOne(Roll.class, "partBarcode", rollCode);
-                    break;
-                default:
-                    break;
+                }
+                case "partbarcode" -> roll = findOne(Roll.class, "partBarcode", rollCode);
+                default -> {
+                }
             }
 
             if (roll.getId() == null) {
@@ -205,7 +184,6 @@ public class MobilePackage2ServiceImpl extends BaseServiceImpl implements IMobil
             tbr.setPackagingStaff(packagingStaff);
             tbr.setPackagingTime(new Date());
             trayBoxRolllist.add(tbr);
-
             TotalStatistics tsRoll = findOne(TotalStatistics.class, "rollBarcode", rollCode);
             if (tsRoll != null) {
                 tsRoll.setIsPacked(1);
@@ -217,7 +195,6 @@ public class MobilePackage2ServiceImpl extends BaseServiceImpl implements IMobil
         param.put("trayBarcode", trayCode);
         Tray tray = findUniqueByMap(Tray.class, param);
         if (tray == null) {
-
             tray = new Tray();
             tray.setPackagingStaff(packagingStaff);
             tray.setPackagingTime(new Date());
@@ -242,10 +219,8 @@ public class MobilePackage2ServiceImpl extends BaseServiceImpl implements IMobil
             tray.setPackagingTime(new Date());
         }
         saveList(trayBoxRolllist);
-
         tray.setRollCountInTray(bcService.countRollsInTray(tray.getTrayBarcode()));
         save(tray);
-
         param.clear();
         param.put("rollBarcode", trayCode);
         TotalStatistics ts = findUniqueByMap(TotalStatistics.class, param);
