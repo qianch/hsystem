@@ -4,9 +4,7 @@ import com.bluebirdme.mes.core.base.dao.IBaseDao;
 import com.bluebirdme.mes.core.base.entity.Filter;
 import com.bluebirdme.mes.core.base.entity.Page;
 import com.bluebirdme.mes.core.base.service.BaseServiceImpl;
-import com.bluebirdme.mes.oa.dao.IFtcBomOaDao;
 import com.bluebirdme.mes.oa.dao.IFtcProcBomOaDao;
-import com.bluebirdme.mes.oa.service.IFtcBomOaService;
 import com.bluebirdme.mes.oa.service.IFtcProcBomOaService;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +15,7 @@ import java.util.Map;
 public class FtcProcBomOaServiceImpl extends BaseServiceImpl implements IFtcProcBomOaService {
     @Resource
     public IFtcProcBomOaDao iFtcProcBomOaDao;
+
     @Override
     protected IBaseDao getBaseDao() {
         return iFtcProcBomOaDao;
@@ -24,6 +23,6 @@ public class FtcProcBomOaServiceImpl extends BaseServiceImpl implements IFtcProc
 
     @Override
     public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-        return iFtcProcBomOaDao.findPageInfo(filter,page);
+        return iFtcProcBomOaDao.findPageInfo(filter, page);
     }
 }

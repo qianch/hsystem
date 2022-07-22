@@ -25,7 +25,6 @@ public interface IMobilePackageDao extends IBaseDao {
 
     /**
      * 托打包判断盒或卷是否已被打包
-     *
      */
     List<Map<String, Object>> isPackedBoxRoll(String[] rolls, String[] boxs);
 }

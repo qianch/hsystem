@@ -6,30 +6,11 @@
  */
 package com.bluebirdme.mes.planner.cut.controller;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import com.bluebirdme.mes.baseInfo.entityMirror.FtcBomVersionMirror;
-import com.bluebirdme.mes.produce.entity.FinishedProductMirror;
-import com.bluebirdme.mes.sales.entity.*;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-import org.xdemo.superutil.j2se.ObjectUtils;
-import org.xdemo.superutil.thirdparty.gson.GsonTools;
-
 import com.bluebirdme.mes.audit.entity.AuditConstant;
 import com.bluebirdme.mes.baseInfo.entity.FtcBomVersion;
 import com.bluebirdme.mes.baseInfo.entity.TcBomVersionParts;
 import com.bluebirdme.mes.baseInfo.entity.TcBomVersionPartsDetail;
+import com.bluebirdme.mes.baseInfo.entityMirror.FtcBomVersionMirror;
 import com.bluebirdme.mes.baseInfo.service.IBomService;
 import com.bluebirdme.mes.baseInfo.service.ITcBomService;
 import com.bluebirdme.mes.core.annotation.Journal;
@@ -43,15 +24,27 @@ import com.bluebirdme.mes.core.valid.annotations.Valid;
 import com.bluebirdme.mes.planner.cut.entity.CutDailyPlanUsers;
 import com.bluebirdme.mes.planner.cut.entity.CutPlan;
 import com.bluebirdme.mes.planner.cut.entity.PlanUsers;
-import com.bluebirdme.mes.planner.cut.service.ICutDailyPlanDetailService;
 import com.bluebirdme.mes.planner.cut.service.ICutPlanService;
 import com.bluebirdme.mes.planner.produce.entity.ProducePlanDetail;
 import com.bluebirdme.mes.planner.produce.entity.ProducePlanDetailPartCount;
-import com.bluebirdme.mes.planner.produce.service.IProducePlanService;
 import com.bluebirdme.mes.platform.entity.User;
 import com.bluebirdme.mes.produce.entity.FinishedProduct;
+import com.bluebirdme.mes.produce.entity.FinishedProductMirror;
+import com.bluebirdme.mes.sales.entity.*;
 import com.bluebirdme.mes.sales.service.ISalesOrderService;
 import com.bluebirdme.mes.utils.MapUtils;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+import org.xdemo.superutil.j2se.ObjectUtils;
+import org.xdemo.superutil.thirdparty.gson.GsonTools;
+
+import javax.annotation.Resource;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 
 /**
  * 裁剪计划Controller
@@ -63,7 +56,9 @@ import com.bluebirdme.mes.utils.MapUtils;
 @RequestMapping("planner/cutPlan")
 @Journal(name = "裁剪计划")
 public class CutPlanController extends BaseController {
-    // 裁剪计划页面
+    /**
+     * 裁剪计划页面
+     */
     final String index = "planner/cut/cutPlan";
     final String addOrEdit = "planner/cut/cutPlanAddOrEdit";
     final String addOrEditOrder = "planner/cut/salesOrderAddOrEdit";
@@ -119,14 +114,14 @@ public class CutPlanController extends BaseController {
         TcBomVersionParts tcVersionParts = cutPlanService.findById(TcBomVersionParts.class, Long.valueOf(partsId));
         String[] ids = userIds.split(",");
         StringBuffer sb = new StringBuffer();
-        if (userIds == "") {
+        if (userIds.equals("")) {
             return new ModelAndView(addOrEdit, model.addAttribute("cutPlan", cutPlan).addAttribute("tcVersionParts", tcVersionParts).addAttribute("userName", ""));
         } else {
             for (int i = 0; i < ids.length; i++) {
                 map.put("id", Long.valueOf(ids[i]));
                 List<User> userList = cutPlanService.findListByMap(User.class, map);
-                for (int j = 0; j < userList.size(); j++) {
-                    sb.append((i == 0 ? "" : ",") + userList.get(j).getUserName());
+                for (User user : userList) {
+                    sb.append((i == 0 ? "" : ",") + user.getUserName());
                 }
             }
             return new ModelAndView(addOrEdit, model.addAttribute("tcVersionParts", tcVersionParts).addAttribute("cutPlan", cutPlan).addAttribute("userName", sb.toString()).addAttribute("userIds", userIds));
@@ -138,7 +133,7 @@ public class CutPlanController extends BaseController {
     @RequestMapping(value = "edit", method = RequestMethod.POST)
     @Valid
     public String edit(CutPlan cutPlan, Long[] userIds, String tcBomPartId) throws Exception {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         map.put("tcBomPartId", Long.valueOf(tcBomPartId));
         List<PlanUsers> list = cutPlanService.findListByMap(PlanUsers.class, map);
         if (list.size() == 0) {
@@ -152,7 +147,7 @@ public class CutPlanController extends BaseController {
     @ResponseBody
     @Journal(name = "排序字段", logType = LogType.DB)
     @RequestMapping(value = "sortEdit", method = RequestMethod.POST)
-    public String sortEdit(Integer index, Long id) throws Exception {
+    public String sortEdit(Integer index, Long id) {
         CutPlan cutPlan = cutPlanService.findById(CutPlan.class, id);
         cutPlan.setSort(index.longValue());
         cutPlanService.update(cutPlan);
@@ -195,22 +190,12 @@ public class CutPlanController extends BaseController {
     @Journal(name = "获取部件信息")
     @RequestMapping("findParts")
     public String findParts(Long id) throws Exception {
-        HashMap<String, Object> map = new HashMap<String, Object>();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("cutPlanDailyPlanId", id);
         List<CutDailyPlanUsers> li = cutPlanService.findListByMap(CutDailyPlanUsers.class, map);
-        Map<String, Object> ret = null;
-        List<Map<String, Object>> listMap1 = new ArrayList<Map<String, Object>>();
-		
-		/*for (CutDailyPlanUsers cpu : li) {
-			ret = new HashMap<String, Object>();
-			ret.put("id", cpu.getId());
-			ret.put("text", cpu.getPartName());
-			User user = cutPlanService.findById(User.class, cpu.getUserId());
-			ret.put("userName", user.getUserName() + "(" + cpu.getCount() + ")");
-			listMap1.add(ret);
-		}*/
-
-        Map<String, Object> ret2 = new HashMap<String, Object>();
+        Map<String, Object> ret;
+        List<Map<String, Object>> listMap1 = new ArrayList<>();
+        Map<String, Object> ret2 = new HashMap<>();
         for (CutDailyPlanUsers cpu2 : li) {
             User user = cutPlanService.findById(User.class, cpu2.getUserId());
             if (ret2.containsKey(cpu2.getPartName())) {
@@ -219,88 +204,50 @@ public class CutPlanController extends BaseController {
                 ret2.put(cpu2.getPartName(), user.getUserName() + "(" + cpu2.getCount() + ")");
             }
         }
-        Iterator<String> it = ret2.keySet().iterator();
-        while (it.hasNext()) {
-            ret = new HashMap<String, Object>();
-            String key = (String) it.next();
-            ret.put("text", key);
-            ret.put("userName", ret2.get(key));
+        for (String s : ret2.keySet()) {
+            ret = new HashMap<>();
+            ret.put("text", s);
+            ret.put("userName", ret2.get(s));
             listMap1.add(ret);
         }
         return GsonTools.toJson(listMap1);
     }
-
-	/*@NoAuth
-	@ResponseBody
-	@Journal(name = "获取部件信息")
-	@RequestMapping("findParts2")
-	public String findParts(Long cutPlanId, Long cutDailyPlanId) throws Exception {
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("cutPlanDailyPlanId", cutDailyPlanId);
-		map.put("cutPlanId", cutPlanId);
-		List<CutDailyPlanUsers> li = cutPlanService.findListByMap(CutDailyPlanUsers.class, map);
-		Map<String, Integer> ret = new HashMap<String, Integer>();
-		List<Map<String, Object>> listMap1 = new ArrayList<Map<String, Object>>();
-
-		for (CutDailyPlanUsers cpu : li) {
-			if (!ret.containsKey(cpu.getPartName())) {
-				ret.put(cpu.getPartName(), cpu.getCount());
-			} else {
-				int count = ret.get(cpu.getPartName());
-				ret.put(cpu.getPartName(), cpu.getCount() + count);
-			}
-		}
-		Map<String, Object> resultMap = null;
-		int a = 0;
-		for (String key : ret.keySet()) {
-			resultMap = new HashMap<String, Object>();
-			resultMap.put("id", a);
-			resultMap.put("partName", key);
-			resultMap.put("printCount", ret.get(key));
-			listMap1.add(resultMap);
-			a++;
-		}
-		return GsonTools.toJson(listMap1);
-	}*/
 
     @NoAuth
     @ResponseBody
     @Journal(name = "获取部件信息")
     @RequestMapping("findParts2")
     public String findParts(Long cutPlanId, Long cutDailyPlanId) throws Exception {
-        HashMap<String, Object> map = new HashMap<String, Object>();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("cutPlanDailyPlanId", cutDailyPlanId);
         map.put("cutPlanId", cutPlanId);
         List<CutDailyPlanUsers> li = cutPlanService.findListByMap(CutDailyPlanUsers.class, map);
-        HashMap<String, Long> parN = new HashMap<String, Long>();
+        HashMap<String, Long> parN = new HashMap<>();
         for (CutDailyPlanUsers cpu : li) {
             parN.put(cpu.getPartName(), cpu.getPartId());
         }
-        List<Map<String, Object>> listMap1 = new ArrayList<Map<String, Object>>();
-        Map<String, Object> resultMap = null;
+        List<Map<String, Object>> listMap1 = new ArrayList<>();
+        Map<String, Object> resultMap;
         for (String partName : parN.keySet()) {
-            resultMap = new HashMap<String, Object>();
+            resultMap = new HashMap<>();
             resultMap.put("text", partName);
             resultMap.put("value", parN.get(partName));
             listMap1.add(resultMap);
         }
-        String json = GsonTools.toJson(listMap1);
-        return json;
+        return GsonTools.toJson(listMap1);
     }
 
     @NoAuth
     @ResponseBody
     @Journal(name = "获取部件信息")
     @RequestMapping("findParts3")
-    public String findParts3(Long orderId, Long planId) throws Exception {
-
+    public String findParts3(Long orderId, Long planId) {
         List<Map<String, Object>> ret = new ArrayList<>();
         Map<String, Object> map = new HashMap<>();
         map.put("salesOrderDetailId", orderId);
         List<SalesOrderDetailPartsCount> list = tcBomService.findListByMap(SalesOrderDetailPartsCount.class, map);
         for (SalesOrderDetailPartsCount p : list) {
             Map<String, Object> unit = new HashMap<>();
-
             unit.put("text", p.getPartName());
             unit.put("value", p.getPartId());
             ret.add(unit);
@@ -324,27 +271,14 @@ public class CutPlanController extends BaseController {
         filter.set("salesOrderSubCode", "like:" + plan.getSalesOrderCode());
         Map<String, Object> findPageInfo = salesOrderService.findPageInfo(filter, new Page());
         List<Map<String, Object>> list = (List<Map<String, Object>>) findPageInfo.get("rows");
-        filter = new Filter();
         String salesOrderSubCode = list.get(0).get("ID").toString();
-        HashMap<String, Object> map11 = new HashMap<String, Object>();
-        map11.put("salesOrderId", Long.parseLong(salesOrderSubCode));
-        List<SalesOrderDetail> details2 = salesOrderService.findListByMap(SalesOrderDetail.class, map11);
-//		SalesOrderDetail sod=details2.get(0);
         String yx = plan.getFromTcName();
         if (plan.getWeaveSalesOrderId() != null) {
             salesOrder = salesOrderService.findById(SalesOrder.class, plan.getWeaveSalesOrderId());
             List<SalesOrderDetail> de = salesOrderService.getDetails(plan.getWeaveSalesOrderId());
             List<Map<Object, Object>> details = new ArrayList<Map<Object, Object>>();
             for (SalesOrderDetail sd : de) {
-//				map11.clear();
-//				map11.put("tcFinishedProductId", sd.getProductId());
                 Map<Object, Object> m = MapUtils.entityToMap(sd);
-                //List<TcBomVersionPartsDetail> findListByMap = salesOrderService.findListByMap(TcBomVersionPartsDetail.class, map11);
-				/*for (int i = 0; i < findListByMap.size(); i++) {
-					m.put("levelno", findListByMap.get(i).getLevelNo());//层数
-					m.put("rollno", findListByMap.get(i).getRollNo());//卷号
-					m.put("drawingno", findListByMap.get(i).getDrawingNo());//图号
-				}*/
                 details.add(m);
             }
             return new ModelAndView(addOrEditOrder, model.addAttribute("salesOrder", salesOrder).addAttribute("details", GsonTools.toJson(details)).addAttribute("consumerName", "裁剪车间").addAttribute("cutPlanId", cutPlanId).addAttribute("finalConsumerId", plan.getConsumerId()).addAttribute("code", plan.getSalesOrderCode()));
@@ -399,9 +333,9 @@ public class CutPlanController extends BaseController {
         parm.put("salesOrderSubCode", "cj-" + plan.getSalesOrderCode());
         List<SalesOrderDetailTemp> sodList = bomService.findListByMap(SalesOrderDetailTemp.class, parm);
         //查找套材镜像成品信息
-        Map<String,Object> planMap = new HashMap<>();
-        planMap.put("productId",plan.getProductId());
-        planMap.put("salesOrderDetailId",plan.getFromSalesOrderDetailId());
+        Map<String, Object> planMap = new HashMap<>();
+        planMap.put("productId", plan.getProductId());
+        planMap.put("salesOrderDetailId", plan.getFromSalesOrderDetailId());
         List<FinishedProductMirror> finishedProductMirrors = salesOrderService.findListByMap(FinishedProductMirror.class, planMap);
         List<SalesOrderDetail> list = new ArrayList<SalesOrderDetail>();
         if (sodList.size() > 0) {

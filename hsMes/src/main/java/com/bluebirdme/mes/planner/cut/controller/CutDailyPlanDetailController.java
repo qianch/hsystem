@@ -8,7 +8,6 @@ package com.bluebirdme.mes.planner.cut.controller;
 
 import com.bluebirdme.mes.audit.entity.AuditConstant;
 import com.bluebirdme.mes.audit.service.IAuditInstanceService;
-import com.bluebirdme.mes.common.service.IProcessService;
 import com.bluebirdme.mes.core.annotation.Journal;
 import com.bluebirdme.mes.core.annotation.NoAuth;
 import com.bluebirdme.mes.core.annotation.NoLogin;
@@ -50,8 +49,9 @@ import java.util.*;
 @RequestMapping("/cutDailyPlan")
 @Journal(name = "日计划和裁剪计划表")
 public class CutDailyPlanDetailController extends BaseController {
-
-    // 日计划和裁剪计划表页面
+    /**
+     * 日计划和裁剪计划表页面
+     */
     final String index = "planner/cutPlanDaily/cutDailyPlan";
     final String addOrEdit = "planner/cutPlanDaily/cutDailyPlanAddOrEdit";
     final String audit = "planner/cutPlanDaily/cutDailyPlanAudit";
@@ -64,8 +64,6 @@ public class CutDailyPlanDetailController extends BaseController {
     ICutDailyPlanDetailService cutDailyPlanDetailService;
     @Resource
     IAuditInstanceService auditInstanceService;
-    @Resource
-    IProcessService processService;
     @Resource
     IDepartmentService departmentService;
 
@@ -118,14 +116,10 @@ public class CutDailyPlanDetailController extends BaseController {
     @RequestMapping(value = "add", method = RequestMethod.POST)
     @Valid
     public String add(CutDailyPlan cutDailyPlan, Long cids[], Integer counts[], String partsNames[], String pCounts[], String partNames[], String comments[], String uids[], String partids[]) throws Exception {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("planDate", cutDailyPlan.getPlanDate());
-        map.put("workShop", cutDailyPlan.getWorkShop());
-        map.put("isClosed", 0);
         String[] workShopCodes = cutDailyPlan.getWorkShopCode().split(",");
-        for (int i = 0; i < workShopCodes.length; i++) {
-            Department department = departmentService.findOne(Department.class, "code", workShopCodes[i]);
-            cutDailyPlan.setWorkShopCode(workShopCodes[i]);
+        for (String workShopCode : workShopCodes) {
+            Department department = departmentService.findOne(Department.class, "code", workShopCode);
+            cutDailyPlan.setWorkShopCode(workShopCode);
             cutDailyPlan.setWorkShop(department.getName());
             if (cutDailyPlan.getId() == null) {
                 cutDailyPlan.setOperator((Long) session.getAttribute(Constant.CURRENT_USER_ID));
@@ -201,16 +195,12 @@ public class CutDailyPlanDetailController extends BaseController {
     @Journal(name = "打开分配人员页面")
     @RequestMapping(value = "users", method = RequestMethod.GET)
     public ModelAndView users(Long id, String date, String workshop) {
-
-        Map<String, Object> map = new HashMap<String, Object>();
-        List<Map<String, Object>> partNames = new ArrayList<Map<String, Object>>();
-
+        Map<String, Object> map = new HashMap<>();
+        List<Map<String, Object>> partNames = new ArrayList<>();
         map.put("planDetailId", id);
-
         List<ProducePlanDetailPartCount> parts = cutDailyPlanDetailService.findListByMap(ProducePlanDetailPartCount.class, map);
-
         for (ProducePlanDetailPartCount p : parts) {
-            map = new HashMap<String, Object>();
+            map = new HashMap<>();
             map.put("PARTID", p.getPartId());
             map.put("TCPROCBOMVERSIONPARTSNAME", p.getPartName());
             map.put("TCPROCBOMVERSIONPARTSCOUNT", p.getPlanPartCount());
@@ -248,7 +238,8 @@ public class CutDailyPlanDetailController extends BaseController {
         String templateName;
         Workbook wb = new SXSSFWorkbook();
         CellStyle cellStyle = wb.createCellStyle();
-        cellStyle.setAlignment(HorizontalAlignment.CENTER); // 水平布局：居中
+        // 水平布局：居中
+        cellStyle.setAlignment(HorizontalAlignment.CENTER);
         cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
         cellStyle.setBorderBottom(BorderStyle.THIN);
         cellStyle.setBorderTop(BorderStyle.THIN);
@@ -257,25 +248,24 @@ public class CutDailyPlanDetailController extends BaseController {
         cellStyle.setWrapText(true);
 
         CellStyle cellStyle1 = wb.createCellStyle();
-        cellStyle1.setAlignment(HorizontalAlignment.LEFT); // 左对齐
-//		cellStyle1.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+        // 左对齐
+        cellStyle1.setAlignment(HorizontalAlignment.LEFT);
         cellStyle1.setBorderBottom(BorderStyle.THIN);
         cellStyle1.setBorderTop(BorderStyle.THIN);
         cellStyle1.setBorderRight(BorderStyle.THIN);
         cellStyle1.setBorderLeft(BorderStyle.THIN);
 
         Sheet sheet = wb.createSheet();
-        Row row = null;
-        Cell cell = null;
-        String columnName[] = new String[]{"人员名称", "数量", "部件名称", "生产任务单编号", "订单号", "批号",
+        Row row;
+        Cell cell;
+        String[] columnName = new String[]{"人员名称", "数量", "部件名称", "生产任务单编号", "订单号", "批号",
                 "产品规格", "定长/定重", "客户名称", "生产工艺", "包装工艺", "备注"};
-        int r = 0;// 从第1行开始写数据
-
+        // 从第1行开始写数据
+        int r = 0;
         String title = cutDailyPlan.getWorkShop();
         templateName = title;
         String date = cutDailyPlan.getPlanDate();
         String operator = user.getUserName();
-
         //第一行
         row = sheet.createRow(r);
         cell = row.createCell(0);

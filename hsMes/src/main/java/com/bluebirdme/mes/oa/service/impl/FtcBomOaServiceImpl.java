@@ -10,10 +10,12 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Map;
+
 @Service
 public class FtcBomOaServiceImpl extends BaseServiceImpl implements IFtcBomOaService {
     @Resource
     public IFtcBomOaDao ftcBomOaDao;
+
     @Override
     protected IBaseDao getBaseDao() {
         return ftcBomOaDao;
@@ -21,6 +23,6 @@ public class FtcBomOaServiceImpl extends BaseServiceImpl implements IFtcBomOaSer
 
     @Override
     public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-        return ftcBomOaDao.findPageInfo(filter,page);
+        return ftcBomOaDao.findPageInfo(filter, page);
     }
 }

@@ -2,7 +2,6 @@ package com.bluebirdme.mes.oa.entity;
 
 import com.bluebirdme.mes.core.annotation.Desc;
 import com.bluebirdme.mes.core.base.entity.BaseEntity;
-import org.hibernate.annotations.Index;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

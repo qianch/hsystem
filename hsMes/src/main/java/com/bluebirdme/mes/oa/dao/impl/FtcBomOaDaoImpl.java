@@ -6,7 +6,6 @@ import com.bluebirdme.mes.core.base.entity.Page;
 import com.bluebirdme.mes.oa.dao.IFtcBomOaDao;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
@@ -20,7 +19,6 @@ public class FtcBomOaDaoImpl extends BaseDaoImpl implements IFtcBomOaDao {
     @Override
     public Session getSession() {
         return factory.getCurrentSession();
-
     }
 
     @Override

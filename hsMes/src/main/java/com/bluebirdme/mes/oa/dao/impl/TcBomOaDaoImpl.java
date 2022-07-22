@@ -10,18 +10,19 @@ import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
 import java.util.Map;
+
 @Repository
 public class TcBomOaDaoImpl extends BaseDaoImpl implements ITcBomOaDao {
- @Resource
- SessionFactory sessionFactory;
+    @Resource
+    SessionFactory sessionFactory;
 
- @Override
- public Session getSession() {
-  return sessionFactory.getCurrentSession();
- }
+    @Override
+    public Session getSession() {
+        return sessionFactory.getCurrentSession();
+    }
 
- @Override
- public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-  return null;
- }
+    @Override
+    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+        return null;
+    }
 }
