@@ -269,14 +269,11 @@ public class CutPlanController extends BaseController {
     public ModelAndView _add(SalesOrder salesOrder, Long cutPlanId, Filter filter) throws Exception {
         CutPlan plan = salesOrderService.findById(CutPlan.class, cutPlanId);
         filter.set("salesOrderSubCode", "like:" + plan.getSalesOrderCode());
-        Map<String, Object> findPageInfo = salesOrderService.findPageInfo(filter, new Page());
-        List<Map<String, Object>> list = (List<Map<String, Object>>) findPageInfo.get("rows");
-        String salesOrderSubCode = list.get(0).get("ID").toString();
         String yx = plan.getFromTcName();
         if (plan.getWeaveSalesOrderId() != null) {
             salesOrder = salesOrderService.findById(SalesOrder.class, plan.getWeaveSalesOrderId());
             List<SalesOrderDetail> de = salesOrderService.getDetails(plan.getWeaveSalesOrderId());
-            List<Map<Object, Object>> details = new ArrayList<Map<Object, Object>>();
+            List<Map<Object, Object>> details = new ArrayList<>();
             for (SalesOrderDetail sd : de) {
                 Map<Object, Object> m = MapUtils.entityToMap(sd);
                 details.add(m);
@@ -284,31 +281,17 @@ public class CutPlanController extends BaseController {
             return new ModelAndView(addOrEditOrder, model.addAttribute("salesOrder", salesOrder).addAttribute("details", GsonTools.toJson(details)).addAttribute("consumerName", "裁剪车间").addAttribute("cutPlanId", cutPlanId).addAttribute("finalConsumerId", plan.getConsumerId()).addAttribute("code", plan.getSalesOrderCode()));
 
         } else {
-            HashMap<String, Object> map1 = new HashMap<String, Object>();
+            HashMap<String, Object> map1 = new HashMap<>();
             map1.put("consumerCode", "CJ000");
             Consumer c = salesOrderService.findUniqueByMap(Consumer.class, map1);
             salesOrder.setSalesOrderConsumerId(c.getId());
             salesOrder.setSalesOrderIsExport(-1);
             salesOrder.setSalesOrderDate(new Date());
             salesOrder.setAuditState(0);
-            // 根据裁剪计划明细编辑
-
-            // Consumer c=salesOrderService.findById(Consumer.class,
-            // plan.getConsumerId());
             salesOrder.setSalesOrderMemo("来自裁剪计划：" + plan.getPlanCode() + ";订单号为:" + plan.getSalesOrderCode() + ";叶型为：" + yx);
             List<SalesOrderDetail> de = getFabs(plan);
-
-            List<Map<Object, Object>> details = new ArrayList<Map<Object, Object>>();
+            List<Map<Object, Object>> details = new ArrayList<>();
             for (SalesOrderDetail sd : de) {
-				/*map11.clear();
-				map11.put("tcFinishedProductId", sd.getProductId());*/
-                Map<Object, Object> m = MapUtils.entityToMap(sd);
-				/*List<TcBomVersionPartsDetail> findListByMap = salesOrderService.findListByMap(TcBomVersionPartsDetail.class, map11);
-				for (int i = 0; i < findListByMap.size(); i++) {
-					m.put("levelno", findListByMap.get(i).getLevelNo());//层数
-					m.put("rollno", findListByMap.get(i).getRollNo());//卷号
-					m.put("drawingno", findListByMap.get(i).getDrawingNo());//图号
-				}*/
                 details.add(MapUtils.entityToMap(sd));
             }
             return new ModelAndView(addOrEditOrder, model
@@ -319,15 +302,13 @@ public class CutPlanController extends BaseController {
                     .addAttribute("finalConsumerId", plan.getConsumerId())
                     .addAttribute("code", plan.getSalesOrderCode())
                     .addAttribute("fromProducePlancode", plan.getPlanCode())
-
-
             );
         }
     }
 
     // 根据tcBomVersionId获取需要生产的胚布的id和数量
     public List<SalesOrderDetail> getFabs(CutPlan plan) {
-        HashMap<String, Object> parm = new HashMap<String, Object>();
+        HashMap<String, Object> parm = new HashMap<>();
         parm.put("productBatchCode", plan.getBatchCode());
         parm.put("closed", null);
         parm.put("salesOrderSubCode", "cj-" + plan.getSalesOrderCode());
@@ -337,9 +318,9 @@ public class CutPlanController extends BaseController {
         planMap.put("productId", plan.getProductId());
         planMap.put("salesOrderDetailId", plan.getFromSalesOrderDetailId());
         List<FinishedProductMirror> finishedProductMirrors = salesOrderService.findListByMap(FinishedProductMirror.class, planMap);
-        List<SalesOrderDetail> list = new ArrayList<SalesOrderDetail>();
+        List<SalesOrderDetail> list = new ArrayList<>();
         if (sodList.size() > 0) {
-            SalesOrderDetail sd = null;
+            SalesOrderDetail sd;
             for (SalesOrderDetailTemp temp : sodList) {
                 sd = new SalesOrderDetail();
                 sd.setProductId(temp.getProductId());
@@ -379,12 +360,12 @@ public class CutPlanController extends BaseController {
                 list.add(sd);
             }
         } else {
-            HashMap<String, Object> part = new HashMap<String, Object>();
+            HashMap<String, Object> part = new HashMap<>();
             part.put("tcProcBomVersoinId", plan.getProcBomId());
             //套材部件列表
             List<TcBomVersionParts> partList = bomService.findListByMap(TcBomVersionParts.class, part);
             //套材部件明细
-            List<TcBomVersionPartsDetail> tcBomList = new ArrayList<TcBomVersionPartsDetail>();
+            List<TcBomVersionPartsDetail> tcBomList = new ArrayList<>();
             for (TcBomVersionParts p : partList) {
                 if (p.getTcProcBomVersionPartsType().equals("成品胚布")) continue;
                 part.clear();
@@ -399,11 +380,8 @@ public class CutPlanController extends BaseController {
             part.clear();
             part.put("planDetailId", ppd.getId());
             List<ProducePlanDetailPartCount> ppdpcList = bomService.findListByMap(ProducePlanDetailPartCount.class, part);
-
-            SalesOrderDetail sd = null;
-            TcBomVersionParts partInfo = null;
-
-            Map<String, Object> map = new HashMap<String, Object>();
+            SalesOrderDetail sd;
+            TcBomVersionParts partInfo;
             for (int i = tcBomList.size() - 1; i >= 0; i--) {
                 double count = 0;
                 for (ProducePlanDetailPartCount ppdpc : ppdpcList) {
@@ -412,7 +390,6 @@ public class CutPlanController extends BaseController {
                     }
                 }
                 FinishedProduct fp = bomService.findById(FinishedProduct.class, tcBomList.get(i).getTcFinishedProductId());
-
                 if (count * tcBomList.get(i).getTcProcBomFabricCount() > 0) {
                     sd = new SalesOrderDetail();
                     sd.setProductId(fp.getId());
@@ -456,17 +433,14 @@ public class CutPlanController extends BaseController {
     public String add(@RequestBody SalesOrder salesOrder) throws Exception {
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("salesOrderCode", salesOrder.getSalesOrderCode());
-
         if (salesOrderService.isExist(SalesOrder.class, param, true)) {
             return ajaxError("订单编号重复");
         }
-
         if (salesOrder.getAuditState() != null) {
             if (salesOrder.getAuditState() > 0) {
                 return ajaxError("已审核和审核中的订单不能修改");
             }
         }
-
         CutPlan cutPlan = salesOrderService.findById(CutPlan.class, salesOrder.getCutPlanId());
         if (cutPlan.getIsCreatWeave() == 1) {
             return ajaxError("已生成胚布计划的订单不能修改");
@@ -511,10 +485,7 @@ public class CutPlanController extends BaseController {
 
         if (cutPlan.getIsCreatWeave() == 0) {
             cutPlan.setIsCreatWeave(1);
-        }/* else {
-            cutPlan.setIsCreatWeave(0);
-        }*/
-
+        }
         cutPlan.setWeaveSalesOrderId(salesOrder.getId());
         salesOrderService.update(cutPlan);
         return GsonTools.toJson("保存成功");

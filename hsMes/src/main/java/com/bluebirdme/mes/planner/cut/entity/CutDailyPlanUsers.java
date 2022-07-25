@@ -1,93 +1,92 @@
 package com.bluebirdme.mes.planner.cut.entity;
 
+import com.bluebirdme.mes.core.annotation.Desc;
+import com.bluebirdme.mes.core.base.entity.BaseEntity;
+import org.hibernate.annotations.Index;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Index;
-
-import com.bluebirdme.mes.core.annotation.Desc;
-import com.bluebirdme.mes.core.base.entity.BaseEntity;
-
 /**
  * 裁剪日计划，部件任务人员列表
+ *
  * @author Goofy
  * @Date 2016年12月13日 下午9:30:51
  */
 @Entity
-@Table(name="hs_Cut_Daily_Plan_users")
+@Table(name = "hs_Cut_Daily_Plan_users")
 public class CutDailyPlanUsers extends BaseEntity {
-	
-	@Desc("裁剪日计划ID")
-	@Column(nullable=false)
-	@Index(name="cutPlanDailyPlanId")
-	private Long cutPlanDailyPlanId;
-	
-	@Desc("裁剪计划ID")
-	@Column(nullable=false)
-	@Index(name="cutPlanId")
-	private Long cutPlanId;
-	
-	@Desc("用户ID")
-	@Column(nullable=false)
-	@Index(name="userId")
-	private Long userId;
-	
-	@Desc("数量")
-	@Column(nullable=false)
-	private Integer count;
-	
-	@Desc("部件名称")
-	private String partName;
-	@Desc("部件ID")
-	private Long partId;
+    @Desc("裁剪日计划ID")
+    @Column(nullable = false)
+    @Index(name = "cutPlanDailyPlanId")
+    private Long cutPlanDailyPlanId;
 
-	public Long getPartId() {
-		return partId;
-	}
+    @Desc("裁剪计划ID")
+    @Column(nullable = false)
+    @Index(name = "cutPlanId")
+    private Long cutPlanId;
 
-	public void setPartId(Long partId) {
-		this.partId = partId;
-	}
+    @Desc("用户ID")
+    @Column(nullable = false)
+    @Index(name = "userId")
+    private Long userId;
 
-	public Long getCutPlanDailyPlanId() {
-		return cutPlanDailyPlanId;
-	}
+    @Desc("数量")
+    @Column(nullable = false)
+    private Integer count;
 
-	public void setCutPlanDailyPlanId(Long cutPlanDailyPlanId) {
-		this.cutPlanDailyPlanId = cutPlanDailyPlanId;
-	}
+    @Desc("部件名称")
+    private String partName;
+    @Desc("部件ID")
+    private Long partId;
 
-	public Long getCutPlanId() {
-		return cutPlanId;
-	}
+    public Long getPartId() {
+        return partId;
+    }
 
-	public void setCutPlanId(Long cutPlanId) {
-		this.cutPlanId = cutPlanId;
-	}
+    public void setPartId(Long partId) {
+        this.partId = partId;
+    }
 
-	public Long getUserId() {
-		return userId;
-	}
+    public Long getCutPlanDailyPlanId() {
+        return cutPlanDailyPlanId;
+    }
 
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
+    public void setCutPlanDailyPlanId(Long cutPlanDailyPlanId) {
+        this.cutPlanDailyPlanId = cutPlanDailyPlanId;
+    }
 
-	public Integer getCount() {
-		return count;
-	}
+    public Long getCutPlanId() {
+        return cutPlanId;
+    }
 
-	public void setCount(Integer count) {
-		this.count = count;
-	}
+    public void setCutPlanId(Long cutPlanId) {
+        this.cutPlanId = cutPlanId;
+    }
 
-	public String getPartName() {
-		return partName;
-	}
+    public Long getUserId() {
+        return userId;
+    }
 
-	public void setPartName(String partName) {
-		this.partName = partName;
-	}
-	
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
+    }
+
+    public String getPartName() {
+        return partName;
+    }
+
+    public void setPartName(String partName) {
+        this.partName = partName;
+    }
+
 }

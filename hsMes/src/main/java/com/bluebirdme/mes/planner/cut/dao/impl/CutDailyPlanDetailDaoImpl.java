@@ -32,7 +32,6 @@ import com.bluebirdme.mes.planner.cut.dao.ICutDailyPlanDetailDao;
  */
 @Repository
 public class CutDailyPlanDetailDaoImpl extends BaseDaoImpl implements ICutDailyPlanDetailDao {
-	
 	@Resource SessionFactory factory;
 
 	@Override
@@ -73,5 +72,4 @@ public class CutDailyPlanDetailDaoImpl extends BaseDaoImpl implements ICutDailyP
 		query.setParameter("cutPlanId",cutPlanId).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
 		return query.list();
 	}
-
 }

@@ -9,78 +9,83 @@ package com.bluebirdme.mes.planner.cut.entity;
 import java.util.Date;
 
 /**
- * 
  * @author Administrator
  * @Date 2016年11月29日 上午1:24:58
  */
 public interface Iplan {
-	public Long getId();
-	public Long getFromSalesOrderDetailId();
+    Long getId();
 
-	public Long getPartId();
-	public void setPartId(Long partId);
-	public Long getFromTcId();
+    Long getFromSalesOrderDetailId();
 
-	public String getFromTcName();
+    Long getPartId();
 
-	public Integer getPackagedCount();
+    void setPartId(Long partId);
 
-	public Long getProducePlanDetailId();
+    Long getFromTcId();
 
-	public Integer getProductType();
+    String getFromTcName();
 
-	public Integer getIsFinished();
+    Integer getPackagedCount();
 
-	public Long getSort();
+    Long getProducePlanDetailId();
 
-	public Long getProductId();
+    Integer getProductType();
 
-	public String getPlanCode();
+    Integer getIsFinished();
 
-	public Long getConsumerId() ;
+    Long getSort();
 
-	public String getConsumerName();
+    Long getProductId();
 
-	public String getSalesOrderCode();
+    String getPlanCode();
 
-	public String getBatchCode();
+    Long getConsumerId();
 
-	public String getProductModel() ;
+    String getConsumerName();
 
-	public String getProductName();
+    String getSalesOrderCode();
 
-	public Double getProductWidth();
+    String getBatchCode();
 
-	public Double getProductWeight();
+    String getProductModel();
 
-	public Double getProductLength();
+    String getProductName();
 
-	public Double getOrderCount();
+    Double getProductWidth();
 
-	public String getBcBomVersion();
+    Double getProductWeight();
 
-	public String getBcBomCode();
-	
-	public String getProcessBomVersion() ;
-	
-	public String getProcessBomCode() ;
+    Double getProductLength();
 
-	public Integer getTotalRollCount();
-	
-	public Integer getTotalTrayCount() ;
+    Double getOrderCount();
 
-	public Double getRequirementCount() ;
+    String getBcBomVersion();
 
-	public Double getProducedCount() ;
+    String getBcBomCode();
 
-	public Date getDeleveryDate() ;
+    String getProcessBomVersion();
 
-	public String getDeviceCode() ;
+    String getProcessBomCode();
 
-	public String getComment() ;
-	public String getPartName();
-	public void setPartName(String name);
-	public void setDeviceCode(String devCode);
+    Integer getTotalRollCount();
 
-	public Long getMirrorProcBomId();
+    Integer getTotalTrayCount();
+
+    Double getRequirementCount();
+
+    Double getProducedCount();
+
+    Date getDeleveryDate();
+
+    String getDeviceCode();
+
+    String getComment();
+
+    String getPartName();
+
+    void setPartName(String name);
+
+    void setDeviceCode(String devCode);
+
+    Long getMirrorProcBomId();
 }

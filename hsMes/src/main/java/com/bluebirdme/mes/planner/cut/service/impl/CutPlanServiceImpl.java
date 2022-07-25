@@ -28,7 +28,6 @@ import com.bluebirdme.mes.produce.entity.FinishedProduct;
 import com.bluebirdme.mes.produce.entity.FinishedProductMirror;
 import com.bluebirdme.mes.sales.entity.SalesOrderDetailPartsCount;
 import com.bluebirdme.mes.sales.entity.SalesOrderDetailTemp;
-import com.bluebirdme.mes.sales.service.ISalesOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -54,8 +53,6 @@ public class CutPlanServiceImpl extends BaseServiceImpl implements ICutPlanServi
     @Resource
     IProcessService processService;
 
-    @Resource
-    ISalesOrderService salesOrderService;
 
     @Override
     protected IBaseDao getBaseDao() {

@@ -1,124 +1,123 @@
 package com.bluebirdme.mes.planner.cut.entity;
 
+import com.bluebirdme.mes.core.annotation.Desc;
+import com.bluebirdme.mes.core.base.entity.BaseEntity;
+import org.hibernate.annotations.Index;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Index;
-
-import com.bluebirdme.mes.core.annotation.Desc;
-import com.bluebirdme.mes.core.base.entity.BaseEntity;
 @Desc("日计划和裁剪计划表")
 @Entity
-@Table(name="hs_Cut_Daily_Plan_Detail")
+@Table(name = "hs_Cut_Daily_Plan_Detail")
 public class CutDailyPlanDetail extends BaseEntity {
-	
-	@Desc("裁剪日计划ID")
-	@Column(nullable=false)
-	@Index(name="cutPlanDailyId")
-	private Long cutPlanDailyId;
-	
-	@Desc("裁剪计划ID")
-	@Column(nullable=false)
-	@Index(name="cutPlanId")
-	private Long cutPlanId;
-	
-	@Desc("套数")
-	@Column(nullable=false)
-	private Integer count;
-	
-	@Desc("用户和数量")
-	@Column(nullable=false,columnDefinition="text")
-	private String userAndCount;
-	
-	@Desc("备注")
-	private String comment;
-	
-	@Desc("该裁剪计划分配的所有用户的ID")
-	@Column(nullable=false,columnDefinition="text")
-	private String userIds;
-	
-	@Desc("各个部件的数量")
-	@Column(columnDefinition="text")
-	private String counts;
-	
-	@Desc("所有的部件")
-	@Column(columnDefinition="text")
-	private String partNames;
-	@Desc("所有的ID")
-	@Column(columnDefinition="text")
-	private String partids;
+    @Desc("裁剪日计划ID")
+    @Column(nullable = false)
+    @Index(name = "cutPlanDailyId")
+    private Long cutPlanDailyId;
 
-	public String getPartids() {
-		return partids;
-	}
+    @Desc("裁剪计划ID")
+    @Column(nullable = false)
+    @Index(name = "cutPlanId")
+    private Long cutPlanId;
 
-	public void setPartids(String partids) {
-		this.partids = partids;
-	}
+    @Desc("套数")
+    @Column(nullable = false)
+    private Integer count;
 
-	public Long getCutPlanDailyId() {
-		return cutPlanDailyId;
-	}
+    @Desc("用户和数量")
+    @Column(nullable = false, columnDefinition = "text")
+    private String userAndCount;
 
-	public void setCutPlanDailyId(Long cutPlanDailyId) {
-		this.cutPlanDailyId = cutPlanDailyId;
-	}
+    @Desc("备注")
+    private String comment;
 
-	public Long getCutPlanId() {
-		return cutPlanId;
-	}
+    @Desc("该裁剪计划分配的所有用户的ID")
+    @Column(nullable = false, columnDefinition = "text")
+    private String userIds;
 
-	public void setCutPlanId(Long cutPlanId) {
-		this.cutPlanId = cutPlanId;
-	}
+    @Desc("各个部件的数量")
+    @Column(columnDefinition = "text")
+    private String counts;
 
-	public Integer getCount() {
-		return count;
-	}
+    @Desc("所有的部件")
+    @Column(columnDefinition = "text")
+    private String partNames;
+    @Desc("所有的ID")
+    @Column(columnDefinition = "text")
+    private String partids;
 
-	public void setCount(Integer count) {
-		this.count = count;
-	}
+    public String getPartids() {
+        return partids;
+    }
 
-	public String getUserAndCount() {
-		return userAndCount;
-	}
+    public void setPartids(String partids) {
+        this.partids = partids;
+    }
 
-	public void setUserAndCount(String userAndCount) {
-		this.userAndCount = userAndCount;
-	}
+    public Long getCutPlanDailyId() {
+        return cutPlanDailyId;
+    }
 
-	public String getComment() {
-		return comment;
-	}
+    public void setCutPlanDailyId(Long cutPlanDailyId) {
+        this.cutPlanDailyId = cutPlanDailyId;
+    }
 
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
+    public Long getCutPlanId() {
+        return cutPlanId;
+    }
 
-	public String getUserIds() {
-		return userIds;
-	}
+    public void setCutPlanId(Long cutPlanId) {
+        this.cutPlanId = cutPlanId;
+    }
 
-	public void setUserIds(String userIds) {
-		this.userIds = userIds;
-	}
+    public Integer getCount() {
+        return count;
+    }
 
-	public String getCounts() {
-		return counts;
-	}
+    public void setCount(Integer count) {
+        this.count = count;
+    }
 
-	public void setCounts(String counts) {
-		this.counts = counts;
-	}
+    public String getUserAndCount() {
+        return userAndCount;
+    }
 
-	public String getPartNames() {
-		return partNames;
-	}
+    public void setUserAndCount(String userAndCount) {
+        this.userAndCount = userAndCount;
+    }
 
-	public void setPartNames(String partNames) {
-		this.partNames = partNames;
-	}
-	
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public String getUserIds() {
+        return userIds;
+    }
+
+    public void setUserIds(String userIds) {
+        this.userIds = userIds;
+    }
+
+    public String getCounts() {
+        return counts;
+    }
+
+    public void setCounts(String counts) {
+        this.counts = counts;
+    }
+
+    public String getPartNames() {
+        return partNames;
+    }
+
+    public void setPartNames(String partNames) {
+        this.partNames = partNames;
+    }
+
 }

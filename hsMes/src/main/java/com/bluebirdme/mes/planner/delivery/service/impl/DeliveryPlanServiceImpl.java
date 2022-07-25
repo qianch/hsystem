@@ -27,8 +27,6 @@ import com.bluebirdme.mes.platform.entity.MessageType;
 import com.bluebirdme.mes.produce.entity.FinishedProduct;
 import com.bluebirdme.mes.sales.entity.SalesOrderDetail;
 import com.bluebirdme.mes.sales.entity.SalesOrderDetailPartsCount;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -51,7 +49,7 @@ import java.util.*;
 @Service
 @AnyExceptionRollback
 public class DeliveryPlanServiceImpl extends BaseServiceImpl implements IDeliveryPlanService {
-    private static Logger logger = LoggerFactory.getLogger(DeliveryPlanServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(DeliveryPlanServiceImpl.class);
     @Resource
     IDeliveryPlanDao deliveryPlanDao;
     @Resource
@@ -576,7 +574,7 @@ public class DeliveryPlanServiceImpl extends BaseServiceImpl implements IDeliver
     public void unbindingPDA(String id) {
         Map<String, Object> param = new HashMap<>();
         param.put("deliveryId", Long.parseLong(id));
-        DeliveryPlanSalesOrders dpo = deliveryPlanDao.findUniqueByMap(DeliveryPlanSalesOrders.class,param);
+        DeliveryPlanSalesOrders dpo = deliveryPlanDao.findUniqueByMap(DeliveryPlanSalesOrders.class, param);
         dpo.setOptUser(null);
         dpo.setPdaID(null);
         deliveryPlanDao.save(dpo);
@@ -585,7 +583,7 @@ public class DeliveryPlanServiceImpl extends BaseServiceImpl implements IDeliver
     @Override
     public List<Map<String, Object>> findDeliverySlipMirror(Long id) {
         List<Map<String, Object>> deliverySlip = deliveryPlanDao.findDeliverySlipMirror(id);
-        return  deliverySlip;
+        return deliverySlip;
     }
 
     @Override

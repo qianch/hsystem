@@ -6,7 +6,6 @@
  */
 package com.bluebirdme.mes.planner.delivery.controller;
 
-import com.aspose.cells.Border;
 import com.bluebirdme.mes.audit.entity.AuditConstant;
 import com.bluebirdme.mes.audit.service.IAuditInstanceService;
 import com.bluebirdme.mes.baseInfo.entity.TcBomVersionParts;
@@ -27,7 +26,6 @@ import com.bluebirdme.mes.planner.delivery.service.IDeliveryPlanService;
 import com.bluebirdme.mes.platform.entity.User;
 import com.bluebirdme.mes.platform.service.IUserService;
 import com.bluebirdme.mes.produce.entity.FinishedProduct;
-import com.bluebirdme.mes.produce.service.IFinishedProductService;
 import com.bluebirdme.mes.sales.entity.Consumer;
 import com.bluebirdme.mes.sales.entity.SalesOrderDetail;
 import com.bluebirdme.mes.sales.service.IConsumerService;
@@ -40,16 +38,14 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFFont;
-
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellAddress;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.streaming.SXSSFDrawing;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.apache.poi.xssf.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -73,7 +69,9 @@ import java.util.*;
 @RequestMapping("/planner/deliveryPlan")
 @Journal(name = "出货计划")
 public class DeliveryPlanController extends BaseController {
-    // 出货计划页面
+    /**
+     * 出货计划页面
+     */
     final String index = "planner/delivery/deliveryPlan";
     final String addOrEdit = "planner/delivery/deliveryPlanAddOrEdit";
     final String checkDetail = "planner/delivery/deliveryPlanReadOnly";
@@ -227,7 +225,6 @@ public class DeliveryPlanController extends BaseController {
     @RequestMapping(value = "searchProduct", method = RequestMethod.GET)
     public ModelAndView searchProduct(DeliveryPlanSalesOrders dpo) {
         dpo = deliveryPlanService.findById(DeliveryPlanSalesOrders.class, dpo.getId());
-
         HashMap<String, Object> map = new HashMap();
         map.put("packingNumber", dpo.getPackingNumber());
         List<DeliveryPlanDetails> list = deliveryPlanService.findListByMap(DeliveryPlanDetails.class, map);
@@ -262,11 +259,9 @@ public class DeliveryPlanController extends BaseController {
         Map<String, Object> map = new HashMap();
         map.put("deliveryId", deliveryPlan.getId());
         List<Map<String, Object>> products = deliveryPlanService.getDeliveryProducts(deliveryPlan.getId());
-
         map.clear();
         map.put("deliveryId", deliveryPlan.getId());
         List<DeliveryPlanSalesOrders> orders = deliveryPlanService.findListByMap(DeliveryPlanSalesOrders.class, map);
-
         return new ModelAndView(auditDetail, model
                 .addAttribute("deliveryBizUserName", c.userName)
                 .addAttribute("deliveryPlan", deliveryPlan)
@@ -345,7 +340,6 @@ public class DeliveryPlanController extends BaseController {
         Map<String, Object> map = new HashMap();
         map.put("deliveryId", deliveryPlan.getId());
         List<Map<String, Object>> products = deliveryPlanService.getDeliveryProducts(deliveryPlan.getId());
-
         //下单量
         int orderxdl;
         int orderfhl;
@@ -353,36 +347,33 @@ public class DeliveryPlanController extends BaseController {
         int detailplanxdl;
         int detailplanfhl;
         int detailplankcl;
-
-        for (int i = 0; i < products.size(); i++) {
-            String salesOrderCode = products.get(i).get("SALESORDERSUBCODE".toUpperCase()).toString();
-            String batchCode = products.get(i).get("BATCHCODE").toString();
-            long salesOrderDetailId = Long.parseLong(products.get(i).get("salesOrderDetailId".toUpperCase()).toString());
-            String partName = products.get(i).get("PARTNAME".toUpperCase()) == null ? "" : products.get(i).get("PARTNAME".toUpperCase()).toString();
+        for (Map<String, Object> product : products) {
+            String salesOrderCode = product.get("SALESORDERSUBCODE".toUpperCase()).toString();
+            String batchCode = product.get("BATCHCODE").toString();
+            long salesOrderDetailId = Long.parseLong(product.get("salesOrderDetailId".toUpperCase()).toString());
+            String partName = product.get("PARTNAME".toUpperCase()) == null ? "" : product.get("PARTNAME".toUpperCase()).toString();
             //订单下单量
             orderxdl = deliveryPlanService.getOrderXdl(salesOrderDetailId, partName);
-            products.get(i).put("orderxdl", orderxdl);
+            product.put("orderxdl", orderxdl);
             //查询订单发货量
             orderfhl = deliveryPlanService.getOrderFhl(salesOrderCode);
-            products.get(i).put("orderfhl", orderfhl);
+            product.put("orderfhl", orderfhl);
             //查询订单库存量
             orderkcl = orderxdl - orderfhl;
-            products.get(i).put("orderkcl", orderkcl);
+            product.put("orderkcl", orderkcl);
             //计划下单量
             detailplanxdl = deliveryPlanService.getPlanXdl(salesOrderDetailId, batchCode, partName);
-            products.get(i).put("detailplanxdl", detailplanxdl);
+            product.put("detailplanxdl", detailplanxdl);
             //查询计划发货量
             detailplanfhl = deliveryPlanService.getDetailPlanOrderFhl(salesOrderCode, batchCode);
-            products.get(i).put("detailplanfhl", detailplanfhl);
+            product.put("detailplanfhl", detailplanfhl);
             //查询计划库存量
             detailplankcl = detailplanxdl - detailplanfhl;
-            products.get(i).put("detailplankcl", detailplankcl);
+            product.put("detailplankcl", detailplankcl);
         }
-
         map.clear();
         map.put("deliveryId", deliveryPlan.getId());
         List<DeliveryPlanSalesOrders> orders = deliveryPlanService.findListByMap(DeliveryPlanSalesOrders.class, map);
-
         return new ModelAndView(checkDetail, model
                 .addAttribute("deliveryBizUserName", c.userName)
                 .addAttribute("deliveryPlan", deliveryPlan)
@@ -403,7 +394,8 @@ public class DeliveryPlanController extends BaseController {
     public void export(Long id) throws Exception {
         // 出货计划
         DeliveryPlan deliveryPlan = deliveryPlanService.findById(DeliveryPlan.class, id);
-        HashMap<String, Object> deliveryCode = new HashMap();// 发货单编号
+        //发货单编号
+        HashMap<String, Object> deliveryCode = new HashMap();
         deliveryCode.put("deliveryCode", deliveryPlan.getDeliveryCode());
         // 成品出库记录
         List<ProductOutRecord> productOutRecords = deliveryPlanService.findListByMap(ProductOutRecord.class, deliveryCode);
@@ -429,21 +421,24 @@ public class DeliveryPlanController extends BaseController {
         String templateName = "成品发货通知单(" + deliveryPlan.getDeliveryCode() + ")";
         SXSSFWorkbook wb = new SXSSFWorkbook();
         Font font = wb.createFont();
-        // font.setColor(HSSFColor.BLACK.index);//HSSFColor.VIOLET.index //字体颜色
         font.setFontHeightInPoints((short) 18);
-        font.setBold(true); // 字体增粗
+        // 字体增粗
+        font.setBold(true);
         CellStyle cellStyle = wb.createCellStyle();
-        cellStyle.setAlignment(HorizontalAlignment.CENTER); // 水平布局：居中
+        // 水平布局：居中
+        cellStyle.setAlignment(HorizontalAlignment.CENTER);
         cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
         cellStyle.setBorderBottom(BorderStyle.NONE);
         cellStyle.setBorderTop(BorderStyle.THIN);
         cellStyle.setBorderRight(BorderStyle.THIN);
         cellStyle.setBorderLeft(BorderStyle.THIN);
-        cellStyle.setWrapText(true);// 单元格自动换行
+        // 单元格自动换行
+        cellStyle.setWrapText(true);
         cellStyle.setFont(font);
 
         CellStyle cellStyle0 = wb.createCellStyle();
-        cellStyle0.setAlignment(HorizontalAlignment.CENTER); // 水平布局：居中
+        // 水平布局：居中
+        cellStyle0.setAlignment(HorizontalAlignment.CENTER);
         cellStyle0.setVerticalAlignment(VerticalAlignment.CENTER);
         cellStyle0.setBorderBottom(BorderStyle.THIN);
         cellStyle0.setBorderTop(BorderStyle.THIN);
@@ -456,7 +451,7 @@ public class DeliveryPlanController extends BaseController {
         font1.setFontHeightInPoints((short) 10);
         font1.setBold(true); // 字体增粗
         CellStyle cellStyle3 = wb.createCellStyle();
-        cellStyle3.setAlignment(HorizontalAlignment.LEFT); // 左对齐
+        cellStyle3.setAlignment(HorizontalAlignment.LEFT);
         cellStyle3.setBorderBottom(BorderStyle.THIN);
         cellStyle3.setBorderTop(BorderStyle.THIN);
         cellStyle3.setBorderRight(BorderStyle.THIN);
@@ -472,11 +467,13 @@ public class DeliveryPlanController extends BaseController {
         row = sheet.createRow(r);
         row.setHeightInPoints(50);
         cell = row.createCell(0);
-        sheet.setColumnWidth(0, 13 * 256);// 设置列宽
+        // 设置列宽
+        sheet.setColumnWidth(0, 13 * 256);
         cell.setCellStyle(cellStyle);
         cell.setCellValue("浙江恒石纤维基业有限公司成品发货通知单");
         cell = row.createCell(1);
-        sheet.setColumnWidth(1, 13 * 256);// 设置列宽
+        // 设置列宽
+        sheet.setColumnWidth(1, 13 * 256);
         cell.setCellStyle(cellStyle);
         cell = row.createCell(2);
         sheet.setColumnWidth(2, 13 * 256);
@@ -510,7 +507,7 @@ public class DeliveryPlanController extends BaseController {
         // 第二行
         row = sheet.createRow(r);
         CellStyle cellStyle1 = wb.createCellStyle();
-        cellStyle1.setAlignment(HorizontalAlignment.RIGHT); // 右对齐
+        cellStyle1.setAlignment(HorizontalAlignment.RIGHT);
         cellStyle1.setBorderBottom(BorderStyle.THIN);
         cellStyle1.setBorderTop(BorderStyle.NONE);
         cellStyle1.setBorderRight(BorderStyle.THIN);
@@ -525,7 +522,7 @@ public class DeliveryPlanController extends BaseController {
         sheet.addMergedRegion(new CellRangeAddress(r, r, 0, 10));
         r++;
         CellStyle cellStyle2 = wb.createCellStyle();
-        cellStyle2.setAlignment(HorizontalAlignment.LEFT); // 左对齐
+        cellStyle2.setAlignment(HorizontalAlignment.LEFT);
         cellStyle2.setBorderBottom(BorderStyle.THIN);
         cellStyle2.setBorderTop(BorderStyle.THIN);
         cellStyle2.setBorderRight(BorderStyle.THIN);
@@ -611,7 +608,7 @@ public class DeliveryPlanController extends BaseController {
         sheet.addMergedRegion(new CellRangeAddress(r, r, 6, 10));
         r++;
         // 第五行 箱单数据
-        String columnName[] = new String[]{"箱单数据", "编号", "装箱号", "提单号", "箱号", "封号", "件数", "毛重", "尺码"};
+        String[] columnName = new String[]{"箱单数据", "编号", "装箱号", "提单号", "箱号", "封号", "件数", "毛重", "尺码"};
         row = sheet.createRow(r);
         for (int a = 0; a < columnName.length; a++) {
             cell = row.createCell(a);
@@ -636,33 +633,15 @@ public class DeliveryPlanController extends BaseController {
             for (int j = 0; j < columnName.length; j++) {
                 cell = row.createCell(j);
                 switch (j) {
-                    case 0:
-                        cell.setCellValue("");
-                        break;
-                    case 1:
-                        cell.setCellValue(index);// 编号
-                        break;
-                    case 2:
-                        cell.setCellValue(data.getPn() == null ? "" : data.getPn());// 装箱号
-                        break;
-                    case 3:
-                        cell.setCellValue(data.getLadingCode() == null ? "" : data.getLadingCode());// 提单号
-                        break;
-                    case 4:
-                        cell.setCellValue(data.getBoxNumber() == null ? "" : data.getBoxNumber());// 箱号
-                        break;
-                    case 5:
-                        cell.setCellValue(data.getSerialNumber() == null ? "" : data.getSerialNumber());// 封号
-                        break;
-                    case 6:
-                        cell.setCellValue(data.getCount() == null ? 0d : data.getCount());// 件数
-                        break;
-                    case 7:
-                        cell.setCellValue(data.getWeight() == null ? 0d : data.getWeight());// 毛重
-                        break;
-                    case 8:
-                        cell.setCellValue(data.getSize() == null ? 0d : data.getSize());// 尺码
-                        break;
+                    case 0 -> cell.setCellValue("");
+                    case 1 -> cell.setCellValue(index);// 编号
+                    case 2 -> cell.setCellValue(data.getPn() == null ? "" : data.getPn());// 装箱号
+                    case 3 -> cell.setCellValue(data.getLadingCode() == null ? "" : data.getLadingCode());// 提单号
+                    case 4 -> cell.setCellValue(data.getBoxNumber() == null ? "" : data.getBoxNumber());// 箱号
+                    case 5 -> cell.setCellValue(data.getSerialNumber() == null ? "" : data.getSerialNumber());// 封号
+                    case 6 -> cell.setCellValue(data.getCount() == null ? 0d : data.getCount());// 件数
+                    case 7 -> cell.setCellValue(data.getWeight() == null ? 0d : data.getWeight());// 毛重
+                    case 8 -> cell.setCellValue(data.getSize() == null ? 0d : data.getSize());// 尺码
                 }
                 cell.setCellStyle(cellStyle0);
             }
@@ -686,7 +665,7 @@ public class DeliveryPlanController extends BaseController {
         }
         sheet.addMergedRegion(new CellRangeAddress(r, r, 0, 10));
         r++;
-        String cellName[] = new String[]{"编号", "装箱号", "订单号", "批次号", "客户产品名称", "厂内名称", "部件名称", "门幅", "发货数量(托)", "发货数量(套)", "备注"};
+        String[] cellName = new String[]{"编号", "装箱号", "订单号", "批次号", "客户产品名称", "厂内名称", "部件名称", "门幅", "发货数量(托)", "发货数量(套)", "备注"};
         row = sheet.createRow(r);
         for (int b = 0; b < cellName.length; b++) {
             Cell cell2 = row.createCell(b);
@@ -706,70 +685,82 @@ public class DeliveryPlanController extends BaseController {
             for (int b = 0; b < cellName.length; b++) {
                 Cell cell2 = row.createCell(b);
                 cell2.setCellStyle(cellStyle0);
-                if ("装箱号".equals(cellName[b])) {
-                    if (dpds.getPn() != null) {
-                        cell2.setCellValue(dpds.getPn());
-                    } else {
-                        cell2.setCellValue("");
-                    }
-                } else if ("订单号".equals(cellName[b])) {
-                    if (dpds.getSalesOrderSubCode() != null) {
-                        cell2.setCellValue(dpds.getSalesOrderSubCode());
-                    } else {
-                        cell2.setCellValue("");
-                    }
-                } else if ("批次号".equals(cellName[b])) {
-                    if (dpds.getBatchCode() != null) {
-                        cell2.setCellValue(dpds.getBatchCode());
-                    } else {
-                        cell2.setCellValue("");
-                    }
-                } else if ("客户产品名称".equals(cellName[b])) {
-                    if (dpds.getConsumerProductName() != null) {
-                        cell2.setCellValue(dpds.getConsumerProductName());
-                    } else {
-                        cell2.setCellValue("");
-                    }
-                } else if ("厂内名称".equals(cellName[b])) {
-                    if (dpds.getFactoryProductName() != null) {
-                        cell2.setCellValue(dpds.getFactoryProductName());
-                    } else {
-                        cell2.setCellValue("");
-                    }
-                } else if ("部件名称".equals(cellName[b])) {
-                    if (dpds.getPartName() != null) {
-                        cell2.setCellValue(dpds.getPartName());
-                    } else {
-                        cell2.setCellValue("");
-                    }
-                } else if ("门幅".equals(cellName[b])) {
-                    if (procuct.getProductWidth() != null) {
-                        cell2.setCellValue(procuct.getProductWidth());
-                    } else {
-                        cell2.setCellValue("");
-                    }
-                } else if ("发货数量(托)".equals(cellName[b])) {
-                    if (dpds.getDeliveryCount() != null) {
-                        cell2.setCellValue(dpds.getDeliveryCount());
-                        deliveryCount += dpds.getDeliveryCount();
-                    } else {
-                        cell2.setCellValue("");
-                    }
-                } else if ("发货数量(套)".equals(cellName[b])) {
-                    if (dpds.getDeliverySuitCount() != null) {
-                        cell2.setCellValue(dpds.getDeliverySuitCount());
-                        deliverySuitCount += dpds.getDeliverySuitCount();
-                    } else {
-                        cell2.setCellValue("");
-                    }
-                } else if ("备注".equals(cellName[b])) {
-                    if (dpds.getMemo() != null) {
-                        cell2.setCellValue(dpds.getMemo());
-                    } else {
-                        cell2.setCellValue("");
-                    }
-                } else if ("编号".equals(cellName[b])) {
-                    cell2.setCellValue(index1);
+                switch (cellName[b]) {
+                    case "装箱号":
+                        if (dpds.getPn() != null) {
+                            cell2.setCellValue(dpds.getPn());
+                        } else {
+                            cell2.setCellValue("");
+                        }
+                        break;
+                    case "订单号":
+                        if (dpds.getSalesOrderSubCode() != null) {
+                            cell2.setCellValue(dpds.getSalesOrderSubCode());
+                        } else {
+                            cell2.setCellValue("");
+                        }
+                        break;
+                    case "批次号":
+                        if (dpds.getBatchCode() != null) {
+                            cell2.setCellValue(dpds.getBatchCode());
+                        } else {
+                            cell2.setCellValue("");
+                        }
+                        break;
+                    case "客户产品名称":
+                        if (dpds.getConsumerProductName() != null) {
+                            cell2.setCellValue(dpds.getConsumerProductName());
+                        } else {
+                            cell2.setCellValue("");
+                        }
+                        break;
+                    case "厂内名称":
+                        if (dpds.getFactoryProductName() != null) {
+                            cell2.setCellValue(dpds.getFactoryProductName());
+                        } else {
+                            cell2.setCellValue("");
+                        }
+                        break;
+                    case "部件名称":
+                        if (dpds.getPartName() != null) {
+                            cell2.setCellValue(dpds.getPartName());
+                        } else {
+                            cell2.setCellValue("");
+                        }
+                        break;
+                    case "门幅":
+                        if (procuct.getProductWidth() != null) {
+                            cell2.setCellValue(procuct.getProductWidth());
+                        } else {
+                            cell2.setCellValue("");
+                        }
+                        break;
+                    case "发货数量(托)":
+                        if (dpds.getDeliveryCount() != null) {
+                            cell2.setCellValue(dpds.getDeliveryCount());
+                            deliveryCount += dpds.getDeliveryCount();
+                        } else {
+                            cell2.setCellValue("");
+                        }
+                        break;
+                    case "发货数量(套)":
+                        if (dpds.getDeliverySuitCount() != null) {
+                            cell2.setCellValue(dpds.getDeliverySuitCount());
+                            deliverySuitCount += dpds.getDeliverySuitCount();
+                        } else {
+                            cell2.setCellValue("");
+                        }
+                        break;
+                    case "备注":
+                        if (dpds.getMemo() != null) {
+                            cell2.setCellValue(dpds.getMemo());
+                        } else {
+                            cell2.setCellValue("");
+                        }
+                        break;
+                    case "编号":
+                        cell2.setCellValue(index1);
+                        break;
                 }
             }
             r++;
@@ -925,14 +916,11 @@ public class DeliveryPlanController extends BaseController {
         anchor.setAnchorType(ClientAnchor.AnchorType.byId(3));
         //插入图片
         patriarch.createPicture(anchor, wb.addPicture(byteArrayOut.toByteArray(), XSSFWorkbook.PICTURE_TYPE_PNG));
-        HttpUtils.download (response,wb, templateName);
+        HttpUtils.download(response, wb, templateName);
     }
 
     /**
      * 根据成品出库装厢表id导出Excel（竖排）
-     *
-     * @param ids
-     * @throws Exception
      */
     @NoLogin
     @Journal(name = "根据成品出库装厢表id导出Excel（竖排）")
@@ -940,7 +928,7 @@ public class DeliveryPlanController extends BaseController {
     @RequestMapping(value = "exportnew", method = RequestMethod.GET)
     public void exportnew(String ids) throws Exception {
         SimpleDateFormat sf = new SimpleDateFormat("yyyy年MM月dd日");
-        String templateName = "成品发货通知单(竖版)"+sf.format(new Date());
+        String templateName = "成品发货通知单(竖版)" + sf.format(new Date());
         SXSSFWorkbook wb = new SXSSFWorkbook();
         Font font = wb.createFont();
         // font.setColor(HSSFColor.BLACK.index);//HSSFColor.VIOLET.index //字体颜色
@@ -980,11 +968,11 @@ public class DeliveryPlanController extends BaseController {
 
 
         String[] idsArray = ids.split(",");
-        for (String idString : idsArray){
+        for (String idString : idsArray) {
             ProductOutOrder productOutOrder = deliveryPlanService.findById(ProductOutOrder.class, Long.parseLong(idString));
             DeliveryPlan deliveryPlan = deliveryPlanService.findById(DeliveryPlan.class, productOutOrder.getDeliveryId());
             //出货员
-            User operater =deliveryPlanService.findById(User.class,productOutOrder.getOperateUserId());
+            User operater = deliveryPlanService.findById(User.class, productOutOrder.getOperateUserId());
             // 业务员
             User user = deliveryPlanService.findById(User.class, deliveryPlan.getDeliveryBizUserId());
             List<Map<String, Object>> auditInstance = deliveryPlanService.searchAuditer("com.bluebirdme.mes.planner.delivery.entity.DeliveryPlan", deliveryPlan.getId());
@@ -997,13 +985,13 @@ public class DeliveryPlanController extends BaseController {
             //客户信息
             Consumer consumer = consumerService.findById(Consumer.class, deliveryPlan.getConsumerId());
             List<Map<String, Object>> serviceDeliverySlip = deliveryPlanService.findDeliverySlipMirror(Long.parseLong(idString));
-            if(serviceDeliverySlip.size() == 0){
+            if (serviceDeliverySlip.size() == 0) {
                 serviceDeliverySlip = deliveryPlanService.findDeliverySlip(Long.parseLong(idString));
             }
             sheet = wb.createSheet(deliveryPlan.getDeliveryCode());
             // 生成一个字体
-            Row row = null;
-            Cell cell = null;
+            Row row;
+            Cell cell;
 
             int r = 0;// 从第1行开始写数据
             row = sheet.createRow(r);
@@ -1173,7 +1161,7 @@ public class DeliveryPlanController extends BaseController {
             cell.setCellValue("收货地址：");
             cell.setCellStyle(cellStyle2);
             cell = row.createCell(10);
-            cell.setCellValue(deliveryPlan.getShippingAddress()==null ? "" : deliveryPlan.getShippingAddress());
+            cell.setCellValue(deliveryPlan.getShippingAddress() == null ? "" : deliveryPlan.getShippingAddress());
             cell.setCellStyle(cellStyle2);
             cell = row.createCell(11);
             cell.setCellStyle(cellStyle2);
@@ -1202,7 +1190,7 @@ public class DeliveryPlanController extends BaseController {
             cell.setCellStyle(cellStyle2);
             sheet.addMergedRegion(new CellRangeAddress(r, r, 0, 1));
             cell = row.createCell(2);
-            cell.setCellValue(deliveryPlan.getLinkmanAndPhone()==null ? "" : deliveryPlan.getLinkmanAndPhone());
+            cell.setCellValue(deliveryPlan.getLinkmanAndPhone() == null ? "" : deliveryPlan.getLinkmanAndPhone());
             cell.setCellStyle(cellStyle2);
             cell = row.createCell(3);
             cell.setCellStyle(cellStyle2);
@@ -1287,33 +1275,15 @@ public class DeliveryPlanController extends BaseController {
                 for (int j = 0; j < columnName.length; j++) {
                     cell = row.createCell(j);
                     switch (j) {
-                        case 0:
-                            cell.setCellValue("");
-                            break;
-                        case 1:
-                            cell.setCellValue(index);// 编号
-                            break;
-                        case 2:
-                            cell.setCellValue(data.getPn() == null ? "" : data.getPn());// 装箱号
-                            break;
-                        case 3:
-                            cell.setCellValue(data.getLadingCode() == null ? "" : data.getLadingCode());// 提单号
-                            break;
-                        case 4:
-                            cell.setCellValue(data.getBoxNumber() == null ? "" : data.getBoxNumber());// 箱号
-                            break;
-                        case 5:
-                            cell.setCellValue(data.getSerialNumber() == null ? "" : data.getSerialNumber());// 封号
-                            break;
-                        case 6:
-                            cell.setCellValue(data.getCount() == null ? 0d : data.getCount());// 件数
-                            break;
-                        case 7:
-                            cell.setCellValue(data.getWeight() == null ? 0d : data.getWeight());// 毛重
-                            break;
-                        case 8:
-                            cell.setCellValue(data.getSize() == null ? 0d : data.getSize());// 尺码
-                            break;
+                        case 0 -> cell.setCellValue("");
+                        case 1 -> cell.setCellValue(index);// 编号
+                        case 2 -> cell.setCellValue(data.getPn() == null ? "" : data.getPn());// 装箱号
+                        case 3 -> cell.setCellValue(data.getLadingCode() == null ? "" : data.getLadingCode());// 提单号
+                        case 4 -> cell.setCellValue(data.getBoxNumber() == null ? "" : data.getBoxNumber());// 箱号
+                        case 5 -> cell.setCellValue(data.getSerialNumber() == null ? "" : data.getSerialNumber());// 封号
+                        case 6 -> cell.setCellValue(data.getCount() == null ? 0d : data.getCount());// 件数
+                        case 7 -> cell.setCellValue(data.getWeight() == null ? 0d : data.getWeight());// 毛重
+                        case 8 -> cell.setCellValue(data.getSize() == null ? 0d : data.getSize());// 尺码
                     }
                     cell.setCellStyle(cellStyle0);
                 }
@@ -1340,10 +1310,8 @@ public class DeliveryPlanController extends BaseController {
                 cell.setCellStyle(cellStyle0);
                 r++;
             }
-            sheet.addMergedRegion(new CellRangeAddress(4, r-1, 11, 11));
-            sheet.addMergedRegion(new CellRangeAddress(4, r-1, 12, 18));
-
-
+            sheet.addMergedRegion(new CellRangeAddress(4, r - 1, 11, 11));
+            sheet.addMergedRegion(new CellRangeAddress(4, r - 1, 12, 18));
 
             row = sheet.createRow(r);
             cell = row.createCell(0);
@@ -1355,9 +1323,9 @@ public class DeliveryPlanController extends BaseController {
             }
             sheet.addMergedRegion(new CellRangeAddress(r, r, 0, 18));
             r++;
-            String cellName[] = new String[]{"编号", "装箱号", "订单号", "批次号","Po No", "关税编号",
-                    "物料规格型号","客户产品名称", "厂内名称", "部件名称", "门幅", "米长（m）","发货数量(托)", "发货数量(套)", "发货数量（kg）","收货数量(托)",
-                    "收货数量(套)","收货数量(kg)","备注"};
+            String[] cellName = new String[]{"编号", "装箱号", "订单号", "批次号", "Po No", "关税编号",
+                    "物料规格型号", "客户产品名称", "厂内名称", "部件名称", "门幅", "米长（m）", "发货数量(托)", "发货数量(套)", "发货数量（kg）", "收货数量(托)",
+                    "收货数量(套)", "收货数量(kg)", "备注"};
             row = sheet.createRow(r);
             for (int b = 0; b < cellName.length; b++) {
                 cell = row.createCell(b);
@@ -1369,37 +1337,38 @@ public class DeliveryPlanController extends BaseController {
             int index1 = 0;
             int tcounts = 0;//总套数
             int traycounts = 0;//总托数
-            Double dweights=0.00;
+            Double dweights = 0.00;
 
-            for (Map<String,Object> mapobject:serviceDeliverySlip) {
+            for (Map<String, Object> mapobject : serviceDeliverySlip) {
                 int tcount = 0;
-                int traycount=0;
-                Double dweight=0.00;
-                if(mapobject.get("BARCODES") == null)
-                {
+                int traycount = 0;
+                Double dweight = 0.00;
+                if (mapobject.get("BARCODES") == null) {
                     continue;
                 }
-                String barCodes[] = mapobject.get("BARCODES").toString().split(",");
-                Map<String,Object> map2=new HashMap<String,Object>();
+                String[] barCodes = mapobject.get("BARCODES").toString().split(",");
+                Map<String, Object> map2 = new HashMap<String, Object>();
 
-                for (int j = 0; j < barCodes.length; j++) {
+                for (String barCode : barCodes) {
                     map2.clear();
-                    map2.put("barcode", barCodes[j]);
+                    map2.put("barcode", barCode);
                     TrayBarCode tb = deliveryPlanService.findUniqueByMap(TrayBarCode.class, map2);
-                    if(tb!=null) {
-                        ProductOutRecord productOutRecord= deliveryPlanService.findUniqueByMap(ProductOutRecord.class, map2);
+                    if (tb != null) {
+                        ProductOutRecord productOutRecord = deliveryPlanService.findUniqueByMap(ProductOutRecord.class, map2);
                         dweight += productOutRecord.getWeight();
                         dweights += productOutRecord.getWeight();
                         //判断是否是套材
-                        if (tb.getPartId() != null && !"".equals(tb.getPartId())) {
+                        if (tb.getPartId() != null) {
                             //判断是成品胚布或常规部件
                             TcBomVersionParts part = deliveryPlanService.findById(TcBomVersionParts.class, tb.getPartId());
-                            if ("成品胚布".equals(part.getTcProcBomVersionPartsType())) {//成品胚布
-                                tcount += 1;//成品胚布一托为一套
+                            if ("成品胚布".equals(part.getTcProcBomVersionPartsType())) {
+                                //成品胚布一托为一套
+                                tcount += 1;
                                 tcounts += 1;
-                            } else {//常规部件
+                            } else {
+                                //常规部件
                                 map.clear();
-                                map.put("trayBarcode", barCodes[j]);
+                                map.put("trayBarcode", barCode);
                                 List<TrayBoxRoll> trays = deliveryPlanService.findListByMap(TrayBoxRoll.class, map);
                                 for (TrayBoxRoll tray : trays) {
                                     if (tray.getBoxBarcode() != null && !"".equals(tray.getBoxBarcode())) {
@@ -1419,24 +1388,20 @@ public class DeliveryPlanController extends BaseController {
                                     }
                                 }
                             }
-                        }
-                        else//非套材增加 托数累加
-                        {
+                        } else {
+                            //非套材增加 托数累加
                             traycount++;
                             traycounts++;
                         }
 
-                    }
-                    else
-                    {
+                    } else {
                         map2.clear();
-                        map2.put("barcode", barCodes[j]);
+                        map2.put("barcode", barCode);
                         PartBarcode partBarcode = deliveryPlanService.findUniqueByMap(PartBarcode.class, map2);
-                        if(partBarcode!=null)
-                        {
+                        if (partBarcode != null) {
                             tcount += 1;//pcj一个部件为一套
                             tcounts += 1;
-                            ProductOutRecord productOutRecord= deliveryPlanService.findUniqueByMap(ProductOutRecord.class, map2);
+                            ProductOutRecord productOutRecord = deliveryPlanService.findUniqueByMap(ProductOutRecord.class, map2);
                             dweight += productOutRecord.getWeight();
                             dweights += productOutRecord.getWeight();
                         }
@@ -1448,64 +1413,36 @@ public class DeliveryPlanController extends BaseController {
                 for (int b = 0; b < cellName.length; b++) {
                     cell = row.createCell(b);
                     cell.setCellStyle(cellStyle0);
-                    switch (b){
-                        case 0:
-                            cell.setCellValue(index1);//编号
-                            break;
-                        case 1:
-                            cell.setCellValue(mapobject.get("PN")==null ? "" : mapobject.get("PN").toString());//装箱号
-                            break;
-                        case 2:
-                            cell.setCellValue(mapobject.get("SALESORDERSUBCODE")==null ? "" : mapobject.get("SALESORDERSUBCODE").toString());//订单号
-                            break;
-                        case 3:
-                            cell.setCellValue(mapobject.get("BATCHCODE")==null ? "" : mapobject.get("BATCHCODE").toString());//批次号
-                            break;
-                        case 4:
-                            cell.setCellValue("");//Po No
-                            break;
-                        case 5:
-                            cell.setCellValue("");//关税编号
-                            break;
-                        case 6:
-                            cell.setCellValue(mapobject.get("PRODUCTMODEL")==null ? "" :mapobject.get("PRODUCTMODEL").toString());//物料规格型号
-                            break;
-                        case 7://consumerProductName
-                            cell.setCellValue(mapobject.get("CONSUMERPRODUCTNAME")==null ? "" :mapobject.get("CONSUMERPRODUCTNAME").toString());//客户产品名称
-                            break;
-                        case 8:
-                            cell.setCellValue(mapobject.get("FACTORYPRODUCTNAME")==null ? "" :mapobject.get("FACTORYPRODUCTNAME").toString());//厂内名称
-                            break;
-                        case 9:
-                            cell.setCellValue(mapobject.get("PARTNAME") == null ? "" :mapobject.get("PARTNAME").toString());//部件名称
-                            break;
-                        case 10:
-                            cell.setCellValue(mapobject.get("PRODUCTWIDTH") == null ? "" :mapobject.get("PRODUCTWIDTH").toString());//门幅
-                            break;
-                        case 11:
-                            cell.setCellValue(mapobject.get("PRODUCTROLLLENGTH") == null ? "" :mapobject.get("PRODUCTROLLLENGTH").toString());//米长（m）
-                            break;
-                        case 12:
-                            cell.setCellValue(traycount);//发货数量(托)
-                            break;
-                        case 13:
-                            cell.setCellValue(tcount);//发货数量(套)
-                            break;
-                        case 14:
-                            cell.setCellValue(dweight);//发货数量（kg）
-                            break;
-                        case 15:
-                            cell.setCellValue("");//收货数量(托)
-                            break;
-                        case 16:
-                            cell.setCellValue("");//收货数量(套）
-                            break;
-                        case 17:
-                            cell.setCellValue("");//收货数量(kg)
-                            break;
-                        case 18:
-                            cell.setCellValue(mapobject.get("MEMO") == null ? "" :mapobject.get("MEMO").toString());//备注
-                            break;
+                    switch (b) {
+                        case 0 -> cell.setCellValue(index1);//编号
+                        case 1 ->
+                                cell.setCellValue(mapobject.get("PN") == null ? "" : mapobject.get("PN").toString());//装箱号
+                        case 2 ->
+                                cell.setCellValue(mapobject.get("SALESORDERSUBCODE") == null ? "" : mapobject.get("SALESORDERSUBCODE").toString());//订单号
+                        case 3 ->
+                                cell.setCellValue(mapobject.get("BATCHCODE") == null ? "" : mapobject.get("BATCHCODE").toString());//批次号
+                        case 4 -> cell.setCellValue("");//Po No
+                        case 5 -> cell.setCellValue("");//关税编号
+                        case 6 ->
+                                cell.setCellValue(mapobject.get("PRODUCTMODEL") == null ? "" : mapobject.get("PRODUCTMODEL").toString());//物料规格型号
+                        case 7 ->//consumerProductName
+                                cell.setCellValue(mapobject.get("CONSUMERPRODUCTNAME") == null ? "" : mapobject.get("CONSUMERPRODUCTNAME").toString());//客户产品名称
+                        case 8 ->
+                                cell.setCellValue(mapobject.get("FACTORYPRODUCTNAME") == null ? "" : mapobject.get("FACTORYPRODUCTNAME").toString());//厂内名称
+                        case 9 ->
+                                cell.setCellValue(mapobject.get("PARTNAME") == null ? "" : mapobject.get("PARTNAME").toString());//部件名称
+                        case 10 ->
+                                cell.setCellValue(mapobject.get("PRODUCTWIDTH") == null ? "" : mapobject.get("PRODUCTWIDTH").toString());//门幅
+                        case 11 ->
+                                cell.setCellValue(mapobject.get("PRODUCTROLLLENGTH") == null ? "" : mapobject.get("PRODUCTROLLLENGTH").toString());//米长（m）
+                        case 12 -> cell.setCellValue(traycount);//发货数量(托)
+                        case 13 -> cell.setCellValue(tcount);//发货数量(套)
+                        case 14 -> cell.setCellValue(dweight);//发货数量（kg）
+                        case 15 -> cell.setCellValue("");//收货数量(托)
+                        case 16 -> cell.setCellValue("");//收货数量(套）
+                        case 17 -> cell.setCellValue("");//收货数量(kg)
+                        case 18 ->
+                                cell.setCellValue(mapobject.get("MEMO") == null ? "" : mapobject.get("MEMO").toString());//备注
                     }
                 }
                 r++;
@@ -1521,7 +1458,7 @@ public class DeliveryPlanController extends BaseController {
             cell.setCellValue("包装方式：");
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(2);
-            cell.setCellValue(deliveryPlan.getPackagingType()==null ? "" : deliveryPlan.getPackagingType());
+            cell.setCellValue(deliveryPlan.getPackagingType() == null ? "" : deliveryPlan.getPackagingType());
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(3);
             cell.setCellStyle(cellStyle0);
@@ -1532,7 +1469,7 @@ public class DeliveryPlanController extends BaseController {
             cell.setCellValue("物流公司：");
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(6);
-            cell.setCellValue(deliveryPlan.getLogisticsCompany()==null ? "" : deliveryPlan.getLogisticsCompany());
+            cell.setCellValue(deliveryPlan.getLogisticsCompany() == null ? "" : deliveryPlan.getLogisticsCompany());
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(7);
             cell.setCellStyle(cellStyle0);
@@ -1578,7 +1515,7 @@ public class DeliveryPlanController extends BaseController {
             sheet.addMergedRegion(new CellRangeAddress(r, r, 1, 2));
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(3);
-            cell.setCellValue(deliveryPlan.getAttention()==null ? "" : deliveryPlan.getAttention());
+            cell.setCellValue(deliveryPlan.getAttention() == null ? "" : deliveryPlan.getAttention());
             cell.setCellStyle(cellStyle0);
             for (int k = 4; k < 11; k++) {
                 cell = row.createCell(k);
@@ -1654,7 +1591,7 @@ public class DeliveryPlanController extends BaseController {
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(10);
             cell.setCellStyle(cellStyle0);
-            sheet.addMergedRegion(new CellRangeAddress(r,r, 7, 10));
+            sheet.addMergedRegion(new CellRangeAddress(r, r, 7, 10));
             cell = row.createCell(11);
             cell.setCellValue("收货人");
             cell.setCellStyle(cellStyle0);
@@ -1673,7 +1610,7 @@ public class DeliveryPlanController extends BaseController {
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(18);
             cell.setCellStyle(cellStyle0);
-            sheet.addMergedRegion(new CellRangeAddress(r,r, 12, 18));
+            sheet.addMergedRegion(new CellRangeAddress(r, r, 12, 18));
             r++;
             row = sheet.createRow(r);
             cell = row.createCell(0);
@@ -1683,25 +1620,25 @@ public class DeliveryPlanController extends BaseController {
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(2);
             cell.setCellStyle(cellStyle0);
-            sheet.addMergedRegion(new CellRangeAddress(r,r, 1, 2));
+            sheet.addMergedRegion(new CellRangeAddress(r, r, 1, 2));
             cell = row.createCell(3);
             cell.setCellValue("客户备注信息：");
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(4);
-            cell.setCellValue(deliveryPlan.getCustomerNotes()==null ? "" : deliveryPlan.getCustomerNotes());
+            cell.setCellValue(deliveryPlan.getCustomerNotes() == null ? "" : deliveryPlan.getCustomerNotes());
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(5);
             cell.setCellStyle(cellStyle0);
-            sheet.addMergedRegion(new CellRangeAddress(r,r, 4, 5));
+            sheet.addMergedRegion(new CellRangeAddress(r, r, 4, 5));
             cell = row.createCell(6);
             cell.setCellValue("发货时间/发货车牌号");
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(7);
             System.out.println(dpso.get(0).getPlate());
-            if(dpso.get(0).getPlate()==null || dpso.get(0).getPlate().equals("")){
-                cell.setCellValue("发货时间："+sf.format(deliveryPlan.getDeliveryDate()));
-            }else{
-                cell.setCellValue("发货时间："+sf.format(deliveryPlan.getDeliveryDate())+"/"+"发货车牌号："+(dpso.get(0).getPlate()==null ? "" : dpso.get(0).getPlate()));
+            if (dpso.get(0).getPlate() == null || dpso.get(0).getPlate().equals("")) {
+                cell.setCellValue("发货时间：" + sf.format(deliveryPlan.getDeliveryDate()));
+            } else {
+                cell.setCellValue("发货时间：" + sf.format(deliveryPlan.getDeliveryDate()) + "/" + "发货车牌号：" + (dpso.get(0).getPlate() == null ? "" : dpso.get(0).getPlate()));
             }
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(8);
@@ -1710,7 +1647,7 @@ public class DeliveryPlanController extends BaseController {
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(10);
             cell.setCellStyle(cellStyle0);
-            sheet.addMergedRegion(new CellRangeAddress(r,r, 7, 10));
+            sheet.addMergedRegion(new CellRangeAddress(r, r, 7, 10));
             cell = row.createCell(11);
             cell.setCellValue("收货时间");
             cell.setCellStyle(cellStyle0);
@@ -1728,7 +1665,7 @@ public class DeliveryPlanController extends BaseController {
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(18);
             cell.setCellStyle(cellStyle0);
-            sheet.addMergedRegion(new CellRangeAddress(r,r, 12, 18));
+            sheet.addMergedRegion(new CellRangeAddress(r, r, 12, 18));
 
             ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
             QRCode.encode(deliveryPlan.getDeliveryCode(), byteArrayOut, 250, 250);
@@ -1741,23 +1678,23 @@ public class DeliveryPlanController extends BaseController {
             patriarch.createPicture(anchor, wb.addPicture(byteArrayOut.toByteArray(), XSSFWorkbook.PICTURE_TYPE_PNG));
 
         }
-        HttpUtils.download(response,wb,templateName);
-}
+        HttpUtils.download(response, wb, templateName);
+    }
 
 
     /**
      * 根据出库计划id导出成品发货通知单（竖排）
      *
      * @param ids
-     * @throws Exception
-.     */
+     * @throws Exception .
+     */
     @NoLogin
     @Journal(name = "根据成品出库装厢表id导出Excel（横排1）")
     @ResponseBody
     @RequestMapping(value = "exportnew1", method = RequestMethod.GET)
     public void exportnew1(String ids) throws Exception {
         SimpleDateFormat sf = new SimpleDateFormat("yyyy年MM月dd日");
-        String templateName = "成品发货通知单(横版)"+sf.format(new Date());
+        String templateName = "成品发货通知单(横版)" + sf.format(new Date());
         SXSSFWorkbook wb = new SXSSFWorkbook();
         Font font = wb.createFont();
         // font.setColor(HSSFColor.BLACK.index);//HSSFColor.VIOLET.index //字体颜色
@@ -1806,11 +1743,11 @@ public class DeliveryPlanController extends BaseController {
         SXSSFSheet sheet;
 
         String[] idsArray = ids.split(",");
-        for (String idString : idsArray){
+        for (String idString : idsArray) {
             ProductOutOrder productOutOrder = deliveryPlanService.findById(ProductOutOrder.class, Long.parseLong(idString));
             DeliveryPlan deliveryPlan = deliveryPlanService.findById(DeliveryPlan.class, productOutOrder.getDeliveryId());
             //出货员
-            User operater =deliveryPlanService.findById(User.class,productOutOrder.getOperateUserId());
+            User operater = deliveryPlanService.findById(User.class, productOutOrder.getOperateUserId());
             // 业务员
             User user = deliveryPlanService.findById(User.class, deliveryPlan.getDeliveryBizUserId());
             List<Map<String, Object>> auditInstance = deliveryPlanService.searchAuditer("com.bluebirdme.mes.planner.delivery.entity.DeliveryPlan", deliveryPlan.getId());
@@ -1821,48 +1758,48 @@ public class DeliveryPlanController extends BaseController {
             //客户信息
             Consumer consumer = consumerService.findById(Consumer.class, deliveryPlan.getConsumerId());
             List<Map<String, Object>> serviceDeliverySlip = deliveryPlanService.findDeliverySlipMirror(Long.parseLong(idString));
-            if(serviceDeliverySlip.size() == 0){
+            if (serviceDeliverySlip.size() == 0) {
                 serviceDeliverySlip = deliveryPlanService.findDeliverySlip(Long.parseLong(idString));
             }
-            sheet = wb.createSheet(deliveryPlan.getDeliveryCode()+idString);
+            sheet = wb.createSheet(deliveryPlan.getDeliveryCode() + idString);
             Row row = null;
             Cell cell = null;
 
-            int outSize=0;
-            if(serviceDeliverySlip.size()>18){
-                outSize +=serviceDeliverySlip.size()-18;
+            int outSize = 0;
+            if (serviceDeliverySlip.size() > 18) {
+                outSize += serviceDeliverySlip.size() - 18;
             }
             //第一行
             int r = 0;// 从第1行开始写数据
             row = sheet.createRow(r);
             row.setHeightInPoints(50);
-            for(int i=0;i<20+outSize;i++){
-                if (i==0){
+            for (int i = 0; i < 20 + outSize; i++) {
+                if (i == 0) {
                     cell = row.createCell(i);
                     sheet.setColumnWidth(0, 13 * 256);// 设置列宽
                     cell.setCellValue("浙江恒石纤维基业有限公司成品发货通知单");
                     cell.setCellStyle(cellStyle);
-                }else{
+                } else {
                     cell = row.createCell(i);
                     sheet.setColumnWidth(0, 13 * 256);// 设置列宽
                     cell.setCellStyle(cellStyle);
                 }
             }
-            sheet.addMergedRegion(new CellRangeAddress(r,r, 0, 19+outSize));
+            sheet.addMergedRegion(new CellRangeAddress(r, r, 0, 19 + outSize));
             r++;
             //第二行
             row = sheet.createRow(r);
-            for(int i=0;i<20+outSize;i++){
-                if (i==0){
+            for (int i = 0; i < 20 + outSize; i++) {
+                if (i == 0) {
                     cell = row.createCell(i);
                     cell.setCellValue("Q/HS RYX0002-2012");
                     cell.setCellStyle(cellStyle2);
-                }else{
+                } else {
                     cell = row.createCell(i);
                     cell.setCellStyle(cellStyle2);
                 }
             }
-            sheet.addMergedRegion(new CellRangeAddress(r,r, 0, 19+outSize));
+            sheet.addMergedRegion(new CellRangeAddress(r, r, 0, 19 + outSize));
             r++;
             //第三行
             row = sheet.createRow(r);
@@ -1871,7 +1808,7 @@ public class DeliveryPlanController extends BaseController {
             cell.setCellStyle(cellStyle2);
             cell = row.createCell(1);
             cell.setCellStyle(cellStyle2);
-            sheet.addMergedRegion(new CellRangeAddress(r,r, 0, 1));
+            sheet.addMergedRegion(new CellRangeAddress(r, r, 0, 1));
             cell = row.createCell(2);
             cell.setCellValue(deliveryPlan.getDeliveryCode());
             cell.setCellStyle(cellStyle0);
@@ -1879,32 +1816,32 @@ public class DeliveryPlanController extends BaseController {
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(4);
             cell.setCellStyle(cellStyle0);
-            sheet.addMergedRegion(new CellRangeAddress(r,r, 2, 4));
+            sheet.addMergedRegion(new CellRangeAddress(r, r, 2, 4));
             cell = row.createCell(5);
             cell.setCellValue("发货日期：");
             cell.setCellStyle(cellStyle2);
             cell = row.createCell(6);
-            cell.setCellValue(sf.format( deliveryPlan.getDeliveryDate()));
+            cell.setCellValue(sf.format(deliveryPlan.getDeliveryDate()));
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(7);
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(8);
             cell.setCellStyle(cellStyle0);
-            sheet.addMergedRegion(new CellRangeAddress(r,r, 6, 8));
+            sheet.addMergedRegion(new CellRangeAddress(r, r, 6, 8));
             cell = row.createCell(9);
             cell.setCellValue("业务员：");
             cell.setCellStyle(cellStyle2);
-            for (int i=10;i<20+outSize;i++){
-                if (i==10){
+            for (int i = 10; i < 20 + outSize; i++) {
+                if (i == 10) {
                     cell = row.createCell(i);
                     cell.setCellValue(user.getUserName());
                     cell.setCellStyle(cellStyle2);
-                }else{
+                } else {
                     cell = row.createCell(i);
                     cell.setCellStyle(cellStyle2);
                 }
             }
-            sheet.addMergedRegion(new CellRangeAddress(r,r, 10, 19+outSize));
+            sheet.addMergedRegion(new CellRangeAddress(r, r, 10, 19 + outSize));
             r++;
             //第四行
             row = sheet.createRow(r);
@@ -1913,7 +1850,7 @@ public class DeliveryPlanController extends BaseController {
             cell.setCellStyle(cellStyle2);
             cell = row.createCell(1);
             cell.setCellStyle(cellStyle2);
-            sheet.addMergedRegion(new CellRangeAddress(r,r, 0, 1));
+            sheet.addMergedRegion(new CellRangeAddress(r, r, 0, 1));
             cell = row.createCell(2);
             cell.setCellValue(deliveryPlan.getDeliveryTargetCompany());
             cell.setCellStyle(cellStyle0);
@@ -1921,7 +1858,7 @@ public class DeliveryPlanController extends BaseController {
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(4);
             cell.setCellStyle(cellStyle0);
-            sheet.addMergedRegion(new CellRangeAddress(r,r, 2, 4));
+            sheet.addMergedRegion(new CellRangeAddress(r, r, 2, 4));
             cell = row.createCell(5);
             cell.setCellValue("单位简称：");
             cell.setCellStyle(cellStyle2);
@@ -1932,21 +1869,21 @@ public class DeliveryPlanController extends BaseController {
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(8);
             cell.setCellStyle(cellStyle0);
-            sheet.addMergedRegion(new CellRangeAddress(r,r, 6, 8));
+            sheet.addMergedRegion(new CellRangeAddress(r, r, 6, 8));
             cell = row.createCell(9);
             cell.setCellValue("收货地址:");
             cell.setCellStyle(cellStyle2);
-            for (int i=10;i<20+outSize;i++){
-                if (i==10){
+            for (int i = 10; i < 20 + outSize; i++) {
+                if (i == 10) {
                     cell = row.createCell(i);
-                    cell.setCellValue(deliveryPlan.getShippingAddress()==null ? "" : deliveryPlan.getShippingAddress());
+                    cell.setCellValue(deliveryPlan.getShippingAddress() == null ? "" : deliveryPlan.getShippingAddress());
                     cell.setCellStyle(cellStyle2);
-                }else{
+                } else {
                     cell = row.createCell(i);
                     cell.setCellStyle(cellStyle2);
                 }
             }
-            sheet.addMergedRegion(new CellRangeAddress(r,r, 10, 19+outSize));
+            sheet.addMergedRegion(new CellRangeAddress(r, r, 10, 19 + outSize));
             r++;
             //第五行
             row = sheet.createRow(r);
@@ -1954,21 +1891,21 @@ public class DeliveryPlanController extends BaseController {
             cell.setCellValue("收货人及联系电话：");
             cell.setCellStyle(cellStyle2);
             cell = row.createCell(1);
-            cell.setCellValue(deliveryPlan.getLinkmanAndPhone()==null ? "" : deliveryPlan.getLinkmanAndPhone());
+            cell.setCellValue(deliveryPlan.getLinkmanAndPhone() == null ? "" : deliveryPlan.getLinkmanAndPhone());
             cell.setCellStyle(cellStyle2);
-            sheet.addMergedRegion(new CellRangeAddress(r,r, 0, 1));
+            sheet.addMergedRegion(new CellRangeAddress(r, r, 0, 1));
             cell = row.createCell(2);
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(3);
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(4);
             cell.setCellStyle(cellStyle0);
-            sheet.addMergedRegion(new CellRangeAddress(r,r, 2, 4));
+            sheet.addMergedRegion(new CellRangeAddress(r, r, 2, 4));
             cell = row.createCell(5);
             cell.setCellValue("样布信息:");
             cell.setCellStyle(cellStyle2);
             cell = row.createCell(6);
-            cell.setCellValue(deliveryPlan.getSampleInformation()==null ? "" : deliveryPlan.getSampleInformation());
+            cell.setCellValue(deliveryPlan.getSampleInformation() == null ? "" : deliveryPlan.getSampleInformation());
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(7);
             cell.setCellStyle(cellStyle0);
@@ -1978,16 +1915,16 @@ public class DeliveryPlanController extends BaseController {
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(10);
             cell.setCellStyle(cellStyle0);
-            sheet.addMergedRegion(new CellRangeAddress(r,r, 6, 10));
+            sheet.addMergedRegion(new CellRangeAddress(r, r, 6, 10));
             cell = row.createCell(11);
             cell.setCellValue("运输方式");
             cell.setCellStyle(cellStyle0);
-            for (int i=12;i<20+outSize;i++){
-                if (i==12){
+            for (int i = 12; i < 20 + outSize; i++) {
+                if (i == 12) {
                     cell = row.createCell(i);
                     cell.setCellValue("□物流    □快递    □送货    □自提    □其他");
                     cell.setCellStyle(cellStyle0);
-                }else{
+                } else {
                     cell = row.createCell(i);
                     cell.setCellStyle(cellStyle0);
                 }
@@ -2026,8 +1963,8 @@ public class DeliveryPlanController extends BaseController {
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(10);
             cell.setCellStyle(cellStyle0);
-            sheet.addMergedRegion(new CellRangeAddress(r,r,8,10));
-            for (int i=11;i<20+outSize;i++){
+            sheet.addMergedRegion(new CellRangeAddress(r, r, 8, 10));
+            for (int i = 11; i < 20 + outSize; i++) {
                 cell = row.createCell(i);
                 cell.setCellStyle(cellStyle0);
             }
@@ -2075,99 +2012,91 @@ public class DeliveryPlanController extends BaseController {
                 cell = row.createCell(10);
                 cell.setCellStyle(cellStyle0);
                 sheet.addMergedRegion(new CellRangeAddress(r, r, 8, 10));
-                for (int i=11;i<20+outSize;i++){
+                for (int i = 11; i < 20 + outSize; i++) {
                     cell = row.createCell(i);
                     cell.setCellStyle(cellStyle0);
                 }
                 r++;
             }
-            sheet.addMergedRegion(new CellRangeAddress(5, r-1, 0, 0));
-            sheet.addMergedRegion(new CellRangeAddress(4, r-1, 11, 11));
-            sheet.addMergedRegion(new CellRangeAddress(4, r-1, 12, 19+outSize));
+            sheet.addMergedRegion(new CellRangeAddress(5, r - 1, 0, 0));
+            sheet.addMergedRegion(new CellRangeAddress(4, r - 1, 11, 11));
+            sheet.addMergedRegion(new CellRangeAddress(4, r - 1, 12, 19 + outSize));
             //发货内容行
             row = sheet.createRow(r);
-            for(int i=0;i<20+outSize;i++){
-                if (i==0){
+            for (int i = 0; i < 20 + outSize; i++) {
+                if (i == 0) {
                     cell = row.createCell(i);
                     cell.setCellValue("发货内容:");
                     cell.setCellStyle(cellStyle3);
-                }else{
+                } else {
                     cell = row.createCell(i);
                     cell.setCellStyle(cellStyle3);
                 }
             }
-            sheet.addMergedRegion(new CellRangeAddress(r,r, 0, 19+outSize));
+            sheet.addMergedRegion(new CellRangeAddress(r, r, 0, 19 + outSize));
             r++;
             //遍历数据行
-            String rowName[] = new String[]{"编号", "装箱号", "订单号", "批次号","Po No", "关税编号",
-                    "物料规格型号","客户产品名称", "厂内名称", "部件名称", "门幅", "米长（m）","发货数量(托)", "发货数量(套)", "发货数量（kg）","收货数量(托)",
-                    "收货数量(套)","收货数量(kg)","备注"};
+            String rowName[] = new String[]{"编号", "装箱号", "订单号", "批次号", "Po No", "关税编号",
+                    "物料规格型号", "客户产品名称", "厂内名称", "部件名称", "门幅", "米长（m）", "发货数量(托)", "发货数量(套)", "发货数量（kg）", "收货数量(托)",
+                    "收货数量(套)", "收货数量(kg)", "备注"};
             //取值的key
-            String rowKey[] = new String[]{"No","PN","SALESORDERSUBCODE","BATCHCODE","4","5",
-                    "PRODUCTMODEL","CONSUMERPRODUCTNAME","FACTORYPRODUCTNAME","PARTNAME","PRODUCTWIDTH","PRODUCTROLLLENGTH","12","13","14","15",
-                    "16","17","MEMO"
+            String rowKey[] = new String[]{"No", "PN", "SALESORDERSUBCODE", "BATCHCODE", "4", "5",
+                    "PRODUCTMODEL", "CONSUMERPRODUCTNAME", "FACTORYPRODUCTNAME", "PARTNAME", "PRODUCTWIDTH", "PRODUCTROLLLENGTH", "12", "13", "14", "15",
+                    "16", "17", "MEMO"
             };
-            for (int k=0;k<rowName.length;k++){
-                if (k==0){//编号
-                    int No=1;
+            for (int k = 0; k < rowName.length; k++) {
+                if (k == 0) {//编号
+                    int No = 1;
                     row = sheet.createRow(r);
-                    for(int i=0;i<20+outSize;i++){
-                        if (i==0){
+                    for (int i = 0; i < 20 + outSize; i++) {
+                        if (i == 0) {
                             cell = row.createCell(i);
                             cell.setCellValue(rowName[k]);
                             cell.setCellStyle(cellStyle0);
-                        }else if (i>0&&i<19+outSize){
+                        } else if (i < 19 + outSize) {
                             cell = row.createCell(i);
                             cell.setCellValue(No);
                             cell.setCellStyle(cellStyle0);
                             No++;
-                        }else{//小计列
+                        } else {//小计列
                             cell = row.createCell(i);
                             cell.setCellValue("小计");
                             cell.setCellStyle(cellStyle0);
                         }
                     }
                     r++;
-                }else if (rowName[k].equals("发货数量(托)")){
+                } else if (rowName[k].equals("发货数量(托)")) {
                     row = sheet.createRow(r);
-                    int b=0;//取dpd集合中的第b位值
-                    int tcounts = 0;//总套数
+                    int b = 0;//取dpd集合中的第b位值
+                    //总套数
                     int traycounts = 0;//总托数
-                    Double dweights=0.00;
-                    for(int i=0;i<20+outSize;i++){
-                        if (i==0){
+                    for (int i = 0; i < 20 + outSize; i++) {
+                        if (i == 0) {
                             cell = row.createCell(i);
                             cell.setCellValue(rowName[k]);
                             cell.setCellStyle(cellStyle0);
-                        }else if (i>0&&i<19+outSize){
-                            if (b>serviceDeliverySlip.size()-1){//超出大dpd集合索引
+                        } else if (i < 19 + outSize) {
+                            if (b > serviceDeliverySlip.size() - 1) {//超出大dpd集合索引
                                 cell = row.createCell(i);
                                 cell.setCellValue("");
                                 cell.setCellStyle(cellStyle0);
-                            }else if(serviceDeliverySlip.get(b).get("BARCODES") != null){
+                            } else if (serviceDeliverySlip.get(b).get("BARCODES") != null) {
                                 String barCodes[] = serviceDeliverySlip.get(b).get("BARCODES").toString().split(",");
-                                Map<String,Object> map2=new HashMap<String,Object>();
-                                int tcount = 0;
-                                int traycount=0;
-                                Double dweight=0.00;
-                                for (int j = 0; j < barCodes.length; j++) {
+                                Map<String, Object> map2 = new HashMap<String, Object>();
+                                int traycount = 0;
+                                for (String barCode : barCodes) {
                                     map2.clear();
-                                    map2.put("barcode", barCodes[j]);
+                                    map2.put("barcode", barCode);
                                     TrayBarCode tb = deliveryPlanService.findUniqueByMap(TrayBarCode.class, map2);
-                                    if(tb!=null) {
-                                        ProductOutRecord productOutRecord= deliveryPlanService.findUniqueByMap(ProductOutRecord.class, map2);
-                                        dweight += productOutRecord.getWeight();
-                                        dweights += productOutRecord.getWeight();
+                                    if (tb != null) {
+                                        ProductOutRecord productOutRecord = deliveryPlanService.findUniqueByMap(ProductOutRecord.class, map2);
                                         //判断是否是套材
-                                        if (tb.getPartId() != null && !"".equals(tb.getPartId())) {
+                                        if (tb.getPartId() != null) {
                                             //判断是成品胚布或常规部件
                                             TcBomVersionParts part = deliveryPlanService.findById(TcBomVersionParts.class, tb.getPartId());
-                                            if ("成品胚布".equals(part.getTcProcBomVersionPartsType())) {//成品胚布
-                                                tcount += 1;//成品胚布一托为一套
-                                                tcounts += 1;
-                                            } else {//常规部件
+                                            if (!"成品胚布".equals(part.getTcProcBomVersionPartsType())) {//常规部件
                                                 map.clear();
-                                                map.put("trayBarcode", barCodes[j]);
+                                                map.put("trayBarcode", barCode);
                                                 List<TrayBoxRoll> trays = deliveryPlanService.findListByMap(TrayBoxRoll.class, map);
                                                 for (TrayBoxRoll tray : trays) {
                                                     if (tray.getBoxBarcode() != null && !"".equals(tray.getBoxBarcode())) {
@@ -2175,53 +2104,37 @@ public class DeliveryPlanController extends BaseController {
                                                         map.put("boxBarcode", tray.getBoxBarcode());
                                                         List<TrayBoxRoll> boxs = deliveryPlanService.findListByMap(TrayBoxRoll.class, map);
                                                         if (boxs.size() > 0) {
-                                                            tcount += boxs.size();//套数为部件条码数量
-                                                            tcounts += boxs.size();
                                                         }
                                                     } else {
                                                         if (trays.size() > 0) {
-                                                            tcount += trays.size();//套数为部件条码数量
-                                                            tcounts += trays.size();
                                                             break;
                                                         }
                                                     }
                                                 }
                                             }
-                                        }
-                                        else//非套材增加 托数累加
-                                        {
+                                        } else {
+                                            //非套材增加 托数累加
                                             traycount++;
                                             traycounts++;
                                         }
-
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         map2.clear();
-                                        map2.put("barcode", barCodes[j]);
+                                        map2.put("barcode", barCode);
                                         PartBarcode partBarcode = deliveryPlanService.findUniqueByMap(PartBarcode.class, map2);
-                                        if(partBarcode!=null)
-                                        {
-                                            tcount += 1;//pcj一个部件为一套
-                                            tcounts += 1;
-                                            ProductOutRecord productOutRecord= deliveryPlanService.findUniqueByMap(ProductOutRecord.class, map2);
-                                            dweight += productOutRecord.getWeight();
-                                            dweights += productOutRecord.getWeight();
-                                        }
                                     }
-
                                 }
                                 cell = row.createCell(i);
                                 cell.setCellValue(traycount);
                                 cell.setCellStyle(cellStyle0);
                                 b++;
-                            }else{
+                            } else {
                                 cell = row.createCell(i);
                                 cell.setCellValue("");
                                 cell.setCellStyle(cellStyle0);
                                 b++;
                             }
-                        }else {//小计列
+                        } else {
+                            //小计列
                             cell = row.createCell(i);
                             cell.setCellValue(traycounts);
                             cell.setCellStyle(cellStyle0);
@@ -2229,47 +2142,41 @@ public class DeliveryPlanController extends BaseController {
                     }
                     r++;
 
-                }
-                else if (rowName[k].equals("发货数量(套)")){
+                } else if (rowName[k].equals("发货数量(套)")) {
                     row = sheet.createRow(r);
                     int tcounts = 0;//总套数
-                    int traycounts = 0;//总托数
-                    Double dweights=0.00;
-                    int b=0;//取dpd集合中的第b位值
-                    for(int i=0;i<20+outSize;i++){
-                        if (i==0){
+                    int b = 0;//取dpd集合中的第b位值
+                    for (int i = 0; i < 20 + outSize; i++) {
+                        if (i == 0) {
                             cell = row.createCell(i);
                             cell.setCellValue(rowName[k]);
                             cell.setCellStyle(cellStyle0);
-                        }else if (i>0&&i<19+outSize){
-                            if (b>serviceDeliverySlip.size()-1){//超出大dpd集合索引
+                        } else if (i > 0 && i < 19 + outSize) {
+                            if (b > serviceDeliverySlip.size() - 1) {//超出大dpd集合索引
                                 cell = row.createCell(i);
                                 cell.setCellValue("");
                                 cell.setCellStyle(cellStyle0);
-                            }else if(serviceDeliverySlip.get(b).get("BARCODES") != null){
+                            } else if (serviceDeliverySlip.get(b).get("BARCODES") != null) {
                                 String barCodes[] = serviceDeliverySlip.get(b).get("BARCODES").toString().split(",");
-                                Map<String,Object> map2=new HashMap<String,Object>();
+                                Map<String, Object> map2 = new HashMap<String, Object>();
                                 int tcount = 0;
-                                int traycount=0;
-                                Double dweight=0.00;
-                                for (int j = 0; j < barCodes.length; j++) {
+                                for (String barCode : barCodes) {
                                     map2.clear();
-                                    map2.put("barcode", barCodes[j]);
+                                    map2.put("barcode", barCode);
                                     TrayBarCode tb = deliveryPlanService.findUniqueByMap(TrayBarCode.class, map2);
-                                    if(tb!=null) {
-                                        ProductOutRecord productOutRecord= deliveryPlanService.findUniqueByMap(ProductOutRecord.class, map2);
-                                        dweight += productOutRecord.getWeight();
-                                        dweights += productOutRecord.getWeight();
+                                    if (tb != null) {
                                         //判断是否是套材
-                                        if (tb.getPartId() != null && !"".equals(tb.getPartId())) {
+                                        if (tb.getPartId() != null) {
                                             //判断是成品胚布或常规部件
                                             TcBomVersionParts part = deliveryPlanService.findById(TcBomVersionParts.class, tb.getPartId());
-                                            if ("成品胚布".equals(part.getTcProcBomVersionPartsType())) {//成品胚布
-                                                tcount += 1;//成品胚布一托为一套
+                                            if ("成品胚布".equals(part.getTcProcBomVersionPartsType())) {
+                                                //成品胚布一托为一套
+                                                tcount += 1;
                                                 tcounts += 1;
-                                            } else {//常规部件
+                                            } else {
+                                                //常规部件
                                                 map.clear();
-                                                map.put("trayBarcode", barCodes[j]);
+                                                map.put("trayBarcode", barCode);
                                                 List<TrayBoxRoll> trays = deliveryPlanService.findListByMap(TrayBoxRoll.class, map);
                                                 for (TrayBoxRoll tray : trays) {
                                                     if (tray.getBoxBarcode() != null && !"".equals(tray.getBoxBarcode())) {
@@ -2290,168 +2197,112 @@ public class DeliveryPlanController extends BaseController {
                                                 }
                                             }
                                         }
-                                        else//非套材增加 托数累加
-                                        {
-                                            traycount++;
-                                            traycounts++;
-                                        }
-
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         map2.clear();
-                                        map2.put("barcode", barCodes[j]);
+                                        map2.put("barcode", barCode);
                                         PartBarcode partBarcode = deliveryPlanService.findUniqueByMap(PartBarcode.class, map2);
-                                        if(partBarcode!=null)
-                                        {
+                                        if (partBarcode != null) {
                                             tcount += 1;//pcj一个部件为一套
                                             tcounts += 1;
-                                            ProductOutRecord productOutRecord= deliveryPlanService.findUniqueByMap(ProductOutRecord.class, map2);
-                                            dweight += productOutRecord.getWeight();
-                                            dweights += productOutRecord.getWeight();
                                         }
                                     }
-
                                 }
                                 cell = row.createCell(i);
                                 cell.setCellValue(tcount);
                                 cell.setCellStyle(cellStyle0);
                                 b++;
-                            }else{
+                            } else {
                                 cell = row.createCell(i);
                                 cell.setCellValue("");
                                 cell.setCellStyle(cellStyle0);
                                 b++;
                             }
-                        }else {//小计列
+                        } else {//小计列
                             cell = row.createCell(i);
                             cell.setCellValue(tcounts);
                             cell.setCellStyle(cellStyle0);
                         }
                     }
                     r++;
-                }
-                else if (rowName[k].equals("发货数量（kg）")){
+                } else if (rowName[k].equals("发货数量（kg）")) {
                     row = sheet.createRow(r);
-                    int tcounts = 0;//总套数
-                    int traycounts = 0;//总托数
-                    Double dweights=0.00;
-                    int b=0;//取dpd集合中的第b位值
-                    for(int i=0;i<20+outSize;i++){
-                        if (i==0){
+                    Double dweights = 0.00;
+                    //取dpd集合中的第b位值
+                    int b = 0;
+                    for (int i = 0; i < 20 + outSize; i++) {
+                        if (i == 0) {
                             cell = row.createCell(i);
                             cell.setCellValue(rowName[k]);
                             cell.setCellStyle(cellStyle0);
-                        }else if (i>0&&i<19+outSize){
-                            if (b>serviceDeliverySlip.size()-1){//超出大dpd集合索引
+                        } else if (i < 19 + outSize) {
+                            //超出大dpd集合索引
+                            if (b > serviceDeliverySlip.size() - 1) {
                                 cell = row.createCell(i);
                                 cell.setCellValue("");
                                 cell.setCellStyle(cellStyle0);
-                            }else if(serviceDeliverySlip.get(b).get("BARCODES") != null){
-                                String barCodes[] = serviceDeliverySlip.get(b).get("BARCODES").toString().split(",");
-                                Map<String,Object> map2=new HashMap<String,Object>();
-                                int tcount = 0;
-                                int traycount=0;
-                                Double dweight=0.00;
-                                for (int j = 0; j < barCodes.length; j++) {
+                            } else if (serviceDeliverySlip.get(b).get("BARCODES") != null) {
+                                String[] barCodes = serviceDeliverySlip.get(b).get("BARCODES").toString().split(",");
+                                Map<String, Object> map2 = new HashMap<>();
+                                Double dweight = 0.00;
+                                for (String barCode : barCodes) {
                                     map2.clear();
-                                    map2.put("barcode", barCodes[j]);
+                                    map2.put("barcode", barCode);
                                     TrayBarCode tb = deliveryPlanService.findUniqueByMap(TrayBarCode.class, map2);
-                                    if(tb!=null) {
-                                        ProductOutRecord productOutRecord= deliveryPlanService.findUniqueByMap(ProductOutRecord.class, map2);
+                                    if (tb != null) {
+                                        ProductOutRecord productOutRecord = deliveryPlanService.findUniqueByMap(ProductOutRecord.class, map2);
                                         dweight += productOutRecord.getWeight();
                                         dweights += productOutRecord.getWeight();
-                                        //判断是否是套材
-                                        if (tb.getPartId() != null && !"".equals(tb.getPartId())) {
-                                            //判断是成品胚布或常规部件
-                                            TcBomVersionParts part = deliveryPlanService.findById(TcBomVersionParts.class, tb.getPartId());
-                                            if ("成品胚布".equals(part.getTcProcBomVersionPartsType())) {//成品胚布
-                                                tcount += 1;//成品胚布一托为一套
-                                                tcounts += 1;
-                                            } else {//常规部件
-                                                map.clear();
-                                                map.put("trayBarcode", barCodes[j]);
-                                                List<TrayBoxRoll> trays = deliveryPlanService.findListByMap(TrayBoxRoll.class, map);
-                                                for (TrayBoxRoll tray : trays) {
-                                                    if (tray.getBoxBarcode() != null && !"".equals(tray.getBoxBarcode())) {
-                                                        map.clear();
-                                                        map.put("boxBarcode", tray.getBoxBarcode());
-                                                        List<TrayBoxRoll> boxs = deliveryPlanService.findListByMap(TrayBoxRoll.class, map);
-                                                        if (boxs.size() > 0) {
-                                                            tcount += boxs.size();//套数为部件条码数量
-                                                            tcounts += boxs.size();
-                                                        }
-                                                    } else {
-                                                        if (trays.size() > 0) {
-                                                            tcount += trays.size();//套数为部件条码数量
-                                                            tcounts += trays.size();
-                                                            break;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        else//非套材增加 托数累加
-                                        {
-                                            traycount++;
-                                            traycounts++;
-                                        }
-
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         map2.clear();
-                                        map2.put("barcode", barCodes[j]);
+                                        map2.put("barcode", barCode);
                                         PartBarcode partBarcode = deliveryPlanService.findUniqueByMap(PartBarcode.class, map2);
-                                        if(partBarcode!=null)
-                                        {
-                                            tcount += 1;//pcj一个部件为一套
-                                            tcounts += 1;
-                                            ProductOutRecord productOutRecord= deliveryPlanService.findUniqueByMap(ProductOutRecord.class, map2);
+                                        if (partBarcode != null) {
+                                            ProductOutRecord productOutRecord = deliveryPlanService.findUniqueByMap(ProductOutRecord.class, map2);
                                             dweight += productOutRecord.getWeight();
                                             dweights += productOutRecord.getWeight();
                                         }
                                     }
-
                                 }
                                 cell = row.createCell(i);
                                 cell.setCellValue(dweight);
                                 cell.setCellStyle(cellStyle0);
                                 b++;
-                            }else{
+                            } else {
                                 cell = row.createCell(i);
                                 cell.setCellValue("");
                                 cell.setCellStyle(cellStyle0);
                                 b++;
                             }
-                        }else {//小计列
+                        } else {
+                            //小计列
                             cell = row.createCell(i);
                             cell.setCellValue(dweights);
                             cell.setCellStyle(cellStyle0);
                         }
                     }
                     r++;
-                }
-                else{//其它行
+                } else {
+                    //其它行
                     row = sheet.createRow(r);
-                    int b=0;//取dpd集合中的第b位值
-                    for(int i=0;i<20+outSize;i++){
-                        if (i==0){
+                    //取dpd集合中的第b位值
+                    int b = 0;
+                    for (int i = 0; i < 20 + outSize; i++) {
+                        if (i == 0) {
                             cell = row.createCell(i);
                             cell.setCellValue(rowName[k]);
                             cell.setCellStyle(cellStyle0);
-                        }else if (i>0&&i<19+outSize){
-                            if (b>serviceDeliverySlip.size()-1){//超出集合索引
+                        } else if (i < 19 + outSize) {
+                            if (b > serviceDeliverySlip.size() - 1) {//超出集合索引
                                 cell = row.createCell(i);
                                 cell.setCellValue("");
                                 cell.setCellStyle(cellStyle0);
-                            }else {
+                            } else {
                                 cell = row.createCell(i);
-                                cell.setCellValue(serviceDeliverySlip.get(b).get(rowKey[k])==null ? "" : serviceDeliverySlip.get(b).get(rowKey[k]).toString());
+                                cell.setCellValue(serviceDeliverySlip.get(b).get(rowKey[k]) == null ? "" : serviceDeliverySlip.get(b).get(rowKey[k]).toString());
                                 cell.setCellStyle(cellStyle0);
                                 b++;
                             }
-                        }else {//小计列
+                        } else {//小计列
                             cell = row.createCell(i);
                             cell.setCellValue("");
                             cell.setCellStyle(cellStyle0);
@@ -2469,18 +2320,18 @@ public class DeliveryPlanController extends BaseController {
             cell.setCellValue("包装方式：");
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(2);
-            cell.setCellValue(deliveryPlan.getPackagingType()==null ? "" : deliveryPlan.getPackagingType());
+            cell.setCellValue(deliveryPlan.getPackagingType() == null ? "" : deliveryPlan.getPackagingType());
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(3);
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(4);
             cell.setCellStyle(cellStyle0);
-            sheet.addMergedRegion(new CellRangeAddress(r,r, 2, 4));
+            sheet.addMergedRegion(new CellRangeAddress(r, r, 2, 4));
             cell = row.createCell(5);
             cell.setCellValue("物流公司：");
             cell.setCellStyle(cellStyle2);
             cell = row.createCell(6);
-            cell.setCellValue(deliveryPlan.getLogisticsCompany()==null ? "" : deliveryPlan.getLogisticsCompany());
+            cell.setCellValue(deliveryPlan.getLogisticsCompany() == null ? "" : deliveryPlan.getLogisticsCompany());
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(7);
             cell.setCellStyle(cellStyle0);
@@ -2490,24 +2341,24 @@ public class DeliveryPlanController extends BaseController {
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(10);
             cell.setCellStyle(cellStyle0);
-            sheet.addMergedRegion(new CellRangeAddress(r,r, 6, 10));
+            sheet.addMergedRegion(new CellRangeAddress(r, r, 6, 10));
             cell = row.createCell(11);
             cell.setCellValue("装箱注意事项: ");
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(12);
             cell.setCellStyle(cellStyle0);
-            sheet.addMergedRegion(new CellRangeAddress(r,r, 11, 12));
-            for (int i=13;i<20+outSize;i++){
-                if (i==13){
+            sheet.addMergedRegion(new CellRangeAddress(r, r, 11, 12));
+            for (int i = 13; i < 20 + outSize; i++) {
+                if (i == 13) {
                     cell = row.createCell(i);
-                    cell.setCellValue(deliveryPlan.getAttention()==null ? "" : deliveryPlan.getAttention());
+                    cell.setCellValue(deliveryPlan.getAttention() == null ? "" : deliveryPlan.getAttention());
                     cell.setCellStyle(cellStyle0);
-                }else{
+                } else {
                     cell = row.createCell(i);
                     cell.setCellStyle(cellStyle0);
                 }
             }
-            sheet.addMergedRegion(new CellRangeAddress(r,r, 13, 19+outSize));
+            sheet.addMergedRegion(new CellRangeAddress(r, r, 13, 19 + outSize));
             r++;
             //倒数第二行
             row = sheet.createRow(r);
@@ -2527,7 +2378,7 @@ public class DeliveryPlanController extends BaseController {
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(2);
             cell.setCellStyle(cellStyle0);
-            sheet.addMergedRegion(new CellRangeAddress(r,r, 1, 2));
+            sheet.addMergedRegion(new CellRangeAddress(r, r, 1, 2));
             cell = row.createCell(3);
             cell.setCellValue("第二审批人:");
             cell.setCellStyle(cellStyle0);
@@ -2544,7 +2395,7 @@ public class DeliveryPlanController extends BaseController {
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(5);
             cell.setCellStyle(cellStyle2);
-            sheet.addMergedRegion(new CellRangeAddress(r,r, 4, 5));
+            sheet.addMergedRegion(new CellRangeAddress(r, r, 4, 5));
             cell = row.createCell(6);
             cell.setCellValue("发货人员:");
             cell.setCellStyle(cellStyle0);
@@ -2561,21 +2412,21 @@ public class DeliveryPlanController extends BaseController {
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(10);
             cell.setCellStyle(cellStyle0);
-            sheet.addMergedRegion(new CellRangeAddress(r,r, 7, 10));
+            sheet.addMergedRegion(new CellRangeAddress(r, r, 7, 10));
             cell = row.createCell(11);
             cell.setCellValue("收货人");
             cell.setCellStyle(cellStyle0);
-            for (int i=12;i<20+outSize;i++){
-                if (i==12){
+            for (int i = 12; i < 20 + outSize; i++) {
+                if (i == 12) {
                     cell = row.createCell(i);
                     cell.setCellValue("");
                     cell.setCellStyle(cellStyle0);
-                }else{
+                } else {
                     cell = row.createCell(i);
                     cell.setCellStyle(cellStyle0);
                 }
             }
-            sheet.addMergedRegion(new CellRangeAddress(r,r, 12, 19+outSize));
+            sheet.addMergedRegion(new CellRangeAddress(r, r, 12, 19 + outSize));
             r++;
             //最后一行
             row = sheet.createRow(r);
@@ -2587,24 +2438,24 @@ public class DeliveryPlanController extends BaseController {
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(2);
             cell.setCellStyle(cellStyle0);
-            sheet.addMergedRegion(new CellRangeAddress(r,r, 1, 2));
+            sheet.addMergedRegion(new CellRangeAddress(r, r, 1, 2));
             cell = row.createCell(3);
             cell.setCellValue("客户备注信息：");
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(4);
-            cell.setCellValue(deliveryPlan.getCustomerNotes()==null ? "" : deliveryPlan.getCustomerNotes());
+            cell.setCellValue(deliveryPlan.getCustomerNotes() == null ? "" : deliveryPlan.getCustomerNotes());
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(5);
             cell.setCellStyle(cellStyle2);
-            sheet.addMergedRegion(new CellRangeAddress(r,r, 4, 5));
+            sheet.addMergedRegion(new CellRangeAddress(r, r, 4, 5));
             cell = row.createCell(6);
             cell.setCellValue("发货时间/发货车牌号");
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(7);
-            if(dpso.get(0).getPlate()==null || dpso.get(0).getPlate().equals("")){
-                cell.setCellValue("发货时间："+sf.format(deliveryPlan.getDeliveryDate()));
-            }else{
-                cell.setCellValue("发货时间："+sf.format(deliveryPlan.getDeliveryDate())+"/"+"发货车牌号："+(dpso.get(0).getPlate()==null ? "" : dpso.get(0).getPlate()));
+            if (dpso.get(0).getPlate() == null || dpso.get(0).getPlate().equals("")) {
+                cell.setCellValue("发货时间：" + sf.format(deliveryPlan.getDeliveryDate()));
+            } else {
+                cell.setCellValue("发货时间：" + sf.format(deliveryPlan.getDeliveryDate()) + "/" + "发货车牌号：" + (dpso.get(0).getPlate() == null ? "" : dpso.get(0).getPlate()));
             }
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(8);
@@ -2613,40 +2464,36 @@ public class DeliveryPlanController extends BaseController {
             cell.setCellStyle(cellStyle0);
             cell = row.createCell(10);
             cell.setCellStyle(cellStyle0);
-            sheet.addMergedRegion(new CellRangeAddress(r,r, 7, 10));
+            sheet.addMergedRegion(new CellRangeAddress(r, r, 7, 10));
             cell = row.createCell(11);
             cell.setCellValue("收货时间");
             cell.setCellStyle(cellStyle0);
-            for (int i=12;i<20+outSize;i++){
-                if (i==12){
+            for (int i = 12; i < 20 + outSize; i++) {
+                if (i == 12) {
                     cell = row.createCell(i);
                     cell.setCellValue("");
                     cell.setCellStyle(cellStyle0);
-                }else{
+                } else {
                     cell = row.createCell(i);
                     cell.setCellStyle(cellStyle0);
                 }
             }
-            sheet.addMergedRegion(new CellRangeAddress(r,r, 12, 19+outSize));
-
+            sheet.addMergedRegion(new CellRangeAddress(r, r, 12, 19 + outSize));
             ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
             QRCode.encode(deliveryPlan.getDeliveryCode(), byteArrayOut, 250, 250);
             //画图的顶级管理器，一个sheet只能获取一个（一定要注意这点）
             SXSSFDrawing patriarch = sheet.createDrawingPatriarch();
             //anchor主要用于设置图片的属性
-            XSSFClientAnchor anchor = new XSSFClientAnchor(0, 0, 250, 250, (short) 17+outSize, 0, (short) 18+outSize, 1);
+            XSSFClientAnchor anchor = new XSSFClientAnchor(0, 0, 250, 250, (short) 17 + outSize, 0, (short) 18 + outSize, 1);
             anchor.setAnchorType(ClientAnchor.AnchorType.byId(3));
             //插入图片
             patriarch.createPicture(anchor, wb.addPicture(byteArrayOut.toByteArray(), XSSFWorkbook.PICTURE_TYPE_PNG));
         }
-        HttpUtils.download(response,wb,templateName);
+        HttpUtils.download(response, wb, templateName);
     }
 
     /**
      * 根据出库计划id导出成品发货通知单（竖排2）
-     *
-     * @param ids
-     * @throws Exception
      */
     @NoLogin
     @Journal(name = "根据成品出库装厢表id导出Excel（横排2）")
@@ -2719,11 +2566,11 @@ public class DeliveryPlanController extends BaseController {
         SXSSFSheet sheet;
 
         String[] idsArray = ids.split(",");
-        for (String idString : idsArray){
+        for (String idString : idsArray) {
             ProductOutOrder productOutOrder = deliveryPlanService.findById(ProductOutOrder.class, Long.parseLong(idString));
             DeliveryPlan deliveryPlan = deliveryPlanService.findById(DeliveryPlan.class, productOutOrder.getDeliveryId());
             //出货员
-            User operater =deliveryPlanService.findById(User.class,productOutOrder.getOperateUserId());
+            User operater = deliveryPlanService.findById(User.class, productOutOrder.getOperateUserId());
             // 业务员
             User user = deliveryPlanService.findById(User.class, deliveryPlan.getDeliveryBizUserId());
             List<Map<String, Object>> auditInstance = deliveryPlanService.searchAuditer("com.bluebirdme.mes.planner.delivery.entity.DeliveryPlan", deliveryPlan.getId());
@@ -2734,291 +2581,291 @@ public class DeliveryPlanController extends BaseController {
             //客户信息
             Consumer consumer = consumerService.findById(Consumer.class, deliveryPlan.getConsumerId());
             List<Map<String, Object>> serviceDeliverySlip = deliveryPlanService.findDeliverySlipMirror(Long.parseLong(idString));
-            if(serviceDeliverySlip.size() == 0){
+            if (serviceDeliverySlip.size() == 0) {
                 serviceDeliverySlip = deliveryPlanService.findDeliverySlip(Long.parseLong(idString));
             }
-            sheet = wb.createSheet(deliveryPlan.getDeliveryCode()+ids);
+            sheet = wb.createSheet(deliveryPlan.getDeliveryCode() + ids);
             Row row = null;
             Cell cell = null;
-            int outSize=0;
-            if(serviceDeliverySlip.size()>4){
-                outSize +=serviceDeliverySlip.size()-4;
+            int outSize = 0;
+            if (serviceDeliverySlip.size() > 4) {
+                outSize += serviceDeliverySlip.size() - 4;
             }
-            int r=0;
+            int r = 0;
             //第一行
             row = sheet.createRow(r);
             row.setHeightInPoints(50);
-            cell=row.createCell(0);
+            cell = row.createCell(0);
             cell.setCellValue("浙江恒石纤维基业有限公司成品发货通知单");
             sheet.setColumnWidth(0, 8 * 256);// 设置列宽
             cell.setCellStyle(cellStyle);
-            for (int i=1;i<7+outSize;i++){
-                cell=row.createCell(i);
+            for (int i = 1; i < 7 + outSize; i++) {
+                cell = row.createCell(i);
                 sheet.setColumnWidth(i, 13 * 256);// 设置列宽
                 cell.setCellStyle(cellStyle);
             }
-            sheet.addMergedRegion(new CellRangeAddress(r,r, 0, 6+outSize));
+            sheet.addMergedRegion(new CellRangeAddress(r, r, 0, 6 + outSize));
             r++;
             //第二行到第十行
-            String cellName[] = new String[]{"发货单编号（单据编号）：", "发货日期（单据日期）：","业务员：","购货单位：","单位简称：",
-                    "客户基地（收货地址）:","收货人及联系电话：","样布信息:","运输方式："};
-            String cellValue[] = new String[]{deliveryPlan.getDeliveryCode(),deliveryPlan.getDeliveryDate().toString(),user.getUserName(),deliveryPlan.getDeliveryTargetCompany(),
-                    consumer.getConsumerSimpleName(),deliveryPlan.getShippingAddress(),deliveryPlan.getLinkmanAndPhone(),deliveryPlan.getSampleInformation()
+            String[] cellName = new String[]{"发货单编号（单据编号）：", "发货日期（单据日期）：", "业务员：", "购货单位：", "单位简称：",
+                    "客户基地（收货地址）:", "收货人及联系电话：", "样布信息:", "运输方式："};
+            String[] cellValue = new String[]{deliveryPlan.getDeliveryCode(), deliveryPlan.getDeliveryDate().toString(), user.getUserName(), deliveryPlan.getDeliveryTargetCompany(),
+                    consumer.getConsumerSimpleName(), deliveryPlan.getShippingAddress(), deliveryPlan.getLinkmanAndPhone(), deliveryPlan.getSampleInformation()
             };
-            for (int k=0;k<cellName.length;k++){
-                if (k==cellName.length-1){
+            for (int k = 0; k < cellName.length; k++) {
+                if (k == cellName.length - 1) {
                     row = sheet.createRow(r);
-                    cell=row.createCell(0);
+                    cell = row.createCell(0);
                     cell.setCellValue(r);
                     cell.setCellStyle(cellStyle1);
-                    cell=row.createCell(1);
-                    cell.setCellValue( cellName[k]);
+                    cell = row.createCell(1);
+                    cell.setCellValue(cellName[k]);
                     cell.setCellStyle(cellStyle2);
-                    cell=row.createCell(2);
+                    cell = row.createCell(2);
                     cell.setCellStyle(cellStyle2);
-                    sheet.addMergedRegion(new CellRangeAddress(r,r, 1, 2));
-                    for (int i=3;i<7+outSize;i++){
-                        if (i==3){
-                            cell=row.createCell(i);
+                    sheet.addMergedRegion(new CellRangeAddress(r, r, 1, 2));
+                    for (int i = 3; i < 7 + outSize; i++) {
+                        if (i == 3) {
+                            cell = row.createCell(i);
                             cell.setCellValue("□物流    □快递    □送货    □自提    □其他");
                             cell.setCellStyle(cellStyle2);
-                        }else{
-                            cell=row.createCell(i);
+                        } else {
+                            cell = row.createCell(i);
                             cell.setCellStyle(cellStyle2);
                         }
                     }
-                    sheet.addMergedRegion(new CellRangeAddress(r,r, 3, 6+outSize));
+                    sheet.addMergedRegion(new CellRangeAddress(r, r, 3, 6 + outSize));
                     r++;
-                }else{
+                } else {
                     row = sheet.createRow(r);
-                    cell=row.createCell(0);
+                    cell = row.createCell(0);
                     cell.setCellValue(r);
                     cell.setCellStyle(cellStyle1);
-                    cell=row.createCell(1);
-                    cell.setCellValue( cellName[k]);
+                    cell = row.createCell(1);
+                    cell.setCellValue(cellName[k]);
                     cell.setCellStyle(cellStyle2);
-                    cell=row.createCell(2);
+                    cell = row.createCell(2);
                     cell.setCellStyle(cellStyle2);
-                    sheet.addMergedRegion(new CellRangeAddress(r,r, 1, 2));
-                    for (int i=3;i<7+outSize;i++){
-                        if (i==3){
-                            cell=row.createCell(i);
+                    sheet.addMergedRegion(new CellRangeAddress(r, r, 1, 2));
+                    for (int i = 3; i < 7 + outSize; i++) {
+                        if (i == 3) {
+                            cell = row.createCell(i);
                             cell.setCellValue(cellValue[k]);
                             cell.setCellStyle(cellStyle2);
-                        }else{
-                            cell=row.createCell(i);
+                        } else {
+                            cell = row.createCell(i);
                             cell.setCellStyle(cellStyle2);
                         }
                     }
-                    sheet.addMergedRegion(new CellRangeAddress(r,r, 3, 6+outSize));
+                    sheet.addMergedRegion(new CellRangeAddress(r, r, 3, 6 + outSize));
                     r++;
                 }
             }
             //箱单数据
             row = sheet.createRow(r);//编号
-            cell=row.createCell(0);
+            cell = row.createCell(0);
             cell.setCellValue(r);
             cell.setCellStyle(cellStyle1);
-            cell=row.createCell(1);
+            cell = row.createCell(1);
             cell.setCellValue("箱单数据");
             cell.setCellStyle(cellStyle4);
-            cell=row.createCell(2);
+            cell = row.createCell(2);
             cell.setCellValue("编号");
             cell.setCellStyle(cellStyle2);
-            for (int i=3;i<7+outSize;i++){
-                cell=row.createCell(i);
-                cell.setCellValue(i-2);
+            for (int i = 3; i < 7 + outSize; i++) {
+                cell = row.createCell(i);
+                cell.setCellValue(i - 2);
                 cell.setCellStyle(cellStyle2);
             }
             r++;
             row = sheet.createRow(r);//装箱号
-            cell=row.createCell(0);
+            cell = row.createCell(0);
             cell.setCellStyle(cellStyle1);
-            cell=row.createCell(1);
+            cell = row.createCell(1);
             cell.setCellStyle(cellStyle4);
-            cell=row.createCell(2);
+            cell = row.createCell(2);
             cell.setCellValue("装箱号");
             cell.setCellStyle(cellStyle2);
-            for (int i=3;i<7+outSize;i++){
-                if (i-3<dpso.size()){
-                    cell=row.createCell(i);
-                    cell.setCellValue(dpso.get(i-3).getPn()==null ? "" : dpso.get(i-3).getPn());//从0开始索引
+            for (int i = 3; i < 7 + outSize; i++) {
+                if (i - 3 < dpso.size()) {
+                    cell = row.createCell(i);
+                    cell.setCellValue(dpso.get(i - 3).getPn() == null ? "" : dpso.get(i - 3).getPn());//从0开始索引
                     cell.setCellStyle(cellStyle2);
-                }else{
-                    cell=row.createCell(i);
+                } else {
+                    cell = row.createCell(i);
                     cell.setCellValue("");
                     cell.setCellStyle(cellStyle2);
                 }
             }
             r++;
             row = sheet.createRow(r);//提单号
-            cell=row.createCell(0);
+            cell = row.createCell(0);
             cell.setCellStyle(cellStyle1);
-            cell=row.createCell(1);
+            cell = row.createCell(1);
             cell.setCellStyle(cellStyle4);
-            cell=row.createCell(2);
+            cell = row.createCell(2);
             cell.setCellValue("提单号");
             cell.setCellStyle(cellStyle2);
-            for (int i=3;i<7+outSize;i++){
-                if (i-3<dpso.size()){
-                    cell=row.createCell(i);
-                    cell.setCellValue(dpso.get(i-3).getLadingCode()==null ? "" : dpso.get(i-3).getLadingCode());//从0开始索引
+            for (int i = 3; i < 7 + outSize; i++) {
+                if (i - 3 < dpso.size()) {
+                    cell = row.createCell(i);
+                    cell.setCellValue(dpso.get(i - 3).getLadingCode() == null ? "" : dpso.get(i - 3).getLadingCode());//从0开始索引
                     cell.setCellStyle(cellStyle2);
-                }else{
-                    cell=row.createCell(i);
+                } else {
+                    cell = row.createCell(i);
                     cell.setCellValue("");
                     cell.setCellStyle(cellStyle2);
                 }
             }
             r++;
             row = sheet.createRow(r);//箱号
-            cell=row.createCell(0);
+            cell = row.createCell(0);
             cell.setCellStyle(cellStyle1);
-            cell=row.createCell(1);
+            cell = row.createCell(1);
             cell.setCellStyle(cellStyle4);
-            cell=row.createCell(2);
+            cell = row.createCell(2);
             cell.setCellValue("箱号");
             cell.setCellStyle(cellStyle2);
-            for (int i=3;i<7+outSize;i++){
-                if (i-3<dpso.size()){
-                    cell=row.createCell(i);
-                    cell.setCellValue(dpso.get(i-3).getBoxNumber()==null ? "" : dpso.get(i-3).getBoxNumber());//从0开始索引
+            for (int i = 3; i < 7 + outSize; i++) {
+                if (i - 3 < dpso.size()) {
+                    cell = row.createCell(i);
+                    cell.setCellValue(dpso.get(i - 3).getBoxNumber() == null ? "" : dpso.get(i - 3).getBoxNumber());//从0开始索引
                     cell.setCellStyle(cellStyle2);
-                }else{
-                    cell=row.createCell(i);
+                } else {
+                    cell = row.createCell(i);
                     cell.setCellValue("");
                     cell.setCellStyle(cellStyle2);
                 }
             }
             r++;
             row = sheet.createRow(r);//封号
-            cell=row.createCell(0);
+            cell = row.createCell(0);
             cell.setCellStyle(cellStyle1);
-            cell=row.createCell(1);
+            cell = row.createCell(1);
             cell.setCellStyle(cellStyle4);
-            cell=row.createCell(2);
+            cell = row.createCell(2);
             cell.setCellValue("封号");
             cell.setCellStyle(cellStyle2);
-            for (int i=3;i<7+outSize;i++){
-                if (i-3<dpso.size()){
-                    cell=row.createCell(i);
-                    cell.setCellValue(dpso.get(i-3).getSerialNumber()==null ? "" : dpso.get(i-3).getSerialNumber());//从0开始索引
+            for (int i = 3; i < 7 + outSize; i++) {
+                if (i - 3 < dpso.size()) {
+                    cell = row.createCell(i);
+                    cell.setCellValue(dpso.get(i - 3).getSerialNumber() == null ? "" : dpso.get(i - 3).getSerialNumber());//从0开始索引
                     cell.setCellStyle(cellStyle2);
-                }else{
-                    cell=row.createCell(i);
+                } else {
+                    cell = row.createCell(i);
                     cell.setCellValue("");
                     cell.setCellStyle(cellStyle2);
                 }
             }
             r++;
             row = sheet.createRow(r);//件数
-            cell=row.createCell(0);
+            cell = row.createCell(0);
             cell.setCellStyle(cellStyle1);
-            cell=row.createCell(1);
+            cell = row.createCell(1);
             cell.setCellStyle(cellStyle4);
-            cell=row.createCell(2);
+            cell = row.createCell(2);
             cell.setCellValue("件数");
             cell.setCellStyle(cellStyle2);
-            for (int i=3;i<7+outSize;i++){
-                if (i-3<dpso.size()){
-                    cell=row.createCell(i);
-                    cell.setCellValue(dpso.get(i-3).getCount()==null ? "" : dpso.get(i-3).getCount().toString());//从0开始索引
+            for (int i = 3; i < 7 + outSize; i++) {
+                if (i - 3 < dpso.size()) {
+                    cell = row.createCell(i);
+                    cell.setCellValue(dpso.get(i - 3).getCount() == null ? "" : dpso.get(i - 3).getCount().toString());//从0开始索引
                     cell.setCellStyle(cellStyle2);
-                }else{
-                    cell=row.createCell(i);
+                } else {
+                    cell = row.createCell(i);
                     cell.setCellValue("");
                     cell.setCellStyle(cellStyle2);
                 }
             }
             r++;
             row = sheet.createRow(r);//毛重
-            cell=row.createCell(0);
+            cell = row.createCell(0);
             cell.setCellStyle(cellStyle1);
-            cell=row.createCell(1);
+            cell = row.createCell(1);
             cell.setCellStyle(cellStyle4);
-            cell=row.createCell(2);
+            cell = row.createCell(2);
             cell.setCellValue("毛重");
             cell.setCellStyle(cellStyle2);
-            for (int i=3;i<7+outSize;i++){
-                if (i-3<dpso.size()){
-                    cell=row.createCell(i);
-                    cell.setCellValue(dpso.get(i-3).getWeight()==null ? "" : dpso.get(i-3).getWeight().toString());//从0开始索引
+            for (int i = 3; i < 7 + outSize; i++) {
+                if (i - 3 < dpso.size()) {
+                    cell = row.createCell(i);
+                    cell.setCellValue(dpso.get(i - 3).getWeight() == null ? "" : dpso.get(i - 3).getWeight().toString());//从0开始索引
                     cell.setCellStyle(cellStyle2);
-                }else{
-                    cell=row.createCell(i);
+                } else {
+                    cell = row.createCell(i);
                     cell.setCellValue("");
                     cell.setCellStyle(cellStyle2);
                 }
             }
             r++;
             row = sheet.createRow(r);//尺码
-            cell=row.createCell(0);
+            cell = row.createCell(0);
             cell.setCellStyle(cellStyle1);
-            cell=row.createCell(1);
+            cell = row.createCell(1);
             cell.setCellStyle(cellStyle4);
-            cell=row.createCell(2);
+            cell = row.createCell(2);
             cell.setCellValue("尺码");
             cell.setCellStyle(cellStyle2);
-            for (int i=3;i<7+outSize;i++){
-                if (i-3<dpso.size()){
-                    cell=row.createCell(i);
-                    cell.setCellValue(dpso.get(i-3).getSize()==null ? "" : dpso.get(i-3).getSize().toString());//从0开始索引
+            for (int i = 3; i < 7 + outSize; i++) {
+                if (i - 3 < dpso.size()) {
+                    cell = row.createCell(i);
+                    cell.setCellValue(dpso.get(i - 3).getSize() == null ? "" : dpso.get(i - 3).getSize().toString());//从0开始索引
                     cell.setCellStyle(cellStyle2);
-                }else{
-                    cell=row.createCell(i);
+                } else {
+                    cell = row.createCell(i);
                     cell.setCellValue("");
                     cell.setCellStyle(cellStyle2);
                 }
             }
-            sheet.addMergedRegion(new CellRangeAddress(10,r, 1, 1));
+            sheet.addMergedRegion(new CellRangeAddress(10, r, 1, 1));
             r++;
             //遍历数据行
-            String rowName[] = new String[]{"编号（序号）", "装箱号", "订单号", "批次号","Po No", "关税编号",
-                    "物料规格型号","客户产品名称", "厂内名称", "部件名称", "门幅", "米长（m）","发货数量(托)", "发货数量(套)", "发货数量（kg）","收货数量(托)",
-                    "收货数量(套)","收货数量(kg)","总计（小计）：","备注"};
+            String rowName[] = new String[]{"编号（序号）", "装箱号", "订单号", "批次号", "Po No", "关税编号",
+                    "物料规格型号", "客户产品名称", "厂内名称", "部件名称", "门幅", "米长（m）", "发货数量(托)", "发货数量(套)", "发货数量（kg）", "收货数量(托)",
+                    "收货数量(套)", "收货数量(kg)", "总计（小计）：", "备注"};
             //取值的key
-            String rowKey[] = new String[]{"No","PN","SALESORDERSUBCODE","BATCHCODE","4","5",
-                    "PRODUCTMODEL","CONSUMERPRODUCTNAME","FACTORYPRODUCTNAME","PARTNAME","PRODUCTWIDTH","PRODUCTROLLLENGTH","12","13","14","15",
-                    "16","17","18","MEMO"
+            String rowKey[] = new String[]{"No", "PN", "SALESORDERSUBCODE", "BATCHCODE", "4", "5",
+                    "PRODUCTMODEL", "CONSUMERPRODUCTNAME", "FACTORYPRODUCTNAME", "PARTNAME", "PRODUCTWIDTH", "PRODUCTROLLLENGTH", "12", "13", "14", "15",
+                    "16", "17", "18", "MEMO"
             };
-            for (int k=0;k<rowName.length;k++){
-                if (k==0){
+            for (int k = 0; k < rowName.length; k++) {
+                if (k == 0) {
                     row = sheet.createRow(r);
-                    cell=row.createCell(0);
+                    cell = row.createCell(0);
                     cell.setCellValue(11);
                     cell.setCellStyle(cellStyle1);
-                    cell=row.createCell(1);
+                    cell = row.createCell(1);
                     cell.setCellValue("发货内容：");
                     cell.setCellStyle(cellStyle4);
-                    cell=row.createCell(2);
+                    cell = row.createCell(2);
                     cell.setCellValue(rowName[k]);
                     cell.setCellStyle(cellStyle2);
-                    int No=1;
-                    for(int i=3;i<7+outSize;i++){
-                        cell=row.createCell(i);
+                    int No = 1;
+                    for (int i = 3; i < 7 + outSize; i++) {
+                        cell = row.createCell(i);
                         cell.setCellValue(No);
                         cell.setCellStyle(cellStyle2);
                         No++;
                     }
                     r++;
-                }else{
+                } else {
                     row = sheet.createRow(r);
-                    cell=row.createCell(0);
+                    cell = row.createCell(0);
                     cell.setCellStyle(cellStyle1);
-                    cell=row.createCell(1);
+                    cell = row.createCell(1);
                     cell.setCellStyle(cellStyle4);
-                    cell=row.createCell(2);
+                    cell = row.createCell(2);
                     cell.setCellValue(rowName[k]);
                     cell.setCellStyle(cellStyle2);
-                    int b=0;
-                    for(int i=3;i<7+outSize;i++){
-                        if (b<serviceDeliverySlip.size()){
-                            cell=row.createCell(i);
-                            cell.setCellValue(serviceDeliverySlip.get(b).get(rowKey[k])==null ? "" : serviceDeliverySlip.get(b).get(rowKey[k]).toString());
+                    int b = 0;
+                    for (int i = 3; i < 7 + outSize; i++) {
+                        if (b < serviceDeliverySlip.size()) {
+                            cell = row.createCell(i);
+                            cell.setCellValue(serviceDeliverySlip.get(b).get(rowKey[k]) == null ? "" : serviceDeliverySlip.get(b).get(rowKey[k]).toString());
                             cell.setCellStyle(cellStyle2);
                             b++;
-                        }else{
-                            cell=row.createCell(i);
+                        } else {
+                            cell = row.createCell(i);
                             cell.setCellValue("");
                             cell.setCellStyle(cellStyle2);
                         }
@@ -3026,106 +2873,106 @@ public class DeliveryPlanController extends BaseController {
                     r++;
                 }
             }
-            sheet.addMergedRegion(new CellRangeAddress(18,r-1, 1, 1));
+            sheet.addMergedRegion(new CellRangeAddress(18, r - 1, 1, 1));
             //装箱要求
             row = sheet.createRow(r);//包装方式
-            cell=row.createCell(0);
+            cell = row.createCell(0);
             cell.setCellValue(12);
             cell.setCellStyle(cellStyle1);
-            cell=row.createCell(1);
+            cell = row.createCell(1);
             cell.setCellValue("装箱要求");
             cell.setCellStyle(cellStyle4);
-            cell=row.createCell(2);
+            cell = row.createCell(2);
             cell.setCellValue("包装方式：");
             cell.setCellStyle(cellStyle2);
-            for (int i=3;i<7+outSize;i++){
-                cell=row.createCell(i);
+            for (int i = 3; i < 7 + outSize; i++) {
+                cell = row.createCell(i);
                 cell.setCellValue("");
                 cell.setCellStyle(cellStyle2);
             }
             r++;
             row = sheet.createRow(r);//物流公司
-            cell=row.createCell(0);
+            cell = row.createCell(0);
             cell.setCellStyle(cellStyle1);
-            cell=row.createCell(1);
+            cell = row.createCell(1);
             cell.setCellStyle(cellStyle4);
-            cell=row.createCell(2);
+            cell = row.createCell(2);
             cell.setCellValue("物流公司");
             cell.setCellStyle(cellStyle2);
-            for (int i=3;i<7+outSize;i++){
-                cell=row.createCell(i);
+            for (int i = 3; i < 7 + outSize; i++) {
+                cell = row.createCell(i);
                 cell.setCellValue("");
                 cell.setCellStyle(cellStyle2);
             }
             r++;
             row = sheet.createRow(r);//装箱注意事项
-            cell=row.createCell(0);
+            cell = row.createCell(0);
             cell.setCellStyle(cellStyle1);
-            cell=row.createCell(1);
+            cell = row.createCell(1);
             cell.setCellStyle(cellStyle4);
-            cell=row.createCell(2);
+            cell = row.createCell(2);
             cell.setCellValue("装箱注意事项");
             cell.setCellStyle(cellStyle2);
-            for (int i=3;i<7+outSize;i++){
-                cell=row.createCell(i);
+            for (int i = 3; i < 7 + outSize; i++) {
+                cell = row.createCell(i);
                 cell.setCellValue("");
                 cell.setCellStyle(cellStyle2);
             }
-            sheet.addMergedRegion(new CellRangeAddress(38,r, 1, 1));
+            sheet.addMergedRegion(new CellRangeAddress(38, r, 1, 1));
             r++;
             //auditInstance
-            String rowName1[] = new String[]{"第一审批人","第二审批人","发货人员","司机签字","收货人",
-                    "发货时间","发货车牌号","客户备注信息","收货时间"
+            String[] rowName1 = new String[]{"第一审批人", "第二审批人", "发货人员", "司机签字", "收货人",
+                    "发货时间", "发货车牌号", "客户备注信息", "收货时间"
             };
-            int num=13;
-            for (int k=0;k<rowName1.length;k++){
+            int num = 13;
+            for (int k = 0; k < rowName1.length; k++) {
                 row = sheet.createRow(r);
-                cell=row.createCell(0);
+                cell = row.createCell(0);
                 cell.setCellValue(num);
                 cell.setCellStyle(cellStyle1);
-                cell=row.createCell(1);
+                cell = row.createCell(1);
                 cell.setCellValue(rowName1[k]);
                 cell.setCellStyle(cellStyle2);
-                switch (k){
+                switch (k) {
                     case 0:
-                        for (int i = 2; i < 7+outSize; i++) {
-                            if (i==3){
-                                cell=row.createCell(i);
+                        for (int i = 2; i < 7 + outSize; i++) {
+                            if (i == 3) {
+                                cell = row.createCell(i);
                                 //第一审批人
                                 if (auditInstance.size() > 0) {
-                                    cell.setCellValue(auditInstance.get(0).get("FIRSTREALAUDITUSERNAME")==null ? "" : auditInstance.get(0).get("FIRSTREALAUDITUSERNAME").toString());
+                                    cell.setCellValue(auditInstance.get(0).get("FIRSTREALAUDITUSERNAME") == null ? "" : auditInstance.get(0).get("FIRSTREALAUDITUSERNAME").toString());
                                 } else {
                                     cell.setCellValue("");
                                 }
                                 cell.setCellStyle(cellStyle2);
-                            }else{
-                                cell=row.createCell(i);
+                            } else {
+                                cell = row.createCell(i);
                                 cell.setCellValue("");
                                 cell.setCellStyle(cellStyle2);
                             }
                         }
                         break;
                     case 1:
-                        for (int i = 2; i < 7+outSize; i++) {
-                            if (i==3){
-                                cell=row.createCell(i);
+                        for (int i = 2; i < 7 + outSize; i++) {
+                            if (i == 3) {
+                                cell = row.createCell(i);
                                 //第二审批人
                                 if (auditInstance.size() > 0) {
-                                    cell.setCellValue(auditInstance.get(0).get("SECONDREALAUDITUSERNAME")==null ? "" : auditInstance.get(0).get("SECONDREALAUDITUSERNAME").toString());
+                                    cell.setCellValue(auditInstance.get(0).get("SECONDREALAUDITUSERNAME") == null ? "" : auditInstance.get(0).get("SECONDREALAUDITUSERNAME").toString());
                                 } else {
                                     cell.setCellValue("");
                                 }
                                 cell.setCellStyle(cellStyle2);
-                            }else{
-                                cell=row.createCell(i);
+                            } else {
+                                cell = row.createCell(i);
                                 cell.setCellStyle(cellStyle2);
                             }
                         }
                         break;
                     case 2:
-                        for (int i = 2; i < 7+outSize; i++) {
-                            if (i==3){
-                                cell=row.createCell(i);
+                        for (int i = 2; i < 7 + outSize; i++) {
+                            if (i == 3) {
+                                cell = row.createCell(i);
                                 //发货人员
                                 if (operater != null) {
                                     cell.setCellValue(operater.getUserName());
@@ -3133,60 +2980,60 @@ public class DeliveryPlanController extends BaseController {
                                     cell.setCellValue("");
                                 }
                                 cell.setCellStyle(cellStyle2);
-                            }else{
-                                cell=row.createCell(i);
+                            } else {
+                                cell = row.createCell(i);
                                 cell.setCellValue("");
                                 cell.setCellStyle(cellStyle2);
                             }
                         }
                         break;
                     case 3://司机签字
-                        for (int i = 2; i < 7+outSize; i++) {
-                            cell=row.createCell(i);
+                        for (int i = 2; i < 7 + outSize; i++) {
+                            cell = row.createCell(i);
                             cell.setCellStyle(cellStyle2);
                         }
                         break;
                     case 4://收货人
-                        for (int i = 2; i < 7+outSize; i++) {
-                            cell=row.createCell(i);
+                        for (int i = 2; i < 7 + outSize; i++) {
+                            cell = row.createCell(i);
                             cell.setCellStyle(cellStyle2);
                         }
                         break;
                     case 5://发货时间
-                        for (int i = 2; i < 7+outSize; i++) {
-                            if (i==3){
-                                cell=row.createCell(i);
+                        for (int i = 2; i < 7 + outSize; i++) {
+                            if (i == 3) {
+                                cell = row.createCell(i);
                                 //发货时间
                                 cell.setCellValue(sf.format(deliveryPlan.getDeliveryDate()));
                                 cell.setCellStyle(cellStyle2);
-                            }else{
-                                cell=row.createCell(i);
+                            } else {
+                                cell = row.createCell(i);
                                 cell.setCellStyle(cellStyle2);
                             }
                         }
                         break;
                     case 6://发货车牌号
-                        for (int i = 2; i < 7+outSize; i++) {
-                            if (i==3){
-                                cell=row.createCell(i);
+                        for (int i = 2; i < 7 + outSize; i++) {
+                            if (i == 3) {
+                                cell = row.createCell(i);
                                 //发货车牌号
-                                cell.setCellValue(dpso.get(0).getPlate()==null ? "" : dpso.get(0).getPlate());
+                                cell.setCellValue(dpso.get(0).getPlate() == null ? "" : dpso.get(0).getPlate());
                                 cell.setCellStyle(cellStyle2);
-                            }else{
-                                cell=row.createCell(i);
+                            } else {
+                                cell = row.createCell(i);
                                 cell.setCellStyle(cellStyle2);
                             }
                         }
                         break;
                     case 7://客户备注信息
-                        for (int i = 2; i < 7+outSize; i++) {
-                            cell=row.createCell(i);
+                        for (int i = 2; i < 7 + outSize; i++) {
+                            cell = row.createCell(i);
                             cell.setCellStyle(cellStyle2);
                         }
                         break;
                     case 8://收货时间
-                        for (int i = 2; i < 7+outSize; i++) {
-                            cell=row.createCell(i);
+                        for (int i = 2; i < 7 + outSize; i++) {
+                            cell = row.createCell(i);
                             cell.setCellStyle(cellStyle2);
                         }
                         break;
@@ -3195,7 +3042,7 @@ public class DeliveryPlanController extends BaseController {
                 r++;
             }
         }
-        HttpUtils.download(response,wb,templateName);
+        HttpUtils.download(response, wb, templateName);
     }
 
 
@@ -3261,8 +3108,8 @@ public class DeliveryPlanController extends BaseController {
                 serviceDeliverySlip = deliveryPlanService.findDeliverySlip(Long.parseLong(idString));
             }
             ProductOutOrder productOutOrder = deliveryPlanService.findById(ProductOutOrder.class, Long.parseLong(idString));
-            Map<String,Object> nameMap=new HashMap<>();
-            nameMap.put("deliveryCode",productOutOrder.getDeliveryCode());
+            Map<String, Object> nameMap = new HashMap<>();
+            nameMap.put("deliveryCode", productOutOrder.getDeliveryCode());
             List<ProductOutRecord> productOutRecords = deliveryPlanService.findListByMap(ProductOutRecord.class, nameMap);
             User user = deliveryPlanService.findById(User.class, productOutRecords.get(0).getOperateUserId());
             sheet = wb.createSheet(productOutOrder.getDeliveryCode() + "-" + productOutOrder.getPn());
@@ -3823,7 +3670,7 @@ public class DeliveryPlanController extends BaseController {
             cell.setCellStyle(cellStyle0);
             sheet.addMergedRegion(new CellRangeAddress(r, r, 11, 15));
         }
-        HttpUtils.download(response,wb,templateName);
+        HttpUtils.download(response, wb, templateName);
     }
 
     @NoLogin
@@ -4055,7 +3902,7 @@ public class DeliveryPlanController extends BaseController {
                 }
             }
         }
-        HttpUtils.download(response,wb,"PackingList");
+        HttpUtils.download(response, wb, "PackingList");
     }
 
     @NoLogin
@@ -4064,7 +3911,7 @@ public class DeliveryPlanController extends BaseController {
     @RequestMapping(value = "exportDeliveryExcel", method = RequestMethod.GET)
     public void exportDeliveryExcel(String ids) throws Exception {
         SXSSFWorkbook wb = deliveryPlanService.exportDeliveryExcel(ids);
-        HttpUtils.download(response,wb,"PackingList");
+        HttpUtils.download(response, wb, "PackingList");
     }
 
     // 根据托条码获取托下面的所有卷信息
@@ -4378,7 +4225,7 @@ public class DeliveryPlanController extends BaseController {
                 }
             }
         }
-        HttpUtils.download(response,wb, sdf.format(date));
+        HttpUtils.download(response, wb, sdf.format(date));
     }
 
     @NoLogin
@@ -4666,7 +4513,7 @@ public class DeliveryPlanController extends BaseController {
                 }
             }
         }
-        HttpUtils.download(response,wb, sdf.format(date));
+        HttpUtils.download(response, wb, sdf.format(date));
     }
 
     @ResponseBody
