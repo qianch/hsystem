@@ -54,7 +54,6 @@ import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -256,13 +255,13 @@ public class ProducePlanController extends BaseController {
             // 通过订单明细ID查询所有的编织计划
             findListByMap = producePlanService.findListByMap(WeavePlan.class, map);
             findListByMap1 = producePlanService.findListByMap(CutPlan.class, map);
-            for (int i = 0; i < findListByMap.size(); i++) {
-                if (findListByMap.get(i).getClosed() == null || findListByMap.get(i).getClosed() == 0) {
+            for (WeavePlan weavePlan : findListByMap) {
+                if (weavePlan.getClosed() == null || weavePlan.getClosed() == 0) {
                     return ajaxError("只有先关闭编制计划后方可操作");
                 }
             }
-            for (int i = 0; i < findListByMap1.size(); i++) {
-                if (findListByMap1.get(i).getClosed() == null || findListByMap1.get(i).getClosed() == 0) {
+            for (CutPlan cutPlan : findListByMap1) {
+                if (cutPlan.getClosed() == null || cutPlan.getClosed() == 0) {
                     return ajaxError("只有先关闭裁剪计划后方可操作");
                 }
             }
@@ -278,21 +277,11 @@ public class ProducePlanController extends BaseController {
         param.put("producePlanId", producePlan.getId());
         if (null != producePlan.getWorkShopCode()) {
             switch (producePlan.getWorkShopCode()) {
-                case "00107":
-                    producePlan.setWorkshop("编织一车间");
-                    break;
-                case "00108":
-                    producePlan.setWorkshop("编织二车间");
-                    break;
-                case "00109":
-                    producePlan.setWorkshop("编织三车间");
-                    break;
-                case "00116":
-                    producePlan.setWorkshop("裁剪一车间");
-                    break;
-                case "00117":
-                    producePlan.setWorkshop("裁剪二车间");
-                    break;
+                case "00107" -> producePlan.setWorkshop("编织一车间");
+                case "00108" -> producePlan.setWorkshop("编织二车间");
+                case "00109" -> producePlan.setWorkshop("编织三车间");
+                case "00116" -> producePlan.setWorkshop("裁剪一车间");
+                case "00117" -> producePlan.setWorkshop("裁剪二车间");
             }
         }
         List<ProducePlanDetail> ppdList = producePlanService.findListByMap(ProducePlanDetail.class, param);
@@ -347,8 +336,8 @@ public class ProducePlanController extends BaseController {
 
         List<Map<String, Object>> list = departmentService.queryDepartment("weave");
         List listWorkshop = new ArrayList<String>();
-        for (int i = 0; i < list.size(); i++) {
-            listWorkshop.add(list.get(i).get("CODE"));
+        for (Map<String, Object> stringObjectMap : list) {
+            listWorkshop.add(stringObjectMap.get("CODE"));
         }
 
         if (listWorkshop.contains(workShopCode)) {
@@ -360,7 +349,6 @@ public class ProducePlanController extends BaseController {
         if (filter.get("ISCOMPLETE") == null || filter.get("ISCOMPLETE").equals("")) {
             filter.set("ISCOMPLETE", "");
         }
-
         Map<String, Object> findPageInfo = producePlanService.findOrderPageInfo2(filter, page);
         return GsonTools.toJson(findPageInfo);
     }
@@ -398,8 +386,8 @@ public class ProducePlanController extends BaseController {
 
         List<Map<String, Object>> list = departmentService.queryDepartment("weave");
         List listWorkshop = new ArrayList<String>();
-        for (int i = 0; i < list.size(); i++) {
-            listWorkshop.add(list.get(i).get("CODE"));
+        for (Map<String, Object> stringObjectMap : list) {
+            listWorkshop.add(stringObjectMap.get("CODE"));
         }
 
         if (listWorkshop.contains(workShopCode)) {
@@ -418,7 +406,7 @@ public class ProducePlanController extends BaseController {
 
     @Journal(name = "查看生产任务页面")
     @RequestMapping(value = "look", method = RequestMethod.GET)
-    public ModelAndView look(ProducePlan producePlan) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+    public ModelAndView look(ProducePlan producePlan) throws IllegalArgumentException, SecurityException {
         producePlan = producePlanService.findById(ProducePlan.class, producePlan.getId());
         List<Map<String, Object>> ret = producePlanService.details(producePlan.getId());
         return new ModelAndView(look, model.addAttribute("producePlan", producePlan).addAttribute("details", GsonTools.toJson(ret)));
@@ -531,7 +519,7 @@ public class ProducePlanController extends BaseController {
     @RequestMapping("valid/batchcode/{batchCode}")
     public String validBatchCode(@PathVariable("batchCode") String batchCodes[], Long producePlanId) {
         Map<String, Object> map = new HashMap();
-        StringBuffer ret = new StringBuffer();
+        StringBuilder ret = new StringBuilder();
         if (producePlanId != null) {
             for (String batchCode : batchCodes) {
                 List<Map<String, Object>> ppd = producePlanService.checkBatchCode(batchCode, producePlanId);
@@ -600,7 +588,7 @@ public class ProducePlanController extends BaseController {
         Sheet sheet = wb.createSheet("生产任务单");
         Row row;
         Cell cell;
-        String columnName[] = new String[]{"客户简称", "客户订单号", "批号", "产品类别代码", "产品类别名称", "产品名称", "客户产品名称", "门幅(mm)", "产品数量（卷/套）", "产品重量（KG）", "产品卷长（M）", "预留长度（M）", "产品卷重（KG）", "图号", "包装要求", "内销/外销", "交货日期", "使用工艺", "生产机器", "备注"};
+        String[] columnName = new String[]{"客户简称", "客户订单号", "批号", "产品类别代码", "产品类别名称", "产品名称", "客户产品名称", "门幅(mm)", "产品数量（卷/套）", "产品重量（KG）", "产品卷长（M）", "预留长度（M）", "产品卷重（KG）", "图号", "包装要求", "内销/外销", "交货日期", "使用工艺", "生产机器", "备注"};
         int r = 0;// 从第1行开始写数据
         row = sheet.createRow(r);
         row.setHeight((short) 1000);
@@ -687,7 +675,7 @@ public class ProducePlanController extends BaseController {
                 switch (j) {
                     case 0:
                         if (data.getConsumerName() != null && so.getSalesOrderMemo() != null) {
-                            Integer index = so.getSalesOrderMemo().indexOf("叶型为：");
+                            int index = so.getSalesOrderMemo().indexOf("叶型为：");
                             if (index != -1) {
                                 String memo = so.getSalesOrderMemo().substring(index + 4);
                                 cell.setCellValue(data.getConsumerName() + "(" + memo + ")");
@@ -935,7 +923,7 @@ public class ProducePlanController extends BaseController {
                 writeRow(row, d.getPackMaterialCode(), d.getPackStandardCode(), d.getPackMaterialName(), d.getPackMaterialModel(), d.getPackUnit(), d.getPackMaterialCount(), d.getPackMemo());
             }
         }
-        HttpUtils.download(response,wb,templateName);
+        HttpUtils.download(response, wb, templateName);
     }
 
     private void writeRow(Row row, Object... values) {
@@ -1245,7 +1233,7 @@ public class ProducePlanController extends BaseController {
             cell.setCellStyle(cellStyle2);
         }
         sheet.addMergedRegion(new CellRangeAddress(r, r, 0, 13));
-        HttpUtils.download(response,wb,templateName);
+        HttpUtils.download(response, wb, templateName);
     }
 
     @Journal(name = "生产进度跟踪报表")
@@ -1337,8 +1325,8 @@ public class ProducePlanController extends BaseController {
         for (int i = 0; i < 43; i++) {
             sheet.setColumnWidth(i, 256 * 25 + 184);
         }
-        Row row = null;
-        Object columnNames[] = new Object[]{"任务单编号", "车间", "客户名称", "产品类别代码", "产品大类", "订单号", "计划类型", "批次号", "客户产品名称", "厂内名称", "部件名称", "产品门幅(mm)", "卷重(kg)", "卷长(m)", "关闭状态", "生产完成状态", "交期预警", "计划重量", "已生产重量", "未完成重量", "数量单位", "计划数量", "已生产数", "未完成数", "计划托数", "打包托数", "入库托数", "入库重量", "在库托数", "在库重量", "已发托数", "已发货重量", "出货时间", "计调下单时间", "计调安排的机台", "实际生产机台", "工艺代码", "工艺版本", "包装代码", "包装版本", "包装要求", "出口(内销)", "计调员", "销售员"};
+        Row row;
+        Object[] columnNames = new Object[]{"任务单编号", "车间", "客户名称", "产品类别代码", "产品大类", "订单号", "计划类型", "批次号", "客户产品名称", "厂内名称", "部件名称", "产品门幅(mm)", "卷重(kg)", "卷长(m)", "关闭状态", "生产完成状态", "交期预警", "计划重量", "已生产重量", "未完成重量", "数量单位", "计划数量", "已生产数", "未完成数", "计划托数", "打包托数", "入库托数", "入库重量", "在库托数", "在库重量", "已发托数", "已发货重量", "出货时间", "计调下单时间", "计调安排的机台", "实际生产机台", "工艺代码", "工艺版本", "包装代码", "包装版本", "包装要求", "出口(内销)", "计调员", "销售员"};
         int r = 0;// 从第1行开始写数据
         row = sheet.createRow(r);
         writeRow(row, columnNames);

@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 
  * @author 徐波
  * @Date 2016-11-2 9:30:07
  */
@@ -23,16 +22,17 @@ public interface IDeliveryOnTheWayPlanDao extends IBaseDao {
 
     /**
      * 根据计划id查询计划明细
+     *
      * @param deliveryId
      * @return
      */
-    public List<Map<String,Object>> findDeliveryOnTheWayPlanDetails(Long deliveryId);
+    List<Map<String, Object>> findDeliveryOnTheWayPlanDetails(Long deliveryId);
 
-    public List<Map<String, Object>> findProductDeliveryOnTheWayPlanDetailsByDeliveryId(Long deliveryId);
+    List<Map<String, Object>> findProductDeliveryOnTheWayPlanDetailsByDeliveryId(Long deliveryId);
 
-    public String getSerial(String type);
+    String getSerial(String type);
 
-    <T> Map<String,Object> findPageInfoTotalWeight(Filter filter, Page page) throws Exception;
+    Map<String, Object> findPageInfoTotalWeight(Filter filter, Page page) throws Exception;
 
-    public <T> Map<String,Object> findDeliveryOnTheWayPlanDetails(Filter filter,Page page)  throws Exception;
+    Map<String, Object> findDeliveryOnTheWayPlanDetails(Filter filter, Page page) throws Exception;
 }

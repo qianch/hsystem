@@ -1,53 +1,47 @@
 package com.bluebirdme.mes.planner.material.entity;
 
-import javax.persistence.Column;
-
-import com.bluebirdme.mes.core.annotation.Desc;
-
 public class FtcMaterialInfo {
-	//"物料名称"
-	private String materialName;
-	
-	//"规格型号"
-	private String materialModel;
-	
-	//"总重"
-	private Double materialTotalWeight;
-	
-	//"总重"
-	private Double materialStockWeight;
+    //"物料名称"
+    private String materialName;
 
-	public String getMaterialName() {
-		return materialName;
-	}
+    //"规格型号"
+    private String materialModel;
 
-	public void setMaterialName(String materialName) {
-		this.materialName = materialName;
-	}
+    //"总重"
+    private Double materialTotalWeight;
 
-	public String getMaterialModel() {
-		return materialModel;
-	}
+    //"总重"
+    private Double materialStockWeight;
 
-	public void setMaterialModel(String materialModel) {
-		this.materialModel = materialModel;
-	}
+    public String getMaterialName() {
+        return materialName;
+    }
 
-	public Double getMaterialTotalWeight() {
-		return materialTotalWeight;
-	}
+    public void setMaterialName(String materialName) {
+        this.materialName = materialName;
+    }
 
-	public void setMaterialTotalWeight(Double materialTotalWeight) {
-		this.materialTotalWeight = materialTotalWeight;
-	}
+    public String getMaterialModel() {
+        return materialModel;
+    }
 
-	public Double getMaterialStockWeight() {
-		return materialStockWeight;
-	}
+    public void setMaterialModel(String materialModel) {
+        this.materialModel = materialModel;
+    }
 
-	public void setMaterialStockWeight(Double materialStockWeight) {
-		this.materialStockWeight = materialStockWeight;
-	}
-	
+    public Double getMaterialTotalWeight() {
+        return materialTotalWeight;
+    }
 
+    public void setMaterialTotalWeight(Double materialTotalWeight) {
+        this.materialTotalWeight = materialTotalWeight;
+    }
+
+    public Double getMaterialStockWeight() {
+        return materialStockWeight;
+    }
+
+    public void setMaterialStockWeight(Double materialStockWeight) {
+        this.materialStockWeight = materialStockWeight;
+    }
 }

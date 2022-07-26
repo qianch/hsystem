@@ -200,13 +200,13 @@ public class DeliveryOnTheWayPlanServiceImpl extends BaseServiceImpl implements 
 	}
 
 	@Override
-	public <T> Map<String,Object> findPageInfoTotalWeight(Filter filter,Page page)
+	public Map<String,Object> findPageInfoTotalWeight(Filter filter,Page page)
 			throws Exception{
 		return  deliveryPlanDao.findPageInfoTotalWeight(filter,page);
 	}
 
 	@Override
-	public <T> Map<String,Object> findDeliveryOnTheWayPlanDetails(Filter filter,Page page)throws Exception{
+	public Map<String,Object> findDeliveryOnTheWayPlanDetails(Filter filter,Page page)throws Exception{
 		return  deliveryPlanDao.findDeliveryOnTheWayPlanDetails(filter,page);
 	}
 }

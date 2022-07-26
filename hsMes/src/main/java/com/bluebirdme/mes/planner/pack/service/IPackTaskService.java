@@ -6,20 +6,21 @@
  */
 package com.bluebirdme.mes.planner.pack.service;
 
-import java.util.List;
-import java.util.Map;
-
 import com.bluebirdme.mes.core.base.service.IBaseService;
 import com.bluebirdme.mes.planner.pack.entity.PackTask;
 
+import java.util.List;
+
 /**
- * 
  * @author Goofy
  * @Date 2017年12月7日 下午2:40:33
  */
 public interface IPackTaskService extends IBaseService {
-	public void saveOrUpdate(List<PackTask> list);
-	public List<PackTask> findProductTask(Long productId);
-	public List<PackTask> findProduceTask(Long ppdId);
-	public void updateLeftCount(List<PackTask> list);
+    void saveOrUpdate(List<PackTask> list);
+
+    List<PackTask> findProductTask(Long productId);
+
+    List<PackTask> findProduceTask(Long ppdId);
+
+    void updateLeftCount(List<PackTask> list);
 }

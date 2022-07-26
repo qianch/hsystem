@@ -1,107 +1,102 @@
 package com.bluebirdme.mes.planner.material.entity;
 
-import javax.persistence.Column;
-
-import com.bluebirdme.mes.core.annotation.Desc;
-
 public class BcMaterialInfo {
-	//"包材名称"
-	private String packMaterialName;
-	
-	//"规格型号"
-	private String packMaterialModel;
-	
-	//"材质"
-	private String packMaterialAttr;
-	
-	//"数量"
-	private Double packMateriaTotalCount;
-	
-	//"库存数量"
-	private Double packMateriaStockCount;
+    //"包材名称"
+    private String packMaterialName;
 
-	//"单位"
-	private String packMaterialUnit;
-	
-	//"包装单位"
-	private String packUnit;
-	
-	private String mtCode;
-	
-	private String stCode;
+    //"规格型号"
+    private String packMaterialModel;
 
-	public String getPackMaterialName() {
-		return packMaterialName;
-	}
+    //"材质"
+    private String packMaterialAttr;
 
-	public void setPackMaterialName(String packMaterialName) {
-		this.packMaterialName = packMaterialName;
-	}
+    //"数量"
+    private Double packMateriaTotalCount;
 
-	public String getPackMaterialModel() {
-		return packMaterialModel;
-	}
+    //"库存数量"
+    private Double packMateriaStockCount;
 
-	public void setPackMaterialModel(String packMaterialModel) {
-		this.packMaterialModel = packMaterialModel;
-	}
+    //"单位"
+    private String packMaterialUnit;
 
-	public String getPackMaterialAttr() {
-		return packMaterialAttr;
-	}
+    //"包装单位"
+    private String packUnit;
 
-	public void setPackMaterialAttr(String packMaterialAttr) {
-		this.packMaterialAttr = packMaterialAttr;
-	}
+    private String mtCode;
 
-	public Double getPackMateriaTotalCount() {
-		return packMateriaTotalCount;
-	}
+    private String stCode;
 
-	public void setPackMateriaTotalCount(Double packMateriaTotalCount) {
-		this.packMateriaTotalCount = packMateriaTotalCount;
-	}
+    public String getPackMaterialName() {
+        return packMaterialName;
+    }
 
-	public Double getPackMateriaStockCount() {
-		return packMateriaStockCount;
-	}
+    public void setPackMaterialName(String packMaterialName) {
+        this.packMaterialName = packMaterialName;
+    }
 
-	public void setPackMateriaStockCount(Double packMateriaStockCount) {
-		this.packMateriaStockCount = packMateriaStockCount;
-	}
+    public String getPackMaterialModel() {
+        return packMaterialModel;
+    }
 
-	public String getPackMaterialUnit() {
-		return packMaterialUnit;
-	}
+    public void setPackMaterialModel(String packMaterialModel) {
+        this.packMaterialModel = packMaterialModel;
+    }
 
-	public void setPackMaterialUnit(String packMaterialUnit) {
-		this.packMaterialUnit = packMaterialUnit;
-	}
+    public String getPackMaterialAttr() {
+        return packMaterialAttr;
+    }
 
-	public String getPackUnit() {
-		return packUnit;
-	}
+    public void setPackMaterialAttr(String packMaterialAttr) {
+        this.packMaterialAttr = packMaterialAttr;
+    }
 
-	public void setPackUnit(String packUnit) {
-		this.packUnit = packUnit;
-	}
+    public Double getPackMateriaTotalCount() {
+        return packMateriaTotalCount;
+    }
 
-	public String getMtCode() {
-		return mtCode;
-	}
+    public void setPackMateriaTotalCount(Double packMateriaTotalCount) {
+        this.packMateriaTotalCount = packMateriaTotalCount;
+    }
 
-	public void setMtCode(String mtCode) {
-		this.mtCode = mtCode;
-	}
+    public Double getPackMateriaStockCount() {
+        return packMateriaStockCount;
+    }
 
-	public String getStCode() {
-		return stCode;
-	}
+    public void setPackMateriaStockCount(Double packMateriaStockCount) {
+        this.packMateriaStockCount = packMateriaStockCount;
+    }
 
-	public void setStCode(String stCode) {
-		this.stCode = stCode;
-	}
-	
-	
-	
+    public String getPackMaterialUnit() {
+        return packMaterialUnit;
+    }
+
+    public void setPackMaterialUnit(String packMaterialUnit) {
+        this.packMaterialUnit = packMaterialUnit;
+    }
+
+    public String getPackUnit() {
+        return packUnit;
+    }
+
+    public void setPackUnit(String packUnit) {
+        this.packUnit = packUnit;
+    }
+
+    public String getMtCode() {
+        return mtCode;
+    }
+
+    public void setMtCode(String mtCode) {
+        this.mtCode = mtCode;
+    }
+
+    public String getStCode() {
+        return stCode;
+    }
+
+    public void setStCode(String stCode) {
+        this.stCode = stCode;
+    }
+
+
 }

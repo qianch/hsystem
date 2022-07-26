@@ -39,7 +39,9 @@ import java.util.Map;
 @RequestMapping("/planner/producePlanDetail")
 @Journal(name = "生产计划明细")
 public class ProducePlanDetailController extends BaseController {
-    // 出货调拨单页面
+    /**
+     * 出货调拨单页面
+     */
     final String index = "planner/produce/producePlanDetailPrint/producePlanDetailPrint";
     final String editProducePlanDetailPrintsUrl = "planner/produce/producePlanDetailPrint/producePlanDetailPrintAddOrEdit";
 
@@ -60,9 +62,7 @@ public class ProducePlanDetailController extends BaseController {
     @Journal(name = "获取生产计划明细信息")
     @RequestMapping("list")
     public String getProducePlanDetailRecord(Filter filter, Page page) throws Exception {
-
         Map<String, Object> pageInfo = producePlanDetailService.findPageInfo(filter, page);
-
         return GsonTools.toJson(pageInfo);
     }
 
@@ -70,39 +70,30 @@ public class ProducePlanDetailController extends BaseController {
     @Journal(name = "获取生产计划明细信息2")
     @RequestMapping("getProducePlanDetailPageInfo")
     public String getProducePlanDetailPageInfo(Filter filter, Page page) throws Exception {
-
         Map<String, Object> findPageInfo = producePlanDetailService.findProducePlanDetail(filter, page);
-
         List<Map<String, Object>> rows = (List<Map<String, Object>>) findPageInfo.get("rows");
         if (rows == null) {
             return GsonTools.toJson(findPageInfo);
         }
-
-        for (int i = 0; i < rows.size(); i++) {
+        for (Map<String, Object> row : rows) {
             Double weight = 0.0;
-
-            String producePlanDetailId = rows.get(i).get("ID").toString();
+            String producePlanDetailId = row.get("ID").toString();
             page = new Page();
             page.setAll(1);
             filter = new Filter();
             filter.set("producePlanDetailId", producePlanDetailId);
-
             List<Map<String, Object>> moverows = (List<Map<String, Object>>) productStockService.moveInfolist(filter, page).get("rows");
             if (moverows == null) {
-                rows.get(i).put("WEIGHT", weight);
-                rows.get(i).put("TOTALCOUNT", 0);
+                row.put("WEIGHT", weight);
+                row.put("TOTALCOUNT", 0);
                 continue;
             }
-
-            for (int j = 0; j < moverows.size(); j++) {
-                weight += (Double) moverows.get(j).get("WEIGHT");
+            for (Map<String, Object> moverow : moverows) {
+                weight += (Double) moverow.get("WEIGHT");
             }
-
-            rows.get(i).put("WEIGHT", weight);
-            rows.get(i).put("TOTALCOUNT", moverows.size());
+            row.put("WEIGHT", weight);
+            row.put("TOTALCOUNT", moverows.size());
         }
-
-
         return GsonTools.toJson(findPageInfo);
     }
 
@@ -111,7 +102,6 @@ public class ProducePlanDetailController extends BaseController {
     @Journal(name = "查询计划明细下面的打印信息", logType = LogType.DB)
     @RequestMapping(value = "findProducePlanDetailPrints", method = RequestMethod.POST)
     public String findProducePlanDetailPrints(Long ProducePlanDetailId) throws Exception {
-
         return GsonTools.toJson(producePlanDetailService.findProducePlanDetailPrints(ProducePlanDetailId));
     }
 
@@ -120,15 +110,13 @@ public class ProducePlanDetailController extends BaseController {
     @Journal(name = "查询计划明细下面的打印信息", logType = LogType.DB)
     @RequestMapping(value = "findPlanDetailPrintsBybtwFileId", method = RequestMethod.POST)
     public String findPlanDetailPrintsBybtwFileId(Long ProducePlanDetailId, long btwFileId) throws Exception {
-
         return GsonTools.toJson(producePlanDetailService.findPlanDetailPrintsBybtwFileId(ProducePlanDetailId, btwFileId));
     }
 
     @Journal(name = "加载计划打印明细页面")
     @RequestMapping(value = "editProducePlanDetailPrints", method = RequestMethod.GET)
-    public ModelAndView editProducePlanDetailPrints(Long ProducePlanDetailId,Long btwFileId,String tagType) throws Exception {
+    public ModelAndView editProducePlanDetailPrints(Long ProducePlanDetailId, Long btwFileId, String tagType) {
         ProducePlanDetail producePlanDetail = producePlanDetailService.findById(ProducePlanDetail.class, ProducePlanDetailId);
-
         SalesOrderDetail salesOrderDetail = producePlanDetailService.findById(SalesOrderDetail.class, producePlanDetail.getFromSalesOrderDetailId());
         long customerId = 0;
         if (salesOrderDetail.getMirrorProductId() != null) {
@@ -140,8 +128,6 @@ public class ProducePlanDetailController extends BaseController {
             FinishedProduct finishedProduct = producePlanDetailService.findById(FinishedProduct.class, salesOrderDetail.getProductId());
             customerId = finishedProduct.getProductConsumerId();
         }
-
-
         return new ModelAndView(editProducePlanDetailPrintsUrl,
                 model.addAttribute("producePlanDetail", producePlanDetail)
                         .addAttribute("btwFileId", btwFileId)
