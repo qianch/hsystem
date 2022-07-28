@@ -47,7 +47,7 @@ public class PackageTaskDaoImpl extends BaseDaoImpl implements IPackageTaskDao {
     public List<Map<String, Object>> findTasks(Long producePlanDetailId) {
         String sql = SQL.get("packageTask-list");
         List<Map<String, Object>> list = getSession().createSQLQuery(sql).setParameter("id", producePlanDetailId).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP).list();
-        List<Map<String, Object>> ret = new ArrayList<Map<String, Object>>();
+        List<Map<String, Object>> ret = new ArrayList<>();
         Map<String, Object> unit;
         for (Map<String, Object> map : list) {
             unit = new HashMap<>();
@@ -70,7 +70,7 @@ public class PackageTaskDaoImpl extends BaseDaoImpl implements IPackageTaskDao {
         List<Map<String, Object>> ret = new ArrayList<>();
         Map<String, Object> unit;
         for (BcBom bom : list) {
-            unit = new HashMap<String, Object>();
+            unit = new HashMap<>();
             unit.put("PACKAGEBOMID", bom.getId());
             unit.put("PACKAGECODE", bom.getPackBomCode() + "/" + bom.getPackBomGenericName() + "/每托" + bom.getPackBomRollsPerTray().intValue() + "卷");
             unit.put("ROLLCOUNTPERTRAY", bom.getPackBomRollsPerTray());

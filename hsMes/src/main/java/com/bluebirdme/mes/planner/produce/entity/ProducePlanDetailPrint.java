@@ -9,9 +9,8 @@ import javax.persistence.Table;
 
 @Desc("打印模版信息")
 @Entity
-@Table(name="HS_Produce_Plan_Detail_Print")
+@Table(name = "HS_Produce_Plan_Detail_Print")
 public class ProducePlanDetailPrint extends BaseEntity {
-
     @Desc("生产计划明细Id")
     @Column
     private Long producePlanDetailId;
@@ -21,11 +20,11 @@ public class ProducePlanDetailPrint extends BaseEntity {
     private Long btwFileId;
 
     @Desc("打印属性")
-    @Column(nullable=false)
+    @Column(nullable = false)
     private String printAttribute;
 
     @Desc("打印属性名称")
-    @Column(nullable=false)
+    @Column(nullable = false)
     private String printAttributeName;
 
     @Desc("打印内容")
@@ -35,16 +34,23 @@ public class ProducePlanDetailPrint extends BaseEntity {
     public long getProducePlanDetailId() {
         return producePlanDetailId;
     }
+
     public void setProducePlanDetailId(Long producePlanDetailId) {
         this.producePlanDetailId = producePlanDetailId;
     }
 
-    public Long getBtwFileId() {return btwFileId;}
-    public void setBtwFileId(Long btwFileId) {this.btwFileId = btwFileId;}
+    public Long getBtwFileId() {
+        return btwFileId;
+    }
+
+    public void setBtwFileId(Long btwFileId) {
+        this.btwFileId = btwFileId;
+    }
 
     public String getPrintAttribute() {
         return printAttribute;
     }
+
     public void setPrintAttribute(String printAttribute) {
         this.printAttribute = printAttribute;
     }
@@ -52,6 +58,7 @@ public class ProducePlanDetailPrint extends BaseEntity {
     public String getPrintAttributeName() {
         return printAttributeName;
     }
+
     public void setPrintAttributeName(String printAttributeName) {
         this.printAttributeName = printAttributeName;
     }
@@ -59,5 +66,8 @@ public class ProducePlanDetailPrint extends BaseEntity {
     public String getPrintAttributeContent() {
         return printAttributeContent;
     }
-    public void setPrintAttributeContent(String printAttributeContent) {this.printAttributeContent = printAttributeContent;}
+
+    public void setPrintAttributeContent(String printAttributeContent) {
+        this.printAttributeContent = printAttributeContent;
+    }
 }

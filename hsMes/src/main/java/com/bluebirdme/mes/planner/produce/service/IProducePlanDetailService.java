@@ -26,7 +26,7 @@ public interface IProducePlanDetailService extends IBaseService {
      * @return
      */
 
-    public <T> Map<String, Object> findProducePlanDetail(Filter filter, Page page) throws Exception;
+    Map<String, Object> findProducePlanDetail(Filter filter, Page page) throws Exception;
 
     /**
      * 根据计划明细Id和标签模板Id查询对应的打印内容
@@ -34,12 +34,12 @@ public interface IProducePlanDetailService extends IBaseService {
      * @param ProducePlanDetailId
      * @return
      */
-    public List<Map<String, Object>> findProducePlanDetailPrints(Long ProducePlanDetailId) throws Exception;
+    List<Map<String, Object>> findProducePlanDetailPrints(Long ProducePlanDetailId) throws Exception;
 
-    public List<Map<String, Object>> findPlanDetailPrintsBybtwFileId(Long ProducePlanDetailId, long btwFileId) throws Exception;
+    List<Map<String, Object>> findPlanDetailPrintsBybtwFileId(Long ProducePlanDetailId, long btwFileId) throws Exception;
 
 
-    public String saveProducePlanDetailPrints(long producePlanDetailId, long btwFileId, String planDetailPrintsData) throws Exception;
+    String saveProducePlanDetailPrints(long producePlanDetailId, long btwFileId, String planDetailPrintsData) throws Exception;
 
-    public String createProducePlanDetailPrints(Long producePlanDetailId, Long btwFileId) throws Exception;
+    String createProducePlanDetailPrints(Long producePlanDetailId, Long btwFileId) throws Exception;
 }

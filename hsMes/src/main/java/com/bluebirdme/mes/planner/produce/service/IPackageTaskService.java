@@ -6,11 +6,11 @@
  */
 package com.bluebirdme.mes.planner.produce.service;
 
-import java.util.List;
-import java.util.Map;
-
 import com.bluebirdme.mes.core.base.service.IBaseService;
 import com.bluebirdme.mes.planner.produce.entity.PackageTask;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author 高飞
@@ -18,11 +18,12 @@ import com.bluebirdme.mes.planner.produce.entity.PackageTask;
  */
 public interface IPackageTaskService extends IBaseService {
 
-	public List<Map<String,Object>> findTasks(Long planDetailId);
-	public List<Map<String, Object>> findPakcageInfo(Long bcBomId);
-	
-	public void saveTask(List<PackageTask> list);
-	
-	public void deleteTask(PackageTask task);
+    List<Map<String, Object>> findTasks(Long planDetailId);
+
+    List<Map<String, Object>> findPakcageInfo(Long bcBomId);
+
+    void saveTask(List<PackageTask> list);
+
+    void deleteTask(PackageTask task);
 
 }

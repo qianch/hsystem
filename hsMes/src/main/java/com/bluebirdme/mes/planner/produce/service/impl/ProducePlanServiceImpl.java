@@ -59,7 +59,7 @@ import java.util.Map.Entry;
 @Service
 @AnyExceptionRollback
 public class ProducePlanServiceImpl extends BaseServiceImpl implements IProducePlanService {
-    private static Logger log = LoggerFactory.getLogger(ProducePlanServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(ProducePlanServiceImpl.class);
 
     @Resource
     IProducePlanDao producePlanDao;
@@ -92,7 +92,7 @@ public class ProducePlanServiceImpl extends BaseServiceImpl implements IProduceP
         return producePlanDao.findPageInfo(filter, page);
     }
 
-    public <T> Map<String, Object> findOrderPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findOrderPageInfo(Filter filter, Page page) throws Exception {
         return producePlanDao.findOrderPageInfo(filter, page);
     }
 
@@ -108,7 +108,7 @@ public class ProducePlanServiceImpl extends BaseServiceImpl implements IProduceP
         TcBomVersionPartsMirror tvpm;
         TcBomVersionParts tvp;
         for (ProducePlanDetail ppd : ppdList) {
-            orderWeight = new Double(0);
+            orderWeight = 0D;
             SalesOrderDetail salesOrderDetail = findById(SalesOrderDetail.class, ppd.getFromSalesOrderDetailId());
             if (null != salesOrderDetail.getMirrorProductId()) {
                 productm = findById(FinishedProductMirror.class, salesOrderDetail.getMirrorProductId());
@@ -147,7 +147,7 @@ public class ProducePlanServiceImpl extends BaseServiceImpl implements IProduceP
                     map.clear();
                     map.put("ftcBomVersionId", productm.getProcBomId());
                     bomDetails = findListByMap(FtcBomDetailMirror.class, map);
-                    if(bomDetails.size()!=0){
+                    if (bomDetails.size() != 0) {
                         Double bomWeight = 0D;
                         for (FtcBomDetailMirror d : bomDetails) {
                             bomWeight += d.getFtcBomDetailWeightPerSquareMetre() == null ? 0D : d.getFtcBomDetailWeightPerSquareMetre();
@@ -157,8 +157,8 @@ public class ProducePlanServiceImpl extends BaseServiceImpl implements IProduceP
                         orderWeight = MathUtils.div(orderWeight, 1000000, 2);
                         ppd.setMirrorProcBomId(bomDetails.get(0).getFtcBomVersionId());
                         ppd.setMirrorFromTcId(productm.getId());
-                    }else {
-                        log.info("成品id为："+productm.getProductId()+"；成品镜像id为："+productm.getId()+"的产品为外购产品；");
+                    } else {
+                        log.info("成品id为：" + productm.getProductId() + "；成品镜像id为：" + productm.getId() + "的产品为外购产品；");
                         continue;
                     }
                 }
@@ -185,7 +185,7 @@ public class ProducePlanServiceImpl extends BaseServiceImpl implements IProduceP
                     save(c);
                 }
             } else {//与原来数据兼容
-                orderWeight = new Double(0);
+                orderWeight = 0D;
                 // 套材订单
                 if (ppd.getProductIsTc() == 1) {
                     for (ProducePlanDetailPartCount c : ppd.getList()) {
@@ -295,7 +295,7 @@ public class ProducePlanServiceImpl extends BaseServiceImpl implements IProduceP
                 update(pt);
             }
             // 删除被删除掉的计划的翻包任务
-            orderWeight = new Double(0);
+            orderWeight = 0D;
             SalesOrderDetail salesOrderDetail = findById(SalesOrderDetail.class, ppd.getFromSalesOrderDetailId());
             if (null != ppd.getMirrorProcBomId()) {
                 productm = findById(FinishedProductMirror.class, salesOrderDetail.getMirrorProductId());
@@ -475,7 +475,7 @@ public class ProducePlanServiceImpl extends BaseServiceImpl implements IProduceP
         // 遍历计划明细
         for (ProducePlanDetail ppd : list) {
             if (null != ppd.getMirrorProcBomId()) {
-                if (!(ppd.getClosed() == null || ppd.getClosed() == 0)){
+                if (!(ppd.getClosed() == null || ppd.getClosed() == 0)) {
                     continue;
                 }
                 // 套材，拆分成非套材，生成编织计划和裁剪计划
@@ -521,7 +521,7 @@ public class ProducePlanServiceImpl extends BaseServiceImpl implements IProduceP
                         List<TcBomVersionPartsDetailMirror> tcvpdList = bomService.findListByMap(TcBomVersionPartsDetailMirror.class, map);
                         for (TcBomVersionPartsDetailMirror tcvpd : tcvpdList) {
 //                            TcBomVersionPartsDetail tcBomVersionPartsDetail = findById(TcBomVersionPartsDetail.class, tcvpd.getVersionPartsDetailMirrorId());
-                            TcBomVersionPartsMirror tcBomVersionPartsMirror = findById(TcBomVersionPartsMirror.class,tcvpd.getTcProcBomPartsId());
+                            TcBomVersionPartsMirror tcBomVersionPartsMirror = findById(TcBomVersionPartsMirror.class, tcvpd.getTcProcBomPartsId());
                             //过滤掉非下单的部件
                             if (tcvpd.getTcProcBomPartsId().longValue() != ppdpc.getMirrorPartId().longValue()) {
                                 continue;
@@ -569,7 +569,7 @@ public class ProducePlanServiceImpl extends BaseServiceImpl implements IProduceP
                             abstractPPD.setTotalRollCount((int) (totalCount * tcvpd.getTcProcBomFabricCount()));
                             abstractPPD.setTotalTrayCount(ppdpc.getPlanPartCount());
                             // 总卷数
-                            abstractPPD.setRequirementCount(new Double(totalCount * tcvpd.getTcProcBomFabricCount().intValue()));
+                            abstractPPD.setRequirementCount((double) (totalCount * tcvpd.getTcProcBomFabricCount().intValue()));
                             abstractPPD.setProducedCount(0.0);
                             abstractPPD.setProducedRolls(0);
                             abstractPPD.setPackagedCount(0);
@@ -708,7 +708,7 @@ public class ProducePlanServiceImpl extends BaseServiceImpl implements IProduceP
                             abstractPPD.setTotalRollCount((int) (totalCount * tcvpd.getTcProcBomFabricCount()));
                             abstractPPD.setTotalTrayCount(ppdpc.getPlanPartCount());
                             // 总卷数
-                            abstractPPD.setRequirementCount(new Double(totalCount * tcvpd.getTcProcBomFabricCount().intValue()));
+                            abstractPPD.setRequirementCount((double) (totalCount * tcvpd.getTcProcBomFabricCount().intValue()));
                             abstractPPD.setProducedCount(0.0);
                             abstractPPD.setProducedRolls(0);
                             abstractPPD.setPackagedCount(0);
@@ -1164,7 +1164,7 @@ public class ProducePlanServiceImpl extends BaseServiceImpl implements IProduceP
     }
 
     @Override
-    public <T> Map<String, Object> listOrders(Filter filter, Page page) throws Exception {
+    public Map<String, Object> listOrders(Filter filter, Page page) throws Exception {
         return producePlanDao.listOrders(filter, page);
     }
 
@@ -1174,7 +1174,7 @@ public class ProducePlanServiceImpl extends BaseServiceImpl implements IProduceP
     }
 
     @Override
-    public <T> Map<String, Object> findScheduleWeight(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findScheduleWeight(Filter filter, Page page) throws Exception {
         return producePlanDao.findScheduleWeight(filter, page);
     }
 
@@ -1187,11 +1187,11 @@ public class ProducePlanServiceImpl extends BaseServiceImpl implements IProduceP
         return producePlanDao.hasPackTask(id);
     }
 
-    public <T> Map<String, Object> findTBPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findTBPageInfo(Filter filter, Page page) throws Exception {
         return producePlanDao.findTBPageInfo(filter, page);
     }
 
-    public <T> Map<String, Object> findTBPageInfo2(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findTBPageInfo2(Filter filter, Page page) throws Exception {
         return producePlanDao.findTBPageInfo2(filter, page);
     }
 
