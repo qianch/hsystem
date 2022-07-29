@@ -74,9 +74,7 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
 
     @Override
     public void update2(Object... object) throws Exception {
-        int length = object.length;
-        for (int i = 0; i < length; ++i) {
-            Object o = object[i];
+        for (Object o : object) {
             Class<? extends Object> clazz = o.getClass();
             StringBuilder builder = new StringBuilder("update " + clazz.getAnnotation(Table.class).name() + " set ");
             List<Field> fields = ReflectUtils.getFields(clazz, true);

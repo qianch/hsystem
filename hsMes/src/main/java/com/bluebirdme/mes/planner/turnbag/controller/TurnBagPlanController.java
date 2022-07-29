@@ -28,11 +28,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -60,10 +58,11 @@ import java.util.Map;
 @RequestMapping("/planner/tbp")
 @Journal(name = "翻包计划")
 public class TurnBagPlanController extends BaseController {
-    // 翻包计划页面
+    /**
+     * 翻包计划页面
+     */
     final String index = "planner/turnbag/turnBagPlan";
     final String addOrEdit = "planner/turnbag/turnBagPlanAddOrEdit";
-    DecimalFormat df = new DecimalFormat("######0.0");
     @Resource
     ITurnBagPlanService turnBagPlanService;
 
@@ -94,11 +93,11 @@ public class TurnBagPlanController extends BaseController {
         }
         ProducePlan pp = turnBagPlanService.findById(ProducePlan.class, ppd.getProducePlanId());
         List<Map<String, Object>> list = turnBagPlanService.getDetails(ppd.getId());
-        List<Long> ids = new ArrayList<Long>();
-        List<String> batchCodes = new ArrayList<String>();
-        for (int i = 0; i < list.size(); i++) {
-            ids.add(((BigInteger) list.get(i).get("SALESORDERDETAILID")).longValue());
-            batchCodes.add(list.get(i).get("BATCHCODE").toString());
+        List<Long> ids = new ArrayList<>();
+        List<String> batchCodes = new ArrayList<>();
+        for (Map<String, Object> stringObjectMap : list) {
+            ids.add(((BigInteger) stringObjectMap.get("SALESORDERDETAILID")).longValue());
+            batchCodes.add(stringObjectMap.get("BATCHCODE").toString());
         }
         List<Map<String, Object>> position = null;
         if (ids.size() > 0)
@@ -154,9 +153,8 @@ public class TurnBagPlanController extends BaseController {
     @RequestMapping(value = "delete", method = RequestMethod.POST)
     public String edit(String ids) throws Exception {
         String[] idArray = ids.split(",");
-        TurnBagPlan tbp = null;
-        List<TurnBagPlan> list = new ArrayList<TurnBagPlan>();
-
+        TurnBagPlan tbp;
+        List<TurnBagPlan> list = new ArrayList<>();
         for (String id : idArray) {
             tbp = turnBagPlanService.findById(TurnBagPlan.class, Long.parseLong(id));
             if (tbp != null && tbp.getAuditState() > 0) {
@@ -164,14 +162,13 @@ public class TurnBagPlanController extends BaseController {
             }
             list.add(tbp);
         }
-
         turnBagPlanService.delete(list);
         return Constant.AJAX_SUCCESS;
     }
 
     @Journal(name = "获取生产订单和产品数据")
     @RequestMapping("/order/select")
-    public String selectOrder() throws Exception {
+    public String selectOrder() {
         return "planner/turnbag/orderProductSelect";
     }
 
@@ -183,11 +180,10 @@ public class TurnBagPlanController extends BaseController {
         if (!StringUtils.isEmpty(filterRules)) {
             JsonParser parser = new JsonParser();
             JsonArray array = parser.parse(filterRules).getAsJsonArray();
-            FilterRules rule = null;
+            FilterRules rule;
             Gson gson = new Gson();
             for (JsonElement obj : array) {
                 rule = gson.fromJson(obj, FilterRules.class);
-                // System.out.println("<#if key[\""+rule.getField()+"\"]??> and so."+rule.getField()+" like :"+rule.getField()+" </#if>");
                 filter.set(rule.getField(), "like:" + rule.getValue());
             }
         }
@@ -199,16 +195,14 @@ public class TurnBagPlanController extends BaseController {
     @RequestMapping("/batchCode")
     public String getBatchCode(Long orderId, Long partId) throws Exception {
         List<Map<String, Object>> list = turnBagPlanService.getBatchCodeCountBySalesOrderCode(orderId, partId);
-        List<Map<String, Object>> combobox = new ArrayList<Map<String, Object>>();
+        List<Map<String, Object>> combobox = new ArrayList<>();
         Map<String, Object> map;
-
         for (Map<String, Object> m : list) {
-            map = new HashMap<String, Object>();
+            map = new HashMap<>();
             map.put("t", m.get("BATCHCODE") + "*" + m.get("COUNT") + "托");
             map.put("v", m.get("BATCHCODE"));
             combobox.add(map);
         }
-
         return GsonTools.toJson(combobox);
     }
 
@@ -219,7 +213,6 @@ public class TurnBagPlanController extends BaseController {
         return GsonTools.toJson(turnBagPlanService.getBatchInfo(targetProducePlanDetailId, fromProducePlanDetailId));
     }
 
-
     @ResponseBody
     @Journal(name = "翻包任务单提交审核", logType = LogType.DB)
     @RequestMapping(value = "commitAudit", method = RequestMethod.POST)
@@ -228,7 +221,7 @@ public class TurnBagPlanController extends BaseController {
         if (!tbp.getUserName().equals(session.getAttribute(Constant.CURRENT_USER_NAME))) {
             return ajaxError("只能由下达该计划的业务员才能提交审核！");
         }
-        auditInstanceService.submitAudit(name, AuditConstant.CODE.FB, (Long) session.getAttribute(Constant.CURRENT_USER_ID), "planner/tbp/" + id, Long.valueOf(id), TurnBagPlan.class);
+        auditInstanceService.submitAudit(name, AuditConstant.CODE.FB, (Long) session.getAttribute(Constant.CURRENT_USER_ID), "planner/tbp/" + id, id, TurnBagPlan.class);
         return Constant.AJAX_SUCCESS;
     }
 
@@ -269,9 +262,6 @@ public class TurnBagPlanController extends BaseController {
 
     /**
      * 翻包领料导出
-     *
-     * @param filter
-     * @throws Exception
      */
     @NoAuth
     @ResponseBody
@@ -296,10 +286,9 @@ public class TurnBagPlanController extends BaseController {
         cellStyle.setWrapText(true);
 
         Sheet sheet = wb.createSheet();
-        // sheet.setDisplayGridlines(true);
-        Row row = null;
-        Cell cell = null;
-        String columnName[] = new String[]{"产品条码", "翻包单号", "新订单号", "客户订单号", "计划单号", "厂内名称", "客户名称", "产品规格", "批次号", "门幅(mm)",
+        Row row;
+        Cell cell;
+        String[] columnName = new String[]{"产品条码", "翻包单号", "新订单号", "客户订单号", "计划单号", "厂内名称", "客户名称", "产品规格", "批次号", "门幅(mm)",
                 "米长(m)", "旧订单号", "批次号", "门幅(mm)", "米长(m)", "客户名称", "计划单号", "产品规格", "重量", "操作人", "领出时间", "领出车间"};
         int r = 0;// 从第1行开始写数据
         row = sheet.createRow(r);
@@ -312,7 +301,6 @@ public class TurnBagPlanController extends BaseController {
         }
         sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 21));
         r++;
-
         row = sheet.createRow(r);
         sheet.setColumnWidth(0, 18 * 256);// 设置列宽
         sheet.setColumnWidth(1, 16 * 256);
@@ -342,7 +330,6 @@ public class TurnBagPlanController extends BaseController {
             cell.setCellStyle(cellStyle);
         }
         r++;
-
         for (Map<String, Object> data : list) {
             row = sheet.createRow(r);
 

@@ -1,111 +1,107 @@
 package com.bluebirdme.mes.planner.turnbag.entity;
 
+import com.bluebirdme.mes.core.annotation.Desc;
+import com.bluebirdme.mes.core.base.entity.BaseEntity;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import com.bluebirdme.mes.core.annotation.Desc;
-import com.bluebirdme.mes.core.base.entity.BaseEntity;
-
 /**
  * 翻包明细
- * 
+ *
  * @author Goofy
  * @Date 2017年3月22日 下午3:24:19
  */
 @Entity
 @Table(name = "hs_turnbag_plan_details")
 public class TurnBagPlanDetails extends BaseEntity {
-	
-	@Column
-	private Long producePlanDetailId;
-	
-	@Column
-	private Long fromProducePlanDetailId;
-	
-	@Column
-	private Long salesOrderDetailId;
-	@Column
-	private String batchCode;
-	@Column
-	private Integer turnBagCount;
+    @Column
+    private Long producePlanDetailId;
 
-	@Desc("领出数量")
-	@Column(columnDefinition = "int(5) default 0")
-	private Integer takeOutCount;
-	
-	@Desc("仓库领出数量")
-	@Column
-	private Integer takeOutCountFromWareHouse;
+    @Column
+    private Long fromProducePlanDetailId;
 
-	@Desc("翻包备注")
-	@Column
-	private String memo;
+    @Column
+    private Long salesOrderDetailId;
+    @Column
+    private String batchCode;
+    @Column
+    private Integer turnBagCount;
 
-	public Long getSalesOrderDetailId() {
-		return salesOrderDetailId;
-	}
+    @Desc("领出数量")
+    @Column(columnDefinition = "int(5) default 0")
+    private Integer takeOutCount;
 
-	public void setSalesOrderDetailId(Long salesOrderDetailId) {
-		this.salesOrderDetailId = salesOrderDetailId;
-	}
+    @Desc("仓库领出数量")
+    @Column
+    private Integer takeOutCountFromWareHouse;
 
-	public String getBatchCode() {
-		return batchCode;
-	}
+    @Desc("翻包备注")
+    @Column
+    private String memo;
 
-	public void setBatchCode(String batchCode) {
-		this.batchCode = batchCode;
-	}
+    public Long getSalesOrderDetailId() {
+        return salesOrderDetailId;
+    }
 
-	public Integer getTurnBagCount() {
-		return turnBagCount;
-	}
+    public void setSalesOrderDetailId(Long salesOrderDetailId) {
+        this.salesOrderDetailId = salesOrderDetailId;
+    }
 
-	public void setTurnBagCount(Integer turnBagCount) {
-		this.turnBagCount = turnBagCount;
-	}
+    public String getBatchCode() {
+        return batchCode;
+    }
 
-	public Long getProducePlanDetailId() {
-		return producePlanDetailId;
-	}
+    public void setBatchCode(String batchCode) {
+        this.batchCode = batchCode;
+    }
 
-	public void setProducePlanDetailId(Long producePlanDetailId) {
-		this.producePlanDetailId = producePlanDetailId;
-	}
+    public Integer getTurnBagCount() {
+        return turnBagCount;
+    }
 
-	public Integer getTakeOutCount() {
-		return takeOutCount==null?0:takeOutCount;
-	}
+    public void setTurnBagCount(Integer turnBagCount) {
+        this.turnBagCount = turnBagCount;
+    }
 
-	public void setTakeOutCount(Integer takeOutCount) {
-		this.takeOutCount = takeOutCount;
-	}
+    public Long getProducePlanDetailId() {
+        return producePlanDetailId;
+    }
 
-	public Integer getTakeOutCountFromWareHouse() {
-		return takeOutCountFromWareHouse;
-	}
+    public void setProducePlanDetailId(Long producePlanDetailId) {
+        this.producePlanDetailId = producePlanDetailId;
+    }
 
-	public void setTakeOutCountFromWareHouse(Integer takeOutCountFromWareHouse) {
-		this.takeOutCountFromWareHouse = takeOutCountFromWareHouse;
-	}
+    public Integer getTakeOutCount() {
+        return takeOutCount == null ? 0 : takeOutCount;
+    }
 
-	public String getMemo() {
-		return memo;
-	}
+    public void setTakeOutCount(Integer takeOutCount) {
+        this.takeOutCount = takeOutCount;
+    }
 
-	public void setMemo(String memo) {
-		this.memo = memo;
-	}
+    public Integer getTakeOutCountFromWareHouse() {
+        return takeOutCountFromWareHouse;
+    }
 
-	public Long getFromProducePlanDetailId() {
-		return fromProducePlanDetailId;
-	}
+    public void setTakeOutCountFromWareHouse(Integer takeOutCountFromWareHouse) {
+        this.takeOutCountFromWareHouse = takeOutCountFromWareHouse;
+    }
 
-	public void setFromProducePlanDetailId(Long fromProducePlanDetailId) {
-		this.fromProducePlanDetailId = fromProducePlanDetailId;
-	}
-	
-	
-	
+    public String getMemo() {
+        return memo;
+    }
+
+    public void setMemo(String memo) {
+        this.memo = memo;
+    }
+
+    public Long getFromProducePlanDetailId() {
+        return fromProducePlanDetailId;
+    }
+
+    public void setFromProducePlanDetailId(Long fromProducePlanDetailId) {
+        this.fromProducePlanDetailId = fromProducePlanDetailId;
+    }
 }

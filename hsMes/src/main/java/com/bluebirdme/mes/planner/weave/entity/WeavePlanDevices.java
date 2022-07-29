@@ -1,74 +1,68 @@
 package com.bluebirdme.mes.planner.weave.entity;
 
+import com.bluebirdme.mes.core.annotation.Desc;
+import com.bluebirdme.mes.core.base.entity.BaseEntity;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.Index;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.Index;
-
-import com.bluebirdme.mes.core.annotation.Desc;
-import com.bluebirdme.mes.core.base.entity.BaseEntity;
 @Desc("计划和机台信息")
 @Entity
-@Table(name="hs_Weave_Plan_Devices")
+@Table(name = "hs_Weave_Plan_Devices")
 @DynamicInsert
 public class WeavePlanDevices extends BaseEntity {
-	
-	
-	@Desc("机台ID")
-	@Column(nullable=false)
-	@Index(name="deviceId")
-	private Long deviceId;
-	
-	@Desc("编织计划ID")
-	@Column(nullable=false)
-	@Index(name="weavePlanId")
-	private Long weavePlanId;
-	
-	//1:正在生产
-	@Desc("正在生产")
-	@Column(columnDefinition="int(2) default 0")
-	private Integer isProducing;
-	
-	//1:正在生产
-	@Desc("优先")
-	@Column
-	private Long prior;
-	
-	public Long getDeviceId() {
-		return deviceId;
-	}
+    @Desc("机台ID")
+    @Column(nullable = false)
+    @Index(name = "deviceId")
+    private Long deviceId;
 
-	public void setDeviceId(Long deviceId) {
-		this.deviceId = deviceId;
-	}
+    @Desc("编织计划ID")
+    @Column(nullable = false)
+    @Index(name = "weavePlanId")
+    private Long weavePlanId;
 
-	public Long getWeavePlanId() {
-		return weavePlanId;
-	}
+    @Desc("正在生产")
+    @Column(columnDefinition = "int(2) default 0")
+    private Integer isProducing;
+    
+    @Desc("优先")
+    @Column
+    private Long prior;
 
-	public void setWeavePlanId(Long weavePlanId) {
-		this.weavePlanId = weavePlanId;
-	}
+    public Long getDeviceId() {
+        return deviceId;
+    }
 
-	public Integer getIsProducing() {
-		return isProducing;
-	}
+    public void setDeviceId(Long deviceId) {
+        this.deviceId = deviceId;
+    }
 
-	public void setIsProducing(Integer isProducing) {
-		this.isProducing = isProducing;
-	}
+    public Long getWeavePlanId() {
+        return weavePlanId;
+    }
 
-	public Long getPrior() {
-		return prior;
-	}
+    public void setWeavePlanId(Long weavePlanId) {
+        this.weavePlanId = weavePlanId;
+    }
 
-	public void setPrior(Long prior) {
-		this.prior = prior;
-	}
-	
-	
+    public Integer getIsProducing() {
+        return isProducing;
+    }
 
-	
+    public void setIsProducing(Integer isProducing) {
+        this.isProducing = isProducing;
+    }
+
+    public Long getPrior() {
+        return prior;
+    }
+
+    public void setPrior(Long prior) {
+        this.prior = prior;
+    }
+
+
 }

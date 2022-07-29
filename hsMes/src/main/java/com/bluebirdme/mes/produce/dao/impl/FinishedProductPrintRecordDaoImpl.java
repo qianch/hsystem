@@ -5,6 +5,7 @@
  * 2016版权所有
  */
 package com.bluebirdme.mes.produce.dao.impl;
+
 import com.bluebirdme.mes.core.base.dao.BaseDaoImpl;
 import com.bluebirdme.mes.core.base.entity.Filter;
 import com.bluebirdme.mes.core.base.entity.Page;
@@ -21,32 +22,29 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
  * @author 徐波
  * @Date 2016年4月5日 下午4:35:34
  */
 @Repository
 public class FinishedProductPrintRecordDaoImpl extends BaseDaoImpl implements IFinishedProductPrintRecordDao {
+    @Resource
+    SessionFactory factory;
 
-	@Resource SessionFactory factory;
+    @Override
+    public Session getSession() {
+        return factory.getCurrentSession();
+    }
 
-	@Override
-	public Session getSession() {
-		return factory.getCurrentSession();
-	}
+    @Override
+    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+        return null;
+    }
 
-	@Override
-	public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-		return null;
-	}
-
-	public List<Map<String, Object>> findFinishedProductPrintRecords(Long productId) throws Exception
-	{
-		String sql= SQL.get("findFinishedProductPrintRecords");
-		SQLQuery query=getSession().createSQLQuery(sql);
-		query.setParameter("productId", productId);
-		query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
-		return query.list();
-	}
-
+    public List<Map<String, Object>> findFinishedProductPrintRecords(Long productId) throws Exception {
+        String sql = SQL.get("findFinishedProductPrintRecords");
+        SQLQuery query = getSession().createSQLQuery(sql);
+        query.setParameter("productId", productId);
+        query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+        return query.list();
+    }
 }

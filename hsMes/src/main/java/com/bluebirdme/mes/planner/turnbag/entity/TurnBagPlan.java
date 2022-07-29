@@ -1,228 +1,226 @@
 package com.bluebirdme.mes.planner.turnbag.entity;
 
-import java.util.Date;
-import java.util.List;
+import com.bluebirdme.mes.core.annotation.Desc;
+import com.bluebirdme.mes.core.base.entity.BaseEntity;
+import org.hibernate.annotations.Index;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
-import org.hibernate.annotations.Index;
-
-import com.bluebirdme.mes.core.annotation.Desc;
-import com.bluebirdme.mes.core.base.entity.BaseEntity;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 翻包计划
+ *
  * @author 高飞
  * @Date 2016年10月20日 上午13:02:34
  */
 @Desc("翻包计划")
-@Entity 
-@Table(name="HS_TurnBag_Plan")
-public class TurnBagPlan extends BaseEntity{
-	@Desc("翻包任务单号")
-	@Column(nullable=false)
-	@Index(name="trunBagCode")
-	private String trunBagCode;
-	
-	@Index(name="newSalesOrderDetailsId")
-	@Desc("新订单")
-	@Column(nullable=false)
-	private Long newSalesOrderDetailsId;
-	
-	@Index(name="newSalesOrderDetailsId")
-	@Desc("新订单号")
-	@Column(nullable=false)
-	private String newSalesOrderCode;
-	
-	@Index(name="newBatchCode")
-	@Desc("新批次号")
-	@Column(nullable=false)
-	private String newBatchCode;
-	
-	@Desc("新客户")
-	@Column(nullable=false)
-	private String newConsumer;
-	
-	@Desc("新产品型号")
-	@Column(nullable=false)
-	private String newProductModel;
-	
-	@Index(name="createTime")
-	@Desc("下单时间")
-	@Column(nullable=false)
-	private String createTime;
-	
-	@Index(name="finishTime")
-	@Desc("完成截止时间")
-	@Column(nullable=true)
-	private String finishTime;
-	
-	@Desc("翻包订单交期")
-	@Column(nullable=false)
-	private Date deliveryDate;
-	
-	@Index(name="userName")
-	@Desc("下单人")
-	@Column(nullable=false)
-	private String userName;
-	
-	@Index(name="departmentName")
-	@Desc("翻包执行部门")
-	@Column(nullable=false)
-	private String departmentName;
-	
-	@Index(name="memo")
-	@Desc("说明")
-	@Column(nullable=true)
-	private String memo;
-	
-	@Desc("审核状态")
-	@Column(nullable=false)
-	private Integer auditState;
-	
-	@Desc("翻包数量")
-	@Column
-	private Double trunBagCount;
-	
-	/**
-	 * 0:未完成，1：已完成
-	 */
-	@Desc("完成状态")
-	@Column(nullable=false)
-	private Integer isCompleted;
-	
-	@Transient
-	private List<TurnBagPlanDetails> details;
+@Entity
+@Table(name = "HS_TurnBag_Plan")
+public class TurnBagPlan extends BaseEntity {
+    @Desc("翻包任务单号")
+    @Column(nullable = false)
+    @Index(name = "trunBagCode")
+    private String trunBagCode;
 
-	public String getTrunBagCode() {
-		return trunBagCode;
-	}
+    @Index(name = "newSalesOrderDetailsId")
+    @Desc("新订单")
+    @Column(nullable = false)
+    private Long newSalesOrderDetailsId;
 
-	public void setTrunBagCode(String trunBagCode) {
-		this.trunBagCode = trunBagCode;
-	}
+    @Index(name = "newSalesOrderDetailsId")
+    @Desc("新订单号")
+    @Column(nullable = false)
+    private String newSalesOrderCode;
 
-	public Long getNewSalesOrderDetailsId() {
-		return newSalesOrderDetailsId;
-	}
+    @Index(name = "newBatchCode")
+    @Desc("新批次号")
+    @Column(nullable = false)
+    private String newBatchCode;
 
-	public void setNewSalesOrderDetailsId(Long newSalesOrderDetailsId) {
-		this.newSalesOrderDetailsId = newSalesOrderDetailsId;
-	}
+    @Desc("新客户")
+    @Column(nullable = false)
+    private String newConsumer;
 
-	public String getNewBatchCode() {
-		return newBatchCode;
-	}
+    @Desc("新产品型号")
+    @Column(nullable = false)
+    private String newProductModel;
 
-	public void setNewBatchCode(String newBatchCode) {
-		this.newBatchCode = newBatchCode;
-	}
+    @Index(name = "createTime")
+    @Desc("下单时间")
+    @Column(nullable = false)
+    private String createTime;
 
-	public String getCreateTime() {
-		return createTime;
-	}
+    @Index(name = "finishTime")
+    @Desc("完成截止时间")
+    @Column(nullable = true)
+    private String finishTime;
 
-	public void setCreateTime(String createTime) {
-		this.createTime = createTime;
-	}
+    @Desc("翻包订单交期")
+    @Column(nullable = false)
+    private Date deliveryDate;
 
-	public String getFinishTime() {
-		return finishTime;
-	}
+    @Index(name = "userName")
+    @Desc("下单人")
+    @Column(nullable = false)
+    private String userName;
 
-	public void setFinishTime(String finishTime) {
-		this.finishTime = finishTime;
-	}
+    @Index(name = "departmentName")
+    @Desc("翻包执行部门")
+    @Column(nullable = false)
+    private String departmentName;
 
-	public String getUserName() {
-		return userName;
-	}
+    @Index(name = "memo")
+    @Desc("说明")
+    @Column(nullable = true)
+    private String memo;
 
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
+    @Desc("审核状态")
+    @Column(nullable = false)
+    private Integer auditState;
 
-	public String getDepartmentName() {
-		return departmentName;
-	}
+    @Desc("翻包数量")
+    @Column
+    private Double trunBagCount;
 
-	public void setDepartmentName(String departmentName) {
-		this.departmentName = departmentName;
-	}
+    /**
+     * 0:未完成，1：已完成
+     */
+    @Desc("完成状态")
+    @Column(nullable = false)
+    private Integer isCompleted;
 
-	public String getMemo() {
-		return memo;
-	}
+    @Transient
+    private List<TurnBagPlanDetails> details;
 
-	public void setMemo(String memo) {
-		this.memo = memo;
-	}
+    public String getTrunBagCode() {
+        return trunBagCode;
+    }
 
-	public Integer getAuditState() {
-		return auditState;
-	}
+    public void setTrunBagCode(String trunBagCode) {
+        this.trunBagCode = trunBagCode;
+    }
 
-	public void setAuditState(Integer auditState) {
-		this.auditState = auditState;
-	}
+    public Long getNewSalesOrderDetailsId() {
+        return newSalesOrderDetailsId;
+    }
 
-	public Integer getIsCompleted() {
-		return isCompleted;
-	}
+    public void setNewSalesOrderDetailsId(Long newSalesOrderDetailsId) {
+        this.newSalesOrderDetailsId = newSalesOrderDetailsId;
+    }
 
-	public void setIsCompleted(Integer isCompleted) {
-		this.isCompleted = isCompleted;
-	}
+    public String getNewBatchCode() {
+        return newBatchCode;
+    }
 
-	public List<TurnBagPlanDetails> getDetails() {
-		return details;
-	}
+    public void setNewBatchCode(String newBatchCode) {
+        this.newBatchCode = newBatchCode;
+    }
 
-	public void setDetails(List<TurnBagPlanDetails> details) {
-		this.details = details;
-	}
+    public String getCreateTime() {
+        return createTime;
+    }
 
-	public Double getTrunBagCount() {
-		return trunBagCount;
-	}
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
 
-	public void setTrunBagCount(Double trunBagCount) {
-		this.trunBagCount = trunBagCount;
-	}
+    public String getFinishTime() {
+        return finishTime;
+    }
 
-	public String getNewSalesOrderCode() {
-		return newSalesOrderCode;
-	}
+    public void setFinishTime(String finishTime) {
+        this.finishTime = finishTime;
+    }
 
-	public void setNewSalesOrderCode(String newSalesOrderCode) {
-		this.newSalesOrderCode = newSalesOrderCode;
-	}
+    public String getUserName() {
+        return userName;
+    }
 
-	public Date getDeliveryDate() {
-		return deliveryDate;
-	}
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
-	public void setDeliveryDate(Date deliveryDate) {
-		this.deliveryDate = deliveryDate;
-	}
+    public String getDepartmentName() {
+        return departmentName;
+    }
 
-	public String getNewConsumer() {
-		return newConsumer;
-	}
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
+    }
 
-	public void setNewConsumer(String newConsumer) {
-		this.newConsumer = newConsumer;
-	}
+    public String getMemo() {
+        return memo;
+    }
 
-	public String getNewProductModel() {
-		return newProductModel;
-	}
+    public void setMemo(String memo) {
+        this.memo = memo;
+    }
 
-	public void setNewProductModel(String newProductModel) {
-		this.newProductModel = newProductModel;
-	}
-	
+    public Integer getAuditState() {
+        return auditState;
+    }
+
+    public void setAuditState(Integer auditState) {
+        this.auditState = auditState;
+    }
+
+    public Integer getIsCompleted() {
+        return isCompleted;
+    }
+
+    public void setIsCompleted(Integer isCompleted) {
+        this.isCompleted = isCompleted;
+    }
+
+    public List<TurnBagPlanDetails> getDetails() {
+        return details;
+    }
+
+    public void setDetails(List<TurnBagPlanDetails> details) {
+        this.details = details;
+    }
+
+    public Double getTrunBagCount() {
+        return trunBagCount;
+    }
+
+    public void setTrunBagCount(Double trunBagCount) {
+        this.trunBagCount = trunBagCount;
+    }
+
+    public String getNewSalesOrderCode() {
+        return newSalesOrderCode;
+    }
+
+    public void setNewSalesOrderCode(String newSalesOrderCode) {
+        this.newSalesOrderCode = newSalesOrderCode;
+    }
+
+    public Date getDeliveryDate() {
+        return deliveryDate;
+    }
+
+    public void setDeliveryDate(Date deliveryDate) {
+        this.deliveryDate = deliveryDate;
+    }
+
+    public String getNewConsumer() {
+        return newConsumer;
+    }
+
+    public void setNewConsumer(String newConsumer) {
+        this.newConsumer = newConsumer;
+    }
+
+    public String getNewProductModel() {
+        return newProductModel;
+    }
+
+    public void setNewProductModel(String newProductModel) {
+        this.newProductModel = newProductModel;
+    }
 }

@@ -17,7 +17,6 @@ import java.util.Map;
  * @Date 2017-5-26 10:04:05
  */
 public interface IPackageTaskService extends IBaseService {
-
     List<Map<String, Object>> findTasks(Long planDetailId);
 
     List<Map<String, Object>> findPakcageInfo(Long bcBomId);

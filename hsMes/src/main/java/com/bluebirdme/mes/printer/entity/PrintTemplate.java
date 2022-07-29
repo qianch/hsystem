@@ -1,12 +1,11 @@
 package com.bluebirdme.mes.printer.entity;
 
+import com.bluebirdme.mes.core.annotation.Desc;
+import com.bluebirdme.mes.core.base.entity.BaseEntity;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Transient;
-
-import com.bluebirdme.mes.core.annotation.Desc;
-import com.bluebirdme.mes.core.base.entity.BaseEntity;
 
 @Desc("打印模版信息")
 @Entity
@@ -47,6 +46,4 @@ public class PrintTemplate extends BaseEntity {
     public void setType(String type) {
         this.type = type;
     }
-
-
 }

@@ -12,13 +12,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
  * @author 徐波
  * @Date 2016-11-26 23:01:35
  */
 
 public interface IFinishedProductPrintRecordDao extends IBaseDao {
-
-
-    public List<Map<String, Object>> findFinishedProductPrintRecords(Long productId) throws Exception;
+    List<Map<String, Object>> findFinishedProductPrintRecords(Long productId) throws Exception;
 }

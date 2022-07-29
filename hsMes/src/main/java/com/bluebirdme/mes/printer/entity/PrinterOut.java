@@ -1,10 +1,8 @@
 package com.bluebirdme.mes.printer.entity;
 
-import java.util.List;
-
-import javax.persistence.Column;
-
 import com.bluebirdme.mes.store.entity.IBarcode;
+
+import java.util.List;
 
 public class PrinterOut {
     private String printerName;
@@ -52,5 +50,4 @@ public class PrinterOut {
     public void setContents(List<String> contents) {
         this.contents = contents;
     }
-
 }

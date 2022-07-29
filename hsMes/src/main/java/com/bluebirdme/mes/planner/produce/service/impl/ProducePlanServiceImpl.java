@@ -1033,7 +1033,7 @@ public class ProducePlanServiceImpl extends BaseServiceImpl implements IProduceP
         return ret;
     }
 
-    public <T> Map<String, Object> findOrderPageInfo2(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findOrderPageInfo2(Filter filter, Page page) throws Exception {
         Map<String, Object> ret = producePlanDao.findOrderPageInfo2(filter, page);
         List<Map<String, Object>> list = (List<Map<String, Object>>) ret.get("rows");
         Map<String, Long> bomPartCount;
@@ -1089,9 +1089,6 @@ public class ProducePlanServiceImpl extends BaseServiceImpl implements IProduceP
 
     /**
      * 强制变更
-     *
-     * @param
-     * @throws Exception
      */
     public void forceEdit(ProducePlan plan, Long userId) throws Exception {
         Map<String, Object> param = new HashMap();
@@ -1169,7 +1166,7 @@ public class ProducePlanServiceImpl extends BaseServiceImpl implements IProduceP
     }
 
     @Override
-    public <T> Map<String, Object> findSchedule(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findSchedule(Filter filter, Page page) throws Exception {
         return producePlanDao.findSchedule(filter, page);
     }
 

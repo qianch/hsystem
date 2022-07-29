@@ -8,7 +8,6 @@ import com.bluebirdme.mes.store.service.ITrayBarCodeService;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 public class PrintBarCode {
     private static PrintBarCode instance = new PrintBarCode();
@@ -24,10 +23,8 @@ public class PrintBarCode {
     private static final Map<String, Integer> barcodeCount = new HashMap();
 
     public static List<String> getBarCodeList(String type, String prefixPrint, int count) {
-
         type = type.toLowerCase();
         type = type.equals("roll_peibu") ? "roll" : type;
-
         synchronized (buildLock(type)) {
             List<String> list = new ArrayList<>();
             Calendar c = Calendar.getInstance();
@@ -41,8 +38,8 @@ public class PrintBarCode {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String barcodeDate = sdf.format(now);
 
-            String likeString = "";
-            List<Map<String, Object>> listmap=new ArrayList<>();
+            String likeString;
+            List<Map<String, Object>> listmap;
             switch (type) {
                 case "roll":
                     likeString = "R" + prefixPrint + dateString + "%";
@@ -67,16 +64,12 @@ public class PrintBarCode {
                 default:
                     return null;
             }
-
-            Integer   barCodeCount = Integer.parseInt(listmap.get(0).get("BARCODECOUNT").toString());
-
+            int barCodeCount = Integer.parseInt(listmap.get(0).get("BARCODECOUNT").toString());
             if (barCodeCount >= (barcodeCount.get(barcodeDate + type) == null ? 0 : Integer.parseInt(barcodeCount.get(barcodeDate + type).toString()))) {
                 barcodeCount.put(barcodeDate + type, barCodeCount);
             }
-
             int dc = barcodeCount.get(barcodeDate + type);
             String dcString;
-
             for (int a = 0; a < count; a++) {
                 dc++;
                 if (dc < 10) {

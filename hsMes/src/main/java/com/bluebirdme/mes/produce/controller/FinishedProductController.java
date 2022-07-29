@@ -6,21 +6,25 @@
  */
 package com.bluebirdme.mes.produce.controller;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.text.DecimalFormat;
-import java.util.*;
-
-import javax.annotation.Resource;
-
-import com.bluebirdme.mes.baseInfo.entity.TcBomVersionParts;
-import com.bluebirdme.mes.planner.deliveryontheway.entity.DeliveryOnTheWayPlanDetails;
-import com.bluebirdme.mes.planner.produce.entity.ProducePlan;
-import com.bluebirdme.mes.planner.produce.service.IProducePlanService;
+import com.bluebirdme.mes.audit.service.IAuditInstanceService;
+import com.bluebirdme.mes.baseInfo.entity.FtcBcBom;
+import com.bluebirdme.mes.baseInfo.entity.FtcBomDetail;
+import com.bluebirdme.mes.baseInfo.service.IFtcBcBomService;
+import com.bluebirdme.mes.core.annotation.Journal;
+import com.bluebirdme.mes.core.annotation.NoAuth;
+import com.bluebirdme.mes.core.annotation.support.LogType;
+import com.bluebirdme.mes.core.base.controller.BaseController;
+import com.bluebirdme.mes.core.base.entity.Filter;
+import com.bluebirdme.mes.core.base.entity.Page;
+import com.bluebirdme.mes.core.constant.Constant;
+import com.bluebirdme.mes.core.sql.SQLTemplateException;
+import com.bluebirdme.mes.core.valid.annotations.Valid;
+import com.bluebirdme.mes.produce.entity.FinishedProduct;
+import com.bluebirdme.mes.produce.entity.FinishedProductCategory;
 import com.bluebirdme.mes.produce.entity.FinishedProductMirror;
+import com.bluebirdme.mes.produce.service.IFinishedProductService;
+import com.bluebirdme.mes.sales.entity.Consumer;
+import com.bluebirdme.mes.sales.service.IConsumerService;
 import com.bluebirdme.mes.utils.HttpUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -33,27 +37,13 @@ import org.xdemo.superutil.j2se.MathUtils;
 import org.xdemo.superutil.j2se.PathUtils;
 import org.xdemo.superutil.thirdparty.gson.GsonTools;
 
-import com.bluebirdme.mes.audit.service.IAuditInstanceService;
-import com.bluebirdme.mes.baseInfo.entity.FtcBcBom;
-import com.bluebirdme.mes.baseInfo.entity.FtcBomDetail;
-import com.bluebirdme.mes.baseInfo.service.IFtcBcBomService;
-import com.bluebirdme.mes.core.annotation.Journal;
-import com.bluebirdme.mes.core.annotation.NoAuth;
-import com.bluebirdme.mes.core.annotation.support.LogType;
-import com.bluebirdme.mes.core.base.controller.BaseController;
-import com.bluebirdme.mes.core.base.entity.Filter;
-import com.bluebirdme.mes.core.base.entity.Page;
-import com.bluebirdme.mes.core.constant.Constant;
-import com.bluebirdme.mes.core.exception.BusinessException;
-import com.bluebirdme.mes.core.sql.SQLTemplateException;
-import com.bluebirdme.mes.core.valid.annotations.Valid;
-import com.bluebirdme.mes.device.service.IWeightCarrierService;
-import com.bluebirdme.mes.planner.cut.entity.CutPlan;
-import com.bluebirdme.mes.produce.entity.FinishedProduct;
-import com.bluebirdme.mes.produce.entity.FinishedProductCategory;
-import com.bluebirdme.mes.produce.service.IFinishedProductService;
-import com.bluebirdme.mes.sales.entity.Consumer;
-import com.bluebirdme.mes.sales.service.IConsumerService;
+import javax.annotation.Resource;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.text.DecimalFormat;
+import java.util.*;
 
 /**
  * 成品信息Controller
@@ -95,12 +85,7 @@ public class FinishedProductController extends BaseController {
     @Resource
     IAuditInstanceService auditInstanceService;
     @Resource
-    IWeightCarrierService weightCarrierService;
-    @Resource
     IFtcBcBomService ftcBcBomService;
-
-    @Resource
-    IProducePlanService producePlanService;
 
     @Journal(name = "首页")
     @RequestMapping(method = RequestMethod.GET)
@@ -122,8 +107,6 @@ public class FinishedProductController extends BaseController {
 
     /**
      * 选择衬管编码页面
-     *
-     * @return
      */
     @Journal(name = "选择衬管编码页面")
     @RequestMapping(value = "selectorCarrierCode", method = RequestMethod.GET)
@@ -141,11 +124,11 @@ public class FinishedProductController extends BaseController {
         DecimalFormat df = new DecimalFormat("#.0");
         if (list.size() > 0) {
             boolean isChange = false;
-            for (int i = 0; i < list.size(); i++) {
-                FinishedProduct finishedProduct = finishProductService.findById(FinishedProduct.class, Long.parseLong(list.get(i).get("ID").toString()));
+            for (Map<String, Object> stringObjectMap : list) {
+                FinishedProduct finishedProduct = finishProductService.findById(FinishedProduct.class, Long.parseLong(stringObjectMap.get("ID").toString()));
                 //BOM工艺名称改变时产品工艺代码和名称也会随之改变
-                if (list.get(i).get("PRODUCTPROCESSCODE") != null) {
-                    String productProcessCode = list.get(i).get("PRODUCTPROCESSCODE").toString();
+                if (stringObjectMap.get("PRODUCTPROCESSCODE") != null) {
+                    String productProcessCode = stringObjectMap.get("PRODUCTPROCESSCODE").toString();
                     String productProcessCodes[] = productProcessCode.split("/");
                     if (productProcessCodes.length == 2) {
                         if (!"HS".equals(productProcessCodes[0]) && productProcessCodes[0] != null && productProcessCodes[1] != null) {
@@ -162,18 +145,15 @@ public class FinishedProductController extends BaseController {
                     }
                 }
 
-                Object weight = list.get(i).get("PRODUCTROLLWEIGHT");
+                Object weight = stringObjectMap.get("PRODUCTROLLWEIGHT");
                 if (weight != null) {
                     weight = df.format(weight);
-                    list.get(i).put("PRODUCTROLLWEIGHT", weight);
+                    stringObjectMap.put("PRODUCTROLLWEIGHT", weight);
                 }
-                
-              
                 // 产品的总克重
-                String procBomId = list.get(i).get("PROCBOMID").toString(); 
-                int total_ftcBomDetailWeightPerSquareMetre =  finishProductService.queryProcBomDetail(procBomId);
-              //  System.out.println("产品的总克重 total_ftcBomDetailWeightPerSquareMetre="+total_ftcBomDetailWeightPerSquareMetre);
-                list.get(i).put("PRODUCTRTOTALWEIGHT", total_ftcBomDetailWeightPerSquareMetre);
+                String procBomId = stringObjectMap.get("PROCBOMID").toString();
+                int total_ftcBomDetailWeightPerSquareMetre = finishProductService.queryProcBomDetail(procBomId);
+                stringObjectMap.put("PRODUCTRTOTALWEIGHT", total_ftcBomDetailWeightPerSquareMetre);
             }
             if (isChange) {
                 findPageInfo = finishProductService.findPageInfo(filter, page);
@@ -181,11 +161,12 @@ public class FinishedProductController extends BaseController {
         }
         return GsonTools.toJson(findPageInfo);
     }
+
     @NoAuth
     @ResponseBody
     @Journal(name = "获取成品信息列表信息")
     @RequestMapping("productMirrorList")
-    public String getFinishProductMirror(Filter filter, Page page) throws Exception {
+    public String getFinishProductMirror(Filter filter, Page page) {
         Map<String, Object> findPageInfo = finishProductService.findPageInfo1(filter, page);
         return GsonTools.toJson(findPageInfo);
     }
@@ -200,18 +181,12 @@ public class FinishedProductController extends BaseController {
         List<Map<String, Object>> list = (List<Map<String, Object>>) findPageInfo.get("rows");
         DecimalFormat df = new DecimalFormat("#.0");
         if (list.size() > 0) {
-            Iterator<Map<String, Object>> it = list.iterator();
-            while (it.hasNext()) {
-                Map<String, Object> x = it.next();
-                if ("-1".equals(x.get("BCBOMCANCELED") + "") || "-1".equals(x.get("FTCBCBOMCANCELED") + "")) {
-                    it.remove();
-                }
-            }
-            for (int i = 0; i < list.size(); i++) {
-                Object weight = list.get(i).get("PRODUCTROLLWEIGHT");
+            list.removeIf(x -> "-1".equals(x.get("BCBOMCANCELED") + "") || "-1".equals(x.get("FTCBCBOMCANCELED") + ""));
+            for (Map<String, Object> stringObjectMap : list) {
+                Object weight = stringObjectMap.get("PRODUCTROLLWEIGHT");
                 if (weight != null) {
                     weight = df.format(weight);
-                    list.get(i).put("PRODUCTROLLWEIGHT", weight);
+                    stringObjectMap.put("PRODUCTROLLWEIGHT", weight);
                 }
             }
         }
@@ -219,10 +194,9 @@ public class FinishedProductController extends BaseController {
     }
 
     List<FtcBcBom> findPackType() {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         map.put("level", 2);
-        List<FtcBcBom> list = ftcBcBomService.findListByMap(FtcBcBom.class, map);
-        return list;
+        return ftcBcBomService.findListByMap(FtcBcBom.class, map);
     }
 
     @NoAuth
@@ -291,20 +265,19 @@ public class FinishedProductController extends BaseController {
             }
         }
 
-        Double productWeight = 0D;
+        double productWeight;
         if (finishProduct.getProductRollWeight() == null) {
-            List<FtcBomDetail> bomDetails = null;
-            Map<String, Object> map = new HashMap<String, Object>();
+            List<FtcBomDetail> bomDetails;
+            Map<String, Object> map = new HashMap<>();
             map.put("ftcBomVersionId", finishProduct.getProcBomId());
-
             bomDetails = finishProductService.findListByMap(FtcBomDetail.class, map);
-            Double bomWeight = 0D;
+            double bomWeight = 0D;
             for (FtcBomDetail d : bomDetails) {
                 bomWeight += d.getFtcBomDetailWeightPerSquareMetre() == null ? 0D : d.getFtcBomDetailWeightPerSquareMetre();
             }
             //米长*门幅*单位面积克重
-            Double width = finishProduct.getProductWidth() != null ? finishProduct.getProductWidth() : 0D;
-            Double length = finishProduct.getProductRollLength() != null ? finishProduct.getProductRollLength() : 0D;
+            double width = finishProduct.getProductWidth() != null ? finishProduct.getProductWidth() : 0D;
+            double length = finishProduct.getProductRollLength() != null ? finishProduct.getProductRollLength() : 0D;
             productWeight = MathUtils.add(bomWeight * width * length, 0D, 2);
             productWeight = MathUtils.div(productWeight, 1000000, 2);
             if (finishProduct.getMaxWeight() == null) {
@@ -314,26 +287,10 @@ public class FinishedProductController extends BaseController {
                 finishProduct.setMinWeight(MathUtils.add(productWeight * 0.97, 0D, 2));
             }
         }
-
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("productModel", finishProduct.getProductModel());
-        List<FinishedProduct> li = finishProductService.findListByMap(FinishedProduct.class, map);
-        /*
-         * if(finishProduct.getPackBomId()!=null&&finishProduct.getProcBomId()!=null
-         * &&
-         * finishProduct.getProductWidth()!=null&&finishProduct.getProductRollLength
-         * ()!=null){ for(FinishedProduct fp:li){
-         * if(fp.getPackBomId().equals(finishProduct
-         * .getPackBomId())&&fp.getProcBomId
-         * ().equals(finishProduct.getProcBomId())){ return
-         * ajaxError("该条信息已有重复的值"); } } }
-         */
         finishProduct.setAuditState(0);
         finishProduct.setAuditChange(1);
         finishProduct.setObsolete(null);
-        //Double w=finishProduct.getProductRollWeight();
         finishProductService.save(finishProduct);
-
         return GsonTools.toJson(finishProduct);
     }
 
@@ -351,20 +308,19 @@ public class FinishedProductController extends BaseController {
                 finishProduct.setIsShow(0);
             }
         }
-        Double productWeight = 0D;
-        Double bomWeight = 0D;
+        double productWeight = 0D;
+        double bomWeight = 0D;
         if (finishProduct.getProductRollWeight() == null) {
-            List<FtcBomDetail> bomDetails = null;
-            Map<String, Object> map = new HashMap<String, Object>();
+            List<FtcBomDetail> bomDetails;
+            Map<String, Object> map = new HashMap<>();
             map.put("ftcBomVersionId", finishProduct.getProcBomId());
-
             bomDetails = finishProductService.findListByMap(FtcBomDetail.class, map);
             for (FtcBomDetail d : bomDetails) {
                 bomWeight += d.getFtcBomDetailWeightPerSquareMetre() == null ? 0D : d.getFtcBomDetailWeightPerSquareMetre();
             }
             //米长*门幅*单位面积克重
-            Double width = finishProduct.getProductWidth() != null ? finishProduct.getProductWidth() : 0D;
-            Double length = finishProduct.getProductRollLength() != null ? finishProduct.getProductRollLength() : 0D;
+            double width = finishProduct.getProductWidth() != null ? finishProduct.getProductWidth() : 0D;
+            double length = finishProduct.getProductRollLength() != null ? finishProduct.getProductRollLength() : 0D;
             productWeight = MathUtils.add(bomWeight * width * length, 0D, 2);
             productWeight = MathUtils.div(productWeight, 1000000, 2);
             if (finishProduct.getMaxWeight() == null) {
@@ -374,7 +330,6 @@ public class FinishedProductController extends BaseController {
                 finishProduct.setMinWeight(MathUtils.add(productWeight * 0.97, 0D, 2));
             }
         }
-
         //成品类别信息
         productCategory = finishProduct.getFpcid() == null ? null : finishProductService.findById(FinishedProductCategory.class, finishProduct.getFpcid());
         return new ModelAndView(addOrEdit, model.addAttribute("finishProduct", finishProduct).addAttribute("codes", GsonTools.toJson(findPackType())).addAttribute("consumer", consumer).addAttribute("productCategory", productCategory).addAttribute("productWeight", productWeight).addAttribute("bomWeight", bomWeight).addAttribute("zgmc", zgmc));
@@ -388,23 +343,18 @@ public class FinishedProductController extends BaseController {
         finishProduct.setModifyTime(new Date());
         finishProduct.setModifyUser(session.getAttribute(Constant.CURRENT_USER_NAME).toString());
         Long id = finishProduct.getId();
-//
-//        List<Map<String, Object>> productList = producePlanService.findProductListByMap(finishProduct);
-//        if (0 != productList.size()) {
-//            return ajaxError("该产品信息下有未分配的订单，请分配完再变更！");
-//        }
-
         finishProduct.setId(null);
         if (finishProduct.getProductRollWeight() != null) {
             Double w = finishProduct.getProductRollWeight();
-            finishProduct.setProductRollWeight(Double.parseDouble(String.format("%.1f", w)));//四舍五入，保留一位小数点
+            //四舍五入，保留一位小数点
+            finishProduct.setProductRollWeight(Double.parseDouble(String.format("%.1f", w)));
         }
         finishProduct.setFpcid(Long.parseLong(productCategoryID));
         //成品信息与已保存的且非作废的产品信息进行比对，判断是否重复
         List<Map<String, Object>> finishedProducts = finishProductService.findAllFinishProduct();
         for (Map<String, Object> oldFinishedProduct : finishedProducts) {
             if (finishProduct.getProductIsTc() == -1) { //胚布
-                if ((finishProduct.getProductConsumerId() == (Long.valueOf(oldFinishedProduct.get("PRODUCTCONSUMERID").toString()))) && finishProduct.getMaterielCode().equals(oldFinishedProduct.get("MATERIELCODE")) && (!String.valueOf(id).equals(oldFinishedProduct.get("ID").toString()))) {
+                if ((Objects.equals(finishProduct.getProductConsumerId(), Long.valueOf(oldFinishedProduct.get("PRODUCTCONSUMERID").toString()))) && finishProduct.getMaterielCode().equals(oldFinishedProduct.get("MATERIELCODE")) && (!String.valueOf(id).equals(oldFinishedProduct.get("ID").toString()))) {
                     return ajaxError("已存在相同的产品信息！");
                 }
             } else if (finishProduct.getProductIsTc() == 1) {//套材
@@ -412,16 +362,16 @@ public class FinishedProductController extends BaseController {
                         && (finishProduct.getProductIsTc().equals(oldFinishedProduct.get("PRODUCTISTC"))) && (finishProduct.getIsCommon().equals(oldFinishedProduct.get("ISCOMMON")))
                         && (finishProduct.getProductProcessCode().equals(oldFinishedProduct.get("PRODUCTPROCESSCODE"))) && (finishProduct.getProductProcessName().equals(oldFinishedProduct.get("PRODUCTPROCESSNAME")))
                         && (finishProduct.getProductShelfLife().equals(oldFinishedProduct.get("PRODUCTSHELFLIFE"))) && (finishProduct.getProductPackagingCode().equals(oldFinishedProduct.get("PRODUCTPACKAGINGCODE")))
-                        && (Long.parseLong(productCategoryID) == Long.valueOf(oldFinishedProduct.get("FPCID").toString())) && (finishProduct.getMaterielCode().equals(oldFinishedProduct.get("MATERIELCODE")))
+                        && (Long.parseLong(productCategoryID) == Long.parseLong(oldFinishedProduct.get("FPCID").toString())) && (finishProduct.getMaterielCode().equals(oldFinishedProduct.get("MATERIELCODE")))
                         && (finishProduct.getProductModel().equals(oldFinishedProduct.get("PRODUCTMODEL"))) && (finishProduct.getProductWeigh().equals(oldFinishedProduct.get("PRODUCTWEIGH"))) && (!String.valueOf(id).equals(oldFinishedProduct.get("ID").toString()))) {
                     return ajaxError("已存在相同的产品信息！");
                 }
             } else if (finishProduct.getProductIsTc() == 2) {//非套材
-                if ((finishProduct.getProductConsumerId() == (Long.valueOf(oldFinishedProduct.get("PRODUCTCONSUMERID").toString()))) && finishProduct.getConsumerProductName().equals(oldFinishedProduct.get("CONSUMERPRODUCTNAME"))
+                if ((Objects.equals(finishProduct.getProductConsumerId(), Long.valueOf(oldFinishedProduct.get("PRODUCTCONSUMERID").toString()))) && finishProduct.getConsumerProductName().equals(oldFinishedProduct.get("CONSUMERPRODUCTNAME"))
                         && finishProduct.getProductIsTc().equals(oldFinishedProduct.get("PRODUCTISTC")) && finishProduct.getIsCommon().equals(oldFinishedProduct.get("ISCOMMON"))
                         && finishProduct.getProductProcessCode().equals(oldFinishedProduct.get("PRODUCTPROCESSCODE")) && finishProduct.getProductProcessName().equals(oldFinishedProduct.get("PRODUCTPROCESSNAME"))
                         && finishProduct.getProductShelfLife().equals(oldFinishedProduct.get("PRODUCTSHELFLIFE")) && finishProduct.getProductPackagingCode().equals(oldFinishedProduct.get("PRODUCTPACKAGINGCODE"))
-                        && (Long.parseLong(productCategoryID) == Long.valueOf(oldFinishedProduct.get("FPCID").toString())) && finishProduct.getMaterielCode().equals(oldFinishedProduct.get("MATERIELCODE"))
+                        && (Long.parseLong(productCategoryID) == Long.parseLong(oldFinishedProduct.get("FPCID").toString())) && finishProduct.getMaterielCode().equals(oldFinishedProduct.get("MATERIELCODE"))
                         && finishProduct.getProductModel().equals(oldFinishedProduct.get("PRODUCTMODEL")) && finishProduct.getProductWeigh().equals(oldFinishedProduct.get("PRODUCTWEIGH"))
                         && (finishProduct.getProductWidth() != null ? finishProduct.getProductWidth() : "").equals(oldFinishedProduct.get("PRODUCTWIDTH") != null ? oldFinishedProduct.get("PRODUCTWIDTH") : "") && (finishProduct.getProductRollLength() != null ? finishProduct.getProductRollLength() : "").equals(oldFinishedProduct.get("PRODUCTROLLLENGTH") != null ? oldFinishedProduct.get("PRODUCTROLLLENGTH") : "")
                         && (finishProduct.getMaxWeight() != null ? finishProduct.getMaxWeight() : "").equals(oldFinishedProduct.get("MAXWEIGHT") != null ? oldFinishedProduct.get("MAXWEIGHT") : "") && (finishProduct.getMinWeight() != null ? finishProduct.getMinWeight() : "").equals(oldFinishedProduct.get("MINWEIGHT") != null ? oldFinishedProduct.get("MINWEIGHT") : "")
@@ -532,11 +482,12 @@ public class FinishedProductController extends BaseController {
         FinishedProductCategory productCategory = finishProduct.getFpcid() == null ? null : finishProductService.findById(FinishedProductCategory.class, finishProduct.getFpcid());
         return new ModelAndView(checkProduct, model.addAttribute("finishProduct", finishProduct).addAttribute("consumer", consumer).addAttribute("productCategory", productCategory).addAttribute("zgmc", zgmc));
     }
+
     @ResponseBody
     @Journal(name = "查看镜像产品信息页面")
     @RequestMapping(value = "checkProductMirror", method = RequestMethod.GET)
     public ModelAndView checkProductMirror(FinishedProductMirror finishProductMirror, Boolean copy) throws SQLTemplateException {
-        finishProductMirror = finishProductService.findById(FinishedProductMirror.class,finishProductMirror.getId());
+        finishProductMirror = finishProductService.findById(FinishedProductMirror.class, finishProductMirror.getId());
         //根据衬管编码查找衬管名称
         String zgmc = finishProductService.getzgmcbycode(finishProductMirror.getCarrierCode());
         Consumer consumer = consumerService.findById(Consumer.class, finishProductMirror.getProductConsumerId());
@@ -599,7 +550,7 @@ public class FinishedProductController extends BaseController {
     public void tempExport() throws Exception {
         InputStream is = new FileInputStream(PathUtils.getClassPath() + "template/finishedProductTemp.xlsx");
         Workbook wb = new XSSFWorkbook(is);
-        HttpUtils.download(response,wb ,"成品信息导入模板");
+        HttpUtils.download(response, wb, "成品信息导入模板");
         is.close();
     }
 
@@ -635,9 +586,9 @@ public class FinishedProductController extends BaseController {
         } else {
             //取原来的流水号
             String[] lshs = gglist.get(0).get("MATERIELCODE").toString().split("\\.");
-            for (int i = 0; i < lshs.length; i++) {
-                if (lshs[i].length() == 4) {
-                    cpgglsh = lshs[i];
+            for (String lsh : lshs) {
+                if (lsh.length() == 4) {
+                    cpgglsh = lsh;
                     break;
                 }
             }
@@ -726,27 +677,7 @@ public class FinishedProductController extends BaseController {
                 jclsh = jzlshs[jzlshs.length - 1];
             }
         }
-
         wlbh = wlbh + "." + jclsh;
-//		int xh1 = finishProductService.querySlBycode(wlbh) + 1;
-//
-//		if(xh1 < 10){
-//			wlbh =  wlbh + "." + "00" + xh1;
-//		}else if(xh1 < 100){
-//			wlbh =  wlbh + "." + "0" + xh1;
-//		}else{
-//			wlbh =  wlbh + "."  + xh1;
-//		}
-//
-//		int xh2 =  finishProductService.querySlBycode(wlbh) + 1;
-//
-//		if(xh2 < 10){
-//			wlbh =  wlbh + "." + "00" + xh2;
-//		}else if(xh2 < 100){
-//			wlbh =  wlbh + "." + "0" + xh2;
-//		}else{
-//			wlbh =  wlbh + "."  + xh2;
-//		}
         return GsonTools.toJson(wlbh);
     }
 
@@ -755,9 +686,7 @@ public class FinishedProductController extends BaseController {
     @Journal(name = "查看叶型信息")
     @RequestMapping("viewYxInfo")
     public ModelAndView getYxInfo(String id) throws Exception {
-        String a = GsonTools.toJson(finishProductService.checkYxInfo(id));
         return new ModelAndView(viewYxInfo, model.addAttribute("yxdates", GsonTools.toJson(finishProductService.checkYxInfo(id))));
-        //return GsonTools.toJson(finishProductService.checkYxInfo(id));
     }
 
     @NoAuth
@@ -772,10 +701,10 @@ public class FinishedProductController extends BaseController {
     @Journal(name = "计算工艺BOM中的单位面积质量", logType = LogType.CONSOLE)
     @RequestMapping(value = "calcWeight", method = RequestMethod.POST)
     @Valid
-    public String calcWeight(String procBomId) throws Exception {
-        Double bomWeight = 0d;
-        List<FtcBomDetail> bomDetails = null;
-        Map<String, Object> map = new HashMap<String, Object>();
+    public String calcWeight(String procBomId) {
+        double bomWeight = 0d;
+        List<FtcBomDetail> bomDetails;
+        Map<String, Object> map = new HashMap<>();
         map.put("ftcBomVersionId", Long.parseLong(procBomId));
         bomDetails = finishProductService.findListByMap(FtcBomDetail.class, map);
         for (FtcBomDetail d : bomDetails) {

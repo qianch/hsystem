@@ -1,15 +1,15 @@
 package com.bluebirdme.mes.planner.turnbag.entity;
 
+import com.bluebirdme.mes.core.annotation.Desc;
+import com.bluebirdme.mes.core.base.entity.BaseEntity;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import com.bluebirdme.mes.core.annotation.Desc;
-import com.bluebirdme.mes.core.base.entity.BaseEntity;
-
 /**
  * 翻包明细
- * 
+ *
  * @author Goofy
  * @Date 2017年3月22日 下午3:24:19
  */
@@ -17,77 +17,76 @@ import com.bluebirdme.mes.core.base.entity.BaseEntity;
 @Entity
 @Table(name = "hs_turnbag_plan_record")
 public class TurnBagPlanRecord extends BaseEntity {
-	
-	@Desc("翻包计划ID")
-	@Column(nullable=false)
-	private Long turnBagPlanId;
-	
-	@Desc("原订单明细ID")
-	@Column(nullable=false)
-	private Long salesOrderDetailId;
-	
-	@Desc("原订单批次号")
-	@Column(nullable=false)
-	private String oldBatchCode;
-	
-	@Desc("新订单ID")
-	@Column(nullable=false)
-	private Long newSalesOrderDetailId;
-	
-	@Desc("新订单批次号")
-	@Column(nullable=false)
-	private String newBatchCode;
-	
-	@Desc("托条码号")
-	@Column(nullable=false)
-	private String trayCode;
+    @Desc("翻包计划ID")
+    @Column(nullable = false)
+    private Long turnBagPlanId;
 
-	public Long getTurnBagPlanId() {
-		return turnBagPlanId;
-	}
+    @Desc("原订单明细ID")
+    @Column(nullable = false)
+    private Long salesOrderDetailId;
 
-	public void setTurnBagPlanId(Long turnBagPlanId) {
-		this.turnBagPlanId = turnBagPlanId;
-	}
+    @Desc("原订单批次号")
+    @Column(nullable = false)
+    private String oldBatchCode;
 
-	public Long getSalesOrderDetailId() {
-		return salesOrderDetailId;
-	}
+    @Desc("新订单ID")
+    @Column(nullable = false)
+    private Long newSalesOrderDetailId;
 
-	public void setSalesOrderDetailId(Long salesOrderDetailId) {
-		this.salesOrderDetailId = salesOrderDetailId;
-	}
+    @Desc("新订单批次号")
+    @Column(nullable = false)
+    private String newBatchCode;
 
-	public Long getNewSalesOrderDetailId() {
-		return newSalesOrderDetailId;
-	}
+    @Desc("托条码号")
+    @Column(nullable = false)
+    private String trayCode;
 
-	public void setNewSalesOrderDetailId(Long newSalesOrderDetailId) {
-		this.newSalesOrderDetailId = newSalesOrderDetailId;
-	}
+    public Long getTurnBagPlanId() {
+        return turnBagPlanId;
+    }
 
-	public String getTrayCode() {
-		return trayCode;
-	}
+    public void setTurnBagPlanId(Long turnBagPlanId) {
+        this.turnBagPlanId = turnBagPlanId;
+    }
 
-	public void setTrayCode(String trayCode) {
-		this.trayCode = trayCode;
-	}
+    public Long getSalesOrderDetailId() {
+        return salesOrderDetailId;
+    }
 
-	public String getOldBatchCode() {
-		return oldBatchCode;
-	}
+    public void setSalesOrderDetailId(Long salesOrderDetailId) {
+        this.salesOrderDetailId = salesOrderDetailId;
+    }
 
-	public void setOldBatchCode(String oldBatchCode) {
-		this.oldBatchCode = oldBatchCode;
-	}
+    public Long getNewSalesOrderDetailId() {
+        return newSalesOrderDetailId;
+    }
 
-	public String getNewBatchCode() {
-		return newBatchCode;
-	}
+    public void setNewSalesOrderDetailId(Long newSalesOrderDetailId) {
+        this.newSalesOrderDetailId = newSalesOrderDetailId;
+    }
 
-	public void setNewBatchCode(String newBatchCode) {
-		this.newBatchCode = newBatchCode;
-	}
+    public String getTrayCode() {
+        return trayCode;
+    }
+
+    public void setTrayCode(String trayCode) {
+        this.trayCode = trayCode;
+    }
+
+    public String getOldBatchCode() {
+        return oldBatchCode;
+    }
+
+    public void setOldBatchCode(String oldBatchCode) {
+        this.oldBatchCode = oldBatchCode;
+    }
+
+    public String getNewBatchCode() {
+        return newBatchCode;
+    }
+
+    public void setNewBatchCode(String newBatchCode) {
+        this.newBatchCode = newBatchCode;
+    }
 
 }

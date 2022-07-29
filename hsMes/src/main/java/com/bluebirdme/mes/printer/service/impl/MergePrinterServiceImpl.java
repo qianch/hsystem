@@ -26,9 +26,10 @@ import com.bluebirdme.mes.platform.entity.Department;
 import com.bluebirdme.mes.platform.service.IDepartmentService;
 import com.bluebirdme.mes.printer.PrintBarCode;
 import com.bluebirdme.mes.printer.dao.IPrinterDao;
-import com.bluebirdme.mes.printer.entity.*;
+import com.bluebirdme.mes.printer.entity.BarCodePrintRecord;
+import com.bluebirdme.mes.printer.entity.MyException;
+import com.bluebirdme.mes.printer.entity.PrinterOut;
 import com.bluebirdme.mes.printer.service.IMergePrinterService;
-import com.bluebirdme.mes.printer.service.IPrinterService;
 import com.bluebirdme.mes.produce.entity.FinishedProduct;
 import com.bluebirdme.mes.produce.entity.FinishedProductMirror;
 import com.bluebirdme.mes.produce.entity.FinishedProductPrintRecord;
@@ -41,7 +42,9 @@ import com.bluebirdme.mes.utils.ProductIsTc;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.xdemo.superutil.j2se.*;
+import org.xdemo.superutil.j2se.ObjectUtils;
+import org.xdemo.superutil.j2se.PathUtils;
+import org.xdemo.superutil.j2se.StringUtils;
 import org.xdemo.superutil.thirdparty.gson.GsonTools;
 
 import javax.annotation.Resource;
@@ -57,8 +60,8 @@ import java.util.*;
 @Service
 @AnyExceptionRollback
 public class MergePrinterServiceImpl extends BaseServiceImpl implements IMergePrinterService {
-    private static Logger logger = LoggerFactory.getLogger(MergePrinterServiceImpl.class);
-    private String fileUrl = new File(PathUtils.getClassPath()) + File.separator + "BtwFiles" + File.separator;
+    private static final Logger logger = LoggerFactory.getLogger(MergePrinterServiceImpl.class);
+    private final String fileUrl = new File(PathUtils.getClassPath()) + File.separator + "BtwFiles" + File.separator;
     private static String btwName = null;
 
     @Resource
@@ -69,9 +72,6 @@ public class MergePrinterServiceImpl extends BaseServiceImpl implements IMergePr
 
     @Resource
     IDepartmentService departmentService;
-
-    @Resource
-    IPrinterService printerService;
 
     @Override
     protected IBaseDao getBaseDao() {
@@ -96,7 +96,7 @@ public class MergePrinterServiceImpl extends BaseServiceImpl implements IMergePr
         return out;
     }
 
-    public IBarcode getBarcode(Iplan plan, String type, String barCode, Long partId, long btwfileId, String customerBarCode,int number) {
+    public IBarcode getBarcode(Iplan plan, String type, String barCode, Long partId, long btwfileId, String customerBarCode, int number) {
         ProducePlanDetail producePlanDetail = printerDao.findById(ProducePlanDetail.class, plan.getProducePlanDetailId());
         Map<String, Object> map = new HashMap<String, Object>();
         SalesOrderDetail salesOrderDetail = findById(SalesOrderDetail.class, plan.getFromSalesOrderDetailId());
@@ -106,20 +106,16 @@ public class MergePrinterServiceImpl extends BaseServiceImpl implements IMergePr
         long tcType = ProductIsTc.FTC;
         List<FinishedProductMirror> finishedProductMirrorList = findListByMap(FinishedProductMirror.class, map);
         FinishedProductMirror fdm = null;
-
-
         if (finishedProductMirrorList != null && finishedProductMirrorList.size() > 0) {
             Collections.sort(finishedProductMirrorList, (o1, o2) -> o2.getId().compareTo(o1.getId()));
             fdm = finishedProductMirrorList.get(0);
         }
-
         List<BarCodePrintRecord> barCodePrintRecordDatas = new ArrayList();
-
-        if (producePlanDetail.getProductIsTc() == 1){
+        if (producePlanDetail.getProductIsTc() == 1) {
             barCodePrintRecordDatas.add(new BarCodePrintRecord("BladeProfile", producePlanDetail.getConsumerProductName() == null ? "" : producePlanDetail.getConsumerProductName().trim()));
-        }else if(producePlanDetail.getPartId() != null){
+        } else if (producePlanDetail.getPartId() != null) {
             SalesOrderDetail salesOrderDetail1 = printerDao.findById(SalesOrderDetail.class, producePlanDetail.getFromSalesOrderDetailId());
-            if (salesOrderDetail1 != null){
+            if (salesOrderDetail1 != null) {
                 barCodePrintRecordDatas.add(new BarCodePrintRecord("BladeProfile", salesOrderDetail1.getBladeProfile() == null ? "" : salesOrderDetail1.getBladeProfile().trim()));
             }
         }
@@ -131,7 +127,6 @@ public class MergePrinterServiceImpl extends BaseServiceImpl implements IMergePr
         }
 
         String partName = plan.getPartName() == null ? "" : plan.getPartName().trim();
-
         barCodePrintRecordDatas.add(new BarCodePrintRecord("SalesOrderSubCode", plan.getSalesOrderCode() == null ? "" : plan.getSalesOrderCode().trim()));
         barCodePrintRecordDatas.add(new BarCodePrintRecord("BatchCode", plan.getBatchCode() == null ? "" : plan.getBatchCode().trim()));
         barCodePrintRecordDatas.add(new BarCodePrintRecord("ConSumerName", plan.getConsumerName() == null ? "" : plan.getConsumerName().trim()));
@@ -173,14 +168,9 @@ public class MergePrinterServiceImpl extends BaseServiceImpl implements IMergePr
         }
 
         switch (type) {
-            case "part":
-                barCodePrintRecordDatas.add(new BarCodePrintRecord("PartBarCode", barCode));
-                break;
-            case "box":
-                barCodePrintRecordDatas.add(new BarCodePrintRecord("BoxBarCode", barCode));
-                break;
-            case "roll_peibu":
-            case "roll":
+            case "part" -> barCodePrintRecordDatas.add(new BarCodePrintRecord("PartBarCode", barCode));
+            case "box" -> barCodePrintRecordDatas.add(new BarCodePrintRecord("BoxBarCode", barCode));
+            case "roll_peibu", "roll" -> {
                 barCodePrintRecordDatas.add(new BarCodePrintRecord("RollBarCode", barCode));
                 if (fdm != null) {
                     barCodePrintRecordDatas.add(new BarCodePrintRecord("RollLength", fdm.getProductRollLength() == null ? "" : fdm.getProductRollLength().toString()));
@@ -195,7 +185,6 @@ public class MergePrinterServiceImpl extends BaseServiceImpl implements IMergePr
                     String rollBarCodeLength = barCode + " " + (fdp.getProductRollLength() == null ? "  " : fdp.getProductRollLength().toString()) + "M";
                     barCodePrintRecordDatas.add(new BarCodePrintRecord("RollBarCodeLength", rollBarCodeLength));
                 }
-
                 String danXiangBuCode = "";// 层数，卷号
                 try {
                     if (plan instanceof WeavePlan) {
@@ -222,11 +211,8 @@ public class MergePrinterServiceImpl extends BaseServiceImpl implements IMergePr
                 } catch (Exception e) {
                     logger.error(e.getLocalizedMessage(), e);
                 }
-
-
-                break;
-            case "tray":
-            case "traypart":
+            }
+            case "tray", "traypart" -> {
                 barCodePrintRecordDatas.add(new BarCodePrintRecord("TrayLength", plan.getProductLength() == null ? "" : plan.getProductLength() == null ? "" : plan.getProductLength().toString().trim()));
                 barCodePrintRecordDatas.add(new BarCodePrintRecord("TrayBarCode", barCode));
                 if (fdm != null) {
@@ -234,7 +220,6 @@ public class MergePrinterServiceImpl extends BaseServiceImpl implements IMergePr
                 } else {
                     barCodePrintRecordDatas.add(new BarCodePrintRecord("TrayWidth", fdp.getProductWidth() == null ? "" : fdp.getProductWidth().toString()));
                 }
-
                 double weight = 0;
                 Tray tray = findOne(Tray.class, "trayBarcode", barCode);
                 if (tray != null && null != tray.getWeight()) {
@@ -245,7 +230,6 @@ public class MergePrinterServiceImpl extends BaseServiceImpl implements IMergePr
                     weight = productInRecord.getWeight();
                 }
                 barCodePrintRecordDatas.add(new BarCodePrintRecord("TrayNetWeight", weight + ""));//托净重
-
                 if (fdp.getProductIsTc() == ProductIsTc.FTC) {
                     try {
                         FtcBcBom ftcBcBom = findOne(FtcBcBom.class, "code", fdp.getProductPackagingCode());
@@ -263,7 +247,7 @@ public class MergePrinterServiceImpl extends BaseServiceImpl implements IMergePr
                     }
                 }
                 barCodePrintRecordDatas.add(new BarCodePrintRecord("TrayGrossWeight", weight + ""));//托毛重
-                break;
+            }
         }
 
         TcBomVersionPartsMirror tcBomVersionPartsMirror = null;
@@ -346,41 +330,36 @@ public class MergePrinterServiceImpl extends BaseServiceImpl implements IMergePr
         map.put("producePlanDetailId", plan.getProducePlanDetailId());
         List<ProducePlanDetailPrint> ProducePlanDetailPrintlist = findListByMap(ProducePlanDetailPrint.class, map);
         for (ProducePlanDetailPrint producePlanDetailPrint : ProducePlanDetailPrintlist) {
-            if (number != -1 && producePlanDetailPrint.getPrintAttribute().equals("xuhao")){
+            if (number != -1 && producePlanDetailPrint.getPrintAttribute().equals("xuhao")) {
                 String[] split = producePlanDetailPrint.getPrintAttributeContent().split("-");
-                String before=split[0];
-                String order=split[split.length - 1];
-                int nowNumber=Integer.parseInt(order)+number;
-                String after=""+nowNumber;
-                if (after.length() < 4){
-                    int a=3;
-                    int b=a-after.length();
-                    switch (b){
+                String before = split[0];
+                String order = split[split.length - 1];
+                int nowNumber = Integer.parseInt(order) + number;
+                String after = "" + nowNumber;
+                if (after.length() < 4) {
+                    int a = 3;
+                    int b = a - after.length();
+                    switch (b) {
                         case 1:
-                            after="0"+after;
+                            after = "0" + after;
                             break;
                         case 2:
-                            after="00"+after;
+                            after = "00" + after;
                             break;
                     }
                 }
-                //producePlanDetailPrint.setPrintAttributeContent(before+"-"+after);
-                barCodePrintRecordDatas.add(new BarCodePrintRecord(producePlanDetailPrint.getPrintAttribute(), before+"-"+after));
-            }else{
+                barCodePrintRecordDatas.add(new BarCodePrintRecord(producePlanDetailPrint.getPrintAttribute(), before + "-" + after));
+            } else {
                 barCodePrintRecordDatas.add(new BarCodePrintRecord(producePlanDetailPrint.getPrintAttribute(), producePlanDetailPrint.getPrintAttributeContent()));
             }
         }
 
-        IBarcode barcode;
-        if (type.equals("roll") || type.equals("roll_peibu")) {
-            barcode = new RollBarcode();
-        } else if (type.equals("tray") || type.equals("traypart")) {
-            barcode = new TrayBarCode();
-        } else if (type.equals("box")) {
-            barcode = new BoxBarcode();
-        } else {
-            barcode = new PartBarcode();
-        }
+        IBarcode barcode = switch (type) {
+            case "roll", "roll_peibu" -> new RollBarcode();
+            case "tray", "traypart" -> new TrayBarCode();
+            case "box" -> new BoxBarcode();
+            default -> new PartBarcode();
+        };
         barcode.setProducePlanDetailId(plan.getProducePlanDetailId());
         barcode.setBarcode(barCode);
         barcode.setSalesOrderCode(plan.getSalesOrderCode());
@@ -423,12 +402,11 @@ public class MergePrinterServiceImpl extends BaseServiceImpl implements IMergePr
     }
 
     //jxl-add-2020-04-30 合并标签
-    public String doIndividualPrintBarcode(String weavePlanId, String cutPlanId, String count, String pName, String type, String partName, String departmentCode, String trugPlanId, Long partId, String btwfileId, String devCode,String copies) throws Exception {
-        Integer counts = Integer.parseInt(count.split("\\.")[0]);
-        if (count == null || counts == 0) {
+    public String doIndividualPrintBarcode(String weavePlanId, String cutPlanId, String count, String pName, String type, String partName, String departmentCode, String trugPlanId, Long partId, String btwfileId, String devCode, String copies) throws Exception {
+        int counts = Integer.parseInt(count.split("\\.")[0]);
+        if (counts == 0) {
             return GsonTools.toJson("打印数量不能为空！");
         }
-
         if (!StringUtils.isBlank(weavePlanId)) {
             // 先根据id查询出信息
             if (type == null)
@@ -469,34 +447,25 @@ public class MergePrinterServiceImpl extends BaseServiceImpl implements IMergePr
                     result = PrintUtils.printYu(printStrings.getPrinterName(), printStrings.getBtwFileUrl(), i.getIndividualOutPutString(), 1);
                 }
             }
-            switch (result) {
-                case 10:
-                    return GsonTools.toJson("打印成功");
-                case 20:
-                    return GsonTools.toJson("找不到打印机");
-                default:
-                    return GsonTools.toJson("打印失败");
-            }
+            return switch (result) {
+                case 10 -> GsonTools.toJson("打印成功");
+                case 20 -> GsonTools.toJson("找不到打印机");
+                default -> GsonTools.toJson("打印失败");
+            };
         } catch (Exception e) {
             logger.error("打印机：" + printStrings.getPrinterName() + ",\t模板：" + printStrings.getBtwFileUrl() + ";错误：", e);
             return GsonTools.toJson(e.getMessage());
         }
     }
 
-    /**
-     * @param
-     * @return
-     */
     private List<IBarcode> getOutputString(Iplan plan, String type, int count, String printName, String departmentCode, Long partId, Long btwfileId) {
 
         List<IBarcode> li = new ArrayList();
         if (plan instanceof WeavePlan) {
-            switch (type) {
-                case "roll"://如果是卷，并且存在部件则打印胚布卷
-                    if (plan.getPartId() != null) {
-                        type = "roll_peibu";
-                    }
-                    break;
+            if ("roll".equals(type)) {//如果是卷，并且存在部件则打印胚布卷
+                if (plan.getPartId() != null) {
+                    type = "roll_peibu";
+                }
             }
         } else if (plan instanceof CutPlan) {
             if (type == null) type = "part";
@@ -504,17 +473,17 @@ public class MergePrinterServiceImpl extends BaseServiceImpl implements IMergePr
             if (type == null) type = "roll";
         }
 
-        String prefixPrint = "HS";
+        String prefixPrint;
         List<Department> listDepartment = departmentService.find(Department.class, "code", departmentCode);
         prefixPrint = (listDepartment != null && listDepartment.size() > 0) ? listDepartment.get(0).getPrefix() : "";
-        if (prefixPrint.startsWith("BZ") && type == "trayPart") {
+        if (prefixPrint.startsWith("BZ") && Objects.equals(type, "trayPart")) {
             prefixPrint = "HS" + prefixPrint.substring(2);
         }
 
         List<String> barcodelist = PrintBarCode.getInstance().getBarCodeList(type, prefixPrint, count);
         int number = 0;
         for (String barcode : barcodelist) {
-            li.add(getBarcode(plan, type, barcode, partId, btwfileId, "",number));
+            li.add(getBarcode(plan, type, barcode, partId, btwfileId, "", number));
             number++;
         }
 
@@ -651,7 +620,7 @@ public class MergePrinterServiceImpl extends BaseServiceImpl implements IMergePr
             throw new MyException("编织为空");
         }
 
-        IBarcode ibarcode = getBarcode(weavePlan, type, barCode, weavePlan.getPartId(), Long.parseLong(btwfileId), "",-1);
+        IBarcode ibarcode = getBarcode(weavePlan, type, barCode, weavePlan.getPartId(), Long.parseLong(btwfileId), "", -1);
         List<IBarcode> li = new ArrayList();
         li.add(ibarcode);
 
@@ -668,18 +637,15 @@ public class MergePrinterServiceImpl extends BaseServiceImpl implements IMergePr
             }
         }
 
-        switch (result) {
-            case 10:
-                return "打印成功";
-            case 20:
-                return "找不到打印机";
-            default:
-                return "打印失败";
-        }
+        return switch (result) {
+            case 10 -> "打印成功";
+            case 20 -> "找不到打印机";
+            default -> "打印失败";
+        };
     }
 
     public String rePrint(String id, String pName, String type) {
-        IBarcode ib = null;
+        IBarcode ib;
         String refileUrl = fileUrl;
         if (type.equals("roll")) {
             RollBarcode r = findById(RollBarcode.class, Long.parseLong(id));
@@ -700,16 +666,12 @@ public class MergePrinterServiceImpl extends BaseServiceImpl implements IMergePr
         }
 
         if (ib.getBtwfileId() == null || ib.getBtwfileId() == 0) {
-            if (type.equals("roll")) {
-                btwName = "标准版\\恒石条码(卷).btw";
-            } else if (type.equals("roll_peibu")) {
-                btwName = "标准版\\恒石条码(胚布).btw";
-            } else if (type.equals("part")) {
-                btwName = "标准版\\恒石条码(部件).btw";
-            } else if (type.equals("box")) {
-                btwName = "标准版\\恒石条码(盒)_空.btw";
-            } else {
-                btwName = "标准版\\恒石条码(托)_空.btw";
+            switch (type) {
+                case "roll" -> btwName = "标准版\\恒石条码(卷).btw";
+                case "roll_peibu" -> btwName = "标准版\\恒石条码(胚布).btw";
+                case "part" -> btwName = "标准版\\恒石条码(部件).btw";
+                case "box" -> btwName = "标准版\\恒石条码(盒)_空.btw";
+                default -> btwName = "标准版\\恒石条码(托)_空.btw";
             }
         } else {
             BtwFile btwFile = salesOrderService.findById(BtwFile.class, ib.getBtwfileId());
@@ -729,14 +691,11 @@ public class MergePrinterServiceImpl extends BaseServiceImpl implements IMergePr
             int i;
             int printCount = ib instanceof TrayBarCode ? 3 : 1;
             i = PrintUtils.printYu(printStrings.getPrinterName(), printStrings.getBtwFileUrl(), ib.getIndividualOutPutString(), printCount);
-            switch (i) {
-                case 10:
-                    return "打印成功";
-                case 20:
-                    return "找不到打印机";
-                default:
-                    return "打印成功";
-            }
+            return switch (i) {
+                case 10 -> "打印成功";
+                case 20 -> "找不到打印机";
+                default -> "打印成功";
+            };
         } catch (Exception e) {
             logger.error(e.getLocalizedMessage(), e);
             return str;
@@ -747,35 +706,40 @@ public class MergePrinterServiceImpl extends BaseServiceImpl implements IMergePr
         IBarcode iBarcode;
         String refileUrl = fileUrl;
         Iplan plan;
-        if (type.equals("roll")) {
-            RollBarcode r = findById(RollBarcode.class, Long.parseLong(id));
-            iBarcode = r;
-            plan = findById(WeavePlan.class, r.getPlanId());
-            if (plan.getPartId() != null) {
-                type = "roll_peibu";
+        switch (type) {
+            case "roll" -> {
+                RollBarcode r = findById(RollBarcode.class, Long.parseLong(id));
+                iBarcode = r;
+                plan = findById(WeavePlan.class, r.getPlanId());
+                if (plan.getPartId() != null) {
+                    type = "roll_peibu";
+                }
             }
-        } else if (type.equals("box")) {
-            BoxBarcode box = findById(BoxBarcode.class, Long.parseLong(id));
-            if (box.getPlanId() == null) {
-                return "请先打包盒条码";
+            case "box" -> {
+                BoxBarcode box = findById(BoxBarcode.class, Long.parseLong(id));
+                if (box.getPlanId() == null) {
+                    return "请先打包盒条码";
+                }
+                iBarcode = box;
+                plan = findById(WeavePlan.class, box.getPlanId());
             }
-            iBarcode = box;
-            plan = findById(WeavePlan.class, box.getPlanId());
-        } else if (type.equals("part")) {
-            PartBarcode part = findById(PartBarcode.class, Long.parseLong(id));
-            iBarcode = part;
-            plan = findById(CutPlan.class, part.getPlanId());
-        } else {
-            TrayBarCode traybarcode = findById(TrayBarCode.class, Long.parseLong(id));
-            iBarcode = traybarcode;
-            if (traybarcode.getPlanId() == null) {
-                return "请先打包托条码";
+            case "part" -> {
+                PartBarcode part = findById(PartBarcode.class, Long.parseLong(id));
+                iBarcode = part;
+                plan = findById(CutPlan.class, part.getPlanId());
             }
-            plan = findById(WeavePlan.class, traybarcode.getPlanId());
+            default -> {
+                TrayBarCode traybarcode = findById(TrayBarCode.class, Long.parseLong(id));
+                iBarcode = traybarcode;
+                if (traybarcode.getPlanId() == null) {
+                    return "请先打包托条码";
+                }
+                plan = findById(WeavePlan.class, traybarcode.getPlanId());
+            }
         }
 
         if (!(iBarcode.getIndividualOutPutString() != null && iBarcode.getIndividualOutPutString().length() > 0)) {
-            IBarcode ibarcode = getBarcode(plan, type, iBarcode.getBarcode(), iBarcode.getPartId(), btwfileId, iBarcode.getCustomerBarCode(),-1);
+            IBarcode ibarcode = getBarcode(plan, type, iBarcode.getBarcode(), iBarcode.getPartId(), btwfileId, iBarcode.getCustomerBarCode(), -1);
             iBarcode.setIndividualOutPutString(ibarcode.getIndividualOutPutString());
             iBarcode.setCustomerBarCode(ibarcode.getCustomerBarCode());
             iBarcode.setAgentBarCode(ibarcode.getAgentBarCode());
@@ -792,16 +756,12 @@ public class MergePrinterServiceImpl extends BaseServiceImpl implements IMergePr
         }
 
         if (btwfileId == 0) {
-            if (type.equals("roll")) {
-                btwName = "标准版\\恒石条码(卷).btw";
-            } else if (type.equals("roll_peibu")) {
-                btwName = "标准版\\恒石条码(胚布).btw";
-            } else if (type.equals("part")) {
-                btwName = "标准版\\恒石条码(部件).btw";
-            } else if (type.equals("box")) {
-                btwName = "标准版\\恒石条码(盒)_空.btw";
-            } else {
-                btwName = "标准版\\恒石条码(托)_空.btw";
+            switch (type) {
+                case "roll" -> btwName = "标准版\\恒石条码(卷).btw";
+                case "roll_peibu" -> btwName = "标准版\\恒石条码(胚布).btw";
+                case "part" -> btwName = "标准版\\恒石条码(部件).btw";
+                case "box" -> btwName = "标准版\\恒石条码(盒)_空.btw";
+                default -> btwName = "标准版\\恒石条码(托)_空.btw";
             }
         } else {
             BtwFile btwFile = salesOrderService.findById(BtwFile.class, btwfileId);
@@ -818,14 +778,11 @@ public class MergePrinterServiceImpl extends BaseServiceImpl implements IMergePr
 
         try {
             int i = PrintUtils.printYu(printStrings.getPrinterName(), printStrings.getBtwFileUrl(), iBarcode.getIndividualOutPutString(), printCount);
-            switch (i) {
-                case 10:
-                    return "打印成功";
-                case 20:
-                    return "找不到打印机";
-                default:
-                    return "打印成功";
-            }
+            return switch (i) {
+                case 10 -> "打印成功";
+                case 20 -> "找不到打印机";
+                default -> "打印成功";
+            };
         } catch (Exception e) {
             logger.error("打印机：" + printStrings.getPrinterName() + ",\t模板：" + printStrings.getBtwFileUrl() + ";错误：", e);
             return "打印失败";

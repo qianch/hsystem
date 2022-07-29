@@ -63,9 +63,9 @@ import java.util.*;
 @Service
 @AnyExceptionRollback
 public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterService {
-    private static Logger logger = LoggerFactory.getLogger(PrinterServiceImpl.class);
-    private String dataUrl = PathUtils.getDrive() + "BtwFiles" + File.separator + "Data" + File.separator;
-    private String fileUrl = new File(PathUtils.getClassPath()) + File.separator + "BtwFiles" + File.separator;
+    private static final Logger logger = LoggerFactory.getLogger(PrinterServiceImpl.class);
+    private final String dataUrl = PathUtils.getDrive() + "BtwFiles" + File.separator + "Data" + File.separator;
+    private final String fileUrl = new File(PathUtils.getClassPath()) + File.separator + "BtwFiles" + File.separator;
     private static String btwName = null;
     byte[] dotfont;
 
@@ -87,7 +87,7 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
         return printerDao.findPageInfo(filter, page);
     }
 
@@ -135,17 +135,13 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
 
         String dateString = year + day;
 
-        if (type.equals("roll")) {
-            barcode = new RollBarcode();
-        } else if (type.equals("tray")) {
-            barcode = new TrayBarCode();
-        } else if (type.equals("trayPart")) {
-            barcode = new TrayBarCode();
-        } else if (type.equals("box")) {
-            barcode = new BoxBarcode();
-        } else {
-            barcode = new PartBarcode();
-        }
+        barcode = switch (type) {
+            case "roll" -> new RollBarcode();
+            case "tray" -> new TrayBarCode();
+            case "trayPart" -> new TrayBarCode();
+            case "box" -> new BoxBarcode();
+            default -> new PartBarcode();
+        };
         barcode.setBarcode(dcString);
         barcode.setSalesOrderCode("");
         barcode.setSalesProductId(null);
@@ -157,7 +153,6 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
         String outputString = "";
         outputString += " ";
         outputString += "\t";
-        // System.out.println("厂内名称"+ fdp.getConsumerProductName());
         outputString += " ";
         outputString += "\t";
         outputString += " ";
@@ -179,13 +174,10 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
         outputString += "\t";
         outputString += barcode.getBarcode();
         outputString += ";";
-        // outputString += plan.getProductModel();
         outputString += " ";
         outputString += ";";
-        // outputString += plan.getBatchCode();
         outputString += " ";
         outputString += ";";
-        // outputString += plan.getSalesOrderCode();
         outputString += " ";
         outputString += ";";
         outputString += " ";
@@ -197,16 +189,12 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
     public IBarcode getBarcode(Iplan plan, String type, String code, Long partId) {
         IBarcode barcode;
         Calendar c = Calendar.getInstance();
-
         String year = "000" + (c.get(Calendar.YEAR) - 1999);
         String day = "00" + c.get(Calendar.DAY_OF_YEAR);
-
         year = year.substring(year.length() - 3);
         day = day.substring(day.length() - 3);
-
         String dateString = year + day;
         HashMap<String, Object> map = new HashMap();
-
         SalesOrderDetail salesOrderDetail = findById(SalesOrderDetail.class, plan.getFromSalesOrderDetailId());
         List<FinishedProductMirror> finishedProductMirrorList;
         FinishedProductMirror fdm = null;
@@ -227,16 +215,17 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
         }
 
         if (null != fdm) {
-            if (type.equals("roll") || type.equals("roll_peibu")) {
-                barcode = new RollBarcode();
-                barcode.setMirrorProcBomId(finishedProductMirrorList.get(0).getProcBomId());
-            } else if (type.equals("tray") || type.equals("traypart")) {
-                barcode = new TrayBarCode();
-            } else if (type.equals("box")) {
-                barcode = new BoxBarcode();
-            } else {
-                barcode = new PartBarcode();
-                barcode.setMirrorProcBomId(finishedProductMirrorList.get(0).getProcBomId());
+            switch (type) {
+                case "roll", "roll_peibu" -> {
+                    barcode = new RollBarcode();
+                    barcode.setMirrorProcBomId(finishedProductMirrorList.get(0).getProcBomId());
+                }
+                case "tray", "traypart" -> barcode = new TrayBarCode();
+                case "box" -> barcode = new BoxBarcode();
+                default -> {
+                    barcode = new PartBarcode();
+                    barcode.setMirrorProcBomId(finishedProductMirrorList.get(0).getProcBomId());
+                }
             }
             barcode.setProducePlanDetailId(plan.getProducePlanDetailId());
             barcode.setBarcode(code);
@@ -248,16 +237,15 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
             if (partId == null || partId < 0) {
                 barcode.setPartId(null);
             } else {
-
                 barcode.setPartId(partId);
             }
             barcode.setPlanId(plan.getId());
             barcode.setPrintDate(new Date());
             barcode.setSalesProductId(plan.getProductId());
-            String danXiangBuCode = "";// 层数，卷号
+            // 层数，卷号
+            String danXiangBuCode = "";
             String partName = "";
-            if (plan instanceof WeavePlan && plan.getPartId() != null) {
-                WeavePlan wp = (WeavePlan) plan;
+            if (plan instanceof WeavePlan wp && plan.getPartId() != null) {
                 try {
                     danXiangBuCode += StringUtils.isBlank(wp.getRollNo()) ? "" : ("卷号" + wp.getRollNo() + " ");
                     danXiangBuCode += StringUtils.isBlank(wp.getLevelNo()) ? "" : ("层号" + wp.getLevelNo() + " ");
@@ -377,18 +365,12 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
                 outputString += "\t";
                 outputString += barcode.getBarcode();
                 outputString += ";";
-                // outputString += plan.getProductModel();
                 outputString += " ";
                 outputString += ";";
-                // outputString += plan.getBatchCode();
                 outputString += " ";
                 outputString += ";";
-                // outputString += plan.getSalesOrderCode();
                 outputString += " ";
                 outputString += ";";
-                // Base64 b = new Base64();
-                // String s =
-                // b.byteArrayToBase64(plan.getConsumerName().getBytes());
                 outputString += " ";
                 outputString += "\n";
             }
@@ -396,16 +378,12 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
             return barcode;
         } else {
             FinishedProduct fdp = findById(FinishedProduct.class, plan.getProductId());
-
-            if (type.equals("roll") || type.equals("roll_peibu")) {
-                barcode = new RollBarcode();
-            } else if (type.equals("tray")) {
-                barcode = new TrayBarCode();
-            } else if (type.equals("box")) {
-                barcode = new BoxBarcode();
-            } else {
-                barcode = new PartBarcode();
-            }
+            barcode = switch (type) {
+                case "roll", "roll_peibu" -> new RollBarcode();
+                case "tray" -> new TrayBarCode();
+                case "box" -> new BoxBarcode();
+                default -> new PartBarcode();
+            };
             barcode.setProducePlanDetailId(plan.getProducePlanDetailId());
             barcode.setBarcode(code);
             barcode.setSalesOrderCode(plan.getSalesOrderCode());
@@ -421,7 +399,8 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
             barcode.setPlanId(plan.getId());
             barcode.setPrintDate(new Date());
             barcode.setSalesProductId(plan.getProductId());
-            String danXiangBuCode = "";// 层数，卷号
+            // 层数，卷号
+            String danXiangBuCode = "";
             String partName = "";
             if (plan instanceof WeavePlan && plan.getPartId() != null) {
                 WeavePlan wp = (WeavePlan) plan;
@@ -444,9 +423,9 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
             String outputString = "";
             if (type.equals("roll_peibu")) {
                 WeavePlan wp = findById(WeavePlan.class, plan.getId());
-                TcBomVersionParts tbp = null;
-                TcBomVersion tbv = null;
-                TcBom tb = null;
+                TcBomVersionParts tbp;
+                TcBomVersion tbv;
+                TcBom tb;
 
                 try {
                     tbp = findById(TcBomVersionParts.class, partId);
@@ -519,18 +498,12 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
                 outputString += "\t";
                 outputString += barcode.getBarcode();
                 outputString += ";";
-                // outputString += plan.getProductModel();
                 outputString += " ";
                 outputString += ";";
-                // outputString += plan.getBatchCode();
                 outputString += " ";
                 outputString += ";";
-                // outputString += plan.getSalesOrderCode();
                 outputString += " ";
                 outputString += ";";
-                // Base64 b = new Base64();
-                // String s =
-                // b.byteArrayToBase64(plan.getConsumerName().getBytes());
                 outputString += " ";
                 outputString += "\n";
             }
@@ -544,11 +517,9 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
         String prefixPrint = "HS";
         Department department = DepartmentCache.getInstance().getDepartmentList().get(departmentType);
         prefixPrint = department == null ? "" : department.getPrefix();
-
         if (prefixPrint.startsWith("BZ") && type == "trayPart") {
             prefixPrint = "HS" + prefixPrint.substring(2);
         }
-
         List<String> barcodelist = PrintBarCode.getInstance().getBarCodeList(type, prefixPrint, count);
         for (String barcode : barcodelist) {
             li.add(getBarcode(type, barcode));
@@ -597,16 +568,17 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
         }
 
         if (null != fdm) {
-            if (type.equals("roll") || type.equals("roll_peibu")) {
-                barcode = new RollBarcode();
-                barcode.setMirrorProcBomId(finishedProductMirrorList.get(0).getProcBomId());
-            } else if (type.equals("tray")) {
-                barcode = new TrayBarCode();
-            } else if (type.equals("box")) {
-                barcode = new BoxBarcode();
-            } else {
-                barcode = new PartBarcode();
-                barcode.setMirrorProcBomId(finishedProductMirrorList.get(0).getProcBomId());
+            switch (type) {
+                case "roll", "roll_peibu" -> {
+                    barcode = new RollBarcode();
+                    barcode.setMirrorProcBomId(finishedProductMirrorList.get(0).getProcBomId());
+                }
+                case "tray" -> barcode = new TrayBarCode();
+                case "box" -> barcode = new BoxBarcode();
+                default -> {
+                    barcode = new PartBarcode();
+                    barcode.setMirrorProcBomId(finishedProductMirrorList.get(0).getProcBomId());
+                }
             }
             barcode.setProducePlanDetailId(plan.getProducePlanDetailId());
             barcode.setBarcode(dcString);
@@ -625,8 +597,7 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
             barcode.setSalesProductId(plan.getProductId());
             String danXiangBuCode = "";// 层数，卷号
             String partName = "";
-            if (plan instanceof WeavePlan && plan.getPartId() != null) {
-                WeavePlan wp = (WeavePlan) plan;
+            if (plan instanceof WeavePlan wp && plan.getPartId() != null) {
                 try {
                     danXiangBuCode += StringUtils.isBlank(wp.getRollNo()) ? "" : ("卷号" + wp.getRollNo() + " ");
                     danXiangBuCode += StringUtils.isBlank(wp.getLevelNo()) ? "" : ("层号" + wp.getLevelNo() + " ");
@@ -756,15 +727,12 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
             return barcode;
         } else {
             FinishedProduct fdp = findById(FinishedProduct.class, plan.getProductId());
-            if (type.equals("roll") || type.equals("roll_peibu")) {
-                barcode = new RollBarcode();
-            } else if (type.equals("tray")) {
-                barcode = new TrayBarCode();
-            } else if (type.equals("box")) {
-                barcode = new BoxBarcode();
-            } else {
-                barcode = new PartBarcode();
-            }
+            barcode = switch (type) {
+                case "roll", "roll_peibu" -> new RollBarcode();
+                case "tray" -> new TrayBarCode();
+                case "box" -> new BoxBarcode();
+                default -> new PartBarcode();
+            };
             barcode.setProducePlanDetailId(plan.getProducePlanDetailId());
             barcode.setBarcode(dcString);
             barcode.setSalesOrderCode(plan.getSalesOrderCode());
@@ -782,8 +750,7 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
             barcode.setSalesProductId(plan.getProductId());
             String danXiangBuCode = "";// 层数，卷号
             String partName = "";
-            if (plan instanceof WeavePlan && plan.getPartId() != null) {
-                WeavePlan wp = (WeavePlan) plan;
+            if (plan instanceof WeavePlan wp && plan.getPartId() != null) {
                 try {
                     danXiangBuCode += StringUtils.isBlank(wp.getRollNo()) ? "" : ("卷号" + wp.getRollNo() + " ");
                     danXiangBuCode += StringUtils.isBlank(wp.getLevelNo()) ? "" : ("层号" + wp.getLevelNo() + " ");
@@ -803,9 +770,9 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
             String outputString = "";
             if (type.equals("roll_peibu")) {
                 WeavePlan wp = findById(WeavePlan.class, plan.getId());
-                TcBomVersionParts tbp = null;
-                TcBomVersion tbv = null;
-                TcBom tb = null;
+                TcBomVersionParts tbp;
+                TcBomVersion tbv;
+                TcBom tb;
                 try {
                     tbp = findById(TcBomVersionParts.class, partId);
                     tbv = findById(TcBomVersion.class, tbp.getTcProcBomVersoinId());
@@ -891,13 +858,8 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
         }
     }
 
-    /**
-     * @param
-     * @return
-     */
     public List<IBarcode> getOutputStringList(Iplan plan, String type, int count, String printName, String departmentCode, Long partId, String trugPlanId) throws Exception {
         List<IBarcode> li = new ArrayList();
-
         if (plan instanceof WeavePlan) {
             if (type == null)
                 type = "roll";
@@ -925,15 +887,10 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
         if (trugPlanId != null && trugPlanId.equals("1") && plan.getPartId() != null) {
             type = "traypart";
         }
-
         IBarcode ibarcode = getBarcodeList(plan, type, "@barcode@", partId);
-
         List<String> barcodelist = PrintBarCode.getInstance().getBarCodeList(type, prefixPrint, count);
         for (String barcode : barcodelist) {
-
-
             IBarcode ibarcodenew;
-
             if (ibarcode instanceof RollBarcode) {
                 ibarcodenew = new RollBarcode();
             } else if (ibarcode instanceof BoxBarcode) {
@@ -948,8 +905,6 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
             ibarcodenew.setBarcode(barcode);
             ibarcodenew.setOutPutString(ibarcode.getOutPutString().replace("@barcode@", barcode));
             li.add(ibarcodenew);
-
-
         }
 
         for (IBarcode i : li) {
@@ -966,10 +921,6 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
         return li;
     }
 
-    /**
-     * @param
-     * @return
-     */
     public List<IBarcode> getOutputString(Iplan plan, String type, int count, String printName, String departmentCode, Long partId, String trugPlanId) {
         List<IBarcode> li = new ArrayList();
         if (plan instanceof WeavePlan) {
@@ -1019,11 +970,10 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
         return li;
     }
 
-    public String doPrintBarcodeByPage(String weavePlanId, String cutPlanId, String count, String pName, String type, String partName, String departmentName, String trugPlanId, Long partId,String copies) throws Exception {
+    public String doPrintBarcodeByPage(String weavePlanId, String cutPlanId, String count, String pName, String type, String partName, String departmentName, String trugPlanId, Long partId, String copies) throws Exception {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date startday = new Date();
-        System.out.println("doPrintBarcodeByPage" + df.format(startday) + "start");
-        Integer counts = Integer.parseInt(count.split("\\.")[0]);
+        int counts = Integer.parseInt(count.split("\\.")[0]);
         if (!StringUtils.isBlank(weavePlanId)) {
             // 先根据id查询出信息
             if (type == null)
@@ -1043,11 +993,10 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
             if (dailyDetail != null && trugPlanId == null) {
                 cutPlanId = dailyDetail.getCutPlanId() + "";
             }
-            if (type == null)
-                type = "part";
+            type = "part";
         }
 
-        if (count == null || counts == 0) {
+        if (counts == 0) {
             return GsonTools.toJson("打印数量不能为空！");
         }
         Iplan plan = null;
@@ -1061,24 +1010,19 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
         plan.setPartName(partName);
         List<IBarcode> li = getOutputString(plan, type, counts, pName, departmentName, partId, trugPlanId);
 
-        if (type.equals("roll")) {
-            btwName = "恒石条码(卷)";
-        } else if (type.equals("roll_peibu")) {
-            btwName = "恒石条码(胚布)";
-        } else if (type.equals("part")) {
-            btwName = "恒石条码(卷)";
-        } else if (type.equals("box")) {
-            btwName = "恒石条码(盒)";
-        } else {
-            btwName = "恒石条码(托)";
+        switch (type) {
+            case "roll" -> btwName = "恒石条码(卷)";
+            case "roll_peibu" -> btwName = "恒石条码(胚布)";
+            case "part" -> btwName = "恒石条码(卷)";
+            case "box" -> btwName = "恒石条码(盒)";
+            default -> btwName = "恒石条码(托)";
         }
 
         PrinterOut printStrings = getQRBarCode(li, pName, fileUrl + btwName + ".btw", dataUrl + UUID.randomUUID().toString() + ".txt");
-        String uname = UUID.randomUUID().toString() + "";
+        String uname = UUID.randomUUID() + "";
 
         try {
             File f = new File(printStrings.getTxtFileUrl());
-
             File parentFile = f.getParentFile();
             if (!parentFile.exists()) {
                 parentFile.mkdirs();
@@ -1099,7 +1043,7 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
                 }
                 //部件条码打印4张
                 if (i instanceof PartBarcode) {
-                    for (int a = 0; a < Integer.parseInt(copies)-1; a++) {
+                    for (int a = 0; a < Integer.parseInt(copies) - 1; a++) {
                         FileUtils.writeToFile(i.getOutPutString(), printStrings.getTxtFileUrl(), true, true, Charset.forName("UTF-8"));
                     }
                 }
@@ -1122,20 +1066,17 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
         r.put("url", dataUrl + uname + ".txt");
         r.put("barcode", li.get(0).getBarcode());
         Date endday = new Date();
-        System.out.println("doPrintBarcodeByPage:" + df.format(endday) + "end");
         return GsonTools.toJson(r);
     }
 
     public void printOrderInfo(String weavePlanId, String cutPlanId, String printer, String type) throws Exception {
         if (!StringUtils.isBlank(weavePlanId)) {
             WeavePlan wp = findById(WeavePlan.class, Long.parseLong(weavePlanId));
-
             ProducePlanDetail producePlanDetail = findById(ProducePlanDetail.class, wp.getProducePlanDetailId());
             FinishedProduct fp1 = findById(FinishedProduct.class, producePlanDetail.getProductId());
             Consumer c = findById(Consumer.class, fp1.getProductConsumerId());
-
             FinishedProduct fp = findById(FinishedProduct.class, wp.getProductId());
-            List<String> content = new ArrayList<String>();
+            List<String> content = new ArrayList<>();
             String factoryName = fp.getFactoryProductName();
             SalesOrderDetail sod = findById(SalesOrderDetail.class, wp.getFromSalesOrderDetailId());
             String order = sod.getSalesOrderSubCodePrint();
@@ -1154,8 +1095,7 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
             CutPlan cp = findById(CutPlan.class, Long.parseLong(cutPlanId));
             FinishedProduct fp = findById(FinishedProduct.class, cp.getProductId());
             Consumer c = findById(Consumer.class, cp.getConsumerId());
-
-            List<String> content = new ArrayList<String>();
+            List<String> content = new ArrayList<>();
             SalesOrderDetail sod = findById(SalesOrderDetail.class, cp.getFromSalesOrderDetailId());
             String order = sod.getSalesOrderSubCodePrint();
             String factoryName = fp.getFactoryProductName();
@@ -1243,35 +1183,36 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
     }
 
     public String rePrint(String id, String pName, String type) {
-        IBarcode ib = null;
-        if (type.equals("roll")) {
-            RollBarcode r = findById(RollBarcode.class, Long.parseLong(id));
-            ib = r;
-            WeavePlan wp = findById(WeavePlan.class, r.getPlanId());
-            if (wp.getPartId() != null) {
-                type = "roll_peibu";
+        IBarcode ib;
+        switch (type) {
+            case "roll" -> {
+                RollBarcode r = findById(RollBarcode.class, Long.parseLong(id));
+                ib = r;
+                WeavePlan wp = findById(WeavePlan.class, r.getPlanId());
+                if (wp.getPartId() != null) {
+                    type = "roll_peibu";
+                }
             }
-        } else if (type.equals("box")) {
-            BoxBarcode r = findById(BoxBarcode.class, Long.parseLong(id));
-            ib = r;
-        } else if (type.equals("part")) {
-            PartBarcode r = findById(PartBarcode.class, Long.parseLong(id));
-            ib = r;
-        } else {
-            TrayBarCode r = findById(TrayBarCode.class, Long.parseLong(id));
-            ib = r;
+            case "box" -> {
+                BoxBarcode r = findById(BoxBarcode.class, Long.parseLong(id));
+                ib = r;
+            }
+            case "part" -> {
+                PartBarcode r = findById(PartBarcode.class, Long.parseLong(id));
+                ib = r;
+            }
+            default -> {
+                TrayBarCode r = findById(TrayBarCode.class, Long.parseLong(id));
+                ib = r;
+            }
         }
 
-        if (type.equals("roll")) {
-            btwName = "恒石条码(卷)";
-        } else if (type.equals("roll_peibu")) {
-            btwName = "恒石条码(胚布)";
-        } else if (type.equals("part")) {
-            btwName = "恒石条码(部件)";
-        } else if (type.equals("box")) {
-            btwName = "恒石条码(盒)_空";
-        } else {
-            btwName = "恒石条码(托)_空";
+        switch (type) {
+            case "roll" -> btwName = "恒石条码(卷)";
+            case "roll_peibu" -> btwName = "恒石条码(胚布)";
+            case "part" -> btwName = "恒石条码(部件)";
+            case "box" -> btwName = "恒石条码(盒)_空";
+            default -> btwName = "恒石条码(托)_空";
         }
 
         PrinterOut printStrings = new PrinterOut();
@@ -1328,26 +1269,21 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
         return "打印成功";
     }
 
-    public String printBarcodeFirst(String departmentType, String pName, String type, int count,int copies) throws Exception {
-
+    public String printBarcodeFirst(String departmentType, String pName, String type, int count, int copies) throws Exception {
         if (count == 0) {
-
             return "打印数量不能为0";
         }
 
         List<IBarcode> li = getOutputString(departmentType, pName, type, count);
-        if (type.equals("roll")) {
-            btwName = "恒石条码(卷)_空";
-        } else if (type.equals("part")) {
-            btwName = "恒石条码(卷)_空";
-        } else if (type.equals("box")) {
-            btwName = "恒石条码(盒)_空";
-        } else {
-            btwName = "恒石条码(托)_空";
+        switch (type) {
+            case "roll" -> btwName = "恒石条码(卷)_空";
+            case "part" -> btwName = "恒石条码(卷)_空";
+            case "box" -> btwName = "恒石条码(盒)_空";
+            default -> btwName = "恒石条码(托)_空";
         }
 
         PrinterOut printStrings = getQRBarCode(li, pName, fileUrl + btwName + ".btw", dataUrl + RandomUtils.uuid() + ".txt");
-        String name = UUID.randomUUID().toString() + "";
+        String name = UUID.randomUUID() + "";
         String finalFileName = dataUrl + name + ".txt";
 
         File f = new File(printStrings.getTxtFileUrl());
@@ -1371,10 +1307,10 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
         finalFile.createNewFile();
 
         List<IBarcode> li1 = printStrings.getLi();
-        if (copies == 0){
-            copies=3;
-        }else{
-            copies=copies-1;
+        if (copies == 0) {
+            copies = 3;
+        } else {
+            copies = copies - 1;
         }
         for (IBarcode i : li1) {
             FileUtils.writeToFile(i.getOutPutString(), printStrings.getTxtFileUrl(), true, true, Charset.forName("UTF-8"));
@@ -1388,7 +1324,6 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
         try {
             int i = PrintUtils.printDb(printStrings.getPrinterName(), printStrings.getBtwFileUrl(), printStrings.getTxtFileUrl(), 1);
             if (i == 21) {
-
                 return "打印失败";
             }
             if (i == 20) {
@@ -1397,7 +1332,6 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
         } catch (Exception ex) {
             return "打印失败:" + ex.getMessage();
         }
-
         return "打印成功";
     }
 
@@ -1425,7 +1359,7 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
             String barcode = ts.getRollBarcode();
             IBarcode iBarcode = null;
 
-            HashMap<String, Object> map = new HashMap();
+            HashMap<String, Object> map = new HashMap<>();
             map.put("barcode", barcode);
             if (type == null) {
                 if (barcode.startsWith("R")) {
@@ -1483,18 +1417,12 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
             }
 
             if (iBarcode == null) continue;
-
-            String likeString;
-            if (type.equals("roll") || type.equals("roll_peibu")) {
-                likeString = iBarcode.getBarcode().substring(0, 4) + dateString + "%";
-            } else if (type.equals("tray")) {
-                likeString = iBarcode.getBarcode().substring(0, 4) + dateString + "%";
-            } else if (type.equals("box")) {
-                likeString = iBarcode.getBarcode().substring(0, 4) + dateString + "%";
-            } else {
-                likeString = iBarcode.getBarcode().substring(0, 4) + dateString + "%";
-            }
-
+            String likeString = switch (type) {
+                case "roll", "roll_peibu" -> iBarcode.getBarcode().substring(0, 4) + dateString + "%";
+                case "tray" -> iBarcode.getBarcode().substring(0, 4) + dateString + "%";
+                case "box" -> iBarcode.getBarcode().substring(0, 4) + dateString + "%";
+                default -> iBarcode.getBarcode().substring(0, 4) + dateString + "%";
+            };
             String dcString;
             if (dc < 10) {
                 dcString = "000" + dc;
@@ -1512,16 +1440,12 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
         dpc.setBarcodeCount(dc);
         update(dpc);
 
-        if (type.equals("roll")) {
-            btwName = "恒石条码(卷)";
-        } else if (type.equals("roll_peibu")) {
-            btwName = "恒石条码(胚布)";
-        } else if (type.equals("part")) {
-            btwName = "恒石条码(卷)";
-        } else if (type.equals("box")) {
-            btwName = "恒石条码(盒)_空";
-        } else {
-            btwName = "恒石条码(托)_空";
+        switch (type) {
+            case "roll" -> btwName = "恒石条码(卷)";
+            case "roll_peibu" -> btwName = "恒石条码(胚布)";
+            case "part" -> btwName = "恒石条码(卷)";
+            case "box" -> btwName = "恒石条码(盒)_空";
+            default -> btwName = "恒石条码(托)_空";
         }
 
         PrinterOut printStrings = new PrinterOut();
@@ -1529,7 +1453,7 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
         printStrings.setTxtFileUrl(dataUrl + RandomUtils.uuid() + ".txt");
         printStrings.setLi(li);
         printStrings.setPrinterName(pName);
-        String uname = UUID.randomUUID().toString() + "";
+        String uname = UUID.randomUUID() + "";
         String finalFileName = dataUrl + uname + ".txt";
         String str = "打印失败";
         try {
@@ -1554,7 +1478,6 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
                     }
                 }
             }
-
             int i = PrintUtils.printDb(printStrings.getPrinterName(), printStrings.getBtwFileUrl(), printStrings.getTxtFileUrl(), 1);
             if (i == 21) {
                 throw new Exception("打印失败");
@@ -1577,18 +1500,23 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
 
     public IBarcode getBarcode(String type, String dcString, IBarcode ibarcode) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
         IBarcode result;
-        if (type.equals("roll") || type.equals("roll_peibu")) {
-            result = new RollBarcode();
-            ObjectUtils.clone((RollBarcode) ibarcode, (RollBarcode) result);
-        } else if (type.equals("tray")) {
-            result = new TrayBarCode();
-            ObjectUtils.clone((TrayBarCode) ibarcode, (TrayBarCode) result);
-        } else if (type.equals("box")) {
-            result = new BoxBarcode();
-            ObjectUtils.clone((BoxBarcode) ibarcode, (BoxBarcode) result);
-        } else {
-            result = new PartBarcode();
-            ObjectUtils.clone((PartBarcode) ibarcode, (PartBarcode) result);
+        switch (type) {
+            case "roll", "roll_peibu" -> {
+                result = new RollBarcode();
+                ObjectUtils.clone((RollBarcode) ibarcode, (RollBarcode) result);
+            }
+            case "tray" -> {
+                result = new TrayBarCode();
+                ObjectUtils.clone((TrayBarCode) ibarcode, (TrayBarCode) result);
+            }
+            case "box" -> {
+                result = new BoxBarcode();
+                ObjectUtils.clone((BoxBarcode) ibarcode, (BoxBarcode) result);
+            }
+            default -> {
+                result = new PartBarcode();
+                ObjectUtils.clone((PartBarcode) ibarcode, (PartBarcode) result);
+            }
         }
         String outPutString = result.getOutPutString();
         result.setOutPutString(outPutString.replace(result.getBarcode(), dcString));
@@ -1599,29 +1527,23 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
 
 
     public String doPrintBarcodeByPageList(String ids, String cutPlanId, String count, String pName, String type, String partName, String departmentName, String trugPlanId, Long partId) throws Exception {
-        Map<String,Object> pNameMap =new HashMap<>();
-        pNameMap.put("printerName",pName);
+        Map<String, Object> pNameMap = new HashMap<>();
+        pNameMap.put("printerName", pName);
         List<Printer> printers = printerDao.findListByMap(Printer.class, pNameMap);
         Department department = printerDao.findById(Department.class, printers.get(0).getDepartmentId());
-        if(department.getPrefix() !=null){
-            departmentName=department.getCode();
+        if (department.getPrefix() != null) {
+            departmentName = department.getCode();
         }
-        Integer counts = Integer.parseInt(count.split("\\.")[0]);
-        if (count == null || counts == 0) {
+        int counts = Integer.parseInt(count.split("\\.")[0]);
+        if (counts == 0) {
             return GsonTools.toJson("打印数量不能为空！");
         }
-
-        String str[] = ids.split(",");
-
-        String message = "";
-        // List<String> barcodelist = PrintBarCode.getInstance().getBarCodeList(type, prefixPrint, count);
-
+        String[] str = ids.split(",");
+        StringBuilder message = new StringBuilder();
         for (String weavePlanId : str) {
-
             if (StringUtils.isBlank(weavePlanId)) {
                 continue;
             }
-
             // 先根据id查询出信息
             if (type == null)
                 type = "roll";
@@ -1659,76 +1581,60 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
                     }
                 }
             }
-
             // 修改打印的状态
             if (w.getIsStamp() != 1) {
                 w.setIsStamp(1);
                 update(w);
             }
-
             if (w.getPartId() != null) {
                 type = "roll_peibu";
                 if (trugPlanId != null && trugPlanId.equals("1")) {
                     type = "tray";
                 }
             }
-
             PrinterOut printOrders = null;
-
             List<PrinterOut> listPrinterOut = new ArrayList<>();
             if (type.equals("roll") || type.equals("roll_peibu")) {
                 List<String> content = getPrintOrders(w);
                 btwName = type.equals("roll_peibu") ? "恒石成品胚布条码(订单).btw" : "恒石条码(订单).btw";
                 printOrders = getContentByList(content, pName, fileUrl + btwName, dataUrl + UUID.randomUUID().toString() + ".txt");
             }
-
             w.setPartName(partName);
             List<IBarcode> li = getOutputStringList(w, type, counts, pName, departmentName, partId, trugPlanId);
-            if (type.equals("roll")) {
-                btwName = "恒石条码(卷).btw";
-            } else if (type.equals("roll_peibu")) {
-                btwName = "恒石条码(胚布).btw";
-            } else if (type.equals("part")) {
-                btwName = "恒石条码(卷).btw";
-            } else if (type.equals("box")) {
-                btwName = "恒石条码(盒).btw";
-            } else {
-                btwName = "恒石条码(托).btw";
+            switch (type) {
+                case "roll" -> btwName = "恒石条码(卷).btw";
+                case "roll_peibu" -> btwName = "恒石条码(胚布).btw";
+                case "part" -> btwName = "恒石条码(卷).btw";
+                case "box" -> btwName = "恒石条码(盒).btw";
+                default -> btwName = "恒石条码(托).btw";
             }
-
             PrinterOut printStringsBarcode = getQRBarCodeByList(li, pName, fileUrl + btwName, dataUrl + UUID.randomUUID().toString() + ".txt");
             listPrinterOut.add(printStringsBarcode);
             if (printOrders != null) {
                 listPrinterOut.add(printOrders);
             }
-
-            message += doPrinterOut(listPrinterOut);
+            message.append(doPrinterOut(listPrinterOut));
         }
-
-        return GsonTools.toJson(message);
+        return GsonTools.toJson(message.toString());
     }
 
-    public List<String> getPrintOrders(WeavePlan wp) throws Exception {
+    public List<String> getPrintOrders(WeavePlan wp) {
         String deviceCodes = weavePlanService.getWeavePlanDevices(wp.getId());
-        List<String> content = new ArrayList<String>();
+        List<String> content = new ArrayList<>();
         if (wp.getPrintOrderContent() != null) {
             content.add(wp.getPrintOrderContent() + " " + deviceCodes.trim());
             return content;
         }
-
         ProducePlanDetail producePlanDetail = findById(ProducePlanDetail.class, wp.getProducePlanDetailId());
         FinishedProduct fp1 = findById(FinishedProduct.class, producePlanDetail.getProductId());
         Consumer c = findById(Consumer.class, fp1.getProductConsumerId());
-
         FinishedProduct fp = findById(FinishedProduct.class, wp.getProductId());
-
         String factoryName = fp.getFactoryProductName();
         SalesOrderDetail sod = findById(SalesOrderDetail.class, wp.getFromSalesOrderDetailId());
         String order = sod.getSalesOrderSubCodePrint();
         String batch = wp.getBatchCode();
         String procCode = wp.getProcessBomCode() + "(" + wp.getProcessBomVersion() + ")";
         String planCode = wp.getPlanCode();
-
         String unit = factoryName.trim() + "\t" + order.trim() + "\t" + batch.trim() + "\t" + procCode.trim() + "\t" + c.getConsumerSimpleName().trim() + "\t" + planCode.trim();
         wp.setPrintOrderContent(unit);
         update(wp);
@@ -1738,8 +1644,7 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
 
 
     public String doPrinterOut(List<PrinterOut> listPrinterOut) {
-
-        String message = "";
+        StringBuilder message = new StringBuilder();
         String printerName = "";
         String btwFileUrl = "";
         try {
@@ -1751,47 +1656,36 @@ public class PrinterServiceImpl extends BaseServiceImpl implements IPrinterServi
                 if (!parentFile.exists()) {
                     parentFile.mkdirs();
                 }
-
                 if (f.exists()) {
                     f.delete();
                 }
                 f.createNewFile();
-
                 if (printStrings.getLi() != null) {
                     for (IBarcode i : printStrings.getLi()) {
                         FileUtils.writeToFile(i.getOutPutString(), printStrings.getTxtFileUrl(), true, true, Charset.forName("UTF-8"));
                     }
                 }
-
                 if (printStrings.getContents() != null) {
                     for (String content : printStrings.getContents()) {
                         FileUtils.writeToFile(content, printStrings.getTxtFileUrl(), true, true, Charset.forName("UTF-8"));
                     }
                 }
-
                 int i = PrintUtils.printDb(printStrings.getPrinterName(), printStrings.getBtwFileUrl(), printStrings.getTxtFileUrl(), 1);
                 if (i == 20) {
-                    message += "找不到打印机：{打印机：" + printerName + ",\t模板：" + btwFileUrl + ";错误：}";
-                    //throw new Exception("找不到打印机");
+                    message.append("找不到打印机：{打印机：").append(printerName).append(",\t模板：").append(btwFileUrl).append(";错误：}");
                 }
                 if (i == 21) {
-                    message += "打印失败:{打印机：" + printerName + ",\t模板：" + btwFileUrl + ";错误：}";
-                    //throw new Exception("打印失败");
+                    message.append("打印失败:{打印机：").append(printerName).append(",\t模板：").append(btwFileUrl).append(";错误：}");
                 }
             }
-
-
         } catch (Exception e) {
             logger.error("打印机：" + printerName + ",\t模板：" + btwFileUrl + ";错误：", e);
-            message += "打印报错:{打印机：" + printerName + ",\t模板：" + btwFileUrl + ";错误：}" + e.getMessage();
+            message.append("打印报错:{打印机：").append(printerName).append(",\t模板：").append(btwFileUrl).append(";错误：}").append(e.getMessage());
         }
-
-        return message;
+        return message.toString();
     }
 
     public void insert(Object... object) throws Exception {
         printerDao.insert(object);
     }
-
-
 }

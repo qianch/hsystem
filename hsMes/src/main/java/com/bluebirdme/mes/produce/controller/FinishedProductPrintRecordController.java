@@ -6,9 +6,6 @@
  */
 package com.bluebirdme.mes.produce.controller;
 
-import com.bluebirdme.mes.btwManager.entity.BtwFile;
-import com.bluebirdme.mes.btwManager.entity.BtwFilePrint;
-import com.bluebirdme.mes.btwManager.service.IBtwFilePrintService;
 import com.bluebirdme.mes.core.annotation.Journal;
 import com.bluebirdme.mes.core.annotation.support.LogType;
 import com.bluebirdme.mes.core.base.controller.BaseController;
@@ -38,8 +35,9 @@ import java.util.List;
 @RequestMapping("/finishProduct/finishedProductPrintRecord")
 @Journal(name = "成品打印属性")
 public class FinishedProductPrintRecordController extends BaseController {
-
-    // btw文件页面
+    /**
+     * btw文件页面
+     */
     final String index = "";
     final String finishedProductPrintRecordAddOrEditUrl = "produce/finishProduct/finishedProductPrintRecordAddOrEdit";
 
@@ -63,7 +61,7 @@ public class FinishedProductPrintRecordController extends BaseController {
 
     @Journal(name = "加载计划打印明细页面")
     @RequestMapping(value = "finishedProductPrintRecordAddOrEdit", method = RequestMethod.GET)
-    public ModelAndView finishedProductPrintRecordAddOrEdit(Long productId) throws Exception {
+    public ModelAndView finishedProductPrintRecordAddOrEdit(Long productId) {
 
         FinishedProduct entity = finishedProductPrintRecordService.findById(FinishedProduct.class, productId);
         List<FinishedProductPrintRecord> listFinishedProductPrintRecord = finishedProductPrintRecordService.find(FinishedProductPrintRecord.class, "productId", productId);
@@ -75,26 +73,19 @@ public class FinishedProductPrintRecordController extends BaseController {
 
     @Journal(name = "加载计划打印明细页面")
     @RequestMapping(value = "finishedProductPrintRecordAddOrEdit2", method = RequestMethod.GET)
-    public ModelAndView finishedProductPrintRecordAddOrEdit2(Long salesOrderDetailId) throws Exception {
-
+    public ModelAndView finishedProductPrintRecordAddOrEdit2(Long salesOrderDetailId) {
         SalesOrderDetail salesOrderDetail = finishedProductPrintRecordService.findById(SalesOrderDetail.class, salesOrderDetailId);
-
         FinishedProduct entity = finishedProductPrintRecordService.findById(FinishedProduct.class, salesOrderDetail.getProductId());
         List<FinishedProductPrintRecord> listFinishedProductPrintRecord = finishedProductPrintRecordService.find(FinishedProductPrintRecord.class, "productId", entity.getId());
-        if (entity != null) {
-            entity.setListFinishedProductPrintRecord(listFinishedProductPrintRecord);
-        }
+        entity.setListFinishedProductPrintRecord(listFinishedProductPrintRecord);
         return new ModelAndView(finishedProductPrintRecordAddOrEditUrl, model.addAttribute("finishedProduct", entity));
     }
 
     @ResponseBody
     @Journal(name = "保存标签打印属性", logType = LogType.DB)
     @RequestMapping(value = "saveFinishedProductPrintRecords", method = RequestMethod.POST)
-    public String saveFinishedProductPrintRecords(@RequestBody FinishedProduct finishedProduct) throws Exception {
-
+    public String saveFinishedProductPrintRecords(@RequestBody FinishedProduct finishedProduct) {
         String userId = session.getAttribute(Constant.CURRENT_USER_ID).toString();
         return GsonTools.toJson(finishedProductPrintRecordService.saveFinishedProductPrintRecords(finishedProduct, userId));
     }
-
-
 }

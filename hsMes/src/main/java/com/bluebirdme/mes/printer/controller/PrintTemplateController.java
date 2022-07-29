@@ -8,11 +8,8 @@ import com.bluebirdme.mes.core.base.entity.Filter;
 import com.bluebirdme.mes.core.base.entity.Page;
 import com.bluebirdme.mes.core.constant.Constant;
 import com.bluebirdme.mes.core.valid.annotations.Valid;
-import com.bluebirdme.mes.platform.entity.Department;
 import com.bluebirdme.mes.printer.entity.PrintTemplate;
-import com.bluebirdme.mes.printer.entity.Printer;
 import com.bluebirdme.mes.printer.service.IPrintTemplateService;
-import com.bluebirdme.mes.printer.service.IPrinterService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,7 +18,8 @@ import org.springframework.web.servlet.ModelAndView;
 import org.xdemo.superutil.thirdparty.gson.GsonTools;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 打印条码
@@ -43,7 +41,6 @@ public class PrintTemplateController extends BaseController {
         return printTemplateUrl;
     }
 
-
     @Journal(name = "添加打印模版管理页面")
     @RequestMapping(value = "add", method = RequestMethod.GET)
     public ModelAndView _add(PrintTemplate printTemplate) {
@@ -60,7 +57,6 @@ public class PrintTemplateController extends BaseController {
         if (printTemplateService.has(PrintTemplate.class, param, printTemplate.getId())) {
             return GsonTools.toJson("重复属性不能保存");
         }
-
         printTemplateService.save(printTemplate);
         return GsonTools.toJson("保存成功");
     }
@@ -68,7 +64,6 @@ public class PrintTemplateController extends BaseController {
     @Journal(name = "编辑打印模版管理页面")
     @RequestMapping(value = "edit", method = RequestMethod.GET)
     public ModelAndView _edit(PrintTemplate printTemplate) {
-
         printTemplate = printTemplateService.findById(PrintTemplate.class, printTemplate.getId());
         return new ModelAndView(addOrEditUrl, model.addAttribute("printTemplate", printTemplate));
     }
@@ -111,6 +106,4 @@ public class PrintTemplateController extends BaseController {
     public String printTemplateList(Filter filter, Page page) throws Exception {
         return GsonTools.toJson(printTemplateService.findPageInfo(filter, page));
     }
-
-
 }

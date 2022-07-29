@@ -40,17 +40,12 @@ public interface IProducePlanService extends IBaseService {
 
     void updateProductInfo(Long producePlanId);
 
-    //public void forceEdit(List<ProducePlanDetail> details,Long userId);
     void forceEdit(ProducePlan plan, Long userId) throws Exception;
 
     String getSdeviceCode(Long id);//得到机台实际机台编码
 
     /**
      * 检查批次号 是否存在
-     *
-     * @param batchCode
-     * @param producePlanId
-     * @return
      */
     List<Map<String, Object>> checkBatchCode(String batchCode, Long producePlanId);
 
@@ -62,7 +57,7 @@ public interface IProducePlanService extends IBaseService {
 
     List<Map<String, Object>> detailsMirror(Long planId);
 
-    <T> Map<String, Object> findOrderPageInfo2(Filter filter, Page page) throws Exception;
+    Map<String, Object> findOrderPageInfo2(Filter filter, Page page) throws Exception;
 
     //获取未分配的订单
     List<Map<String, Object>> searchbox(String searchbox);
@@ -71,7 +66,7 @@ public interface IProducePlanService extends IBaseService {
 
     void noClose(String ids);
 
-    <T> Map<String, Object> findSchedule(Filter filter, Page page) throws Exception;
+    Map<String, Object> findSchedule(Filter filter, Page page) throws Exception;
 
     Map<String, Object> findScheduleWeight(Filter filter, Page page) throws Exception;
 

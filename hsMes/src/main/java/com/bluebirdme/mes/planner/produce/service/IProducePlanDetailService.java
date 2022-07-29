@@ -20,24 +20,15 @@ import java.util.Map;
 public interface IProducePlanDetailService extends IBaseService {
     /**
      * 根据条件查询计划明细
-     *
-     * @param filter
-     * @param page
-     * @return
      */
-
     Map<String, Object> findProducePlanDetail(Filter filter, Page page) throws Exception;
 
     /**
      * 根据计划明细Id和标签模板Id查询对应的打印内容
-     *
-     * @param ProducePlanDetailId
-     * @return
      */
     List<Map<String, Object>> findProducePlanDetailPrints(Long ProducePlanDetailId) throws Exception;
 
     List<Map<String, Object>> findPlanDetailPrintsBybtwFileId(Long ProducePlanDetailId, long btwFileId) throws Exception;
-
 
     String saveProducePlanDetailPrints(long producePlanDetailId, long btwFileId, String planDetailPrintsData) throws Exception;
 
