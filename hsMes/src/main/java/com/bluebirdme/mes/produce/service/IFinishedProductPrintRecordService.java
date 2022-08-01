@@ -6,7 +6,6 @@
  */
 package com.bluebirdme.mes.produce.service;
 
-import com.bluebirdme.mes.btwManager.entity.BtwFile;
 import com.bluebirdme.mes.core.base.service.IBaseService;
 import com.bluebirdme.mes.produce.entity.FinishedProduct;
 
@@ -18,8 +17,7 @@ import java.util.Map;
  * @Date 2016-11-26 23:01:35
  */
 public interface IFinishedProductPrintRecordService extends IBaseService {
+    List<Map<String, Object>> findFinishedProductPrintRecords(Long productId) throws Exception;
 
-    public List<Map<String, Object>> findFinishedProductPrintRecords(Long productId) throws Exception;
-
-    public boolean saveFinishedProductPrintRecords(FinishedProduct finishedProduct, String userId);
+    boolean saveFinishedProductPrintRecords(FinishedProduct finishedProduct, String userId);
 }

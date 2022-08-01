@@ -6,16 +6,15 @@
  */
 package com.bluebirdme.mes.produce.service;
 
+import com.bluebirdme.mes.core.base.service.IBaseService;
+
 import java.util.List;
 import java.util.Map;
 
-import com.bluebirdme.mes.core.base.service.IBaseService;
-
 /**
- * 
  * @author 高飞
  * @Date 2016-11-1 13:05:53
  */
 public interface IProduceCalendarService extends IBaseService {
-	public List<Map<String, Object>> findList(String start,String end);
+    List<Map<String, Object>> findList(String start, String end);
 }

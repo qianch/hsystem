@@ -44,11 +44,9 @@ import com.bluebirdme.mes.store.entity.TrayBarCode;
 import com.bluebirdme.mes.utils.HttpUtils;
 import com.bluebirdme.mes.utils.MapUtils;
 import com.google.common.base.CharMatcher;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -74,7 +72,9 @@ import java.util.*;
 @RequestMapping("/salesOrder")
 @Journal(name = "销售订单")
 public class SalesOrderController extends BaseController {
-    // 销售订单页面
+    /**
+     * 销售订单页面
+     */
     final String index = "sales/salesOrder";
     final String calicoOrder = "sales/calicoOrder";
     final String addOrEdit = "sales/salesOrderAddOrEdit";
@@ -133,7 +133,6 @@ public class SalesOrderController extends BaseController {
     @RequestMapping(value = "add", method = RequestMethod.GET)
     public ModelAndView _add(SalesOrder salesOrder) {
         Long userId = (Long) session.getAttribute(Constant.CURRENT_USER_ID);
-
         User u = salesOrderService.findById(User.class, userId);
         Department de = salesOrderService.findById(Department.class, u.getDid());
         if (de.getName().equals("国内销售部")) {
@@ -148,24 +147,18 @@ public class SalesOrderController extends BaseController {
     @Journal(name = "保存销售订单", logType = LogType.DB)
     @RequestMapping(value = "add", method = RequestMethod.POST)
     public String add(@RequestBody SalesOrder salesOrder) throws Exception {
-
-        Map<String, Object> param = new HashMap<String, Object>();
-
+        Map<String, Object> param = new HashMap<>();
         param.put("salesOrderCode", salesOrder.getSalesOrderCode());
-
         if (salesOrderService.has(SalesOrder.class, param)) {
             return ajaxError("订单编号重复:" + salesOrder.getSalesOrderCode());
         }
         salesOrder.setSalesOrderDate(new Date());
         // 校验产品对应的BOM是否可用
         List<SalesOrderDetail> ps = salesOrder.getDetails();
-
-        TcBomVersion tbv = null;
-        FtcBomVersion fbv = null;
-        BCBomVersion bv = null;
-
-        Map<String, String> repeat = new HashMap<String, String>();
-
+        TcBomVersion tbv;
+        FtcBomVersion fbv;
+        BCBomVersion bv;
+        Map<String, String> repeat = new HashMap<>();
         for (SalesOrderDetail p : ps) {
             String salesOrderSubCode = CharMatcher.anyOf("\t").trimFrom(p.getSalesOrderSubCode());
             String salesOrderSubCodePrint = CharMatcher.anyOf("\t").trimFrom(p.getSalesOrderSubCodePrint());
@@ -182,22 +175,15 @@ public class SalesOrderController extends BaseController {
                 if (salesOrderService.has(SalesOrderDetail.class, param)) {
                     return ajaxError("试样产品下单重复:" + p.getSalesOrderSubCode());
                 }
-                List<Map<String,Object>> map = salesOrderService.selectSalesOrder(p.getSalesOrderSubCode(), p.getFactoryProductName());
-                if (map.size() != 0){
-                    return ajaxError("试样产品订单号和厂内名称的组合已存在，不能重复下单，订单号:" + p.getSalesOrderSubCode()+"厂内名称："+p.getFactoryProductName());
+                List<Map<String, Object>> map = salesOrderService.selectSalesOrder(p.getSalesOrderSubCode(), p.getFactoryProductName());
+                if (map.size() != 0) {
+                    return ajaxError("试样产品订单号和厂内名称的组合已存在，不能重复下单，订单号:" + p.getSalesOrderSubCode() + "厂内名称：" + p.getFactoryProductName());
                 }
             }
             repeat.put(p.getSalesOrderSubCode(), p.getProductId() + "");
-            /*
-             * if (p.getPackBomId() == null) { return ajaxError("[" +
-             * p.getFactoryProductName() + "] 包装工艺为空，不能下单"); }
-             */
-
             if (p.getProcBomId() == null) {
                 return ajaxError("[" + p.getFactoryProductName() + "] 产品工艺为空，不能下单");
             }
-
-
             tbv = salesOrderService.findById(TcBomVersion.class, p.getProcBomId());
             fbv = salesOrderService.findById(FtcBomVersion.class, p.getProcBomId());
             if (fp.getProductIsTc() == 1) {
@@ -206,7 +192,6 @@ public class SalesOrderController extends BaseController {
                     return ajaxError("[" + p.getFactoryProductName() + "] 包材BOM尚未审核通过或变更中，不能下单");
                 }
             }
-
 
             if (p.getProductIsTc() == 1) {
                 if (tbv != null && tbv.getAuditState() != AuditConstant.RS.PASS) {
@@ -217,54 +202,20 @@ public class SalesOrderController extends BaseController {
                     return ajaxError("[" + p.getFactoryProductName() + "] 产品工艺BOM尚未审核通过或变更中，不能下单");
                 }
             }
-
             param.clear();
-
             param.put("salesOrderSubCode", p.getSalesOrderSubCode());
             param.put("productId", p.getProductId());
             param.put("closed", null);
-
             if (salesOrderService.has(SalesOrderDetail.class, param)) {
                 return ajaxError("订单号重复:" + p.getSalesOrderSubCode());
             }
-
             param.put("closed", 0);
-
             if (salesOrderService.has(SalesOrderDetail.class, param)) {
                 return ajaxError("订单号重复:" + p.getSalesOrderSubCode());
             }
         }
-
-        // 校验产品对应的BOM是否可用结束
-
-        /*
-         * List<SalesOrderDetail> list = salesOrder.getDetails();
-         *
-         * param.clear(); boolean isError=false; String info="";
-         */
-
-        /*
-         * for (SalesOrderDetail detail : list) { param.put("salesOrderSubCode",
-         * detail.getSalesOrderSubCode()); if
-         * (salesOrderService.isExist(SalesOrderDetail.class, param, true)) {
-         * return GsonTools.toJson("订单号重复"); } if (detail.getProductIsTc() == 1
-         * && detail.getProcBomId() == null) { isError=true;
-         * info+=("套材产品"+detail
-         * .getFactoryProductName()+"工艺版本"+detail.getProductProcessCode
-         * ()+"无法匹配;"); } if (detail.getProductIsTc() != 1 &&
-         * (detail.getProcBomId() == null)) { isError=true;
-         * info+=("非套材产品"+detail
-         * .getFactoryProductName()+"工艺版本"+detail.getProductProcessCode
-         * ()+"无法匹配;"); } if (detail.getProductIsTc() != 1 &&
-         * (detail.getPackBomId() == null)) { isError=true;
-         * info+=("非套材产品"+detail
-         * .getFactoryProductName()+"包装版本"+detail.getProductPackagingCode
-         * ()+"无法匹配"); } } if(isError){ return ajaxError(info); }
-         */
-
         salesOrder.setAuditState(0);
         salesOrderService.save(salesOrder);
-
         return GsonTools.toJson("保存成功");
     }
 
@@ -290,93 +241,39 @@ public class SalesOrderController extends BaseController {
         if (!salesOrder.getSalesOrderBizUserId().equals(session.getAttribute(Constant.CURRENT_USER_ID))) {
             return ajaxError("只能由下达订单的业务员提交审核");
         }
-        Map<String, Object> param = new HashMap<String, Object>();
-
+        Map<String, Object> param = new HashMap<>();
         param.put("salesOrderCode", salesOrder.getSalesOrderCode());
-
         if (salesOrderService.has(SalesOrder.class, param, salesOrder.getId())) {
             return ajaxError("订单编号重复:" + salesOrder.getSalesOrderCode());
         }
-
         // 校验产品对应的BOM是否可用
         List<SalesOrderDetail> ps = salesOrder.getDetails();
-
-        TcBomVersion tbv = null;
-        FtcBomVersion fbv = null;
-        BCBomVersion bv = null;
-
-        Map<String, String> repeat = new HashMap<String, String>();
-
+        Map<String, String> repeat = new HashMap<>();
         for (SalesOrderDetail p : ps) {
-
             if (repeat.get(p.getSalesOrderSubCode()) != null && repeat.get(p.getSalesOrderSubCode()).equals(p.getProductId() + "")) {
                 return ajaxError("订单号重复:" + p.getSalesOrderSubCode());
             }
-            FinishedProduct fp = salesOrderService.findById(FinishedProduct.class, p.getProductId());
             param.clear();
             param.put("productId", p.getProductId());
             param.put("closed", null);
-            /*
-             * if(fp.getIsCommon()!=null&&fp.getIsCommon()==0){ if
-             * (salesOrderService.has(SalesOrderDetail.class, param)) { return
-             * ajaxError("试样产品下单重复:" + p.getSalesOrderSubCode()); } }
-             */
             repeat.put(p.getSalesOrderSubCode(), p.getProductId() + "");
-            if (salesOrder.getSalesOrderIsExport() == -1) {
-                if (p.getProcBomId() == null) {
-                    return ajaxError("[" + p.getFactoryProductName() + "] 产品工艺为空，不能下单");
-                }
-            } else {
-                /*
-                 * if (p.getPackBomId() == null) { return ajaxError("[" +
-                 * p.getFactoryProductName() + "] 包装工艺为空，不能下单"); }
-                 */
-                if (p.getProcBomId() == null) {
-                    return ajaxError("[" + p.getFactoryProductName() + "] 产品工艺为空，不能下单");
-                }
+            if (p.getProcBomId() == null) {
+                return ajaxError("[" + p.getFactoryProductName() + "] 产品工艺为空，不能下单");
             }
-            /*
-             * if (salesOrder.getSalesOrderIsExport() != -1) { bv =
-             * salesOrderService.findById(BCBomVersion.class, p.getPackBomId());
-             * }
-             */
-            tbv = salesOrderService.findById(TcBomVersion.class, p.getProcBomId());
-            fbv = salesOrderService.findById(FtcBomVersion.class, p.getProcBomId());
-            /*
-             * if (salesOrder.getSalesOrderIsExport() != -1) { if (bv != null &&
-             * bv.getAuditState() != AuditConstant.RS.PASS) { return
-             * ajaxError("[" + p.getFactoryProductName() +
-             * "] 包材BOM尚未审核通过或变更中，不能下单"); } }
-             *
-             * if(p.getProductIsTc()==1){ if (tbv != null && tbv.getAuditState()
-             * != AuditConstant.RS.PASS) { return ajaxError("[" +
-             * p.getFactoryProductName() + "] 产品工艺BOM尚未审核通过或变更中，不能下单"); } }else{
-             * if (fbv != null && fbv.getAuditState() != AuditConstant.RS.PASS)
-             * { return ajaxError("[" + p.getFactoryProductName() +
-             * "] 产品工艺BOM尚未审核通过或变更中，不能下单"); } }
-             */
-
             param.clear();
-
             param.put("salesOrderSubCode", p.getSalesOrderSubCode());
             param.put("productId", p.getProductId());
             param.put("closed", null);
-
             if (salesOrderService.has(SalesOrderDetail.class, param, p.getId())) {
                 return ajaxError("订单号重复:" + p.getSalesOrderSubCode());
             }
-
             param.put("closed", 0);
-
             if (salesOrderService.has(SalesOrderDetail.class, param, p.getId())) {
                 return ajaxError("订单号重复:" + p.getSalesOrderSubCode());
             }
-
         }
-
         salesOrder.setAuditState(0);
         salesOrderService.edit(salesOrder);
-
         return GsonTools.toJson("保存成功");
     }
 
@@ -397,9 +294,9 @@ public class SalesOrderController extends BaseController {
     @Journal(name = "删除销售订单", logType = LogType.DB)
     @RequestMapping(value = "delete", method = RequestMethod.POST)
     public String edit(String ids) throws Exception {
-        String id[] = ids.split(",");
-        for (int a = 0; a < id.length; a++) {
-            SalesOrder salesOrder = auditInstanceService.findById(SalesOrder.class, Long.valueOf(id[a]));
+        String[] id = ids.split(",");
+        for (String s : id) {
+            SalesOrder salesOrder = auditInstanceService.findById(SalesOrder.class, Long.valueOf(s));
             if (salesOrder.getAuditState() > 0) {
                 return ajaxError("审核中和审核通过的记录不能删除！");
             }
@@ -439,15 +336,14 @@ public class SalesOrderController extends BaseController {
     public String _commitAudit(Long id, String name, String userId) throws Exception {
         SalesOrder so = auditInstanceService.findById(SalesOrder.class, id);
         HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put("salesOrderCode",so.getSalesOrderCode());
+        map.put("salesOrderCode", so.getSalesOrderCode());
         List<SalesOrder> salesOrderList = auditInstanceService.findListByMap(SalesOrder.class, map);
-        if (salesOrderList.size()>1){
+        if (salesOrderList.size() > 1) {
             return ajaxError("销售订单编号重复下单，请确认后，删除重复的订单信息");
         }
         if (!so.getSalesOrderBizUserId().equals(session.getAttribute(Constant.CURRENT_USER_ID))) {
             return ajaxError("只能由下达订单的业务员提交审核");
         }
-
         // 检查包装任务
         String rs = salesOrderService.hasPackTask(id);
         if (!StringUtils.isBlank(rs)) {
@@ -482,13 +378,6 @@ public class SalesOrderController extends BaseController {
         SalesOrder salesOrder = salesOrderService.findById(SalesOrder.class, Long.valueOf(id));
         User u = salesOrderService.findById(User.class, salesOrder.getSalesOrderBizUserId());
         Consumer c = salesOrderService.findById(Consumer.class, salesOrder.getSalesOrderConsumerId());
-        /*
-         * List<SalesOrderDetail> list =
-         * salesOrderService.getDetails(salesOrder.getId()); List<Map<Object,
-         * Object>> details = new ArrayList<Map<Object, Object>>(); for
-         * (SalesOrderDetail detail : list) {
-         * details.add(MapUtils.entityToMap(detail)); }
-         */
         return new ModelAndView(audit, model.addAttribute("salesOrder", salesOrder).addAttribute("userName", u.getUserName()).addAttribute("consumerName", c.getConsumerName()).addAttribute("details", GsonTools.toJson(salesOrderService.getDetails2(salesOrder.getSalesOrderCode()))));
     }
 
@@ -496,7 +385,7 @@ public class SalesOrderController extends BaseController {
     @RequestMapping("close")
     @ResponseBody
     public String closeSalesOrder(String _ids) throws Exception {
-        String ids[] = _ids.split(",");
+        String[] ids = _ids.split(",");
         SalesOrder[] orders = new SalesOrder[ids.length];
         SalesOrder order;
         for (int i = 0; i < ids.length; i++) {
@@ -513,7 +402,7 @@ public class SalesOrderController extends BaseController {
     @RequestMapping("complete")
     @ResponseBody
     public String complateSalesOrder(String _ids) throws Exception {
-        String ids[] = _ids.split(",");
+        String[] ids = _ids.split(",");
         SalesOrderDetail[] orders = new SalesOrderDetail[ids.length];
         SalesOrderDetail order;
         for (int i = 0; i < ids.length; i++) {
@@ -530,14 +419,13 @@ public class SalesOrderController extends BaseController {
     @RequestMapping("isPlaned")
     @ResponseBody
     public String isPlanedSalesOrder(String _ids) throws Exception {
-        String ids[] = _ids.split(",");
+        String[] ids = _ids.split(",");
         SalesOrderDetail[] orders = new SalesOrderDetail[ids.length];
         SalesOrderDetail order;
         for (int i = 0; i < ids.length; i++) {
             order = salesOrderService.findById(SalesOrderDetail.class, Long.parseLong(ids[i]));
             order.setIsPlaned(1);
             orders[i] = order;
-            //msgCreateService.createOrderFinish(order);
         }
         salesOrderService.update2(orders);
         return ajaxSuccess();
@@ -555,13 +443,12 @@ public class SalesOrderController extends BaseController {
         map.put("salesOrderId", id);
         List<SalesOrderDetail> details = salesOrderService.findListByMap(SalesOrderDetail.class, map);
         // TODO遍历主订单明细，获取增加的明细
-
         SimpleDateFormat sf = new SimpleDateFormat("yyyy年MM月dd日");
         String templateName = "生产计划安排单(" + salesOrder.getSalesOrderCode() + ")";
         SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日");
         SXSSFWorkbook wb = new SXSSFWorkbook(-1);
         CellStyle cellStyle = wb.createCellStyle();
-        cellStyle.setAlignment(HorizontalAlignment.CENTER); // 水平布局：居中
+        cellStyle.setAlignment(HorizontalAlignment.CENTER);
         cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
         cellStyle.setBorderBottom(BorderStyle.THIN);
         cellStyle.setBorderTop(BorderStyle.THIN);
@@ -570,10 +457,9 @@ public class SalesOrderController extends BaseController {
         cellStyle.setWrapText(true);
 
         Sheet sheet = wb.createSheet("订单");
-        // sheet.setDisplayGridlines(true);
-        Row row = null;
-        Cell cell = null;
-        String columnName[] = new String[]{"序号", "客户产品名称", "厂内产品名称", "客户订单号", "厂内订单号", "批号", "具体规格/牌号", "门幅(mm)", "产品数量(卷/套)", "产品卷重（卷长）", "总重(kg)", "包装代码", "工艺代码", "交货日期", "产品类型选项", "备注"};
+        Row row;
+        Cell cell;
+        String[] columnName = new String[]{"序号", "客户产品名称", "厂内产品名称", "客户订单号", "厂内订单号", "批号", "具体规格/牌号", "门幅(mm)", "产品数量(卷/套)", "产品卷重（卷长）", "总重(kg)", "包装代码", "工艺代码", "交货日期", "产品类型选项", "备注"};
         int r = 0;// 从第1行开始写数据
         row = sheet.createRow(r);
         cell = row.createCell(0);
@@ -660,7 +546,7 @@ public class SalesOrderController extends BaseController {
         }
         sheet.addMergedRegion(new CellRangeAddress(r, r, 8, 15));
         r++;
-        row = sheet.createRow(r);
+        sheet.createRow(r);
         row = sheet.createRow(r);
         cell = row.createCell(0);
         cell.setCellValue("产品类型:");
@@ -671,19 +557,10 @@ public class SalesOrderController extends BaseController {
         cell = row.createCell(2);
 
         switch (salesOrder.getSalesOrderType()) {
-            case 3:
-                cell.setCellValue("新产品");
-                break;
-            case 2:
-                cell.setCellValue("试样产品");
-                break;
-            case 1:
-                cell.setCellValue("常规产品");
-                break;
-
-            default:
-                cell.setCellValue("未知产品");
-                break;
+            case 3 -> cell.setCellValue("新产品");
+            case 2 -> cell.setCellValue("试样产品");
+            case 1 -> cell.setCellValue("常规产品");
+            default -> cell.setCellValue("未知产品");
         }
         cell.setCellStyle(cellStyle);
         for (int a = 3; a < 16; a++) {
@@ -700,18 +577,11 @@ public class SalesOrderController extends BaseController {
             cell.setCellStyle(cellStyle);
         }
         r++;
-
-        // String productTypeNow = null;
         // 遍历数据的长度，得到递增的行数
         int index = 0;
         Double totalCount = 0d;
         for (SalesOrderDetail data : details) {
             index++;
-            // SalesOrderDetail sod =
-            // producePlanService.findById(SalesOrderDetail.class,
-            // data.getFromSalesOrderDetailId());
-            // SalesOrder so = producePlanService.findById(SalesOrder.class,
-            // sod.getSalesOrderId());
             row = sheet.createRow(r);
             // 当产品型号和原来的产品型号不同时，记录现在的型号并插入一行型号
             for (int j = 0; j < columnName.length; j++) {
@@ -804,17 +674,17 @@ public class SalesOrderController extends BaseController {
 
                     case 14:
                         // （3新品，2试样，1常规产品，-1未知）
-                        if (salesOrder.getSalesOrderType().intValue() == 1) {
+                        if (salesOrder.getSalesOrderType() == 1) {
                             cell.setCellValue("常规产品");
                             break;
                         }
 
-                        if (salesOrder.getSalesOrderType().intValue() == 2) {
+                        if (salesOrder.getSalesOrderType() == 2) {
                             cell.setCellValue("试样");
                             break;
                         }
 
-                        if (salesOrder.getSalesOrderType().intValue() == 3) {
+                        if (salesOrder.getSalesOrderType() == 3) {
                             cell.setCellValue("新品");
                             break;
                         }
@@ -831,12 +701,9 @@ public class SalesOrderController extends BaseController {
                 }
             }
 
-            if (data.getProductIsTc().intValue() == 1) {
-
+            if (data.getProductIsTc() == 1) {
                 String[] partNames = {"部件名称", "订单数量", "BOM数量"};
-
                 row = sheet.createRow(++r);
-
                 cell = row.createCell(1);
                 cell.setCellValue(partNames[0]);
                 cell = row.createCell(2);
@@ -949,22 +816,16 @@ public class SalesOrderController extends BaseController {
                 cell.setCellStyle(cellStyle);
             }
         }
-
         sheet.createFreezePane(0, 7);
-
         // 高飞，2018-01-05，导出时添加包装任务信息
-
-        List<PackTask> tasks = null;
-
-        Set<Long> vids = new HashSet<Long>();
-
+        List<PackTask> tasks;
+        Set<Long> vids = new HashSet<>();
         sheet = wb.createSheet("包装任务");
         Object[] packTaskTitles = {"订单号", "批次号", "客户产品名称", "厂内名称", "包装代码", "版本号", "备注", "每托卷数", "数量"};
         row = sheet.createRow(0);
         writeRow(row, packTaskTitles);
         int i = 1;
         // 包装任务 END
-
         for (SalesOrderDetail sod : details) {
             if (sod.getProductIsTc() != 2) continue;
             //i=1;
@@ -977,9 +838,8 @@ public class SalesOrderController extends BaseController {
                 Object[] v = {sod.getSalesOrderSubCode(), sod.getProductBatchCode(), sod.getConsumerProductName(), sod.getFactoryProductName(), t.getCode(), t.getVersion(), t.getMemo(), t.getRollsPerTray(), t.getTotalCount()};
                 writeRow(row, v);
             }
-
         }
-        HttpUtils.download(response,wb,templateName);
+        HttpUtils.download(response, wb, templateName);
     }
 
     void writeRow(Row row, Object... values) {
@@ -1045,8 +905,8 @@ public class SalesOrderController extends BaseController {
             map.clear();
             map.put("fromSalesOrderDetailId", Long.parseLong(id));
             List<ProducePlanDetail> findListByMap = salesOrderService.findListByMap(ProducePlanDetail.class, map);
-            for (int i = 0; i < findListByMap.size(); i++) {
-                if (findListByMap.get(i).getClosed() == null || findListByMap.get(i).getClosed() == 0) {
+            for (ProducePlanDetail producePlanDetail : findListByMap) {
+                if (producePlanDetail.getClosed() == null || producePlanDetail.getClosed() == 0) {
                     return ajaxError("只有先关闭生产计划后方可操作");
                 }
             }
@@ -1067,17 +927,17 @@ public class SalesOrderController extends BaseController {
     public String getSalesOrderOut(Filter filter, Page page) throws Exception {
         Map<String, Object> findPageOut = salesOrderService.findPageOut(filter, page);
         List<Map<String, Object>> list = (List<Map<String, Object>>) findPageOut.get("rows");
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         if (list.size() > 0) {
-            for (int i = 0; i < list.size(); i++) {
+            for (Map<String, Object> stringObjectMap : list) {
                 map.clear();
-                map.put("salesOrderSubCode", list.get(i).get("SALESORDERCODE"));
-                map.put("productModel", list.get(i).get("PRODUCTMODEL"));
+                map.put("salesOrderSubCode", stringObjectMap.get("SALESORDERCODE"));
+                map.put("productModel", stringObjectMap.get("PRODUCTMODEL"));
                 List<SalesOrderDetail> findListByMap = salesOrderService.findListByMap(SalesOrderDetail.class, map);
                 if (findListByMap.size() > 0) {
                     SalesOrder findById = salesOrderService.findById(SalesOrder.class, findListByMap.get(0).getSalesOrderId());
                     User user = salesOrderService.findById(User.class, findById.getSalesOrderBizUserId());
-                    list.get(i).put("SALESNAME", user.getUserName());
+                    stringObjectMap.put("SALESNAME", user.getUserName());
                 }
             }
         }
@@ -1094,17 +954,17 @@ public class SalesOrderController extends BaseController {
         page.setRows(99999);
         Map<String, Object> findPageOut = salesOrderService.findPageOut(filter, page);
         List<Map<String, Object>> rows = (List<Map<String, Object>>) findPageOut.get("rows");
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         if (rows.size() > 0) {
-            for (int i = 0; i < rows.size(); i++) {
+            for (Map<String, Object> row : rows) {
                 map.clear();
-                map.put("salesOrderSubCode", rows.get(i).get("SALESORDERCODE"));
-                map.put("productModel", rows.get(i).get("PRODUCTMODEL"));
+                map.put("salesOrderSubCode", row.get("SALESORDERCODE"));
+                map.put("productModel", row.get("PRODUCTMODEL"));
                 List<SalesOrderDetail> findListByMap = salesOrderService.findListByMap(SalesOrderDetail.class, map);
                 if (findListByMap.size() > 0) {
                     SalesOrder findById = salesOrderService.findById(SalesOrder.class, findListByMap.get(0).getSalesOrderId());
                     User user = salesOrderService.findById(User.class, findById.getSalesOrderBizUserId());
-                    rows.get(i).put("SALESNAME", user.getUserName());
+                    row.put("SALESNAME", user.getUserName());
                 }
             }
         }
@@ -1120,10 +980,9 @@ public class SalesOrderController extends BaseController {
         cellStyle.setBorderLeft(BorderStyle.THIN);
         cellStyle.setWrapText(true);
         Sheet sheet = wb.createSheet();
-        Integer xx = null;
-        Row row = null;
-        Cell cell = null;
-        String columnName[] = new String[]{"出货单编号", "出库日期", "购货单位", "订单号", "批次号", "部件名称", "客户产品名称", "厂内名称", "规格型号", "辅助数量", "辅助单位", "实发数量(kg)", "发货人", "业务员"};
+        Row row;
+        Cell cell;
+        String[] columnName = new String[]{"出货单编号", "出库日期", "购货单位", "订单号", "批次号", "部件名称", "客户产品名称", "厂内名称", "规格型号", "辅助数量", "辅助单位", "实发数量(kg)", "发货人", "业务员"};
         int r = 0;// 从第1行开始写数据
         row = sheet.createRow(r);
         cell = row.createCell(0);
@@ -1136,7 +995,7 @@ public class SalesOrderController extends BaseController {
         sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 13));
         r++;
         row = sheet.createRow(r);
-        cell = row.createCell(0);
+        row.createCell(0);
         for (int a = 0; a < columnName.length; a++) {
             cell = row.createCell(a);
             cell.setCellValue(columnName[a]);
@@ -1157,61 +1016,61 @@ public class SalesOrderController extends BaseController {
         sheet.setColumnWidth(12, 10 * 256);
 
         row = sheet.createRow(r);
-        cell = row.createCell(0);
-        for (int i = 0; i < rows.size(); i++) {
+        row.createCell(0);
+        for (Map<String, Object> stringObjectMap : rows) {
             row = sheet.createRow(r);
             for (int j = 0; j < columnName.length; j++) {
                 cell = row.createCell(j);
                 switch (j) {
                     case 0:
-                        if (rows.get(i).get("DEVICECODE") != null) {
-                            cell.setCellValue(rows.get(i).get("DEVICECODE").toString());
+                        if (stringObjectMap.get("DEVICECODE") != null) {
+                            cell.setCellValue(stringObjectMap.get("DEVICECODE").toString());
                         }
                         break;
                     case 1:
-                        if (rows.get(i).get("OUTTIME") != null) {
-                            cell.setCellValue(sf.format(rows.get(i).get("OUTTIME")));
+                        if (stringObjectMap.get("OUTTIME") != null) {
+                            cell.setCellValue(sf.format(stringObjectMap.get("OUTTIME")));
                         }
                         break;
                     case 2:
-                        if (rows.get(i).get("CONSUMERNAME") != null) {
-                            cell.setCellValue(rows.get(i).get("CONSUMERNAME").toString());
+                        if (stringObjectMap.get("CONSUMERNAME") != null) {
+                            cell.setCellValue(stringObjectMap.get("CONSUMERNAME").toString());
                         }
                         break;
                     case 3:
-                        if (rows.get(i).get("SALESORDERCODE") != null) {
-                            cell.setCellValue(rows.get(i).get("SALESORDERCODE").toString());
+                        if (stringObjectMap.get("SALESORDERCODE") != null) {
+                            cell.setCellValue(stringObjectMap.get("SALESORDERCODE").toString());
                         }
                         break;
                     case 4:
-                        if (rows.get(i).get("BATCHCODE") != null) {
-                            cell.setCellValue(rows.get(i).get("BATCHCODE").toString());
+                        if (stringObjectMap.get("BATCHCODE") != null) {
+                            cell.setCellValue(stringObjectMap.get("BATCHCODE").toString());
                         }
                         break;
                     case 5:
 
-                        if (rows.get(i).get("TCPROCBOMVERSIONPARTSNAME") != null) {
-                            cell.setCellValue(rows.get(i).get("TCPROCBOMVERSIONPARTSNAME").toString());
+                        if (stringObjectMap.get("TCPROCBOMVERSIONPARTSNAME") != null) {
+                            cell.setCellValue(stringObjectMap.get("TCPROCBOMVERSIONPARTSNAME").toString());
                         }
                         break;
                     case 6:
-                        if (rows.get(i).get("PRODUCTCONSUMERNAME") != null) {
-                            cell.setCellValue(rows.get(i).get("PRODUCTCONSUMERNAME").toString());
+                        if (stringObjectMap.get("PRODUCTCONSUMERNAME") != null) {
+                            cell.setCellValue(stringObjectMap.get("PRODUCTCONSUMERNAME").toString());
                         }
                         break;
                     case 7:
-                        if (rows.get(i).get("PRODUCTFACTORYNAME") != null) {
-                            cell.setCellValue(rows.get(i).get("PRODUCTFACTORYNAME").toString());
+                        if (stringObjectMap.get("PRODUCTFACTORYNAME") != null) {
+                            cell.setCellValue(stringObjectMap.get("PRODUCTFACTORYNAME").toString());
                         }
                         break;
                     case 8:
-                        if (rows.get(i).get("PRODUCTMODEL") != null) {
-                            cell.setCellValue(rows.get(i).get("PRODUCTMODEL").toString());
+                        if (stringObjectMap.get("PRODUCTMODEL") != null) {
+                            cell.setCellValue(stringObjectMap.get("PRODUCTMODEL").toString());
                         }
                         break;
                     case 9:
-                        if (rows.get(i).get("COUNT") != null) {
-                            cell.setCellValue(rows.get(i).get("COUNT").toString());
+                        if (stringObjectMap.get("COUNT") != null) {
+                            cell.setCellValue(stringObjectMap.get("COUNT").toString());
                         }
                         break;
                     case 10:
@@ -1219,18 +1078,18 @@ public class SalesOrderController extends BaseController {
                         cell.setCellValue("托");
                         break;
                     case 11:
-                        if (rows.get(i).get("ROLLWEIGHT") != null) {
-                            cell.setCellValue((Double) rows.get(i).get("ROLLWEIGHT"));
+                        if (stringObjectMap.get("ROLLWEIGHT") != null) {
+                            cell.setCellValue((Double) stringObjectMap.get("ROLLWEIGHT"));
                         }
                         break;
                     case 12:
-                        if (rows.get(i).get("OPERATEUSERNAME") != null) {
-                            cell.setCellValue(rows.get(i).get("OPERATEUSERNAME").toString());
+                        if (stringObjectMap.get("OPERATEUSERNAME") != null) {
+                            cell.setCellValue(stringObjectMap.get("OPERATEUSERNAME").toString());
                         }
                         break;
                     case 13:
-                        if (rows.get(i).get("SALESNAME") != null) {
-                            cell.setCellValue(rows.get(i).get("SALESNAME").toString());
+                        if (stringObjectMap.get("SALESNAME") != null) {
+                            cell.setCellValue(stringObjectMap.get("SALESNAME").toString());
                         }
                         break;
                 }
@@ -1239,8 +1098,8 @@ public class SalesOrderController extends BaseController {
             r++;
         }
         row = sheet.createRow(r);
-        cell = row.createCell(0);
-        HttpUtils.download(response,wb,templateName);
+        row.createCell(0);
+        HttpUtils.download(response, wb, templateName);
     }
 
     @Journal(name = "销售下单数量统计")
@@ -1256,8 +1115,8 @@ public class SalesOrderController extends BaseController {
     @RequestMapping("Quantitylist")
     public String getsalesQuantity(Filter filter, Page page) throws Exception {
         Map<String, Object> findPageQuantity = salesOrderService.findPageQuantity(filter, page);
-        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-        Map<String, Object> map = new HashMap<String, Object>();
+        List<Map<String, Object>> list = new ArrayList<>();
+        Map<String, Object> map = new HashMap<>();
         List<Map<String, Object>> rows = (List<Map<String, Object>>) findPageQuantity.get("rows");
         DecimalFormat df = new DecimalFormat("#.00");
         if (rows.size() != 0) {
@@ -1269,16 +1128,16 @@ public class SalesOrderController extends BaseController {
             Double d3 = 0.0;
             Double d4 = 0.0;
             Double d5 = 0.0;
-            for (int i = 0; i < r.size(); i++) {
-                Double _d1 = (Double) r.get(i).get("TWEIGHT");
+            for (Map<String, Object> stringObjectMap : r) {
+                Double _d1 = (Double) stringObjectMap.get("TWEIGHT");
                 d1 += _d1 == null ? 0.0 : _d1;
-                Double _d2 = (Double) r.get(i).get("RW");
+                Double _d2 = (Double) stringObjectMap.get("RW");
                 d2 += _d2 == null ? 0.0 : _d2;
-                Double _d3 = (Double) r.get(i).get("PW");
+                Double _d3 = (Double) stringObjectMap.get("PW");
                 d3 += _d3 == null ? 0.0 : _d3;
-                Double _d4 = (Double) r.get(i).get("WRW");
+                Double _d4 = (Double) stringObjectMap.get("WRW");
                 d4 += _d4 == null ? 0.0 : _d4;
-                Double _d5 = (Double) r.get(i).get("WPW");
+                Double _d5 = (Double) stringObjectMap.get("WPW");
                 d5 += _d5 == null ? 0.0 : _d5;
             }
             Double w1 = Double.parseDouble(df.format(d1));
@@ -1317,33 +1176,33 @@ public class SalesOrderController extends BaseController {
         Map<String, Object> findPageOut = salesOrderService.findPageQuantity(filter, page);
         List<Map<String, Object>> rows = (List<Map<String, Object>>) findPageOut.get("rows");
         if (rows.size() > 0) {
-            for (int i = 0; i < rows.size(); i++) {
-                if (rows.get(i).get("RW") != null && rows.get(i).get("PW") != null) {
-                    rows.get(i).put("PRODUCTIONWEIGHT", (Double) rows.get(i).get("RW") + (Double) rows.get(i).get("PW"));
-                } else if (rows.get(i).get("RW") != null) {
-                    rows.get(i).put("PRODUCTIONWEIGHT", rows.get(i).get("RW"));
+            for (Map<String, Object> row : rows) {
+                if (row.get("RW") != null && row.get("PW") != null) {
+                    row.put("PRODUCTIONWEIGHT", (Double) row.get("RW") + (Double) row.get("PW"));
+                } else if (row.get("RW") != null) {
+                    row.put("PRODUCTIONWEIGHT", row.get("RW"));
                 } else {
-                    rows.get(i).put("PRODUCTIONWEIGHT", rows.get(i).get("PW"));
+                    row.put("PRODUCTIONWEIGHT", row.get("PW"));
                 }
-                if (rows.get(i).get("WRW") != null && rows.get(i).get("WPW") != null) {
-                    rows.get(i).put("OUTWEIGHT", (Double) rows.get(i).get("WRW") + (Double) rows.get(i).get("WPW"));
-                } else if (rows.get(i).get("WRW") != null) {
-                    rows.get(i).put("OUTWEIGHT", rows.get(i).get("WRW"));
+                if (row.get("WRW") != null && row.get("WPW") != null) {
+                    row.put("OUTWEIGHT", (Double) row.get("WRW") + (Double) row.get("WPW"));
+                } else if (row.get("WRW") != null) {
+                    row.put("OUTWEIGHT", row.get("WRW"));
                 } else {
-                    rows.get(i).put("OUTWEIGHT", rows.get(i).get("WPW"));
+                    row.put("OUTWEIGHT", row.get("WPW"));
                 }
-                if (rows.get(i).get("PRODUCTIONWEIGHT") != null) {
-                    if (rows.get(i).get("TWEIGHT") != null) {
-                        if ((Double) rows.get(i).get("TWEIGHT") - (Double) rows.get(i).get("PRODUCTIONWEIGHT") > 0) {
-                            rows.get(i).put("PRWEIGHT", (Double) rows.get(i).get("TWEIGHT") - (Double) rows.get(i).get("PRODUCTIONWEIGHT"));
+                if (row.get("PRODUCTIONWEIGHT") != null) {
+                    if (row.get("TWEIGHT") != null) {
+                        if ((Double) row.get("TWEIGHT") - (Double) row.get("PRODUCTIONWEIGHT") > 0) {
+                            row.put("PRWEIGHT", (Double) row.get("TWEIGHT") - (Double) row.get("PRODUCTIONWEIGHT"));
                         } else {
-                            rows.get(i).put("PRWEIGHT", 0.0);
+                            row.put("PRWEIGHT", 0.0);
                         }
                     } else {
-                        rows.get(i).put("PRWEIGHT", 0.0);
+                        row.put("PRWEIGHT", 0.0);
                     }
                 } else {
-                    rows.get(i).put("PRWEIGHT", rows.get(i).get("TWEIGHT"));
+                    row.put("PRWEIGHT", row.get("TWEIGHT"));
                 }
             }
         }
@@ -1359,10 +1218,9 @@ public class SalesOrderController extends BaseController {
         cellStyle.setBorderLeft(BorderStyle.THIN);
         cellStyle.setWrapText(true);
         Sheet sheet = wb.createSheet();
-        Integer xx = null;
-        Row row = null;
-        Cell cell = null;
-        String columnName[] = new String[]{"客户名称", "厂内名称", "客户产品名称", "下单总量(kg)", "已生产总量(kg)", "未生产总量(kg)", "已出库总量(kg)"};
+        Row row;
+        Cell cell;
+        String[] columnName = new String[]{"客户名称", "厂内名称", "客户产品名称", "下单总量(kg)", "已生产总量(kg)", "未生产总量(kg)", "已出库总量(kg)"};
         int r = 0;// 从第1行开始写数据
         row = sheet.createRow(r);
         cell = row.createCell(0);
@@ -1375,7 +1233,7 @@ public class SalesOrderController extends BaseController {
         sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 5));
         r++;
         row = sheet.createRow(r);
-        cell = row.createCell(0);
+        row.createCell(0);
         for (int a = 0; a < columnName.length; a++) {
             cell = row.createCell(a);
             cell.setCellValue(columnName[a]);
@@ -1390,62 +1248,58 @@ public class SalesOrderController extends BaseController {
         sheet.setColumnWidth(5, 20 * 256);
         sheet.setColumnWidth(6, 20 * 256);
         row = sheet.createRow(r);
-        cell = row.createCell(0);
-        for (int i = 0; i < rows.size(); i++) {
+        row.createCell(0);
+        for (Map<String, Object> stringObjectMap : rows) {
             row = sheet.createRow(r);
             for (int j = 0; j < columnName.length; j++) {
                 cell = row.createCell(j);
                 switch (j) {
                     case 0:
-                        cell.setCellValue(rows.get(i).get("CONSUMERNAME").toString());
+                        cell.setCellValue(stringObjectMap.get("CONSUMERNAME").toString());
                         break;
                     case 1:
-                        cell.setCellValue(rows.get(i).get("FACTORYPRODUCTNAME").toString());
+                        cell.setCellValue(stringObjectMap.get("FACTORYPRODUCTNAME").toString());
                         break;
                     case 2:
-                        cell.setCellValue(rows.get(i).get("CONSUMERPRODUCTNAME").toString());
+                        cell.setCellValue(stringObjectMap.get("CONSUMERPRODUCTNAME").toString());
                         break;
                     case 3:
-                        if (rows.get(i).get("TWEIGHT") != null) {
-                            cell.setCellValue((Double) rows.get(i).get("TWEIGHT"));
+                        if (stringObjectMap.get("TWEIGHT") != null) {
+                            cell.setCellValue((Double) stringObjectMap.get("TWEIGHT"));
                         } else {
                             cell.setCellValue("0.00");
-
                         }
-
                         break;
                     case 4:
-                        if (rows.get(i).get("PRODUCTIONWEIGHT") != null) {
-                            cell.setCellValue((Double) rows.get(i).get("PRODUCTIONWEIGHT"));
+                        if (stringObjectMap.get("PRODUCTIONWEIGHT") != null) {
+                            cell.setCellValue((Double) stringObjectMap.get("PRODUCTIONWEIGHT"));
                         } else {
                             cell.setCellValue("0.00");
 
                         }
                         break;
                     case 5:
-                        if (rows.get(i).get("PRWEIGHT") != null) {
-                            cell.setCellValue((Double) rows.get(i).get("PRWEIGHT"));
+                        if (stringObjectMap.get("PRWEIGHT") != null) {
+                            cell.setCellValue((Double) stringObjectMap.get("PRWEIGHT"));
                         } else {
                             cell.setCellValue("0.00");
                         }
                         break;
                     case 6:
-                        if (rows.get(i).get("OUTWEIGHT") != null) {
-                            cell.setCellValue((Double) rows.get(i).get("OUTWEIGHT"));
+                        if (stringObjectMap.get("OUTWEIGHT") != null) {
+                            cell.setCellValue((Double) stringObjectMap.get("OUTWEIGHT"));
                         } else {
                             cell.setCellValue("0.00");
                         }
                         break;
-
                 }
             }
-
             r++;
         }
         row = sheet.createRow(r);
-        cell = row.createCell(0);
+        row.createCell(0);
         sheet.createFreezePane(0, 2);
-        HttpUtils.download(response,wb,templateName);
+        HttpUtils.download(response, wb, templateName);
     }
 
     @Journal(name = "月度订单产品汇总")
@@ -1461,20 +1315,19 @@ public class SalesOrderController extends BaseController {
     public String getsummaryMonthly(Filter filter, Page page) throws Exception {
         Map<String, Object> findPageSummaryMonthly = salesOrderService.findPageSummaryMonthly(filter, page);
         List<Map<String, Object>> list = (List<Map<String, Object>>) findPageSummaryMonthly.get("rows");
-        Map<String, Object> map = new HashMap<String, Object>();
-        // DecimalFormat df = new DecimalFormat("######0.00"); //保留两位小数点
+        Map<String, Object> map = new HashMap<>();
         if (list.size() > 0) {
             Double countweight = 0.0;// 计调下单总重量
             Double countroll = 0.0;// 计调下单总卷数
-            Double countyroll = 0.0;// 已生产总卷数
-            Double wweight = 0.0;// 未完成总重量
-            Integer ytraycount = 0;// 已打包总托数
+            double countyroll = 0.0;// 已生产总卷数
+            double wweight = 0.0;// 未完成总重量
+            int ytraycount = 0;// 已打包总托数
             Integer countray = 0;// 总托数
             Double inweight = 0.0;// 在库总重量
-            Integer intray = 0;// 在库总托数
+            int intray = 0;// 在库总托数
             Double outweight = 0.0;// 出库总重量
-            Integer outrtay = 0;// 出库总托数
-            for (int i = 0; i < list.size(); i++) {
+            int outrtay = 0;// 出库总托数
+            for (Map<String, Object> stringObjectMap : list) {
                 Integer rollcount = 0; // 已生产的卷数
                 Integer traycout = 0; // 已打包的托数
                 Integer intraycout = 0; // 在库托数
@@ -1483,7 +1336,7 @@ public class SalesOrderController extends BaseController {
                 Double outtrayweight = 0.0; // 出库重量
                 Double completedamount = 0.0;// 已完成量
                 String sdevicecode = "";
-                Long ID = Long.valueOf(list.get(i).get("ID").toString());
+                Long ID = Long.valueOf(stringObjectMap.get("ID").toString());
                 map.clear();
                 map.put("producePlanDetailId", ID);
                 map.put("isAbandon", 0);
@@ -1527,7 +1380,6 @@ public class SalesOrderController extends BaseController {
                                         if (totalStatistics.getProductWeight() != null) {
                                             intrayweight += totalStatistics.getProductWeight();
                                             inweight += totalStatistics.getProductWeight();
-
                                         }
                                     }
                                 }
@@ -1550,31 +1402,30 @@ public class SalesOrderController extends BaseController {
                         }
                     }
                 }
-                list.get(i).put("RC", rollcount);
-                list.get(i).put("TC", traycout);
-                list.get(i).put("STOCKIN", intraycout);
-                list.get(i).put("STOCKINWEIGHT", intrayweight);
-                list.get(i).put("STOCKOUT", outtyaycout);
-                list.get(i).put("STOCKOUTWEIGHT", outweight);// 出库量
+                stringObjectMap.put("RC", rollcount);
+                stringObjectMap.put("TC", traycout);
+                stringObjectMap.put("STOCKIN", intraycout);
+                stringObjectMap.put("STOCKINWEIGHT", intrayweight);
+                stringObjectMap.put("STOCKOUT", outtyaycout);
+                stringObjectMap.put("STOCKOUTWEIGHT", outweight);// 出库量
                 // 入库的托数和重量
-                list.get(i).put("STOCK", intraycout + outtyaycout);
-                list.get(i).put("STOCKWEIGHT", intrayweight + outtrayweight);
-                if ((Double) list.get(i).get("ORDERCOUNT") - (Integer) list.get(i).get("RC") > 0) {
-                    if (list.get(i).get("PLANTOTALWEIGHT") != null) {
+                stringObjectMap.put("STOCK", intraycout + outtyaycout);
+                stringObjectMap.put("STOCKWEIGHT", intrayweight + outtrayweight);
+                if ((Double) stringObjectMap.get("ORDERCOUNT") - (Integer) stringObjectMap.get("RC") > 0) {
+                    if (stringObjectMap.get("PLANTOTALWEIGHT") != null) {
                         // 未完成量
-                        wweight = ((Double) list.get(i).get("ORDERCOUNT") - (Integer) list.get(i).get("RC")) / (Double) list.get(i).get("ORDERCOUNT") * (Double) list.get(i).get("PLANTOTALWEIGHT");
-                        list.get(i).put("WWEIGHT", wweight);
+                        wweight = ((Double) stringObjectMap.get("ORDERCOUNT") - (Integer) stringObjectMap.get("RC")) / (Double) stringObjectMap.get("ORDERCOUNT") * (Double) stringObjectMap.get("PLANTOTALWEIGHT");
+                        stringObjectMap.put("WWEIGHT", wweight);
                     }
                 }
-                if (list.get(i).get("WWEIGHT") != null) {
+                if (stringObjectMap.get("WWEIGHT") != null) {
                     // 已完成量
-                    completedamount = (Double) list.get(i).get("PLANTOTALWEIGHT") - (Double) list.get(i).get("WWEIGHT");
+                    completedamount = (Double) stringObjectMap.get("PLANTOTALWEIGHT") - (Double) stringObjectMap.get("WWEIGHT");
                 } else {
-                    completedamount = (Double) list.get(i).get("PLANTOTALWEIGHT");
+                    completedamount = (Double) stringObjectMap.get("PLANTOTALWEIGHT");
                 }
-                list.get(i).put("COMPLETEDAMOUNT", completedamount);
+                stringObjectMap.put("COMPLETEDAMOUNT", completedamount);
             }
-
         }
         return GsonTools.toJson(findPageSummaryMonthly);
     }
@@ -1594,7 +1445,7 @@ public class SalesOrderController extends BaseController {
         if (list.size() > 0) {
             Double countweight = 0.0;// 计调下单总重量
             Double countroll = 0.0;// 计调下单总卷数
-            Double countyroll = 0.0;// 已生产总卷数
+            double countyroll = 0.0;// 已生产总卷数
             Double wweight = 0.0;// 未完成总重量
             Integer ytraycount = 0;// 已打包总托数
             Integer countray = 0;// 总托数
@@ -1602,11 +1453,11 @@ public class SalesOrderController extends BaseController {
             Integer intray = 0;// 在库总托数
             Double outweight = 0.0;// 出库总重量
             Integer outrtay = 0;// 出库总托数
-            for (int i = 0; i < list.size(); i++) {
-                Integer rollcount = 0; // 已生产的卷数
+            for (Map<String, Object> stringObjectMap : list) {
+                int rollcount = 0; // 已生产的卷数
                 Double outtrayweight = 0.0; // 出库重量
                 Double completedamount = 0.0;// 已完成量
-                Long ID = Long.valueOf(list.get(i).get("ID").toString());
+                Long ID = Long.valueOf(stringObjectMap.get("ID").toString());
                 map.clear();
                 map.put("producePlanDetailId", ID);
                 map.put("isAbandon", 0);
@@ -1651,24 +1502,23 @@ public class SalesOrderController extends BaseController {
                         }
                     }
                 }
-                list.get(i).put("RC", rollcount);
-                list.get(i).put("STOCKOUTWEIGHT", df.format(outweight));// 出库量
-                if ((Double) list.get(i).get("ORDERCOUNT") - (Integer) list.get(i).get("RC") > 0) {
-                    if (list.get(i).get("PLANTOTALWEIGHT") != null) {
+                stringObjectMap.put("RC", rollcount);
+                stringObjectMap.put("STOCKOUTWEIGHT", df.format(outweight));// 出库量
+                if ((Double) stringObjectMap.get("ORDERCOUNT") - (Integer) stringObjectMap.get("RC") > 0) {
+                    if (stringObjectMap.get("PLANTOTALWEIGHT") != null) {
                         // 未完成量
-                        wweight = ((Double) list.get(i).get("ORDERCOUNT") - (Integer) list.get(i).get("RC")) / (Double) list.get(i).get("ORDERCOUNT") * (Double) list.get(i).get("PLANTOTALWEIGHT");
-                        list.get(i).put("WWEIGHT", df.format(wweight));
+                        wweight = ((Double) stringObjectMap.get("ORDERCOUNT") - (Integer) stringObjectMap.get("RC")) / (Double) stringObjectMap.get("ORDERCOUNT") * (Double) stringObjectMap.get("PLANTOTALWEIGHT");
+                        stringObjectMap.put("WWEIGHT", df.format(wweight));
                     }
                 }
-                if (list.get(i).get("WWEIGHT") != null) {
+                if (stringObjectMap.get("WWEIGHT") != null) {
                     // 已完成量
-                    completedamount = (Double) list.get(i).get("PLANTOTALWEIGHT") - Double.valueOf(list.get(i).get("WWEIGHT").toString());
+                    completedamount = (Double) stringObjectMap.get("PLANTOTALWEIGHT") - Double.parseDouble(stringObjectMap.get("WWEIGHT").toString());
                 } else {
-                    completedamount = (Double) list.get(i).get("PLANTOTALWEIGHT");
+                    completedamount = (Double) stringObjectMap.get("PLANTOTALWEIGHT");
                 }
-                list.get(i).put("COMPLETEDAMOUNT", df.format(completedamount));
+                stringObjectMap.put("COMPLETEDAMOUNT", df.format(completedamount));
             }
-
         }
 
         String templateName = "月度订单产品汇总报表";
@@ -1682,10 +1532,9 @@ public class SalesOrderController extends BaseController {
         cellStyle.setBorderLeft(BorderStyle.THIN);
         cellStyle.setWrapText(true);
         Sheet sheet = wb.createSheet();
-        Integer xx = null;
-        Row row = null;
-        Cell cell = null;
-        String columnName[] = new String[]{"客户名称", "客户产品名称", "厂内名称", "订调下单量(kg)", "已完成量(kg)", "未完成量(kg)", "出货量(kg)",};
+        Row row;
+        Cell cell;
+        String[] columnName = new String[]{"客户名称", "客户产品名称", "厂内名称", "订调下单量(kg)", "已完成量(kg)", "未完成量(kg)", "出货量(kg)",};
         int r = 0;// 从第1行开始写数据
         row = sheet.createRow(r);
         cell = row.createCell(0);
@@ -1698,7 +1547,7 @@ public class SalesOrderController extends BaseController {
         sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 6));
         r++;
         row = sheet.createRow(r);
-        cell = row.createCell(0);
+        row.createCell(0);
         for (int a = 0; a < columnName.length; a++) {
             cell = row.createCell(a);
             cell.setCellValue(columnName[a]);
@@ -1714,63 +1563,54 @@ public class SalesOrderController extends BaseController {
         sheet.setColumnWidth(6, 25 * 256);
 
         row = sheet.createRow(r);
-        cell = row.createCell(0);
-        for (int i = 0; i < list.size(); i++) {
-            Double jdcount = (Double) list.get(i).get("PLANTOTALWEIGHT");
-            if (jdcount == null) {
-                jdcount = 0.0;
-            }
-            Double countroll = (Double) list.get(i).get("ORDERCOUNT");
-            Double wwc = (Double) list.get(i).get("ORDERCOUNT") - (Integer) list.get(i).get("RC");
+        row.createCell(0);
+        for (Map<String, Object> stringObjectMap : list) {
             row = sheet.createRow(r);
             for (int j = 0; j < columnName.length; j++) {
                 cell = row.createCell(j);
                 switch (j) {
                     case 0:
-                        cell.setCellValue(list.get(i).get("CONSUMERNAME").toString());
+                        cell.setCellValue(stringObjectMap.get("CONSUMERNAME").toString());
                         break;
                     case 1:
-                        cell.setCellValue(list.get(i).get("CONSUMERPRODUCTNAME").toString());
+                        cell.setCellValue(stringObjectMap.get("CONSUMERPRODUCTNAME").toString());
                         break;
                     case 2:
-                        cell.setCellValue(list.get(i).get("FACTORYPRODUCTNAME").toString());
+                        cell.setCellValue(stringObjectMap.get("FACTORYPRODUCTNAME").toString());
                         break;
                     case 3:
-                        if (list.get(i).get("PLANTOTALWEIGHT") != null) {
-                            cell.setCellValue(list.get(i).get("PLANTOTALWEIGHT").toString());
+                        if (stringObjectMap.get("PLANTOTALWEIGHT") != null) {
+                            cell.setCellValue(stringObjectMap.get("PLANTOTALWEIGHT").toString());
                         }
                         break;
                     case 4:
-                        if (list.get(i).get("COMPLETEDAMOUNT") != null) {
-                            cell.setCellValue(list.get(i).get("COMPLETEDAMOUNT").toString());
+                        if (stringObjectMap.get("COMPLETEDAMOUNT") != null) {
+                            cell.setCellValue(stringObjectMap.get("COMPLETEDAMOUNT").toString());
                         } else {
                             cell.setCellValue("0.00");
                         }
                         break;
                     case 5:
-                        if (list.get(i).get("WWEIGHT") != null) {
-                            cell.setCellValue(list.get(i).get("WWEIGHT").toString());
+                        if (stringObjectMap.get("WWEIGHT") != null) {
+                            cell.setCellValue(stringObjectMap.get("WWEIGHT").toString());
                         } else {
                             cell.setCellValue("0.00");
                         }
                         break;
                     case 6:
-                        if (list.get(i).get("STOCKOUTWEIGHT") != null) {
-                            cell.setCellValue(list.get(i).get("STOCKOUTWEIGHT").toString());
+                        if (stringObjectMap.get("STOCKOUTWEIGHT") != null) {
+                            cell.setCellValue(stringObjectMap.get("STOCKOUTWEIGHT").toString());
                         } else {
                             cell.setCellValue("0.00");
                         }
                         break;
-
                 }
             }
-
             r++;
-
         }
         row = sheet.createRow(r);
-        cell = row.createCell(0);
+        row.createCell(0);
         sheet.createFreezePane(0, 2);
-        HttpUtils.download(response,wb,templateName);
+        HttpUtils.download(response, wb, templateName);
     }
 }

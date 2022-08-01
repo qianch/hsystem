@@ -12,7 +12,6 @@ import java.util.Date;
 @Entity
 @Table(name = "hs_finishproduct_print_record")
 public class FinishedProductPrintRecord extends BaseEntity {
-
     @Desc("产品ID")
     private Long productId;
 

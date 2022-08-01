@@ -6,20 +6,17 @@
  */
 package com.bluebirdme.mes.produce.entity;
 
-import java.util.Date;
-import java.util.List;
+import com.bluebirdme.mes.core.annotation.Desc;
+import com.bluebirdme.mes.core.base.entity.BaseEntity;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.Index;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
-import com.bluebirdme.mes.btwManager.entity.BtwFilePrint;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.Index;
-
-import com.bluebirdme.mes.core.annotation.Desc;
-import com.bluebirdme.mes.core.base.entity.BaseEntity;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 成品信息
@@ -32,7 +29,6 @@ import com.bluebirdme.mes.core.base.entity.BaseEntity;
 @Table(name = "HS_FINISHPRODUCT")
 @DynamicInsert
 public class FinishedProduct extends BaseEntity {
-
     @Desc("成品客户信息ID")
     @Column(nullable = false)
     private Long productConsumerId;

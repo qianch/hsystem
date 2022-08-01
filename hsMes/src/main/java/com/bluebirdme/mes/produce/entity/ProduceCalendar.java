@@ -1,61 +1,58 @@
 package com.bluebirdme.mes.produce.entity;
 
-import java.util.Date;
+import com.bluebirdme.mes.core.annotation.Desc;
+import com.bluebirdme.mes.core.base.entity.BaseEntity;
+import org.hibernate.annotations.Index;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.Index;
-
-import com.bluebirdme.mes.core.annotation.Desc;
-import com.bluebirdme.mes.core.base.entity.BaseEntity;
+import java.util.Date;
 
 /**
  * 排产日历
+ *
  * @author Goofy
  * @Date 2016年11月1日 下午12:55:15
  */
 @Desc("排产日历")
 @Entity
-@Table(name="hs_produce_calendar")
+@Table(name = "hs_produce_calendar")
 public class ProduceCalendar extends BaseEntity {
-	
-	@Desc("销售订单号")
-	@Column(nullable=false)
-	@Index(name="salesOrderCode")
-	private String salesOrderCode;
-	
-	@Desc("开始时间")
-	@Column(nullable=false)
-	private Date startTime;
-	
-	@Desc("结束时间")
-	@Column(nullable=false)
-	private Date endTime;
+    @Desc("销售订单号")
+    @Column(nullable = false)
+    @Index(name = "salesOrderCode")
+    private String salesOrderCode;
 
-	public String getSalesOrderCode() {
-		return salesOrderCode;
-	}
+    @Desc("开始时间")
+    @Column(nullable = false)
+    private Date startTime;
 
-	public void setSalesOrderCode(String salesOrderCode) {
-		this.salesOrderCode = salesOrderCode;
-	}
+    @Desc("结束时间")
+    @Column(nullable = false)
+    private Date endTime;
 
-	public Date getStartTime() {
-		return startTime;
-	}
+    public String getSalesOrderCode() {
+        return salesOrderCode;
+    }
 
-	public void setStartTime(Date startTime) {
-		this.startTime = startTime;
-	}
+    public void setSalesOrderCode(String salesOrderCode) {
+        this.salesOrderCode = salesOrderCode;
+    }
 
-	public Date getEndTime() {
-		return endTime;
-	}
+    public Date getStartTime() {
+        return startTime;
+    }
 
-	public void setEndTime(Date endTime) {
-		this.endTime = endTime;
-	}
-	
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
 }

@@ -6,7 +6,6 @@
  */
 package com.bluebirdme.mes.produce.service.impl;
 
-import com.bluebirdme.mes.btwManager.entity.BtwFilePrint;
 import com.bluebirdme.mes.core.annotation.AnyExceptionRollback;
 import com.bluebirdme.mes.core.base.dao.IBaseDao;
 import com.bluebirdme.mes.core.base.entity.Filter;
@@ -28,7 +27,6 @@ import java.util.*;
 @Service
 @AnyExceptionRollback
 public class FinishedProductPrintRecordServiceImpl extends BaseServiceImpl implements IFinishedProductPrintRecordService {
-
     @Resource
     IFinishedProductPrintRecordDao finishedProductPrintRecordDao;
 
@@ -38,18 +36,16 @@ public class FinishedProductPrintRecordServiceImpl extends BaseServiceImpl imple
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
         return null;
     }
 
     public List<Map<String, Object>> findFinishedProductPrintRecords(Long productId) throws Exception {
-
         return finishedProductPrintRecordDao.findFinishedProductPrintRecords(productId);
     }
 
     public boolean saveFinishedProductPrintRecords(FinishedProduct finishedProduct, String userId) {
-
-        List<FinishedProductPrintRecord> listFinishedProductPrintRecordSave = new ArrayList<FinishedProductPrintRecord>();
+        List<FinishedProductPrintRecord> listFinishedProductPrintRecordSave = new ArrayList<>();
         for (FinishedProductPrintRecord finishedProductPrintRecord : finishedProduct.getListFinishedProductPrintRecord()) {
             finishedProductPrintRecord.setProductId(finishedProduct.getId());
             if (finishedProductPrintRecord.getId() == null) {
@@ -60,13 +56,10 @@ public class FinishedProductPrintRecordServiceImpl extends BaseServiceImpl imple
             finishedProductPrintRecord.setModifyUser(userId);
             listFinishedProductPrintRecordSave.add(finishedProductPrintRecord);
         }
-
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         map.put("productId", finishedProduct.getId());
         delete(FinishedProductPrintRecord.class, map);
-
         finishedProductPrintRecordDao.save(listFinishedProductPrintRecordSave.toArray(new FinishedProductPrintRecord[]{}));
-
         return true;
     }
 }

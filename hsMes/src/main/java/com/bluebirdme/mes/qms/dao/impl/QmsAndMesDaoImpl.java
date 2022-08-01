@@ -18,7 +18,6 @@ import java.util.Map;
 
 @Repository
 public class QmsAndMesDaoImpl extends BaseDaoImpl implements QmsAndMesDao {
-
     @Resource
     SessionFactory factory;
 
@@ -33,38 +32,38 @@ public class QmsAndMesDaoImpl extends BaseDaoImpl implements QmsAndMesDao {
     }
 
     @Override
-    public List<Map<String, Object>> findRollandPartByBatchCode(String batchCode,String deliveryCode) throws Exception{
-        Map<String,Object> map = new HashMap<>();
-        map.put("batchCode",batchCode);
-        map.put("deliveryCode",deliveryCode);
-        String sql= SQL.get(map,"find-RollandPart");
-        SQLQuery query=getSession().createSQLQuery(sql);
-        if(batchCode != null){
+    public List<Map<String, Object>> findRollandPartByBatchCode(String batchCode, String deliveryCode) throws Exception {
+        Map<String, Object> map = new HashMap<>();
+        map.put("batchCode", batchCode);
+        map.put("deliveryCode", deliveryCode);
+        String sql = SQL.get(map, "find-RollandPart");
+        SQLQuery query = getSession().createSQLQuery(sql);
+        if (batchCode != null) {
             query.setParameter("batchCode", batchCode);
         }
-        if(deliveryCode != null){
-            query.setParameter("deliveryCode",deliveryCode);
+        if (deliveryCode != null) {
+            query.setParameter("deliveryCode", deliveryCode);
         }
         query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
         return query.list();
     }
 
     @Override
-    public List<Map<String,Object>> selectBomByCode(String salesOrderId, String procBomCode) throws Exception{
-        Map<String,Object> map = new HashMap<>();
-        map.put("salesOrderId",salesOrderId);
-        map.put("procBomCode",procBomCode);
-        String sql=SQL.get(map,"select-procBomInfo");
-        SQLQuery query=getSession().createSQLQuery(sql);
+    public List<Map<String, Object>> selectBomByCode(String salesOrderId, String procBomCode) throws Exception {
+        Map<String, Object> map = new HashMap<>();
+        map.put("salesOrderId", salesOrderId);
+        map.put("procBomCode", procBomCode);
+        String sql = SQL.get(map, "select-procBomInfo");
+        SQLQuery query = getSession().createSQLQuery(sql);
         query.setParameter("salesOrderId", salesOrderId);
-        query.setParameter("procBomCode",procBomCode);
+        query.setParameter("procBomCode", procBomCode);
         query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
-        if(query.list().size() == 0){
+        if (query.list().size() == 0) {
             map.clear();
-            map.put("procBomCode",procBomCode);
-            sql=SQL.get(map,"select-procBomInfo1");
-            query=getSession().createSQLQuery(sql);
-            query.setParameter("procBomCode",procBomCode);
+            map.put("procBomCode", procBomCode);
+            sql = SQL.get(map, "select-procBomInfo1");
+            query = getSession().createSQLQuery(sql);
+            query.setParameter("procBomCode", procBomCode);
             query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
         }
         return query.list();
@@ -72,55 +71,53 @@ public class QmsAndMesDaoImpl extends BaseDaoImpl implements QmsAndMesDao {
 
     @Override
     public List<Map<String, Object>> selectOUTOrder(String deliveryCode, String batchCode) throws Exception {
-        Map<String,Object> map = new HashMap<>();
-        map.put("batchCode",batchCode);
-        map.put("deliveryCode",deliveryCode);
-        String sql= SQL.get(map,"select-outOrder");
-        SQLQuery query=getSession().createSQLQuery(sql);
+        Map<String, Object> map = new HashMap<>();
+        map.put("batchCode", batchCode);
+        map.put("deliveryCode", deliveryCode);
+        String sql = SQL.get(map, "select-outOrder");
+        SQLQuery query = getSession().createSQLQuery(sql);
         query.setParameter("batchCode", batchCode);
-        query.setParameter("deliveryCode",deliveryCode);
+        query.setParameter("deliveryCode", deliveryCode);
         query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
         return query.list();
     }
 
     @Override
     public List<Map<String, Object>> selectOUTOrderByDeliveryPlan(String deliveryCode, String batchCode) throws Exception {
-        Map<String,Object> map = new HashMap<>();
-        map.put("batchCode",batchCode);
-        map.put("deliveryCode",deliveryCode);
-        String sql= SQL.get(map,"select-outOrder-ByDeliveryPlan");
-        SQLQuery query=getSession().createSQLQuery(sql);
+        Map<String, Object> map = new HashMap<>();
+        map.put("batchCode", batchCode);
+        map.put("deliveryCode", deliveryCode);
+        String sql = SQL.get(map, "select-outOrder-ByDeliveryPlan");
+        SQLQuery query = getSession().createSQLQuery(sql);
         query.setParameter("batchCode", batchCode);
-        query.setParameter("deliveryCode",deliveryCode);
+        query.setParameter("deliveryCode", deliveryCode);
         query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
         return query.list();
     }
 
     @Override
     public List<Map<String, Object>> selectOUTOrderOfMirror(String deliveryCode, String batchCode) throws Exception {
-        Map<String,Object> map = new HashMap<>();
-        map.put("batchCode",batchCode);
-        map.put("deliveryCode",deliveryCode);
-        String sql= SQL.get(map,"select-outOrderMirror");
-        SQLQuery query=getSession().createSQLQuery(sql);
+        Map<String, Object> map = new HashMap<>();
+        map.put("batchCode", batchCode);
+        map.put("deliveryCode", deliveryCode);
+        String sql = SQL.get(map, "select-outOrderMirror");
+        SQLQuery query = getSession().createSQLQuery(sql);
         query.setParameter("batchCode", batchCode);
-        query.setParameter("deliveryCode",deliveryCode);
+        query.setParameter("deliveryCode", deliveryCode);
         query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
         return query.list();
     }
 
     @Override
     public List<Map<String, Object>> selectOUTOrderByDeliveryPlanOfMirror(String deliveryCode, String batchCode) throws Exception {
-        Map<String,Object> map = new HashMap<>();
-        map.put("batchCode",batchCode);
-        map.put("deliveryCode",deliveryCode);
-        String sql= SQL.get(map,"select-outOrder-ByDeliveryPlanMirror");
-        SQLQuery query=getSession().createSQLQuery(sql);
+        Map<String, Object> map = new HashMap<>();
+        map.put("batchCode", batchCode);
+        map.put("deliveryCode", deliveryCode);
+        String sql = SQL.get(map, "select-outOrder-ByDeliveryPlanMirror");
+        SQLQuery query = getSession().createSQLQuery(sql);
         query.setParameter("batchCode", batchCode);
-        query.setParameter("deliveryCode",deliveryCode);
+        query.setParameter("deliveryCode", deliveryCode);
         query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
         return query.list();
     }
-
-
 }

@@ -5,9 +5,9 @@ import com.bluebirdme.mes.core.base.service.IBaseService;
 
 /**
  * 成品类被管理Service
- * @author king
  *
+ * @author king
  */
-public interface IFinishedProductCategoryService  extends IBaseService {
+public interface IFinishedProductCategoryService extends IBaseService {
 
 }
