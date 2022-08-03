@@ -11,28 +11,29 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Map;
+
 @Service
 @AnyExceptionRollback
-public class ConsumerServiceImpl extends BaseServiceImpl implements
-		IConsumerService {
-	@Resource IConsumerDao consumerDao;
-	
-	@Override
-	protected IBaseDao getBaseDao() {
-		return consumerDao;
-	}
+public class ConsumerServiceImpl extends BaseServiceImpl implements IConsumerService {
+    @Resource
+    IConsumerDao consumerDao;
 
-	@Override
-	public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-		return consumerDao.findPageInfo(filter, page);
-	}
+    @Override
+    protected IBaseDao getBaseDao() {
+        return consumerDao;
+    }
 
-	public void delete(String ids) {
-		consumerDao.delete(ids);
-	}
+    @Override
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+        return consumerDao.findPageInfo(filter, page);
+    }
 
-	@Override
-	public void old(String ids) {
-		consumerDao.old(ids);
-	}
+    public void delete(String ids) {
+        consumerDao.delete(ids);
+    }
+
+    @Override
+    public void old(String ids) {
+        consumerDao.old(ids);
+    }
 }
