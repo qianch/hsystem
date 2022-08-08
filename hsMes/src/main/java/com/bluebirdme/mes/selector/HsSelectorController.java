@@ -1,22 +1,6 @@
 package com.bluebirdme.mes.selector;
 
-import java.util.HashMap;
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
-import org.xdemo.superutil.thirdparty.gson.GsonTools;
-
-import com.bluebirdme.mes.baseInfo.entity.BCBomVersion;
-import com.bluebirdme.mes.baseInfo.entity.BcBom;
-import com.bluebirdme.mes.baseInfo.entity.BcBomVersionDetail;
-import com.bluebirdme.mes.baseInfo.entity.FtcBomDetail;
-import com.bluebirdme.mes.baseInfo.entity.FtcBomVersion;
-import com.bluebirdme.mes.baseInfo.entity.TcBomVersion;
+import com.bluebirdme.mes.baseInfo.entity.*;
 import com.bluebirdme.mes.baseInfo.service.IBCBomVersionService;
 import com.bluebirdme.mes.baseInfo.service.IBcBomVersionDetailService;
 import com.bluebirdme.mes.baseInfo.service.IFtcBomService;
@@ -25,8 +9,16 @@ import com.bluebirdme.mes.common.service.ICommonService;
 import com.bluebirdme.mes.core.annotation.Journal;
 import com.bluebirdme.mes.core.base.controller.BaseController;
 import com.bluebirdme.mes.planner.produce.entity.ProducePlanDetail;
-import com.bluebirdme.mes.planner.produce.service.IProducePlanService;
 import com.bluebirdme.mes.produce.entity.FinishedProduct;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+import org.xdemo.superutil.thirdparty.gson.GsonTools;
+
+import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * 选择器界面
@@ -85,8 +77,6 @@ public class HsSelectorController extends BaseController {
     IBCBomVersionService bCBomVersionService;
     @Resource
     IBcBomVersionDetailService bcBomVersionDetailService;
-    @Resource
-    IProducePlanService producePlanService;
 
     @Resource
     ICommonService commonService;
@@ -97,7 +87,7 @@ public class HsSelectorController extends BaseController {
         if (bCBomVersion == null) {
             return null;
         }
-        HashMap<String, Object> map = new HashMap<String, Object>();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("packVersionId", bCBomVersion.getId());
         List<BcBomVersionDetail> li = bcBomVersionDetailService.findListByMap(BcBomVersionDetail.class, map);
         BcBom bom = bCBomVersionService.findById(BcBom.class, bCBomVersion.getPackBomId());
@@ -138,17 +128,14 @@ public class HsSelectorController extends BaseController {
         FinishedProduct product = commonService.findById(FinishedProduct.class, productId);
         String pack = "";
         String proc = "";
-
         if (product != null) {
             pack = product.getPackReq();
             proc = product.getProcReq();
         }
-
         if (ppd != null) {
             pack = ppd.getPackReq();
             proc = ppd.getProcReq();
         }
-
         return new ModelAndView(addReq, model.addAttribute("proc", proc).addAttribute("pack", pack));
     }
 
@@ -233,8 +220,7 @@ public class HsSelectorController extends BaseController {
 
     @Journal(name = "挑选打印模版")
     @RequestMapping(value = "selectorBtwFilePrint", method = RequestMethod.GET)
-    public ModelAndView selectorBtwFilePrint(Long btwFileId) throws Exception {
-
+    public ModelAndView selectorBtwFilePrint(Long btwFileId) {
         return new ModelAndView(selectorBtwFilePrintUrl, model.addAttribute("btwFileId", btwFileId));
     }
 
@@ -243,6 +229,5 @@ public class HsSelectorController extends BaseController {
     public String selectorCutTcBomMain() {
         return selectorCutTcBomMainUrl;
     }
-
 }
 

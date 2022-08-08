@@ -6,19 +6,21 @@
  */
 package com.bluebirdme.mes.siemens.barcode.service;
 
+import com.bluebirdme.mes.core.base.service.IBaseService;
+
 import java.util.List;
 import java.util.Map;
 
-import com.bluebirdme.mes.core.base.service.IBaseService;
-
 /**
- * 
  * @author 高飞
  * @Date 2017-8-3 20:38:40
  */
 public interface IFragmentBarcodeService extends IBaseService {
-	public void extraPrint(String barcodes,String printer,String user,String reason) throws Exception;
-	public void suit(String ctoCode,String part,String fragments,String user,String device) throws Exception;
-	public List<String> getFeedingFarbic(Long cutId);
-	public List<Map<String,Object>> getSuitInfo(String code);
+    void extraPrint(String barcodes, String printer, String user, String reason) throws Exception;
+
+    void suit(String ctoCode, String part, String fragments, String user, String device) throws Exception;
+
+    List<String> getFeedingFarbic(Long cutId);
+
+    List<Map<String, Object>> getSuitInfo(String code);
 }

@@ -1,256 +1,236 @@
 package com.bluebirdme.mes.siemens.barcode.entity;
 
-import java.lang.reflect.Field;
-import java.util.List;
+import com.bluebirdme.mes.core.annotation.Desc;
+import com.bluebirdme.mes.core.base.entity.BaseEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import org.xdemo.superutil.j2se.MapUtils;
-import org.xdemo.superutil.j2se.ReflectUtils;
-
-import com.bluebirdme.mes.core.annotation.Desc;
-import com.bluebirdme.mes.core.base.entity.BaseEntity;
-
 /**
  * 条码扫描错误记录
+ *
  * @author Goofy
  * @Date 2017年8月8日 下午2:23:47
  */
 @Desc("条码扫描错误记录")
 @Entity
-@Table(name="hs_siemens_suit_error_log")
+@Table(name = "hs_siemens_suit_error_log")
 public class SuitErrorLog extends BaseEntity {
-	
-	@Desc("条码号")
-	@Column(nullable=false)
-	private String fragmentBarcode;
+    @Desc("条码号")
+    @Column(nullable = false)
+    private String fragmentBarcode;
 
-	@Desc("打印类型")
-	@Column(nullable=false)
-	private String fragmentPrintType;
+    @Desc("打印类型")
+    @Column(nullable = false)
+    private String fragmentPrintType;
 
-	@Desc("任务单号")
-	@Column(nullable=false)
-	private String fragmentCtCode;
+    @Desc("任务单号")
+    @Column(nullable = false)
+    private String fragmentCtCode;
 
-	@Desc("订单号")
-	@Column(nullable=false)
-	private String fragmentOrderCode;
+    @Desc("订单号")
+    @Column(nullable = false)
+    private String fragmentOrderCode;
 
-	@Desc("批次号")
-	@Column(nullable=false)
-	private String fragmentBatchCode;
+    @Desc("批次号")
+    @Column(nullable = false)
+    private String fragmentBatchCode;
 
-	@Desc("派工单号")
-	@Column(nullable=false)
-	private String fragmentCtoCode;
+    @Desc("派工单号")
+    @Column(nullable = false)
+    private String fragmentCtoCode;
 
-	@Desc("客户简称")
-	@Column(nullable=false)
-	private String fragmentConsumerSimpleName;
+    @Desc("客户简称")
+    @Column(nullable = false)
+    private String fragmentConsumerSimpleName;
 
-	@Desc("客户大类")
-	@Column(nullable=false)
-	private String fragmentConsumerCategory;
+    @Desc("客户大类")
+    @Column(nullable = false)
+    private String fragmentConsumerCategory;
 
-	@Desc("部件名称")
-	@Column(nullable=false)
-	private String partName;
+    @Desc("部件名称")
+    @Column(nullable = false)
+    private String partName;
 
-	@Desc("小部件名称")
-	@Column(nullable=false)
-	private String fragmentName;
+    @Desc("小部件名称")
+    @Column(nullable = false)
+    private String fragmentName;
 
-	@Desc("组套任务单号")
-	@Column(nullable=false)
-	private String suitCtCode;
+    @Desc("组套任务单号")
+    @Column(nullable = false)
+    private String suitCtCode;
 
-	@Desc("组套订单号")
-	@Column(nullable=false)
-	private String suitOrderCode;
+    @Desc("组套订单号")
+    @Column(nullable = false)
+    private String suitOrderCode;
 
-	@Desc("组套批次号")
-	@Column(nullable=false)
-	private String suitBatchCode;
+    @Desc("组套批次号")
+    @Column(nullable = false)
+    private String suitBatchCode;
 
-	@Desc("组套派工单号")
-	@Column(nullable=false)
-	private String suitCtoCode;
+    @Desc("组套派工单号")
+    @Column(nullable = false)
+    private String suitCtoCode;
 
 
-	@Desc("错误信息")
-	@Column(nullable=false)
-	private String errorMsg;
+    @Desc("错误信息")
+    @Column(nullable = false)
+    private String errorMsg;
 
-	@Desc("扫描时间")
-	@Column(nullable=false)
-	private String scanTime;
-	
-	@Desc("操作人")
-	@Column(nullable=false)
-	private String scanUser;
-	
-	@Desc("部件条码")
-	@Column(nullable=false)
-	private String partBarcode;
+    @Desc("扫描时间")
+    @Column(nullable = false)
+    private String scanTime;
 
-	public String getFragmentBarcode() {
-		return fragmentBarcode;
-	}
+    @Desc("操作人")
+    @Column(nullable = false)
+    private String scanUser;
 
-	public void setFragmentBarcode(String fragmentBarcode) {
-		this.fragmentBarcode = fragmentBarcode;
-	}
+    @Desc("部件条码")
+    @Column(nullable = false)
+    private String partBarcode;
 
-	public String getFragmentPrintType() {
-		return fragmentPrintType;
-	}
+    public String getFragmentBarcode() {
+        return fragmentBarcode;
+    }
 
-	public void setFragmentPrintType(String fragmentPrintType) {
-		this.fragmentPrintType = fragmentPrintType;
-	}
+    public void setFragmentBarcode(String fragmentBarcode) {
+        this.fragmentBarcode = fragmentBarcode;
+    }
 
-	public String getFragmentCtCode() {
-		return fragmentCtCode;
-	}
+    public String getFragmentPrintType() {
+        return fragmentPrintType;
+    }
 
-	public void setFragmentCtCode(String fragmentCtCode) {
-		this.fragmentCtCode = fragmentCtCode;
-	}
+    public void setFragmentPrintType(String fragmentPrintType) {
+        this.fragmentPrintType = fragmentPrintType;
+    }
 
-	public String getFragmentOrderCode() {
-		return fragmentOrderCode;
-	}
+    public String getFragmentCtCode() {
+        return fragmentCtCode;
+    }
 
-	public void setFragmentOrderCode(String fragmentOrderCode) {
-		this.fragmentOrderCode = fragmentOrderCode;
-	}
+    public void setFragmentCtCode(String fragmentCtCode) {
+        this.fragmentCtCode = fragmentCtCode;
+    }
 
-	public String getFragmentBatchCode() {
-		return fragmentBatchCode;
-	}
+    public String getFragmentOrderCode() {
+        return fragmentOrderCode;
+    }
 
-	public void setFragmentBatchCode(String fragmentBatchCode) {
-		this.fragmentBatchCode = fragmentBatchCode;
-	}
+    public void setFragmentOrderCode(String fragmentOrderCode) {
+        this.fragmentOrderCode = fragmentOrderCode;
+    }
 
-	public String getFragmentCtoCode() {
-		return fragmentCtoCode;
-	}
+    public String getFragmentBatchCode() {
+        return fragmentBatchCode;
+    }
 
-	public void setFragmentCtoCode(String fragmentCtoCode) {
-		this.fragmentCtoCode = fragmentCtoCode;
-	}
+    public void setFragmentBatchCode(String fragmentBatchCode) {
+        this.fragmentBatchCode = fragmentBatchCode;
+    }
 
-	public String getFragmentConsumerSimpleName() {
-		return fragmentConsumerSimpleName;
-	}
+    public String getFragmentCtoCode() {
+        return fragmentCtoCode;
+    }
 
-	public void setFragmentConsumerSimpleName(String fragmentConsumerSimpleName) {
-		this.fragmentConsumerSimpleName = fragmentConsumerSimpleName;
-	}
+    public void setFragmentCtoCode(String fragmentCtoCode) {
+        this.fragmentCtoCode = fragmentCtoCode;
+    }
 
-	public String getFragmentConsumerCategory() {
-		return fragmentConsumerCategory;
-	}
+    public String getFragmentConsumerSimpleName() {
+        return fragmentConsumerSimpleName;
+    }
 
-	public void setFragmentConsumerCategory(String fragmentConsumerCategory) {
-		this.fragmentConsumerCategory = fragmentConsumerCategory;
-	}
+    public void setFragmentConsumerSimpleName(String fragmentConsumerSimpleName) {
+        this.fragmentConsumerSimpleName = fragmentConsumerSimpleName;
+    }
 
-	public String getPartName() {
-		return partName;
-	}
+    public String getFragmentConsumerCategory() {
+        return fragmentConsumerCategory;
+    }
 
-	public void setPartName(String partName) {
-		this.partName = partName;
-	}
+    public void setFragmentConsumerCategory(String fragmentConsumerCategory) {
+        this.fragmentConsumerCategory = fragmentConsumerCategory;
+    }
 
-	public String getFragmentName() {
-		return fragmentName;
-	}
+    public String getPartName() {
+        return partName;
+    }
 
-	public void setFragmentName(String fragmentName) {
-		this.fragmentName = fragmentName;
-	}
+    public void setPartName(String partName) {
+        this.partName = partName;
+    }
 
-	public String getSuitCtCode() {
-		return suitCtCode;
-	}
+    public String getFragmentName() {
+        return fragmentName;
+    }
 
-	public void setSuitCtCode(String suitCtCode) {
-		this.suitCtCode = suitCtCode;
-	}
+    public void setFragmentName(String fragmentName) {
+        this.fragmentName = fragmentName;
+    }
 
-	public String getSuitOrderCode() {
-		return suitOrderCode;
-	}
+    public String getSuitCtCode() {
+        return suitCtCode;
+    }
 
-	public void setSuitOrderCode(String suitOrderCode) {
-		this.suitOrderCode = suitOrderCode;
-	}
+    public void setSuitCtCode(String suitCtCode) {
+        this.suitCtCode = suitCtCode;
+    }
 
-	public String getSuitBatchCode() {
-		return suitBatchCode;
-	}
+    public String getSuitOrderCode() {
+        return suitOrderCode;
+    }
 
-	public void setSuitBatchCode(String suitBatchCode) {
-		this.suitBatchCode = suitBatchCode;
-	}
+    public void setSuitOrderCode(String suitOrderCode) {
+        this.suitOrderCode = suitOrderCode;
+    }
 
-	public String getSuitCtoCode() {
-		return suitCtoCode;
-	}
+    public String getSuitBatchCode() {
+        return suitBatchCode;
+    }
 
-	public void setSuitCtoCode(String suitCtoCode) {
-		this.suitCtoCode = suitCtoCode;
-	}
+    public void setSuitBatchCode(String suitBatchCode) {
+        this.suitBatchCode = suitBatchCode;
+    }
 
-	public String getErrorMsg() {
-		return errorMsg;
-	}
+    public String getSuitCtoCode() {
+        return suitCtoCode;
+    }
 
-	public void setErrorMsg(String errorMsg) {
-		this.errorMsg = errorMsg;
-	}
+    public void setSuitCtoCode(String suitCtoCode) {
+        this.suitCtoCode = suitCtoCode;
+    }
 
-	public String getScanTime() {
-		return scanTime;
-	}
+    public String getErrorMsg() {
+        return errorMsg;
+    }
 
-	public void setScanTime(String scanTime) {
-		this.scanTime = scanTime;
-	}
+    public void setErrorMsg(String errorMsg) {
+        this.errorMsg = errorMsg;
+    }
 
-	public String getScanUser() {
-		return scanUser;
-	}
+    public String getScanTime() {
+        return scanTime;
+    }
 
-	public void setScanUser(String scanUser) {
-		this.scanUser = scanUser;
-	}
+    public void setScanTime(String scanTime) {
+        this.scanTime = scanTime;
+    }
 
-	public String getPartBarcode() {
-		return partBarcode;
-	}
+    public String getScanUser() {
+        return scanUser;
+    }
 
-	public void setPartBarcode(String partBarcode) {
-		this.partBarcode = partBarcode;
-	}
-	
-	public static void main(String[] args) throws Exception {
-		List<Field> list=ReflectUtils.getFields(SuitErrorLog.class, false);
-		int i=0;
-		for(Field f:list){
-			System.out.println("rowData["+i+++"] = MapUtils.getAsStringIgnoreCase(row, \""+f.getName().toUpperCase()+"\");");
-		}
-		
-		for(Field f:list){
-			Desc d=f.getAnnotation(Desc.class);
-			System.out.print("\""+d.value()+"\",");
-		}
-	}
-	
+    public void setScanUser(String scanUser) {
+        this.scanUser = scanUser;
+    }
+
+    public String getPartBarcode() {
+        return partBarcode;
+    }
+
+    public void setPartBarcode(String partBarcode) {
+        this.partBarcode = partBarcode;
+    }
 }

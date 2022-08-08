@@ -6,42 +6,43 @@
  */
 package com.bluebirdme.mes.screenDisplay.service;
 
+import com.bluebirdme.mes.core.base.service.IBaseService;
+
 import java.util.List;
 import java.util.Map;
 
-import com.bluebirdme.mes.core.base.service.IBaseService;
-
 /**
- * 
  * @author 宋黎明
  * @Date 2016-11-16 11:25:41
  */
 public interface IScreenDisplayService extends IBaseService {
-	/**
-	 * 根据机台ip查询产品信息及生产进度
-	 * @param ip 机台ip
-	 * @return
-	 * @throws Exception
-	 */
-	public List<Map<String, Object>> findProductInfo(String ip) throws Exception ;
-	
-	/**
-	 * 根据机台ip查询产品优先信息及生产进度
-	 * @param ip 机台ip
-	 * @return
-	 * @throws Exception
-	 */
-	public List<Map<String, Object>> findFirstProductInfo(String ip) throws Exception ;
-	
-	/**
-	 * 根据产品id和设备id查询该机台生产数量
-	 * @param productId
-	 * @param deviceId
-	 * @return
-	 * @throws Exception
-	 */
-	public List<Map<String, Object>> findProduceNum(Long productId,Long deviceId) throws Exception;
-	
-	public List<Map<String, Object>> initCombox() throws Exception;
-	
+    /**
+     * 根据机台ip查询产品信息及生产进度
+     *
+     * @param ip 机台ip
+     * @return
+     * @throws Exception
+     */
+    List<Map<String, Object>> findProductInfo(String ip) throws Exception;
+
+    /**
+     * 根据机台ip查询产品优先信息及生产进度
+     *
+     * @param ip 机台ip
+     * @return
+     * @throws Exception
+     */
+    List<Map<String, Object>> findFirstProductInfo(String ip) throws Exception;
+
+    /**
+     * 根据产品id和设备id查询该机台生产数量
+     *
+     * @param productId
+     * @param deviceId
+     * @return
+     * @throws Exception
+     */
+    List<Map<String, Object>> findProduceNum(Long productId, Long deviceId) throws Exception;
+
+    List<Map<String, Object>> initCombox() throws Exception;
 }
