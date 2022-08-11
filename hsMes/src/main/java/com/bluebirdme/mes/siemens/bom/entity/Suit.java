@@ -1,9 +1,9 @@
 package com.bluebirdme.mes.siemens.bom.entity;
 
+import com.bluebirdme.mes.core.annotation.Desc;
+
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
-import com.bluebirdme.mes.core.annotation.Desc;
 
 /**
  * @author Goofy
@@ -11,7 +11,7 @@ import com.bluebirdme.mes.core.annotation.Desc;
  */
 @Desc("组套BOM")
 @Entity
-@Table(name="hs_siemens_suit_bom")
+@Table(name = "hs_siemens_suit_bom")
 public class Suit extends BaseSuit {
-	
+
 }

@@ -7,14 +7,16 @@
 package com.bluebirdme.mes.siemens.order.dao;
 
 import com.bluebirdme.mes.core.base.dao.IBaseDao;
+
 /**
- * 
  * @author 高飞
  * @Date 2017-7-26 10:56:16
  */
 
 public interface ICutTaskDao extends IBaseDao {
-	public String getSerial();
-	public void close(Integer closed,String id);
-	public int[] getSuitCountPerDrawings(Long partId,Long ctId);
+    String getSerial();
+
+    void close(Integer closed, String id);
+
+    int[] getSuitCountPerDrawings(Long partId, Long ctId);
 }

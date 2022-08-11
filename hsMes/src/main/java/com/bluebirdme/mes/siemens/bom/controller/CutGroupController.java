@@ -36,8 +36,9 @@ import java.util.Date;
 @RequestMapping("/cutGroup")
 @Journal(name = "组别管理")
 public class CutGroupController extends BaseController {
-
-    // 组别管理页面
+    /**
+     * 组别管理页面
+     */
     final String index = "siemens/group/cutGroup";
     final String addOrEdit = "siemens/group/cutGroupAddOrEdit";
 
@@ -60,7 +61,7 @@ public class CutGroupController extends BaseController {
     @ResponseBody
     @Journal(name = "获取组别管理裁剪人员列表信息")
     @RequestMapping("workshop/cut/users")
-    public String getCutUsers() throws Exception {
+    public String getCutUsers() {
         return GsonTools.toJson(cutGroupService.findCutWorkshopUsers());
     }
 
@@ -105,5 +106,4 @@ public class CutGroupController extends BaseController {
         cutGroupService.delete(CutGroup.class, ids);
         return Constant.AJAX_SUCCESS;
     }
-
 }

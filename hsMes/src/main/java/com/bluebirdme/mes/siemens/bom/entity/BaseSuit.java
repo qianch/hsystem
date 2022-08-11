@@ -1,213 +1,202 @@
 package com.bluebirdme.mes.siemens.bom.entity;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Transient;
-
 import com.bluebirdme.mes.core.annotation.Desc;
 import com.bluebirdme.mes.core.base.entity.BaseEntity;
 
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 /**
  * 组套BOM基类，还有裁剪任务单，派工单也会用到
+ *
  * @author Goofy
  * @Date 2017年7月31日 下午4:07:24
  */
 @MappedSuperclass
 public class BaseSuit extends BaseEntity {
-	
-	@Desc("套材BOM ID")
-	@Column(nullable = false)
-	private Long tcBomId;
+    @Desc("套材BOM ID")
+    @Column(nullable = false)
+    private Long tcBomId;
 
-	@Desc("小部件ID")
-	@Column(nullable = false)
-	private String fragmentId;
+    @Desc("小部件ID")
+    @Column(nullable = false)
+    private String fragmentId;
 
-	@Desc("小部件编码")
-	@Column(nullable = false)
-	private String fragmentCode;
+    @Desc("小部件编码")
+    @Column(nullable = false)
+    private String fragmentCode;
 
-	@Desc("小部件名称")
-	@Column(nullable = false)
-	private String fragmentName;
-	
-	@Desc("小部件重量")
-	@Column(nullable = false)
-	private Double fragmentWeight;
+    @Desc("小部件名称")
+    @Column(nullable = false)
+    private String fragmentName;
 
-	@Desc("长度(M)")
-	@Column(nullable = true)
-	private String fragmentLength;
+    @Desc("小部件重量")
+    @Column(nullable = false)
+    private Double fragmentWeight;
 
-	@Desc("宽度(M)")
-	@Column(nullable = true)
-	private String fragmentWidth;
-	
-	@Desc("部件ID")
-	@Column(nullable = false)
-	private Long partId;
-	
-	@Desc("部件名称")
-	@Column
-	private String partName;
-	
-	@Desc("胚布规格")
-	@Column(nullable = true)
-	private String farbicModel;
-	
-	@Desc("备注")
-	@Column(nullable = true, columnDefinition = "text")
-	private String fragmentMemo;;
-	
-	@Desc("数量")
-	@Column(nullable = false)
-	private Integer fragmentCountPerDrawings;
-	
-	@Desc("组套小部件数量")
-	@Column
-	private Integer suitCount;
-	
-	@Desc("排序")
-	@Column
-	private Integer suitSort;
+    @Desc("长度(M)")
+    @Column(nullable = true)
+    private String fragmentLength;
 
-	public Long getTcBomId() {
-		return tcBomId;
-	}
+    @Desc("宽度(M)")
+    @Column(nullable = true)
+    private String fragmentWidth;
 
-	public void setTcBomId(Long tcBomId) {
-		this.tcBomId = tcBomId;
-	}
+    @Desc("部件ID")
+    @Column(nullable = false)
+    private Long partId;
 
-	public String getFragmentId() {
-		return fragmentId;
-	}
+    @Desc("部件名称")
+    @Column
+    private String partName;
 
-	public void setFragmentId(String fragmentId) {
-		this.fragmentId = fragmentId;
-	}
+    @Desc("胚布规格")
+    @Column(nullable = true)
+    private String farbicModel;
 
-	public String getFragmentName() {
-		return fragmentName;
-	}
+    @Desc("备注")
+    @Column(nullable = true, columnDefinition = "text")
+    private String fragmentMemo;
+    ;
 
-	public void setFragmentName(String fragmentName) {
-		this.fragmentName = fragmentName;
-	}
+    @Desc("数量")
+    @Column(nullable = false)
+    private Integer fragmentCountPerDrawings;
 
-	public String getFragmentCode() {
-		return fragmentCode;
-	}
+    @Desc("组套小部件数量")
+    @Column
+    private Integer suitCount;
 
-	public void setFragmentCode(String fragmentCode) {
-		this.fragmentCode = fragmentCode;
-	}
+    @Desc("排序")
+    @Column
+    private Integer suitSort;
 
-	public Long getPartId() {
-		return partId;
-	}
+    public Long getTcBomId() {
+        return tcBomId;
+    }
 
-	public void setPartId(Long partId) {
-		this.partId = partId;
-	}
+    public void setTcBomId(Long tcBomId) {
+        this.tcBomId = tcBomId;
+    }
 
-	public Integer getSuitCount() {
-		return suitCount;
-	}
+    public String getFragmentId() {
+        return fragmentId;
+    }
 
-	public void setSuitCount(Integer suitCount) {
-		this.suitCount = suitCount;
-	}
+    public void setFragmentId(String fragmentId) {
+        this.fragmentId = fragmentId;
+    }
 
-	public Integer getSuitSort() {
-		return suitSort;
-	}
+    public String getFragmentName() {
+        return fragmentName;
+    }
 
-	public void setSuitSort(Integer suitSort) {
-		this.suitSort = suitSort;
-	}
+    public void setFragmentName(String fragmentName) {
+        this.fragmentName = fragmentName;
+    }
 
-	public String getPartName() {
-		return partName;
-	}
+    public String getFragmentCode() {
+        return fragmentCode;
+    }
 
-	public void setPartName(String partName) {
-		this.partName = partName;
-	}
-	
-	
-	
-	public Double getFragmentWeight() {
-		return fragmentWeight;
-	}
+    public void setFragmentCode(String fragmentCode) {
+        this.fragmentCode = fragmentCode;
+    }
 
-	public void setFragmentWeight(Double fragmentWeight) {
-		this.fragmentWeight = fragmentWeight;
-	}
+    public Long getPartId() {
+        return partId;
+    }
 
-	public String getFragmentLength() {
-		return fragmentLength;
-	}
+    public void setPartId(Long partId) {
+        this.partId = partId;
+    }
 
-	public void setFragmentLength(String fragmentLength) {
-		this.fragmentLength = fragmentLength;
-	}
+    public Integer getSuitCount() {
+        return suitCount;
+    }
 
-	public String getFragmentWidth() {
-		return fragmentWidth;
-	}
+    public void setSuitCount(Integer suitCount) {
+        this.suitCount = suitCount;
+    }
 
-	public void setFragmentWidth(String fragmentWidth) {
-		this.fragmentWidth = fragmentWidth;
-	}
+    public Integer getSuitSort() {
+        return suitSort;
+    }
 
-	public String getFarbicModel() {
-		return farbicModel;
-	}
+    public void setSuitSort(Integer suitSort) {
+        this.suitSort = suitSort;
+    }
 
-	public void setFarbicModel(String farbicModel) {
-		this.farbicModel = farbicModel;
-	}
+    public String getPartName() {
+        return partName;
+    }
 
-	public String getFragmentMemo() {
-		return fragmentMemo;
-	}
+    public void setPartName(String partName) {
+        this.partName = partName;
+    }
 
-	public void setFragmentMemo(String fragmentMemo) {
-		this.fragmentMemo = fragmentMemo;
-	}
 
-	public Integer getFragmentCountPerDrawings() {
-		return fragmentCountPerDrawings;
-	}
+    public Double getFragmentWeight() {
+        return fragmentWeight;
+    }
 
-	public void setFragmentCountPerDrawings(Integer fragmentCountPerDrawings) {
-		this.fragmentCountPerDrawings = fragmentCountPerDrawings;
-	}
+    public void setFragmentWeight(Double fragmentWeight) {
+        this.fragmentWeight = fragmentWeight;
+    }
 
-	/**
-	 * 将图纸BOM转换成一个其他的子类
-	 * @param clazz
-	 * @return
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
-	 * @throws NoSuchMethodException
-	 * @throws SecurityException
-	 */
-	public <T extends BaseSuit> T convert(Class<T> clazz) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException{
-		T t=clazz.newInstance();
-		Method ms[]=BaseSuit.class.getDeclaredMethods();
-		for(Method m:ms){
-			if(m.getName().startsWith("set")){
-				m.invoke(t, BaseSuit.class.getMethod(m.getName().replaceFirst("s", "g"), null).invoke(this, null));
-			}
-		}
-		return t;
-	}
+    public String getFragmentLength() {
+        return fragmentLength;
+    }
 
+    public void setFragmentLength(String fragmentLength) {
+        this.fragmentLength = fragmentLength;
+    }
+
+    public String getFragmentWidth() {
+        return fragmentWidth;
+    }
+
+    public void setFragmentWidth(String fragmentWidth) {
+        this.fragmentWidth = fragmentWidth;
+    }
+
+    public String getFarbicModel() {
+        return farbicModel;
+    }
+
+    public void setFarbicModel(String farbicModel) {
+        this.farbicModel = farbicModel;
+    }
+
+    public String getFragmentMemo() {
+        return fragmentMemo;
+    }
+
+    public void setFragmentMemo(String fragmentMemo) {
+        this.fragmentMemo = fragmentMemo;
+    }
+
+    public Integer getFragmentCountPerDrawings() {
+        return fragmentCountPerDrawings;
+    }
+
+    public void setFragmentCountPerDrawings(Integer fragmentCountPerDrawings) {
+        this.fragmentCountPerDrawings = fragmentCountPerDrawings;
+    }
+
+    /**
+     * 将图纸BOM转换成一个其他的子类
+     */
+    public <T extends BaseSuit> T convert(Class<T> clazz) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+        T t = clazz.newInstance();
+        Method ms[] = BaseSuit.class.getDeclaredMethods();
+        for (Method m : ms) {
+            if (m.getName().startsWith("set")) {
+                m.invoke(t, BaseSuit.class.getMethod(m.getName().replaceFirst("s", "g"), null).invoke(this, null));
+            }
+        }
+        return t;
+    }
 }

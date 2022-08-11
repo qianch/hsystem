@@ -8,9 +8,7 @@ package com.bluebirdme.mes.siemens.order.dao;
 
 import com.bluebirdme.mes.core.base.dao.IBaseDao;
 
-import org.springframework.stereotype.Repository;
 /**
- * 
  * @author 高飞
  * @Date 2019-4-15 18:44:42
  */

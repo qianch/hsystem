@@ -43,7 +43,7 @@ public class FragmentServiceImpl extends BaseServiceImpl implements IFragmentSer
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
         return fragmentDao.findPageInfo(filter, page);
     }
 
@@ -65,9 +65,6 @@ public class FragmentServiceImpl extends BaseServiceImpl implements IFragmentSer
 
     /**
      * 判断字符串是不是数字
-     *
-     * @param str
-     * @return
      */
     private boolean isNumber(String str) {
         try {
@@ -83,20 +80,24 @@ public class FragmentServiceImpl extends BaseServiceImpl implements IFragmentSer
      */
     @Override
     public ExcelImportMessage fragmentImport(Long fileId, Long tcBomId) throws Exception {
-        ExcelImportMessage msg = new ExcelImportMessage();// 存放错误提示信息
+        //存放错误提示信息
+        ExcelImportMessage msg = new ExcelImportMessage();
         if (fileId != null) {
-            Map<String, Object> map = new HashMap();
+            Map<String, Object> map = new HashMap<>();
             map.put("tcBomId", tcBomId);
             Attachment att = fragmentDao.findById(Attachment.class, fileId);
             if (att != null) {
                 String filePath = att.getFilePath();
-                List<Fragment> fragmentList = new ArrayList();
+                List<Fragment> fragmentList = new ArrayList<>();
                 // 读取文件
                 InputStream is = new FileInputStream(filePath);
                 Workbook wb = WorkbookFactory.create(is);
-                Sheet sheet = wb.getSheetAt(1); // 获取第2个sheet
-                int fa = -1;// 成品信息 标题所在的行
-                int fb = -1;// 图纸文件信息 标题所在的行
+                // 获取第2个sheet
+                Sheet sheet = wb.getSheetAt(1);
+                // 成品信息 标题所在的行
+                int fa = -1;
+                // 图纸文件信息 标题所在的行
+                int fb = -1;
                 Map<String, Integer> titleIndexMap = new LinkedHashMap<>();
                 for (int i = 0; i <= sheet.getLastRowNum(); i++) {
                     Row row = sheet.getRow(i);
@@ -159,25 +160,25 @@ public class FragmentServiceImpl extends BaseServiceImpl implements IFragmentSer
                             if (StringUtils.isNotBlank(row.getCell(0,
                                     Row.MissingCellPolicy.CREATE_NULL_AS_BLANK).toString())
                                     || StringUtils.isNotBlank(row.getCell(2,
-                                    Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)
+                                            Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)
                                     .toString())
                                     || StringUtils.isNotBlank(row.getCell(3,
-                                    Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)
+                                            Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)
                                     .toString())
                                     || StringUtils.isNotBlank(row.getCell(4,
-                                    Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)
+                                            Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)
                                     .toString())
                                     || StringUtils.isNotBlank(row.getCell(5,
-                                    Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)
+                                            Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)
                                     .toString())
                                     || StringUtils.isNotBlank(row.getCell(7,
-                                    Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)
+                                            Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)
                                     .toString())
                                     || StringUtils.isNotBlank(row.getCell(8,
-                                    Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)
+                                            Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)
                                     .toString())
                                     || StringUtils.isNotBlank(row.getCell(9,
-                                    Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)
+                                            Row.MissingCellPolicy.CREATE_NULL_AS_BLANK)
                                     .toString())) {// 判断有效行内内容不为空
                                 Fragment importFragment = new Fragment();
                                 for (String key : titleIndexMap.keySet()) {
@@ -243,7 +244,6 @@ public class FragmentServiceImpl extends BaseServiceImpl implements IFragmentSer
                                     }
                                     if (StringUtils.equals(key, "fragmentMemo")) {// 备注
                                         importFragment.setFragmentMemo(value);
-                                        continue;
                                     }
                                 }
                                 if (!msg.hasError()) {
@@ -278,18 +278,20 @@ public class FragmentServiceImpl extends BaseServiceImpl implements IFragmentSer
      */
     @Override
     public ExcelImportMessage drawingsImport(Long fileId, Long tcBomId, String partId) throws Exception {
-        ExcelImportMessage msg = new ExcelImportMessage();// 存放错误提示信息
+        // 存放错误提示信息
+        ExcelImportMessage msg = new ExcelImportMessage();
         if (fileId != null) {
-            Map<String, Object> tcBomIdMap = new HashMap();
+            Map<String, Object> tcBomIdMap = new HashMap<>();
             tcBomIdMap.put("tcBomId", tcBomId);
             Attachment att = fragmentDao.findById(Attachment.class, fileId);
             if (att != null) {
                 String filePath = att.getFilePath();
-                List<Drawings> drawingsList = new ArrayList();
+                List<Drawings> drawingsList = new ArrayList<>();
                 // 读取文件
                 InputStream is = new FileInputStream(filePath);
                 Workbook wb = WorkbookFactory.create(is);
-                Sheet sheet = wb.getSheetAt(2);// 获取已导入Excel的第3个sheet
+                // 获取已导入Excel的第3个sheet
+                Sheet sheet = wb.getSheetAt(2);
                 Map<String, Integer> titleIndexMap = new LinkedHashMap<>();
                 for (int k = 0; k <= sheet.getLastRowNum(); k++) {
                     Drawings drawings = new Drawings();
@@ -369,7 +371,8 @@ public class FragmentServiceImpl extends BaseServiceImpl implements IFragmentSer
                                 if (!titleIndexMap.containsKey("partName")) {
                                     msg.addMessage("第 " + (k + 1) + "行 \"部件名称\"标题不存在");
                                 }
-                            } else {// Excle内容
+                            } else {
+                                // Excle内容
                                 if (titleIndexMap.size() == 0) {
                                     msg.addMessage("请将图纸BOM放在第三个sheet页");
                                     break;
@@ -377,13 +380,16 @@ public class FragmentServiceImpl extends BaseServiceImpl implements IFragmentSer
                                 int index1 = titleIndexMap.get("fragmentCode");
                                 Cell cell1 = row2.getCell(index1, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
                                 String value1 = cell1.toString();
-                                if (StringUtils.isBlank(value1)) {// 小部件编码为空时
+                                // 小部件编码为空时
+                                if (StringUtils.isBlank(value1)) {
                                     msg.addMessage(k + 1, index1 + 1, "小部件编码不能为空");
-                                } else {// 小部件编码不为空时，判断小部件编码是否存在裁片中
+                                } else {
+                                    // 小部件编码不为空时，判断小部件编码是否存在裁片中
                                     List<Map<String, Object>> fragments = fragmentDao.findFragmentBytcBomIdAndfragmentCode(tcBomId, value1);
                                     if (fragments.size() == 0) {// 该小部件编码不存在裁片中
                                         msg.addMessage(k + 1, 1, "小部件编码(" + value1 + ")在裁片中不存在!");
-                                    } else {// 该小部件编码存在裁片中时
+                                    } else {
+                                        // 该小部件编码存在裁片中时
                                         Map<String, Object> fragment = fragments.get(0);
                                         for (String key1 : titleIndexMap.keySet()) {
                                             int index2 = titleIndexMap.get(key1);
@@ -465,7 +471,6 @@ public class FragmentServiceImpl extends BaseServiceImpl implements IFragmentSer
                                                         msg.addMessage(k + 1, index2 + 1, "出图顺序应为数字类型!");
                                                     }
                                                 }
-                                                continue;
                                             }
                                         }
 
@@ -496,10 +501,12 @@ public class FragmentServiceImpl extends BaseServiceImpl implements IFragmentSer
                 if (!msg.hasError()) {
                     tcBomIdMap.put("partId", Long.parseLong(partId));
                     List<Drawings> drawingsList1 = fragmentDao.findListByMap(Drawings.class, tcBomIdMap);
-                    for (Drawings drawings : drawingsList1) {// 保存之前，删除之前的数据
+                    for (Drawings drawings : drawingsList1) {
+                        // 保存之前，删除之前的数据
                         fragmentDao.delete(drawings);
                     }
-                    fragmentDao.saveList(drawingsList);// 保存导入数据
+                    // 保存导入数据
+                    fragmentDao.saveList(drawingsList);
                 }
             } else {
                 msg.addMessage("请重新选择导入文件!");

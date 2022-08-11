@@ -22,7 +22,7 @@ import com.bluebirdme.mes.siemens.order.service.ICutTaskOrderService;
  * @Date 2017年7月27日 下午2:46:04
  */
 public class CutTaskOrderExportHandler extends ExcelExportHandler {
-	private static Logger logger = LoggerFactory.getLogger(CutTaskOrderExportHandler.class);
+	private static final Logger logger = LoggerFactory.getLogger(CutTaskOrderExportHandler.class);
 	@Override
 	public ExcelContent getContent() {
 		return null;
@@ -44,7 +44,7 @@ public class CutTaskOrderExportHandler extends ExcelExportHandler {
 		
 		try {
 			Map<String,Object> result=cutTaskOrderService.findPageInfo(filter, page);
-			List<String[]> data=new ArrayList<String[]>();
+			List<String[]> data= new ArrayList<>();
 			List<Map<String,Object>> rows=(List<Map<String, Object>>) result.get("rows");
 			String[] rowData;
 			for(Map<String,Object> row:rows){

@@ -6,16 +6,16 @@
  */
 package com.bluebirdme.mes.siemens.bom.dao;
 
+import com.bluebirdme.mes.core.base.dao.IBaseDao;
+
 import java.util.List;
 import java.util.Map;
 
-import com.bluebirdme.mes.core.base.dao.IBaseDao;
 /**
- * 
  * @author 高飞
  * @Date 2017-7-20 13:16:40
  */
 
 public interface ISuitDao extends IBaseDao {
-	public List<Map<String, Object>> suitList(Long partId);
+    List<Map<String, Object>> suitList(Long partId);
 }
