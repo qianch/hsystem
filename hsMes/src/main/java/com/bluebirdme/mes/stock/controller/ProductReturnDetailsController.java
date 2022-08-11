@@ -4,10 +4,10 @@ import com.bluebirdme.mes.core.annotation.Journal;
 import com.bluebirdme.mes.core.annotation.NoAuth;
 import com.bluebirdme.mes.core.annotation.support.LogType;
 import com.bluebirdme.mes.core.base.controller.BaseController;
+import com.bluebirdme.mes.core.base.entity.Filter;
 import com.bluebirdme.mes.core.base.entity.Page;
 import com.bluebirdme.mes.stock.service.IProductReturnDetailService;
 import com.bluebirdme.mes.utils.HttpUtils;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -15,12 +15,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.annotation.Resource;
-import com.bluebirdme.mes.core.base.entity.Filter;
 import org.xdemo.superutil.j2se.PathUtils;
 import org.xdemo.superutil.thirdparty.gson.GsonTools;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -31,12 +29,14 @@ import java.util.Map;
 
 @Controller
 @RequestMapping("/productReturnDetails")
-@Journal(name="成品回库名细")
+@Journal(name = "成品回库名细")
 public class ProductReturnDetailsController extends BaseController {
-
     @Resource
     IProductReturnDetailService productReturnDetailService;
-    // 成品回库明细页面
+
+    /**
+     * 成品回库明细页面
+     */
     final String index = "stock/productReturnDetails";
 
     @Journal(name = "首页")
@@ -63,7 +63,7 @@ public class ProductReturnDetailsController extends BaseController {
         Map<String, Object> map = productReturnDetailService.findPageInfo(filter, page);
         List<Map<String, Object>> list = (List<Map<String, Object>>) map.get("rows");
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        InputStream is = new FileInputStream(new File(PathUtils.getClassPath() + "template/productReturnDetail.xlsx"));
+        InputStream is = new FileInputStream(PathUtils.getClassPath() + "template/productReturnDetail.xlsx");
         Workbook wb = new SXSSFWorkbook(new XSSFWorkbook(is));
         CellStyle cellStyle = wb.createCellStyle();
         cellStyle.setAlignment(HorizontalAlignment.CENTER);
@@ -72,8 +72,8 @@ public class ProductReturnDetailsController extends BaseController {
         cellStyle.setBorderRight(BorderStyle.THIN);
         cellStyle.setBorderTop(BorderStyle.THIN);
         Sheet sheet = wb.getSheetAt(0);
-        Row row = null;
-        Cell cell = null;
+        Row row;
+        Cell cell;
         int i = 2;
         for (Map<String, Object> data : list) {
             row = sheet.createRow(i++);
@@ -152,7 +152,7 @@ public class ProductReturnDetailsController extends BaseController {
                 }
             }
         }
-        HttpUtils.download(response,wb,"产品回库信息表");
+        HttpUtils.download(response, wb, "产品回库信息表");
         is.close();
     }
 }

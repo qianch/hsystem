@@ -20,8 +20,6 @@ import com.bluebirdme.mes.statistics.entity.TotalStatistics;
 import com.bluebirdme.mes.statistics.service.ITotalStatisticsService;
 import com.bluebirdme.mes.store.entity.*;
 import com.bluebirdme.mes.utils.HttpUtils;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -37,7 +35,6 @@ import org.xdemo.superutil.j2se.PathUtils;
 import org.xdemo.superutil.thirdparty.gson.GsonTools;
 
 import javax.annotation.Resource;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -55,8 +52,10 @@ import java.util.Map;
 @RequestMapping("/totalStatistics")
 @Journal(name = "综合统计")
 public class TotalStatisticsController extends BaseController {
-    private static Logger logger = LoggerFactory.getLogger(TotalStatisticsController.class);
-    // 综合统计页面
+    private static final Logger logger = LoggerFactory.getLogger(TotalStatisticsController.class);
+    /**
+     * 综合统计页面
+     */
     final String index = "statistics/totalStatistics";
     final String addOrEdit = "statistics/totalStatisticsAddOrEdit";
     final String dailyIndex = "statistics/dailyStatistics";
@@ -121,16 +120,16 @@ public class TotalStatisticsController extends BaseController {
                 Map<String, Object> findPageInfoByRoll = totalStatisticsService.findPageInfoByRoll(filter, page);
                 List<Map<String, Object>> rows = (List<Map<String, Object>>) findPageInfoByRoll.get("rows");
                 if (rows.size() > 0) {
-                    for (int i = 0; i < rows.size(); i++) {
-                        Object rollbarcode = rows.get(i).get("ROLLBARCODE");
-                        rows.get(i).put("ROLLCOUNT", 1);
+                    for (Map<String, Object> row : rows) {
+                        Object rollbarcode = row.get("ROLLBARCODE");
+                        row.put("ROLLCOUNT", 1);
                         if (rollbarcode != null) {
                             // 查询该条码是否成托
                             String topBarcode = TopBarcode(rollbarcode.toString());
                             if (topBarcode.indexOf("T") == 0 || topBarcode.indexOf("P") == 0) {
-                                rows.get(i).put("ISPACKED", 1);
+                                row.put("ISPACKED", 1);
                             } else {
-                                rows.get(i).put("ISPACKED", 0);
+                                row.put("ISPACKED", 0);
                             }
                         }
                     }
@@ -144,15 +143,15 @@ public class TotalStatisticsController extends BaseController {
                 Map<String, Object> findPageInfoByPart = totalStatisticsService.findPageInfoByPart(filter, page);
                 List<Map<String, Object>> rows = (List<Map<String, Object>>) findPageInfoByPart.get("rows");
                 if (rows.size() > 0) {
-                    for (int i = 0; i < rows.size(); i++) {
-                        Object rollbarcode = rows.get(i).get("ROLLBARCODE");
+                    for (Map<String, Object> row : rows) {
+                        Object rollbarcode = row.get("ROLLBARCODE");
                         if (rollbarcode != null) {
                             // 查询该条码是否成托
                             String topBarcode = TopBarcode(rollbarcode.toString());
                             if (topBarcode.indexOf("T") == 0 || topBarcode.indexOf("P") == 0) {
-                                rows.get(i).put("ISPACKED", 1);
+                                row.put("ISPACKED", 1);
                             } else {
-                                rows.get(i).put("ISPACKED", 0);
+                                row.put("ISPACKED", 0);
                             }
                         }
                     }
@@ -162,16 +161,16 @@ public class TotalStatisticsController extends BaseController {
                 Map<String, Object> findPageInfo = totalStatisticsService.findPageInfo(filter, page);
                 List<Map<String, Object>> rows = (List<Map<String, Object>>) findPageInfo.get("rows");
                 if (rows.size() > 0) {
-                    for (int i = 0; i < rows.size(); i++) {
-                        rows.get(i).put("rollCount", 1);
-                        Object rollbarcode = rows.get(i).get("ROLLBARCODE");
+                    for (Map<String, Object> row : rows) {
+                        row.put("rollCount", 1);
+                        Object rollbarcode = row.get("ROLLBARCODE");
                         if (rollbarcode != null) {
                             // 查询该条码是否成托
                             String topBarcode = TopBarcode(rollbarcode.toString());
                             if (topBarcode.indexOf("T") == 0 || topBarcode.indexOf("P") == 0) {
-                                rows.get(i).put("ISPACKED", 1);
+                                row.put("ISPACKED", 1);
                             } else {
-                                rows.get(i).put("ISPACKED", 0);
+                                row.put("ISPACKED", 0);
                             }
                         }
                     }
@@ -186,18 +185,18 @@ public class TotalStatisticsController extends BaseController {
         Map<String, Object> findPageInfo = totalStatisticsService.findPageInfo(filter, page);
         List<Map<String, Object>> rows = (List<Map<String, Object>>) findPageInfo.get("rows");
         if (rows.size() > 0) {
-            for (int i = 0; i < rows.size(); i++) {
-                Object rollbarcode = rows.get(i).get("ROLLBARCODE");
+            for (Map<String, Object> row : rows) {
+                Object rollbarcode = row.get("ROLLBARCODE");
                 if (rollbarcode.toString().indexOf("T") != 0 && rollbarcode.toString().indexOf("B") != 0 && rollbarcode.toString().indexOf("P") != 0) {
-                    rows.get(i).put("ROLLCOUNT", 1);
+                    row.put("ROLLCOUNT", 1);
                 }
                 if (rollbarcode.toString().indexOf("T") != 0 && rollbarcode.toString().indexOf("B") != 0) {
                     // 查询该条码是否成托
                     String topBarcode = TopBarcode(rollbarcode.toString());
                     if (topBarcode.indexOf("T") == 0 || topBarcode.indexOf("P") == 0) {
-                        rows.get(i).put("ISPACKED", 1);
+                        row.put("ISPACKED", 1);
                     } else {
-                        rows.get(i).put("ISPACKED", 0);
+                        row.put("ISPACKED", 0);
                     }
                 }
             }
@@ -251,8 +250,8 @@ public class TotalStatisticsController extends BaseController {
     public String lock(String ids, String complaintCode, String reasons) {
         List<TotalStatistics> list = totalStatisticsService.getByIds(ids);
         if (list.size() > 0) {
-            for (int i = 0; i < list.size(); i++) {
-                list.get(i).setIsNameLock(session.getAttribute(Constant.CURRENT_USER_NAME).toString());
+            for (TotalStatistics totalStatistics : list) {
+                totalStatistics.setIsNameLock(session.getAttribute(Constant.CURRENT_USER_NAME).toString());
             }
         }
         totalStatisticsService.saveLockState(list, complaintCode, reasons);
@@ -287,14 +286,14 @@ public class TotalStatisticsController extends BaseController {
         String result = "";
         // 最顶级的条码，默认为当前查询条码，如果有父级条码，改为父级条码，用于最后查询拼装树状结构
         String topBarcode = barcode;
-        HashMap<String, Object> partMap = new HashMap();
+        HashMap<String, Object> partMap = new HashMap<>();
         partMap.put("partBarcode", barcode);
         // 查询出对应的箱条码信息，如果没有，查询托条码信息
         BoxRoll part = totalStatisticsService.findUniqueByMap(BoxRoll.class, partMap);
         // 根据条码查询托箱卷关系组织树状关系
         // 如果条码号R/P开头，查询卷箱关系中是否存在箱，如果有箱，查询箱条码的是否有父级托关系，如果没有箱，查询是否在托中，如果都没有，直接返回卷条码
         if (barcode.startsWith("R")) {
-            HashMap<String, Object> map = new HashMap();
+            HashMap<String, Object> map = new HashMap<>();
             map.put("rollBarcode", barcode);
             // 查询出对应的箱条码信息，如果没有，查询托条码信息
             BoxRoll br = totalStatisticsService.findUniqueByMap(BoxRoll.class, map);
@@ -316,7 +315,7 @@ public class TotalStatisticsController extends BaseController {
                 }
             }
         } else if (barcode.startsWith("P") && part != null) {
-            HashMap<String, Object> map = new HashMap<String, Object>();
+            HashMap<String, Object> map = new HashMap<>();
             map.put("partBarcode", barcode);
             // 根据关系查询出顶级节点
             map.clear();
@@ -338,14 +337,14 @@ public class TotalStatisticsController extends BaseController {
 
         // 如果顶级条码号B开头，查询卷箱关系补充卷条码在树状结构
         if (topBarcode.startsWith("B")) {
-            HashMap<String, Object> map = new HashMap();
+            HashMap<String, Object> map = new HashMap<>();
             map.put("boxBarcode", topBarcode);
             List<BoxRoll> boxrollList = totalStatisticsService.findListByMap(BoxRoll.class, map);
             ProductInfoTreeStruct pdInfoStruct = new ProductInfoTreeStruct();
             pdInfoStruct.setId(topBarcode);
             pdInfoStruct.setText(topBarcode);
             pdInfoStruct.setState("closed");
-            List<ProductInfoTreeStruct> childrenList = new ArrayList<ProductInfoTreeStruct>();
+            List<ProductInfoTreeStruct> childrenList = new ArrayList<>();
             for (BoxRoll br : boxrollList) {
                 ProductInfoTreeStruct pdInfo = new ProductInfoTreeStruct();
                 pdInfo.setId(br.getRollBarcode() != null ? br.getRollBarcode() : br.getPartBarcode());
@@ -358,14 +357,14 @@ public class TotalStatisticsController extends BaseController {
         }
         // 如果顶级条码号T开头，查询托箱卷关系，补充箱条码和卷条码和箱条码所包含的卷条码信息，组织树状结构
         else if (topBarcode.startsWith("T") || topBarcode.startsWith("P")) {
-            HashMap<String, Object> map = new HashMap();
+            HashMap<String, Object> map = new HashMap<>();
             map.put("trayBarcode", topBarcode);
             List<TrayBoxRoll> tbrList = totalStatisticsService.findListByMap(TrayBoxRoll.class, map);
             ProductInfoTreeStruct pdInfoStruct = new ProductInfoTreeStruct();
             pdInfoStruct.setId(topBarcode);
             pdInfoStruct.setText(topBarcode);
             pdInfoStruct.setState("closed");
-            List<ProductInfoTreeStruct> childrenList = new ArrayList<ProductInfoTreeStruct>();
+            List<ProductInfoTreeStruct> childrenList = new ArrayList<>();
             for (TrayBoxRoll tbr : tbrList) {
                 if (tbr.getRollBarcode() != null) {
                     ProductInfoTreeStruct pdInfo = new ProductInfoTreeStruct();
@@ -386,7 +385,7 @@ public class TotalStatisticsController extends BaseController {
                     pdInfo.setId(tbr.getBoxBarcode());
                     pdInfo.setText(tbr.getBoxBarcode());
                     pdInfo.setState("closed");
-                    List<ProductInfoTreeStruct> boxchildrenList = new ArrayList();
+                    List<ProductInfoTreeStruct> boxchildrenList = new ArrayList<>();
                     map.clear();
                     map.put("boxBarcode", tbr.getBoxBarcode());
                     List<BoxRoll> brlist = totalStatisticsService.findListByMap(BoxRoll.class, map);
@@ -419,8 +418,8 @@ public class TotalStatisticsController extends BaseController {
     @ResponseBody
     @Journal(name = "获取卷条码信息")
     @RequestMapping(value = "productInfo", method = RequestMethod.POST)
-    public String productInfo(String barcode) throws Exception {
-        HashMap<String, Object> map = new HashMap<String, Object>();
+    public String productInfo(String barcode) {
+        HashMap<String, Object> map = new HashMap<>();
         map.put("rollBarcode", barcode);
         TotalStatistics ts = totalStatisticsService.findUniqueByMap(TotalStatistics.class, map);
         return GsonTools.toJson(ts);
@@ -433,12 +432,12 @@ public class TotalStatisticsController extends BaseController {
         if (barcode.startsWith("T") || barcode.startsWith("B") || barcode.startsWith("PHS")) {
             return ajaxError("只能修改卷重,部件重量");
         }
-        if (barcode.startsWith("R")){
-            HashMap<String, Object> map = new HashMap<String, Object>();
+        if (barcode.startsWith("R")) {
+            HashMap<String, Object> map = new HashMap<>();
             map.put("rollBarcode", barcode);
             Roll roll = totalStatisticsService.findUniqueByMap(Roll.class, map);
-            if (roll.getRollWeight() == null){
-               return ajaxError("没有称重，请先称重！");
+            if (roll.getRollWeight() == null) {
+                return ajaxError("没有称重，请先称重！");
             }
         }
         totalStatisticsService.changeInfo(barcode, parentBarocde, topBarcode, newWeight);
@@ -448,14 +447,14 @@ public class TotalStatisticsController extends BaseController {
     @NoLogin
     @RequestMapping(value = "up111", method = RequestMethod.GET)
     public String updateTotalStaticsModel() {
-        HashMap<String, Object> map1 = new HashMap();
+        HashMap<String, Object> map1 = new HashMap<>();
         map1.put("productModel", null);
         List<Tray> li = totalStatisticsService.findListByMap(Tray.class, map1);
         for (Tray ty : li) {
             if (ty.getProductModel() != null) {
                 continue;
             }
-            HashMap<String, Object> map = new HashMap<String, Object>();
+            HashMap<String, Object> map = new HashMap<>();
             map.put("trayBarcode", ty.getTrayBarcode());
             List<TrayBoxRoll> tbrList = totalStatisticsService.findListByMap(TrayBoxRoll.class, map);
             if (tbrList.size() > 0) {
@@ -530,13 +529,13 @@ public class TotalStatisticsController extends BaseController {
     @ResponseBody
     @Journal(name = "查询最顶级的条码")
     @RequestMapping("TopBarcode")
-    public String TopBarcode(String barcode) throws Exception {
+    public String TopBarcode(String barcode) {
         // 最顶级的条码，默认为当前查询条码，如果有父级条码，改为父级条码，用于最后查询拼装树状结构
         String topBarcode = barcode;
         // 根据条码查询托箱卷关系组织树状关系
         // 如果条码号R/P开头，查询卷箱关系中是否存在箱，如果有箱，查询箱条码的是否有父级托关系，如果没有箱，查询是否在托中，如果都没有，直接返回卷条码
         if (barcode.startsWith("R")) {
-            HashMap<String, Object> map = new HashMap();
+            HashMap<String, Object> map = new HashMap<>();
             map.put("rollBarcode", barcode);
             // 查询出对应的箱条码信息，如果没有，查询托条码信息
             BoxRoll br = totalStatisticsService.findUniqueByMap(BoxRoll.class, map);
@@ -558,7 +557,7 @@ public class TotalStatisticsController extends BaseController {
                 }
             }
         } else if (barcode.startsWith("P")) {
-            HashMap<String, Object> map = new HashMap<String, Object>();
+            HashMap<String, Object> map = new HashMap<>();
             map.put("partBarcode", barcode);
             // 查询出对应的箱条码信息，如果没有，查询托条码信息
             BoxRoll br = totalStatisticsService.findUniqueByMap(BoxRoll.class, map);
@@ -580,7 +579,7 @@ public class TotalStatisticsController extends BaseController {
                 }
             }
         } else if (barcode.startsWith("B")) {
-            HashMap<String, Object> map = new HashMap<String, Object>();
+            HashMap<String, Object> map = new HashMap<>();
             map.put("boxBarcode", barcode);
             TrayBoxRoll tbr = totalStatisticsService.findUniqueByMap(TrayBoxRoll.class, map);
             if (tbr != null) {
@@ -593,10 +592,10 @@ public class TotalStatisticsController extends BaseController {
     @NoAuth
     @ResponseBody
     @Journal(name = "导出生产统计Excel明细2", logType = LogType.DB)
-    @RequestMapping(value="exportDailyStatistics")
-    public void exportDailyStatistics(Filter filter, String searchType) throws Exception{
-        SXSSFWorkbook wb = totalStatisticsService.exportDailyStatistics(filter,searchType);
-        HttpUtils.download(response, wb,  "生产统计表");
+    @RequestMapping(value = "exportDailyStatistics")
+    public void exportDailyStatistics(Filter filter, String searchType) throws Exception {
+        SXSSFWorkbook wb = totalStatisticsService.exportDailyStatistics(filter, searchType);
+        HttpUtils.download(response, wb, "生产统计表");
     }
 
     @NoAuth
@@ -605,7 +604,7 @@ public class TotalStatisticsController extends BaseController {
     @RequestMapping(value = "export1")
     public void export1(String rollBarcode, String searchType, String CONSUMERNAME, String name, String batchCode, String productModel, String rollqualitygradecode, String deviceCode, String salesOrderCode, String state, String start, String end, String loginName, String producePlanCode, String isAbandon, String isOpened) throws Exception {
         Page page = new Page();
-        page.setAll(1);// 全部显示
+        page.setAll(1);
         page.setRows(999);
         Filter filter = new Filter();
         HashMap<String, String> filterMap = new HashMap<>();
@@ -674,7 +673,7 @@ public class TotalStatisticsController extends BaseController {
         }
 
         filter.setFilter(filterMap);
-        Map<String, Object> findPageInfo = new HashMap();
+        Map<String, Object> findPageInfo = new HashMap<>();
         if (filter.get("searchType") != null) {
             if (filter.get("searchType").equals("roll") && filter.get("rollBarcode") == null) {
                 filter.set("searchType", null);
@@ -682,15 +681,15 @@ public class TotalStatisticsController extends BaseController {
                 findPageInfo = totalStatisticsService.findPageInfoByRoll(filter, page);
                 List<Map<String, Object>> rows = (List<Map<String, Object>>) findPageInfo.get("rows");
                 if (rows.size() > 0) {
-                    for (int i = 0; i < rows.size(); i++) {
-                        Object rollbarcode = rows.get(i).get("ROLLBARCODE");
+                    for (Map<String, Object> row : rows) {
+                        Object rollbarcode = row.get("ROLLBARCODE");
                         if (rollbarcode != null) {
                             // 查询该条码是否成托
                             String topBarcode = TopBarcode(rollbarcode.toString());
                             if (topBarcode.indexOf("T") == 0) {
-                                rows.get(i).put("ISPACKED", 1);
+                                row.put("ISPACKED", 1);
                             } else {
-                                rows.get(i).put("ISPACKED", 0);
+                                row.put("ISPACKED", 0);
                             }
                         }
                     }
@@ -728,15 +727,15 @@ public class TotalStatisticsController extends BaseController {
                 findPageInfo = totalStatisticsService.findPageInfo(filter, page);
                 List<Map<String, Object>> rows = (List<Map<String, Object>>) findPageInfo.get("rows");
                 if (rows.size() > 0) {
-                    for (int i = 0; i < rows.size(); i++) {
-                        Object rollbarcode = rows.get(i).get("ROLLBARCODE");
+                    for (Map<String, Object> row : rows) {
+                        Object rollbarcode = row.get("ROLLBARCODE");
                         if (rollbarcode != null) {
                             // 查询该条码是否成托
                             String topBarcode = TopBarcode(rollbarcode.toString());
                             if (topBarcode.indexOf("T") == 0) {
-                                rows.get(i).put("ISPACKED", 1);
+                                row.put("ISPACKED", 1);
                             } else {
-                                rows.get(i).put("ISPACKED", 0);
+                                row.put("ISPACKED", 0);
                             }
                         }
                     }
@@ -757,16 +756,16 @@ public class TotalStatisticsController extends BaseController {
 
         List<Map<String, Object>> rows = (List) findPageInfo.get("rows");
         if (rows.size() > 0) {
-            for (int i = 0; i < rows.size(); i++) {
-                Object rollbarcode = rows.get(i).get("ROLLBARCODE");
+            for (Map<String, Object> row : rows) {
+                Object rollbarcode = row.get("ROLLBARCODE");
                 if (rollbarcode != null) {
                     if (rollbarcode.toString().indexOf("T") != 0 && rollbarcode.toString().indexOf("B") != 0) {
                         // 查询该条码是否成托
                         String topBarcode = TopBarcode(rollbarcode.toString());
                         if (topBarcode.indexOf("T") == 0 || topBarcode.indexOf("P") == 0) {
-                            rows.get(i).put("ISPACKED", 1);
+                            row.put("ISPACKED", 1);
                         } else {
-                            rows.get(i).put("ISPACKED", 0);
+                            row.put("ISPACKED", 0);
                         }
                     }
                 }
@@ -784,12 +783,12 @@ public class TotalStatisticsController extends BaseController {
         cellStyle.setWrapText(true);
         Sheet sheet = wb.createSheet();
         Integer xx = null;
-        Row row = null;
-        Cell cell = null;
-        String columnName[] = new String[]{"条码号", "条码类型", "计划单号", "订单号", "客户名称", "产品规格", "批次号", "质量等级", "机台号", "车间", "卷重（kg）", "门幅（mm）",
+        Row row;
+        Cell cell;
+        String[] columnName = new String[]{"条码号", "条码类型", "计划单号", "订单号", "客户名称", "产品规格", "批次号", "质量等级", "机台号", "车间", "卷重（kg）", "门幅（mm）",
                 "称重重量（kg）", "卷长（m）", "实际卷长（m）", "卷数", "生产时间", "操作人", "库存状态",
                 "状态", "是否作废", "是否打包", "是否拆包", "备注"};
-        int r = 0;// 从第1行开始写数据
+        int r = 0;
         row = sheet.createRow(r);
         cell = row.createCell(0);
         cell.setCellValue("浙江恒石纤维基业有限公司");
@@ -801,7 +800,7 @@ public class TotalStatisticsController extends BaseController {
         sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 23));
         r++;
         row = sheet.createRow(r);
-        cell = row.createCell(0);
+        row.createCell(0);
         for (int a = 0; a < columnName.length; a++) {
             cell = row.createCell(a);
             cell.setCellValue(columnName[a]);
@@ -832,155 +831,154 @@ public class TotalStatisticsController extends BaseController {
         sheet.setColumnWidth(22, 10 * 256);
         sheet.setColumnWidth(23, 10 * 256);
         row = sheet.createRow(r);
-        cell = row.createCell(0);
-        for (int i = 0; i < rows.size(); i++) {
+        row.createCell(0);
+        for (Map<String, Object> stringObjectMap : rows) {
             row = sheet.createRow(r);
             for (int j = 0; j < columnName.length; j++) {
                 cell = row.createCell(j);
                 switch (j) {
                     case 0:
-                        cell.setCellValue(rows.get(i).get("ROLLBARCODE").toString());
+                        cell.setCellValue(stringObjectMap.get("ROLLBARCODE").toString());
                         break;
                     case 1:
-                        if (rows.get(i).get("BARCODETYPE").equals("tray")) {
+                        if (stringObjectMap.get("BARCODETYPE").equals("tray")) {
                             cell.setCellValue("托条码");
-                        } else if (rows.get(i).get("BARCODETYPE").equals("box")) {
+                        } else if (stringObjectMap.get("BARCODETYPE").equals("box")) {
                             cell.setCellValue("箱条码");
                         } else {
                             cell.setCellValue("卷条码");
                         }
                         break;
                     case 2:
-
-                        if (rows.get(i).get("PRODUCEPLANCODE") != null) {
-                            cell.setCellValue(rows.get(i).get("PRODUCEPLANCODE")
+                        if (stringObjectMap.get("PRODUCEPLANCODE") != null) {
+                            cell.setCellValue(stringObjectMap.get("PRODUCEPLANCODE")
                                     .toString());
                         } else {
                             cell.setCellValue("");
                         }
                         break;
                     case 3:
-                        cell.setCellValue(rows.get(i).get("SALESORDERCODE").toString());
+                        cell.setCellValue(stringObjectMap.get("SALESORDERCODE").toString());
                         break;
                     case 4:
-                        cell.setCellValue(rows.get(i).get("CONSUMERNAME").toString());
+                        cell.setCellValue(stringObjectMap.get("CONSUMERNAME").toString());
                         break;
                     case 5:
-                        if (rows.get(i).get("PRODUCTMODEL") != null) {
-                            cell.setCellValue(rows.get(i).get("PRODUCTMODEL").toString());
+                        if (stringObjectMap.get("PRODUCTMODEL") != null) {
+                            cell.setCellValue(stringObjectMap.get("PRODUCTMODEL").toString());
                         }
                         break;
                     case 6:
-                        cell.setCellValue(rows.get(i).get("BATCHCODE").toString());
+                        cell.setCellValue(stringObjectMap.get("BATCHCODE").toString());
                         break;
                     case 7:
-                        cell.setCellValue(rows.get(i).get("ROLLQUALITYGRADECODE").toString());
+                        cell.setCellValue(stringObjectMap.get("ROLLQUALITYGRADECODE").toString());
                         break;
                     case 8:
-                        if (rows.get(i).get("DEVICECODE") != null) {
-                            cell.setCellValue(rows.get(i).get("DEVICECODE").toString());
+                        if (stringObjectMap.get("DEVICECODE") != null) {
+                            cell.setCellValue(stringObjectMap.get("DEVICECODE").toString());
                         }
                         break;
                     case 9:
-                        cell.setCellValue(rows.get(i).get("NAME").toString());
+                        cell.setCellValue(stringObjectMap.get("NAME").toString());
                         break;
                     case 10:
-                        if (rows.get(i).get("ROLLWEIGHT") != null) {
-                            cell.setCellValue((Double) rows.get(i).get("ROLLWEIGHT"));
+                        if (stringObjectMap.get("ROLLWEIGHT") != null) {
+                            cell.setCellValue((Double) stringObjectMap.get("ROLLWEIGHT"));
                         }
                         break;
                     case 11:
-                        if (rows.get(i).get("PRODUCTWIDTH") != null) {
-                            cell.setCellValue((Double) rows.get(i).get("PRODUCTWIDTH"));
+                        if (stringObjectMap.get("PRODUCTWIDTH") != null) {
+                            cell.setCellValue((Double) stringObjectMap.get("PRODUCTWIDTH"));
                         }
                         break;
                     case 12:
-                        if (rows.get(i).get("PRODUCTWEIGHT") != null) {
-                            cell.setCellValue((Double) rows.get(i).get("PRODUCTWEIGHT"));
+                        if (stringObjectMap.get("PRODUCTWEIGHT") != null) {
+                            cell.setCellValue((Double) stringObjectMap.get("PRODUCTWEIGHT"));
                         }
                         break;
                     case 13:
-                        if (rows.get(i).get("PRODUCTLENGTH") != null) {
-                            cell.setCellValue((Double) rows.get(i).get("PRODUCTLENGTH"));
+                        if (stringObjectMap.get("PRODUCTLENGTH") != null) {
+                            cell.setCellValue((Double) stringObjectMap.get("PRODUCTLENGTH"));
                         } else {
                             cell.setCellValue("0.00");
                         }
                         break;
                     case 14:
-                        if (rows.get(i).get("ROLLREALLENGTH") != null) {
-                            cell.setCellValue((Double) rows.get(i).get("ROLLREALLENGTH"));
+                        if (stringObjectMap.get("ROLLREALLENGTH") != null) {
+                            cell.setCellValue((Double) stringObjectMap.get("ROLLREALLENGTH"));
                         } else {
                             cell.setCellValue("0.00");
                         }
                         break;
                     case 15:
-                        if (rows.get(i).get("ROLLBARCODE").toString().startsWith("R")) {
+                        if (stringObjectMap.get("ROLLBARCODE").toString().startsWith("R")) {
                             cell.setCellValue(1);
                         }
-                        if (rows.get(i).get("ROLLCOUNT") != null) {
-                            cell.setCellValue(rows.get(i).get("ROLLCOUNT").toString());
+                        if (stringObjectMap.get("ROLLCOUNT") != null) {
+                            cell.setCellValue(stringObjectMap.get("ROLLCOUNT").toString());
                         }
                         break;
                     case 16:
-                        if (rows.get(i).get("ROLLOUTPUTTIME") != null) {
-                            cell.setCellValue(rows.get(i).get("ROLLOUTPUTTIME").toString());
+                        if (stringObjectMap.get("ROLLOUTPUTTIME") != null) {
+                            cell.setCellValue(stringObjectMap.get("ROLLOUTPUTTIME").toString());
                         }
                         break;
                     case 17:
-                        if (rows.get(i).get("LOGINNAME") != null) {
-                            cell.setCellValue(rows.get(i).get("LOGINNAME").toString());
+                        if (stringObjectMap.get("LOGINNAME") != null) {
+                            cell.setCellValue(stringObjectMap.get("LOGINNAME").toString());
                         }
                         break;
                     case 18:
-                        if (rows.get(i).get("STATE") == null || xx.parseInt(rows.get(i).get("STATE").toString()) == 0) {
+                        if (stringObjectMap.get("STATE") == null || xx.parseInt(stringObjectMap.get("STATE").toString()) == 0) {
                             cell.setCellValue("未入库");
                             break;
                         }
-                        if (xx.parseInt(rows.get(i).get("STATE").toString()) == 1) {
+                        if (xx.parseInt(stringObjectMap.get("STATE").toString()) == 1) {
                             cell.setCellValue("在库");
-                        } else if (xx.parseInt(rows.get(i).get("STATE").toString()) == -1) {
+                        } else if (xx.parseInt(stringObjectMap.get("STATE").toString()) == -1) {
                             cell.setCellValue("出库");
                         }
                         break;
                     case 19:
-                        if (rows.get(i).get("ISLOCKED") == "1") {
+                        if (stringObjectMap.get("ISLOCKED") == "1") {
                             cell.setCellValue("冻结");
                         } else {
                             cell.setCellValue("正常");
                         }
                         break;
                     case 20:
-                        if (rows.get(i).get("ISABANDON") == null) {
+                        if (stringObjectMap.get("ISABANDON") == null) {
                             cell.setCellValue("正常");
-                        } else if (xx.parseInt(rows.get(i).get("ISABANDON").toString()) == 0) {
+                        } else if (xx.parseInt(stringObjectMap.get("ISABANDON").toString()) == 0) {
                             cell.setCellValue("正常");
-                        } else if (xx.parseInt(rows.get(i).get("ISABANDON").toString()) == 1) {
+                        } else if (xx.parseInt(stringObjectMap.get("ISABANDON").toString()) == 1) {
                             cell.setCellValue("已作废");
                         }
                         break;
                     case 21:
-                        if (rows.get(i).get("ISPACKED") != null) {
-                            if (xx.parseInt(rows.get(i).get("ISPACKED").toString()) == 1) {
+                        if (stringObjectMap.get("ISPACKED") != null) {
+                            if (xx.parseInt(stringObjectMap.get("ISPACKED").toString()) == 1) {
                                 cell.setCellValue("已打包");
-                            } else if (xx.parseInt(rows.get(i).get("ISPACKED").toString()) == 0) {
+                            } else if (xx.parseInt(stringObjectMap.get("ISPACKED").toString()) == 0) {
                                 cell.setCellValue("未打包");
                             }
                         }
                         break;
                     case 22:
-                        if (rows.get(i).get("ROLLBARCODE").toString().indexOf("T") == 0 || rows.get(i).get("ROLLBARCODE").toString().indexOf("P") == 0) {
-                            if (rows.get(i).get("ISOPENED") == null) {
+                        if (stringObjectMap.get("ROLLBARCODE").toString().indexOf("T") == 0 || stringObjectMap.get("ROLLBARCODE").toString().indexOf("P") == 0) {
+                            if (stringObjectMap.get("ISOPENED") == null) {
                                 cell.setCellValue("正常");
-                            } else if (xx.parseInt(rows.get(i).get("ISOPENED").toString()) == 0) {
+                            } else if (xx.parseInt(stringObjectMap.get("ISOPENED").toString()) == 0) {
                                 cell.setCellValue("正常");
-                            } else if (xx.parseInt(rows.get(i).get("ISOPENED").toString()) == 1) {
+                            } else if (xx.parseInt(stringObjectMap.get("ISOPENED").toString()) == 1) {
                                 cell.setCellValue("已拆包");
                             }
                         }
                         break;
                     case 23:
-                        if (rows.get(i).get("MEMO") != null) {
-                            cell.setCellValue(rows.get(i).get("MEMO").toString());
+                        if (stringObjectMap.get("MEMO") != null) {
+                            cell.setCellValue(stringObjectMap.get("MEMO").toString());
                         }
                         break;
                 }
@@ -988,15 +986,12 @@ public class TotalStatisticsController extends BaseController {
             r++;
         }
         row = sheet.createRow(r);
-        cell = row.createCell(0);
-        HttpUtils.download(response,wb,templateName);
+        row.createCell(0);
+        HttpUtils.download(response, wb, templateName);
     }
 
     /**
      * 托盒卷关系导出到Excel
-     *
-     * @param barcode
-     * @throws Exception
      */
     @Journal(name = "Excel导出")
     @ResponseBody
@@ -1007,7 +1002,7 @@ public class TotalStatisticsController extends BaseController {
         // 根据条码查询托箱卷关系组织树状关系
         // 如果条码号R/P开头，查询卷箱关系中是否存在箱，如果有箱，查询箱条码的是否有父级托关系，如果没有箱，查询是否在托中，如果都没有，直接返回卷条码
         if (barcode.startsWith("R")) {
-            HashMap<String, Object> map = new HashMap<String, Object>();
+            HashMap<String, Object> map = new HashMap<>();
             map.put("rollBarcode", barcode);
             // 查询出对应的箱条码信息，如果没有，查询托条码信息
             BoxRoll br = totalStatisticsService.findUniqueByMap(BoxRoll.class, map);
@@ -1015,8 +1010,7 @@ public class TotalStatisticsController extends BaseController {
             map.clear();
             if (br != null) {
                 map.put("boxBarcode", br.getBoxBarcode());
-                TrayBoxRoll tbr = totalStatisticsService.findUniqueByMap(
-                        TrayBoxRoll.class, map);
+                TrayBoxRoll tbr = totalStatisticsService.findUniqueByMap(TrayBoxRoll.class, map);
                 if (tbr != null) {
                     topBarcode = tbr.getTrayBarcode();
                 } else {
@@ -1031,7 +1025,7 @@ public class TotalStatisticsController extends BaseController {
                 }
             }
         } else if (barcode.startsWith("P")) {
-            HashMap<String, Object> map = new HashMap<String, Object>();
+            HashMap<String, Object> map = new HashMap<>();
             map.put("partBarcode", barcode);
             // 查询出对应的箱条码信息，如果没有，查询托条码信息
             BoxRoll br = totalStatisticsService.findUniqueByMap(BoxRoll.class, map);
@@ -1054,7 +1048,7 @@ public class TotalStatisticsController extends BaseController {
                 }
             }
         } else if (barcode.startsWith("B")) {
-            HashMap<String, Object> map = new HashMap<String, Object>();
+            HashMap<String, Object> map = new HashMap<>();
             map.put("boxBarcode", barcode);
             TrayBoxRoll tbr = totalStatisticsService.findUniqueByMap(TrayBoxRoll.class, map);
             if (tbr != null) {
@@ -1064,14 +1058,14 @@ public class TotalStatisticsController extends BaseController {
         ProductInfoTreeStruct result = null;
         // 如果顶级条码号B开头，查询卷箱关系补充卷条码在树状结构
         if (topBarcode.startsWith("B")) {
-            HashMap<String, Object> map = new HashMap<String, Object>();
+            HashMap<String, Object> map = new HashMap<>();
             map.put("boxBarcode", topBarcode);
             List<BoxRoll> boxrollList = totalStatisticsService.findListByMap(BoxRoll.class, map);
             ProductInfoTreeStruct pdInfoStruct = new ProductInfoTreeStruct();
             pdInfoStruct.setId(topBarcode);
             pdInfoStruct.setText(topBarcode);
             pdInfoStruct.setState("closed");
-            List<ProductInfoTreeStruct> childrenList = new ArrayList<ProductInfoTreeStruct>();
+            List<ProductInfoTreeStruct> childrenList = new ArrayList<>();
             for (BoxRoll br : boxrollList) {
                 ProductInfoTreeStruct pdInfo = new ProductInfoTreeStruct();
                 pdInfo.setId(br.getRollBarcode() != null ? br.getRollBarcode() : br.getPartBarcode());
@@ -1084,14 +1078,14 @@ public class TotalStatisticsController extends BaseController {
         }
         // 如果顶级条码号T开头，查询托箱卷关系，补充箱条码和卷条码和箱条码所包含的卷条码信息，组织树状结构
         else if (topBarcode.startsWith("T")) {
-            HashMap<String, Object> map = new HashMap<String, Object>();
+            HashMap<String, Object> map = new HashMap<>();
             map.put("trayBarcode", topBarcode);
             List<TrayBoxRoll> tbrList = totalStatisticsService.findListByMap(TrayBoxRoll.class, map);
             ProductInfoTreeStruct pdInfoStruct = new ProductInfoTreeStruct();
             pdInfoStruct.setId(topBarcode);
             pdInfoStruct.setText(topBarcode);
             pdInfoStruct.setState("closed");
-            List<ProductInfoTreeStruct> childrenList = new ArrayList<ProductInfoTreeStruct>();
+            List<ProductInfoTreeStruct> childrenList = new ArrayList<>();
             for (TrayBoxRoll tbr : tbrList) {
                 if (tbr.getRollBarcode() != null) {
                     ProductInfoTreeStruct pdInfo = new ProductInfoTreeStruct();
@@ -1145,53 +1139,51 @@ public class TotalStatisticsController extends BaseController {
         Row row;
         int i = 1;
 
-        if (result != null) {
-            String first = result.getText();
-            if (first.startsWith("T")) {//托条码
-                List<ProductInfoTreeStruct> p1s = result.getChildren();
-                if (p1s != null) {
-                    for (ProductInfoTreeStruct p1 : p1s) {
-                        String box = p1.getText();
-                        List<ProductInfoTreeStruct> p2s = p1.getChildren();
-                        if (p2s != null) {//卷-->箱-->托
-                            for (ProductInfoTreeStruct p2 : p2s) {
-                                String roll = p2.getText();
-                                row = sheet.createRow(i++);
-                                Cell cell1 = row.createCell(0);//第一列
-                                Cell cell2 = row.createCell(1);//第二列
-                                Cell cell3 = row.createCell(2);//第三列
-                                cell1.setCellValue(first);
-                                cell2.setCellValue(box);
-                                cell3.setCellValue(roll);
-                            }
-                        } else {//卷-->托
+        String first = result.getText();
+        if (first.startsWith("T")) {//托条码
+            List<ProductInfoTreeStruct> p1s = result.getChildren();
+            if (p1s != null) {
+                for (ProductInfoTreeStruct p1 : p1s) {
+                    String box = p1.getText();
+                    List<ProductInfoTreeStruct> p2s = p1.getChildren();
+                    if (p2s != null) {//卷-->箱-->托
+                        for (ProductInfoTreeStruct p2 : p2s) {
+                            String roll = p2.getText();
                             row = sheet.createRow(i++);
                             Cell cell1 = row.createCell(0);//第一列
-                            Cell cell2 = row.createCell(2);//第三列
+                            Cell cell2 = row.createCell(1);//第二列
+                            Cell cell3 = row.createCell(2);//第三列
                             cell1.setCellValue(first);
                             cell2.setCellValue(box);
+                            cell3.setCellValue(roll);
                         }
-                    }
-                }
-            } else if (first.startsWith("B")) {//箱条码
-                List<ProductInfoTreeStruct> p1s = result.getChildren();
-                if (p1s != null) {//卷-->箱
-                    for (ProductInfoTreeStruct p1 : p1s) {
-                        String second = p1.getText();
+                    } else {//卷-->托
                         row = sheet.createRow(i++);
-                        Cell cell1 = row.createCell(1);//第二列
+                        Cell cell1 = row.createCell(0);//第一列
                         Cell cell2 = row.createCell(2);//第三列
                         cell1.setCellValue(first);
-                        cell2.setCellValue(second);
+                        cell2.setCellValue(box);
                     }
                 }
-            } else if (first.startsWith("R")) {//卷条码
-                row = sheet.createRow(i++);
-                Cell cell1 = row.createCell(2);//第三列
-                cell1.setCellValue(first);
             }
+        } else if (first.startsWith("B")) {//箱条码
+            List<ProductInfoTreeStruct> p1s = result.getChildren();
+            if (p1s != null) {//卷-->箱
+                for (ProductInfoTreeStruct p1 : p1s) {
+                    String second = p1.getText();
+                    row = sheet.createRow(i++);
+                    Cell cell1 = row.createCell(1);//第二列
+                    Cell cell2 = row.createCell(2);//第三列
+                    cell1.setCellValue(first);
+                    cell2.setCellValue(second);
+                }
+            }
+        } else if (first.startsWith("R")) {//卷条码
+            row = sheet.createRow(i++);
+            Cell cell1 = row.createCell(2);//第三列
+            cell1.setCellValue(first);
         }
-        HttpUtils.download(response,wb,"托合卷关系");
+        HttpUtils.download(response, wb, "托合卷关系");
         is.close();
     }
 }

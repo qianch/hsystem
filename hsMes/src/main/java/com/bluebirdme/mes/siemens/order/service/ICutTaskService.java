@@ -10,13 +10,15 @@ import com.bluebirdme.mes.core.base.service.IBaseService;
 import com.bluebirdme.mes.siemens.order.entity.CutTask;
 
 /**
- * 
  * @author 高飞
  * @Date 2017-7-26 10:56:16
  */
 public interface ICutTaskService extends IBaseService {
-	public String getSerial();
-	public void save(CutTask task,Long pcId) throws Exception ;
-	public void close(Integer closed,String id) throws Exception;
-	public int[] getSuitCountPerDrawings(Long partId,Long ctid);
+    String getSerial();
+
+    void save(CutTask task, Long pcId) throws Exception;
+
+    void close(Integer closed, String id) throws Exception;
+
+    int[] getSuitCountPerDrawings(Long partId, Long ctid);
 }

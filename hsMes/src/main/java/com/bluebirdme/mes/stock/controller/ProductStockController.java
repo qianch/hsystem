@@ -18,11 +18,9 @@ import com.bluebirdme.mes.platform.entity.Department;
 import com.bluebirdme.mes.stock.entity.ProductInRecord;
 import com.bluebirdme.mes.stock.entity.ProductStockState;
 import com.bluebirdme.mes.stock.entity.StockCheckResult;
-import com.bluebirdme.mes.stock.service.IProductInRecordService;
 import com.bluebirdme.mes.stock.service.IProductStockService;
 import com.bluebirdme.mes.store.entity.Roll;
 import com.bluebirdme.mes.utils.HttpUtils;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -43,7 +41,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -58,8 +55,11 @@ import java.util.*;
 @RequestMapping("stock/productStock")
 @Journal(name = "成品库存表")
 public class ProductStockController extends BaseController {
-    private static Logger logger = LoggerFactory.getLogger(ProductStockController.class);
-    // 成品库存表页面
+    private static final Logger logger = LoggerFactory.getLogger(ProductStockController.class);
+
+    /**
+     * 成品库存表页面
+     */
     final String index = "stock/productStock/productStock";
     final String addOrEdit = "stock/productStock/productStockAddOrEdit";
     final String warehouse = "stock/productStock/warehouseDetail";
@@ -70,8 +70,6 @@ public class ProductStockController extends BaseController {
 
     @Resource
     IProductStockService productStockService;
-    @Resource
-    IProductInRecordService productInRecordService;
 
     @Journal(name = "首页")
     @RequestMapping(method = RequestMethod.GET)
@@ -81,7 +79,7 @@ public class ProductStockController extends BaseController {
 
     @Journal(name = "显示库存页面")
     @RequestMapping("viewStock")
-    public ModelAndView viewStock(String factoryProductName, String productProcessCode, String productProcessBomVersion,String workShopCode) {
+    public ModelAndView viewStock(String factoryProductName, String productProcessCode, String productProcessBomVersion, String workShopCode) {
         model.addAttribute("factoryProductName", factoryProductName);
         model.addAttribute("productProcessCode", productProcessCode);
         model.addAttribute("productProcessBomVersion", productProcessBomVersion);
@@ -102,36 +100,24 @@ public class ProductStockController extends BaseController {
         }
 
         Map<String, Object> findPageInfo = productStockService.findPageInfo(filter, page);
-        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-        Map<String, Object> map = new HashMap<String, Object>();
+        List<Map<String, Object>> list = new ArrayList<>();
+        Map<String, Object> map = new HashMap<>();
         List<Map<String, Object>> rows = (List<Map<String, Object>>) findPageInfo.get("rows");
         DecimalFormat df = new DecimalFormat("#.00");
         if (rows.size() != 0) {
             Double weight = 0.0;
-            for (int i = 0; i < rows.size(); i++) {
-                if (null != rows.get(i).get("WEIGHT")
-                        && rows.get(i).get("WEIGHT") != "") {
-                    weight += (Double) rows.get(i).get("WEIGHT");
-                } else if (null == rows.get(i).get("WEIGHT")) {
-                    ProductInRecord productInRecord = productStockService.findOne(ProductInRecord.class, "barCode", rows.get(i).get("BARCODE"));
+            for (Map<String, Object> row : rows) {
+                if (null != row.get("WEIGHT")
+                        && row.get("WEIGHT") != "") {
+                    weight += (Double) row.get("WEIGHT");
+                } else if (null == row.get("WEIGHT")) {
+                    ProductInRecord productInRecord = productStockService.findOne(ProductInRecord.class, "barCode", row.get("BARCODE"));
                     if (productInRecord != null && null != productInRecord.getWeight() && null != productInRecord.getInTime()) {
-                        rows.get(i).put("WEIGHT", productInRecord.getWeight());
-                        weight += (Double) rows.get(i).get("WEIGHT");
-                        rows.get(i).put("INTIME", productInRecord.getInTime());
+                        row.put("WEIGHT", productInRecord.getWeight());
+                        weight += (Double) row.get("WEIGHT");
+                        row.put("INTIME", productInRecord.getInTime());
                     }
                 }
-
-                //根据条码号查询移库信息
-//                List<Map<String, Object>> ydinfo = productStockService.getMoveInfoBybarcode(rows.get(i).get("BARCODE").toString());
-//                if (ydinfo.size() > 0) {
-//                    rows.get(i).put("NEWWAREHOUSECODE", ydinfo.get(0).get("NEWWAREHOUSECODE"));
-//                    rows.get(i).put("NEWWAREHOUSEPOSCODE", ydinfo.get(0).get("NEWWAREHOUSEPOSCODE"));
-//                    rows.get(i).put("ORIGINWAREHOUSECODE", ydinfo.get(0).get("ORIGINWAREHOUSECODE"));
-//                    rows.get(i).put("ORIGINWAREHOUSEPOSCODE", ydinfo.get(0).get("ORIGINWAREHOUSEPOSCODE"));
-//                    rows.get(i).put("ORIGINWAREHOUSENAME", ydinfo.get(0).get("WAREHOUSENAME"));
-//                    rows.get(i).put("USERNAME", ydinfo.get(0).get("USERNAME"));
-//					               rows.get(i).put("MOVETIME", ydinfo.get(0).get("MOVETIME"));
-//                }
             }
             Object o = df.format(weight);
             map.put("CONSUMERNAME", "总重量(kg)");
@@ -164,7 +150,7 @@ public class ProductStockController extends BaseController {
             weight = weight.add((BigDecimal) m.get("WEIGHT"));
             count = count.add((BigDecimal) m.get("COUNT"));
         }
-        Map<String, Object> footer = new HashMap<String, Object>();
+        Map<String, Object> footer = new HashMap<>();
         footer.put("WEIGHT", "共 " + weight + " KG");
         footer.put("COUNT", "共 " + count + " 托");
         findPageInfo.put("footer", new Object[]{footer});
@@ -175,39 +161,39 @@ public class ProductStockController extends BaseController {
     @ResponseBody
     @Journal(name = "获取生产计划中库存信息1")
     @RequestMapping("viewList1")
-    public String getViewStock1(Filter filter, Page page, String factoryProductName, String productProcessCode, String productProcessBomVersion,String workShopCode) throws Exception {
-        Map<String,Object> map =new HashMap<>();
-        map.put("code",workShopCode);
+    public String getViewStock1(Filter filter, Page page, String factoryProductName, String productProcessCode, String productProcessBomVersion, String workShopCode) throws Exception {
+        Map<String, Object> map = new HashMap<>();
+        map.put("code", workShopCode);
         List<Department> departments = productStockService.findListByMap(Department.class, map);
         Map<String, Object> findPageInfo = new HashMap<>();
-        if(departments.get(0).getType().equals("weave")){
+        if (departments.get(0).getType().equals("weave")) {
             filter.set("factoryProductName", factoryProductName);
             filter.set("productProcessCode", productProcessCode);
             filter.set("productProcessBomVersion", productProcessBomVersion);
             page.setAll(1);
             findPageInfo = productStockService.stockViewNew(filter, page);
-        }else if(departments.get(0).getType().equals("cut")){
+        } else if (departments.get(0).getType().equals("cut")) {
             filter.set("factoryProductName", factoryProductName);
             filter.set("productProcessCode", productProcessCode);
             filter.set("productProcessBomVersion", productProcessBomVersion);
             page.setAll(1);
             findPageInfo = productStockService.stockViewNewPcj(filter, page);
         }
-        if(findPageInfo.size()==0){
+        if (findPageInfo.size() == 0) {
             return GsonTools.toJson(findPageInfo);
         }
         BigDecimal weight = new BigDecimal(0);
         BigDecimal count = new BigDecimal(0);
-        DecimalFormat   df   = new  DecimalFormat("0.00");
+        DecimalFormat df = new DecimalFormat("0.00");
         List<Map<String, Object>> rows = (List<Map<String, Object>>) findPageInfo.get("rows");
         for (Map<String, Object> m : rows) {
             weight = weight.add(new BigDecimal(m.get("WEIGHT").toString()));
             count = count.add(new BigDecimal(m.get("COUNT").toString()));
-            Double weight1 =(Double)m.get("WEIGHT");
-            m.put("WEIGHT",df.format(weight1));
+            Double weight1 = (Double) m.get("WEIGHT");
+            m.put("WEIGHT", df.format(weight1));
         }
-        Double value = weight.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-        Map<String, Object> footer = new HashMap<String, Object>();
+        double value = weight.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+        Map<String, Object> footer = new HashMap<>();
         footer.put("WEIGHT", "共 " + value + " KG");
         footer.put("COUNT", "共 " + count + " 托");
         findPageInfo.put("footer", new Object[]{footer});
@@ -227,8 +213,8 @@ public class ProductStockController extends BaseController {
         InputStream is = new FileInputStream(PathUtils.getClassPath() + "template/productStock.xlsx");
         Workbook wb = new XSSFWorkbook(is);
         Sheet sheet = wb.getSheetAt(0);
-        Row row = null;
-        Cell cell = null;
+        Row row;
+        Cell cell;
         int i = 1;
         for (Map<String, Object> data : list) {
             row = sheet.createRow(i++);
@@ -283,7 +269,7 @@ public class ProductStockController extends BaseController {
                     case 15:
                         if (data.get("WEIGHT") == null) {
                             Roll roll = productStockService.findOne(Roll.class, "partBarcode", data.get("BARCODE"));
-                            if (roll != null){
+                            if (roll != null) {
                                 cell.setCellValue(roll.getRollWeight() == null ? "" : roll.getRollWeight().toString());
                             }
                         } else {
@@ -348,7 +334,7 @@ public class ProductStockController extends BaseController {
                 }
             }
         }
-        HttpUtils.download(response,wb,"成品仓库信息表");
+        HttpUtils.download(response, wb, "成品仓库信息表");
         is.close();
     }
 
@@ -391,41 +377,11 @@ public class ProductStockController extends BaseController {
         return Constant.AJAX_SUCCESS;
     }
 
-    // @ResponseBody
-    // @Journal(name="查询订单，产品",logType=LogType.DB)
-    // @RequestMapping(value="findAll",method=RequestMethod.POST)
-    // public String findAll(String id) throws Exception{
-    // // ProductInRecord
-    // productInRecord=productStockService.findById(ProductInRecord.class,Long.valueOf(id));
-    // // if(productInRecord.getRollCode()==null){
-    // // return
-    // GsonTools.toJson(productStockService.findTray(productInRecord.getTrayCode()));
-    // // }else{
-    // // return
-    // GsonTools.toJson(productStockService.findRoll(productInRecord.getRollCode()));
-    // // }
-    // }
-
-    // @ResponseBody
-    // @Journal(name="查询订单，产品",logType=LogType.DB)
-    // @RequestMapping(value="findAll1",method=RequestMethod.POST)
-    // public String findAll1(String id) throws Exception{
-    // ProductStockState
-    // productInRecord=productStockService.findById(ProductStockState.class,Long.valueOf(id));
-    // if(productInRecord.getRollCode()==null){
-    // return
-    // GsonTools.toJson(productStockService.findTray(productInRecord.getTrayCode()));
-    // }else{
-    // return
-    // GsonTools.toJson(productStockService.findRoll(productInRecord.getRollCode()));
-    // }
-    // }
-
     @ResponseBody
     @Journal(name = "查询盘点明细")
     @RequestMapping(value = "findCheck", method = RequestMethod.POST)
     public String findCheck(String id) {
-        Map<String, Object> c = new HashMap<String, Object>();
+        Map<String, Object> c = new HashMap<>();
         c.put("cid", Long.valueOf(id));
         List<StockCheckResult> list = productStockService.findListByMap(StockCheckResult.class, c);
         return GsonTools.toJson(list);
@@ -466,12 +422,11 @@ public class ProductStockController extends BaseController {
         cellStyle.setWrapText(true);
 
         Sheet sheet = wb.createSheet();
-        // sheet.setDisplayGridlines(true);
-        Row row = null;
-        Cell cell = null;
-        String columnName[] = new String[]{"订单号", "批次号", "场内名称", "客户产品名称",
+        Row row;
+        Cell cell;
+        String[] columnName = new String[]{"订单号", "批次号", "场内名称", "客户产品名称",
                 "期末结存数量(kg)", "客户", "进库日期", "库龄", "责任人"};
-        int r = 0;// 从第1行开始写数据
+        int r = 0;
         row = sheet.createRow(r);
         cell = row.createCell(0);
         cell.setCellValue("浙江恒石纤维基业有限公司库龄明细表");
@@ -547,11 +502,11 @@ public class ProductStockController extends BaseController {
                             long day = (s2 - s1) / (24 * 3600 * 1000);
                             if (day <= 30)
                                 cell.setCellValue("1个月以内");
-                            else if (day > 30 && day <= 90)
+                            else if (day <= 90)
                                 cell.setCellValue("1-3个月");
-                            else if (day > 60 && day <= 180)
+                            else if (day <= 180)
                                 cell.setCellValue("3-6个月");
-                            else if (day > 180 && day <= 360)
+                            else if (day <= 360)
                                 cell.setCellValue("6-12个月");
                             else
                                 cell.setCellValue("12个月以上");
@@ -566,7 +521,7 @@ public class ProductStockController extends BaseController {
             }
             r++;
         }
-        HttpUtils.download(response,wb,templateName);
+        HttpUtils.download(response, wb, templateName);
     }
 
     @Journal(name = "库龄汇总页面")
@@ -578,7 +533,7 @@ public class ProductStockController extends BaseController {
     @ResponseBody
     @Journal(name = "库龄汇总表")
     @RequestMapping(value = "summaryDetail", method = RequestMethod.POST)
-    public String summaryDetail(Filter filter, Page page) throws Exception {
+    public String summaryDetail(Filter filter, Page page) {
         if (filter.get("TIME1") == null) {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             Calendar cale = Calendar.getInstance();
@@ -607,11 +562,7 @@ public class ProductStockController extends BaseController {
         Workbook wb = new XSSFWorkbook(is);
         Sheet sheet = wb.getSheetAt(0);
         Row row = sheet.createRow(0);
-        Cell cell = null;
-        // HSSFWorkbook wb = new HSSFWorkbook(is);
-        // HSSFSheet sheet = wb.createSheet("sheet0");
-        // HSSFRow row=sheet.createRow(0);
-        // HSSFCell cell=null;
+        Cell cell;
 
         Page page1 = new Page();
         page1.setRows(10000);
@@ -619,24 +570,18 @@ public class ProductStockController extends BaseController {
             cell = row.createCell(i);
             cell.setCellValue(title[i]);
         }
-        String start = filter.get("TIME1").toString();
+        String start = filter.get("TIME1");
         String end = filter.get("TIME2");
-        if (end == null) {
-            filter.set("TIME2", sdf.format(new Date()));
-        } else {
-            filter.set("TIME2", end);
-        }
+        filter.set("TIME2", Objects.requireNonNullElseGet(end, () -> sdf.format(new Date())));
         if (!"".equals(start)) {
             filter.set("TIME1", start);
         }
 
         try {
-            Map<String, Object> map = productStockService.summaryDetail(filter,
-                    page1);
+            Map<String, Object> map = productStockService.summaryDetail(filter, page1);
             @SuppressWarnings("unchecked")
-            List<Map<String, Object>> list = (ArrayList<Map<String, Object>>) map
-                    .get("rows");
-            Cell nextCell = null;
+            List<Map<String, Object>> list = (ArrayList<Map<String, Object>>) map.get("rows");
+            Cell nextCell;
             for (int i = 0; i < list.size(); i++) {
                 Map<String, Object> m = list.get(i);
                 Row nextRow = sheet.createRow(i + 1);
@@ -676,7 +621,6 @@ public class ProductStockController extends BaseController {
         if (filter.get("TIME1") == null) {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             Calendar cale = Calendar.getInstance();
-            // cale.add(Calendar.MONTH, 0);
             cale.set(Calendar.DAY_OF_MONTH, 0);
             String firstday = format.format(cale.getTime());
             filter.set("TIME1", firstday + " 08:00:00");
@@ -689,24 +633,24 @@ public class ProductStockController extends BaseController {
         }
         // 总计
         Map<String, Object> findPageInfo = productStockService.comparisonDetail(filter, page);
-        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-        Map<String, Object> map = new HashMap<String, Object>();
+        List<Map<String, Object>> list = new ArrayList<>();
+        Map<String, Object> map = new HashMap<>();
         List<Map<String, Object>> rows = (List<Map<String, Object>>) findPageInfo.get("rows");
         DecimalFormat df = new DecimalFormat("#.0");
         findPageInfo.put("footer", list);
         if (rows.size() != 0) {
-            page.setAll(1);// 全部重量
+            page.setAll(1);
             Map<String, Object> map2 = productStockService.comparisonDetail(filter, page);
             List<Map<String, Object>> r = (List<Map<String, Object>>) map2.get("rows");
             Double old = 0.0;
             Double now = 0.0;
             Double diff = 0.0;
-            for (int i = 0; i < r.size(); i++) {
-                Double oldweight = (Double) r.get(i).get("OLDWEIGHT");
+            for (Map<String, Object> stringObjectMap : r) {
+                Double oldweight = (Double) stringObjectMap.get("OLDWEIGHT");
                 old += oldweight == null ? 0.0 : oldweight;
-                Double nowweight = (Double) r.get(i).get("NOWWEIGHT");
+                Double nowweight = (Double) stringObjectMap.get("NOWWEIGHT");
                 now += nowweight == null ? 0.0 : nowweight;
-                diff += (Double) r.get(i).get("DIFFERENCE");
+                diff += (Double) stringObjectMap.get("DIFFERENCE");
             }
             Object s = df.format(old);
             Object i = df.format(now);
@@ -732,13 +676,9 @@ public class ProductStockController extends BaseController {
     @RequestMapping(value = "exportComparison", method = RequestMethod.GET)
     public void exportComparison(Filter filter) throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String start = filter.get("TIME1").toString();
+        String start = filter.get("TIME1");
         String end = filter.get("TIME2");
-        if (end == null) {
-            filter.set("TIME2", sdf.format(new Date()));
-        } else {
-            filter.set("TIME2", end);
-        }
+        filter.set("TIME2", Objects.requireNonNullElseGet(end, () -> sdf.format(new Date())));
         if (!"".equals(start)) {
             filter.set("TIME1", start);
         }
@@ -749,51 +689,35 @@ public class ProductStockController extends BaseController {
         InputStream is = new FileInputStream(PathUtils.getClassPath() + "template/productComparison.xlsx");
         Workbook wb = new SXSSFWorkbook(new XSSFWorkbook(is));
         Sheet sheet = wb.getSheetAt(0);
-        Row row = null;
-        Cell cell = null;
+        Row row;
+        Cell cell;
         int i = 1;
         for (Map<String, Object> data : list) {
             row = sheet.createRow(i++);
             for (int j = 0; j < 20; j++) {
                 cell = row.createCell(j);
                 switch (j) {
-                    case 0:
-                        cell.setCellValue(data.get("SALESORDERCODE") == null ? "" : data.get("SALESORDERCODE").toString());
-                        break;
-                    case 1:
-                        cell.setCellValue(data.get("BATCHCODE") == null ? "" : data.get("BATCHCODE").toString());
-                        break;
-                    case 2:
-                        cell.setCellValue(data.get("PRODUCTMODEL") == null ? "" : data.get("PRODUCTMODEL").toString());
-                        break;
-                    case 3:
-                        cell.setCellValue(data.get("FACTORYPRODUCTNAME") == null ? "" : data.get("FACTORYPRODUCTNAME").toString());
-                        break;
-                    case 4:
-                        cell.setCellValue(data.get("CONSUMERPRODUCTNAME") == null ? "" : data.get("CONSUMERPRODUCTNAME").toString());
-                        break;
-                    case 5:
-                        cell.setCellValue(data.get("OLDWEIGHT") == null ? "" : data.get("OLDWEIGHT").toString());
-                        break;
-                    case 6:
-                        cell.setCellValue(data.get("NOWWEIGHT") == null ? "" : data.get("NOWWEIGHT").toString());
-                        break;
-                    case 7:
-                        cell.setCellValue(data.get("DIFFERENCE") == null ? "" : data.get("DIFFERENCE").toString());
-                        break;
-                    case 8:
-                        cell.setCellValue(data.get("CONSUMERNAME") == null ? "" : data.get("CONSUMERNAME").toString());
-                        break;
-                    case 9:
-                        cell.setCellValue(data.get("INTIME") == null ? "" : data.get("INTIME").toString());
-                        break;
-                    case 10:
-                        cell.setCellValue(data.get("DAYS") == null ? "" : data.get("DAYS").toString());
-                        break;
+                    case 0 ->
+                            cell.setCellValue(data.get("SALESORDERCODE") == null ? "" : data.get("SALESORDERCODE").toString());
+                    case 1 -> cell.setCellValue(data.get("BATCHCODE") == null ? "" : data.get("BATCHCODE").toString());
+                    case 2 ->
+                            cell.setCellValue(data.get("PRODUCTMODEL") == null ? "" : data.get("PRODUCTMODEL").toString());
+                    case 3 ->
+                            cell.setCellValue(data.get("FACTORYPRODUCTNAME") == null ? "" : data.get("FACTORYPRODUCTNAME").toString());
+                    case 4 ->
+                            cell.setCellValue(data.get("CONSUMERPRODUCTNAME") == null ? "" : data.get("CONSUMERPRODUCTNAME").toString());
+                    case 5 -> cell.setCellValue(data.get("OLDWEIGHT") == null ? "" : data.get("OLDWEIGHT").toString());
+                    case 6 -> cell.setCellValue(data.get("NOWWEIGHT") == null ? "" : data.get("NOWWEIGHT").toString());
+                    case 7 ->
+                            cell.setCellValue(data.get("DIFFERENCE") == null ? "" : data.get("DIFFERENCE").toString());
+                    case 8 ->
+                            cell.setCellValue(data.get("CONSUMERNAME") == null ? "" : data.get("CONSUMERNAME").toString());
+                    case 9 -> cell.setCellValue(data.get("INTIME") == null ? "" : data.get("INTIME").toString());
+                    case 10 -> cell.setCellValue(data.get("DAYS") == null ? "" : data.get("DAYS").toString());
                 }
             }
         }
-        HttpUtils.download(response,wb,"库龄数量对比表");
+        HttpUtils.download(response, wb, "库龄数量对比表");
         is.close();
     }
 
@@ -807,17 +731,17 @@ public class ProductStockController extends BaseController {
     @ResponseBody
     @Journal(name = "获取胚布库存信息")
     @RequestMapping("getGreigeStockInfo")
-    public String getGreigeStockInfo(Filter filter, Page page) throws Exception {
+    public String getGreigeStockInfo(Filter filter, Page page) {
         Map<String, Object> findPageInfo = productStockService.getGreigeStockInfo(filter, page);
-        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-        Map<String, Object> map = new HashMap<String, Object>();
+        List<Map<String, Object>> list = new ArrayList<>();
+        Map<String, Object> map = new HashMap<>();
         List<Map<String, Object>> rows = (List<Map<String, Object>>) findPageInfo.get("rows");
         DecimalFormat df = new DecimalFormat("#.00");
         if (rows.size() != 0) {
             Double d = 0.0;
-            for (int i = 0; i < rows.size(); i++) {
-                if (rows.get(i).get("WEIGHT") != null && rows.get(i).get("WEIGHT") != "") {
-                    d += (Double) rows.get(i).get("WEIGHT");
+            for (Map<String, Object> row : rows) {
+                if (row.get("WEIGHT") != null && row.get("WEIGHT") != "") {
+                    d += (Double) row.get("WEIGHT");
                 }
             }
             Object o = df.format(d);
@@ -844,10 +768,10 @@ public class ProductStockController extends BaseController {
         Map<String, Object> map = productStockService.getGreigeStockInfo(filter, page);
         List<Map<String, Object>> list = (List<Map<String, Object>>) map.get("rows");
         InputStream is = new FileInputStream(PathUtils.getClassPath() + "template/productStock.xlsx");
-        Workbook wb = new SXSSFWorkbook( new XSSFWorkbook(is));
+        Workbook wb = new SXSSFWorkbook(new XSSFWorkbook(is));
         Sheet sheet = wb.getSheetAt(0);
-        Row row = null;
-        Cell cell = null;
+        Row row;
+        Cell cell;
         int i = 1;
         for (Map<String, Object> data : list) {
             row = sheet.createRow(i++);
@@ -930,7 +854,7 @@ public class ProductStockController extends BaseController {
                 }
             }
         }
-        HttpUtils.download(response,wb,"胚布仓库信息表");
+        HttpUtils.download(response, wb, "胚布仓库信息表");
         is.close();
     }
 

@@ -14,15 +14,12 @@ import com.bluebirdme.mes.core.base.entity.Page;
 import com.bluebirdme.mes.core.base.service.BaseServiceImpl;
 import com.bluebirdme.mes.planner.weave.entity.WeavePlan;
 import com.bluebirdme.mes.planner.weave.service.IWeavePlanService;
-import com.bluebirdme.mes.sales.service.ISalesOrderStockService;
 import com.bluebirdme.mes.statistics.dao.ITotalStatisticsDao;
 import com.bluebirdme.mes.statistics.entity.TotalStatistics;
 import com.bluebirdme.mes.statistics.service.ITotalStatisticsService;
 import com.bluebirdme.mes.store.entity.*;
 import com.bluebirdme.mes.tracings.entity.TracingLog;
 import com.bluebirdme.mes.utils.ProductState;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -41,8 +38,6 @@ import java.util.*;
 @AnyExceptionRollback
 public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITotalStatisticsService {
     @Resource
-    ISalesOrderStockService salesOrderStockService;
-    @Resource
     ITotalStatisticsDao totalStatisticsDao;
     @Resource
     IProcessService processService;
@@ -55,34 +50,34 @@ public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITota
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
         return totalStatisticsDao.findPageInfo(filter, page);
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfoByBox(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfoByBox(Filter filter, Page page) throws Exception {
         return totalStatisticsDao.findPageInfoByBox(filter, page);
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfoByTray(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfoByTray(Filter filter, Page page) throws Exception {
         return totalStatisticsDao.findPageInfoByTray(filter, page);
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfoByPart(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfoByPart(Filter filter, Page page) throws Exception {
         return totalStatisticsDao.findPageInfoByPart(filter, page);
     }
 
-    public <T> Map<String, Object> findPageInfoByRoll(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfoByRoll(Filter filter, Page page) throws Exception {
         return totalStatisticsDao.findPageInfoByRoll(filter, page);
     }
 
     public List<TotalStatistics> getByIds(String ids) {
-        List<TotalStatistics> list = new ArrayList<TotalStatistics>();
-        String ids_temp[] = ids.split(",");
-        for (int i = 0; i < ids_temp.length; i++) {
-            list.add(findById(TotalStatistics.class, Long.parseLong(ids_temp[i])));
+        List<TotalStatistics> list = new ArrayList<>();
+        String[] ids_temp = ids.split(",");
+        for (String s : ids_temp) {
+            list.add(findById(TotalStatistics.class, Long.parseLong(s)));
         }
         return list;
     }
@@ -99,7 +94,7 @@ public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITota
             t.setBatchCode(ts.getBatchCode());
             t.setSalesCode(ts.getSalesOrderCode());
             t.setDeviceCode(ts.getDeviceCode());
-            if (complaintCode != null && complaintCode != "") {
+            if (complaintCode != null && !complaintCode.equals("")) {
                 t.setTriggerInfo("投诉号：" + complaintCode + "：" + reasons);
             } else {
                 t.setTriggerInfo("：" + reasons);
@@ -111,7 +106,6 @@ public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITota
             save(t);
             merge(ts);
         }
-
     }
 
     public void saveUnLockState(List<TotalStatistics> list, String complaintCode, String reasons) {
@@ -126,7 +120,7 @@ public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITota
             t.setBatchCode(ts.getBatchCode());
             t.setSalesCode(ts.getSalesOrderCode());
             t.setDeviceCode(ts.getDeviceCode());
-            if (complaintCode != null && complaintCode != "") {
+            if (complaintCode != null && !complaintCode.equals("")) {
                 t.setTriggerInfo("投诉号：" + complaintCode + "：" + reasons);
             } else {
                 t.setTriggerInfo("：" + reasons);
@@ -141,8 +135,8 @@ public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITota
     }
 
     public HashSet<String> getBoxRolls(String barcode) {
-        HashSet<String> rollSet = new HashSet<String>();
-        HashMap<String, Object> map = new HashMap<String, Object>();
+        HashSet<String> rollSet = new HashSet<>();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("boxBarcode", barcode);
         List<BoxRoll> boxRoll = this.findListByMap(BoxRoll.class, map);
         for (BoxRoll b : boxRoll) {
@@ -157,9 +151,9 @@ public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITota
 
     public void iflockByBarcode(String barcodes, int state) {
         String[] barcodeList = barcodes.split(",");
-        HashSet<String> rollSet = new HashSet<String>();
-        HashSet<String> boxSet = new HashSet<String>();
-        HashSet<String> traySet = new HashSet<String>();
+        HashSet<String> rollSet = new HashSet<>();
+        HashSet<String> boxSet = new HashSet<>();
+        HashSet<String> traySet = new HashSet<>();
         for (String barcode : barcodeList) {
             // 判断是否是卷条码，存入要冻结的卷的集合
             if (barcode.startsWith("R")) {
@@ -180,7 +174,7 @@ public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITota
             // 判断是否是托条码，存入要冻结的托的集合
             if (barcode.startsWith("T") || barcode.startsWith("P")) {
                 traySet.add(barcode);
-                HashMap<String, Object> map = new HashMap<String, Object>();
+                HashMap<String, Object> map = new HashMap<>();
                 map.put("trayBarcode", barcode);
                 List<TrayBoxRoll> trayBoxRoll = this.findListByMap(TrayBoxRoll.class, map);
                 // 遍历托箱卷关系，如果是卷或部件，存入要冻结的卷的集合，如果是箱，存入要冻结的箱的集合，并遍历箱中的卷和部件，存入要冻结的卷的集合
@@ -201,21 +195,20 @@ public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITota
         for (String rollBarcode : rollSet) {
             // 判断卷中的条码，如果是R开头，通过rollbarcode查询卷，如果是P开头，通过partBarCode查询
             if (rollBarcode.startsWith("R")) {
-                HashMap<String, Object> map = new HashMap<String, Object>();
+                HashMap<String, Object> map = new HashMap<>();
                 map.put("rollBarcode", rollBarcode);
                 Roll roll = findUniqueByMap(Roll.class, map);
                 roll.setState(state);
-
                 update(roll);
             }
             if (rollBarcode.startsWith("P")) {
-                HashMap<String, Object> map = new HashMap<String, Object>();
+                HashMap<String, Object> map = new HashMap<>();
                 map.put("partBarcode", rollBarcode);
                 Roll roll = findUniqueByMap(Roll.class, map);
                 roll.setState(state);
                 update(roll);
             }
-            HashMap<String, Object> map = new HashMap<String, Object>();
+            HashMap<String, Object> map = new HashMap<>();
             map.put("rollBarcode", rollBarcode);
             TotalStatistics ts = findUniqueByMap(TotalStatistics.class, map);
             if (state == ProductState.FROZEN)
@@ -235,7 +228,7 @@ public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITota
             // 获取拖箱卷关系，判断是否冻结
             if (barcode.startsWith("R")) {
                 // 获取上级条码判断是否冻结
-                HashMap<String, Object> map = new HashMap<String, Object>();
+                HashMap<String, Object> map = new HashMap<>();
                 map.put("rollBarcode", barcode);
                 BoxRoll br = findUniqueByMap(BoxRoll.class, map);
                 TrayBoxRoll tbr = findUniqueByMap(TrayBoxRoll.class, map);
@@ -253,7 +246,7 @@ public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITota
                 }
             } else if (barcode.startsWith("P")) {
                 // 获取上级条码判断是否冻结
-                HashMap<String, Object> map = new HashMap<String, Object>();
+                HashMap<String, Object> map = new HashMap<>();
                 map.put("partBarcode", barcode);
                 BoxRoll br = findUniqueByMap(BoxRoll.class, map);
                 TrayBoxRoll tbr = findUniqueByMap(TrayBoxRoll.class, map);
@@ -269,7 +262,7 @@ public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITota
                 }
             } else if (barcode.startsWith("B")) {
                 // 获取上级条码判断是否冻结
-                HashMap<String, Object> map = new HashMap<String, Object>();
+                HashMap<String, Object> map = new HashMap<>();
                 map.put("boxBarcode", barcode);
                 TrayBoxRoll tbr1 = findUniqueByMap(TrayBoxRoll.class, map);
                 if (tbr1 != null) {
@@ -277,50 +270,17 @@ public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITota
                 }
             }
         }
-
-        // for (String boxBarcode : boxSet) {
-        // HashMap<String, Object> map = new HashMap<String, Object>();
-        // map.put("boxBarcode", boxBarcode);
-        // Box box = findUniqueByMap(Box.class, map);
-        // box.setState(state);
-        // // update(box);
-        // map.clear();
-        // map.put("rollBarcode", boxBarcode);
-        // TotalStatistics ts = findUniqueByMap(TotalStatistics.class, map);
-        // if (state == ProductState.FROZEN)
-        // ts.setIsLocked(1);
-        // else
-        // ts.setIsLocked(-1);
-        // update(ts);
-        // }
-        // for (String trayBarcode : traySet) {
-        // HashMap<String, Object> map = new HashMap<String, Object>();
-        // map.put("trayBarcode", trayBarcode);
-        // Tray tray = findUniqueByMap(Tray.class, map);
-        // tray.setState(state);
-        // // update(tray);
-        // map.clear();
-        // map.put("rollBarcode", trayBarcode);
-        // TotalStatistics ts = findUniqueByMap(TotalStatistics.class, map);
-        // if (state == ProductState.FROZEN)
-        // ts.setIsLocked(1);
-        // else
-        // ts.setIsLocked(-1);
-        // update(ts);
-        // }
-
     }
 
-    public void quality(String barcodes, String state) throws Exception{
+    public void quality(String barcodes, String state) throws Exception {
         String[] barcodeList = barcodes.split(",");
-        HashSet<String> rollSet = new HashSet<String>();
-        HashSet<String> boxSet = new HashSet<String>();
-        HashSet<String> traySet = new HashSet<String>();
+        HashSet<String> rollSet = new HashSet<>();
+        HashSet<String> boxSet = new HashSet<>();
+        HashSet<String> traySet = new HashSet<>();
         for (String barcode : barcodeList) {
-            HashMap<String, Object> partMap = new HashMap<String, Object>();
+            HashMap<String, Object> partMap = new HashMap<>();
             partMap.put("partBarcode", barcode);
             Roll part = findUniqueByMap(Roll.class, partMap);
-
             // 判断是否是卷条码，存入要冻结的卷的集合
             if (barcode.startsWith("R")) {
                 rollSet.add(barcode);
@@ -336,7 +296,7 @@ public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITota
             }
             // 判断是否是托条码，存入要冻结的托的集合
             if (barcode.startsWith("T") || barcode.startsWith("P")) {
-                HashMap<String, Object> map = new HashMap<String, Object>();
+                HashMap<String, Object> map = new HashMap<>();
                 map.put("trayBarcode", barcode);
                 List<TrayBoxRoll> trayBoxRoll = this.findListByMap(TrayBoxRoll.class, map);
                 if (trayBoxRoll.size() > 0) {
@@ -361,15 +321,14 @@ public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITota
         for (String rollBarcode : rollSet) {
             // 判断卷中的条码，如果是R开头，通过rollbarcode查询卷，如果是P开头，通过partBarCode查询
             if (rollBarcode.startsWith("R")) {
-                HashMap<String, Object> map = new HashMap<String, Object>();
+                HashMap<String, Object> map = new HashMap<>();
                 map.put("rollBarcode", rollBarcode);
                 Roll roll = findUniqueByMap(Roll.class, map);
                 roll.setRollQualityGradeCode(state);
-                ;
                 update(roll);
                 // 判级 非A的 不参与平均值重量
                 if (!state.equals("A")) {
-                    Map<String, Object> param = new HashMap<String, Object>();
+                    Map<String, Object> param = new HashMap<>();
                     param.put("rollBarcode", rollBarcode);
                     Roll rolls = processService.findUniqueByMap(Roll.class, param);
                     param.clear();
@@ -383,23 +342,23 @@ public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITota
                 }
             }
             if (rollBarcode.startsWith("P")) {
-                HashMap<String, Object> map = new HashMap<String, Object>();
+                HashMap<String, Object> map = new HashMap<>();
                 map.put("partBarcode", rollBarcode);
                 Roll roll = findUniqueByMap(Roll.class, map);
                 roll.setRollQualityGradeCode(state);
                 update(roll);
             }
-            HashMap<String, Object> map = new HashMap<String, Object>();
+            HashMap<String, Object> map = new HashMap<>();
             map.put("rollBarcode", rollBarcode);
             TotalStatistics ts = findUniqueByMap(TotalStatistics.class, map);
-            if(ts==null){
-               throw new Exception("综合统计表无数据，请检查是否称重；");
+            if (ts == null) {
+                throw new Exception("综合统计表无数据，请检查是否称重；");
             }
             ts.setRollQualityGradeCode(state);
             update(ts);
         }
         for (String boxBarcode : boxSet) {
-            HashMap<String, Object> map = new HashMap<String, Object>();
+            HashMap<String, Object> map = new HashMap<>();
             map.put("boxBarcode", boxBarcode);
             Box box = findUniqueByMap(Box.class, map);
             box.setRollQualityGradeCode(state);
@@ -411,7 +370,7 @@ public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITota
             update(ts);
         }
         for (String trayBarcode : traySet) {
-            HashMap<String, Object> map = new HashMap<String, Object>();
+            HashMap<String, Object> map = new HashMap<>();
             map.put("trayBarcode", trayBarcode);
             Tray tray = findUniqueByMap(Tray.class, map);
             tray.setRollQualityGradeCode(state);
@@ -431,19 +390,19 @@ public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITota
     // 判断条码是否为冻结状态
     public Integer isFrozen(String barcode) {
         //P开头的有两种情况，一种是托PHS，一种是部件PCJ
-        HashMap<String, Object> rollPartMap = new HashMap<String, Object>();
+        HashMap<String, Object> rollPartMap = new HashMap<>();
         rollPartMap.put("partBarcode", barcode);
         Roll rollPart = findUniqueByMap(Roll.class, rollPartMap);
 
         if (barcode.startsWith("R")) {
-            HashMap<String, Object> map = new HashMap<String, Object>();
+            HashMap<String, Object> map = new HashMap<>();
             map.put("rollBarcode", barcode);
             Roll roll = findUniqueByMap(Roll.class, map);
             return roll.getState();
         } else if (barcode.startsWith("P") && rollPart != null) {
             return rollPart.getState();
         } else if (barcode.startsWith("B")) {
-            HashMap<String, Object> map = new HashMap<String, Object>();
+            HashMap<String, Object> map = new HashMap<>();
             HashSet<String> rollSet = getBoxRolls(barcode);
             for (String rollBarcode : rollSet) {
                 if (rollBarcode.startsWith("R")) {
@@ -487,9 +446,9 @@ public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITota
             }
             return ProductState.VALID;
         } else {
-            HashMap<String, Object> map = new HashMap<String, Object>();
+            HashMap<String, Object> map = new HashMap<>();
             map.put("trayBarcode", barcode);
-            HashSet<String> rollSet = new HashSet<String>();
+            HashSet<String> rollSet = new HashSet<>();
             List<TrayBoxRoll> trayBoxRoll = this.findListByMap(TrayBoxRoll.class, map);
             // 遍历托箱卷关系，如果是卷或部件，存入要冻结的卷的集合，如果是箱，存入要冻结的箱的集合，并遍历箱中的卷和部件，存入要冻结的卷的集合
             for (TrayBoxRoll tbr : trayBoxRoll) {
@@ -505,7 +464,7 @@ public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITota
             }
             for (String rollBarcode : rollSet) {
                 if (rollBarcode.startsWith("R")) {
-                    HashMap<String, Object> map1 = new HashMap<String, Object>();
+                    HashMap<String, Object> map1 = new HashMap<>();
                     map1.put("rollBarcode", rollBarcode);
                     Roll roll = findUniqueByMap(Roll.class, map1);
                     map1.clear();
@@ -518,21 +477,11 @@ public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITota
                         if (ts.getIsLocked().equals(-1)) {
                             ts.setIsLocked(1);
                             update(ts);
-
-                            /*
-                             * FinishedProduct fp =
-                             * findById(FinishedProduct.class,
-                             * rb.getSalesProductId()); // 获取产品库存，修改库存值-1
-                             * if(ts.getState()!=null){ if
-                             * (ts.getState().intValue()==StockState.IN) {
-                             * salesOrderStockService
-                             * .addStock(ts.getSalesOrderCode(), fp, -1); } }
-                             */
                         }
                         return ProductState.FROZEN;
                     }
                 } else if (rollBarcode.startsWith("P")) {
-                    HashMap<String, Object> map1 = new HashMap<String, Object>();
+                    HashMap<String, Object> map1 = new HashMap<>();
                     map1.put("partBarcode", rollBarcode);
                     Roll roll = findUniqueByMap(Roll.class, map1);
                     if (roll.getState() == ProductState.FROZEN) {
@@ -542,12 +491,9 @@ public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITota
                         if (ts.getIsLocked().equals(-1)) {
                             ts.setIsLocked(1);
                             update(ts);
-                            // 获取产品库存，修改库存值-1
-
                         }
                         return ProductState.FROZEN;
                     }
-
                 }
             }
             map.clear();
@@ -558,32 +504,17 @@ public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITota
             if (ts.getIsLocked().equals(1)) {
                 ts.setIsLocked(-1);
                 update(ts);
-                // 获取产品库存，修改库存值+1
-                /*
-                 * map.clear(); map.put("barcode", barcode); TrayBarCode tb =
-                 * findUniqueByMap(TrayBarCode.class, map); FinishedProduct fp =
-                 * findById(FinishedProduct.class, tb.getSalesProductId()); if
-                 * (ts.getState().equals(StockState.IN)) {
-                 * salesOrderStockService.addStock(ts.getSalesOrderCode(), fp,
-                 * 1); }
-                 */
             }
             return ProductState.VALID;
         }
     }
 
-    public static void main(String args[]) {
-        Integer i = new Integer("1");
-        System.out.println(i == 1);
-    }
-
-    public void changeInfo(String barcode, String parentBarocde, String topBarcode, Double newWeight) throws Exception {
+    public void changeInfo(String barcode, String parentBarocde, String topBarcode, Double newWeight) {
         // 如果为条码为卷或者部件，根据条码修改对应roll和totalStatistics的重量信息，并记录原信息
-        Double oldWeight = 0d;
-
+        Double oldWeight;
+        HashMap<String, Object> map = new HashMap<>();
         if (barcode.startsWith("R")) {
             //处理卷条码
-            HashMap<String, Object> map = new HashMap<String, Object>();
             map.put("rollBarcode", barcode);
             Roll roll = findUniqueByMap(Roll.class, map);
             // 原来重量
@@ -594,7 +525,6 @@ public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITota
             // 先修改卷重
             update(roll);
             update(ts);
-
             // 旧的重量，减去新的重量，计算差距
             double diff = MathUtils.sub(oldWeight, newWeight, 1);
             // 查询是否打包在盒中
@@ -610,13 +540,10 @@ public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITota
 
                 map.clear();
                 map.put("rollBarcode", box.getBoxBarcode());
-
                 ts = findUniqueByMap(TotalStatistics.class, map);
                 ts.setRollWeight(box.getWeight());
-
                 // 更新生产统计
                 update(ts);
-
                 TrayBoxRoll tbr = findOne(TrayBoxRoll.class, "boxBarcode", box.getBoxBarcode());
                 if (tbr != null) {
                     Tray tray = findOne(Tray.class, "trayBarcode", tbr.getTrayBarcode());
@@ -624,12 +551,12 @@ public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITota
                     update(tray);
                     map.clear();
                     map.put("rollBarcode", tray.getTrayBarcode());
-
                     ts = findUniqueByMap(TotalStatistics.class, map);
                     ts.setRollWeight(tray.getWeight());
                     update(ts);
                 }
-            } else {// 如果未打包到盒子中，查询是否直接导报到托中
+            } else {
+                // 如果未打包到盒子中，查询是否直接导报到托中
                 TrayBoxRoll tbr = findOne(TrayBoxRoll.class, "rollBarcode", barcode);
                 if (tbr != null) {
                     Tray tray = findOne(Tray.class, "trayBarcode", tbr.getTrayBarcode());
@@ -644,7 +571,6 @@ public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITota
             }
         } else {
             //处理部件条码
-            HashMap<String, Object> map = new HashMap<String, Object>();
             map.put("partBarcode", barcode);
             Roll roll = findUniqueByMap(Roll.class, map);
             oldWeight = roll.getRollWeight();
@@ -655,7 +581,6 @@ public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITota
             ts.setProductWeight(newWeight);
             update(roll);
             update(ts);
-
             // 旧的重量，减去新的重量，计算差距
             double diff = MathUtils.sub(oldWeight, newWeight, 1);
             // 查询是否打包在盒中
@@ -671,12 +596,10 @@ public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITota
 
                 map.clear();
                 map.put("rollBarcode", box.getBoxBarcode());
-
                 ts = findUniqueByMap(TotalStatistics.class, map);
                 ts.setRollWeight(box.getWeight());
                 // 更新生产统计
                 update(ts);
-
                 TrayBoxRoll tbr = findOne(TrayBoxRoll.class, "boxBarcode", box.getBoxBarcode());
                 if (tbr != null) {
                     Tray tray = findOne(Tray.class, "trayBarcode", tbr.getTrayBarcode());
@@ -688,7 +611,8 @@ public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITota
                     ts.setRollWeight(tray.getWeight());
                     update(ts);
                 }
-            } else {// 如果未打包到盒子中，查询是否直接导报到托中
+            } else {
+                // 如果未打包到盒子中，查询是否直接导报到托中
                 TrayBoxRoll tbr = findOne(TrayBoxRoll.class, "rollBarcode", barcode);
                 if (tbr != null) {
                     Tray tray = findOne(Tray.class, "trayBarcode", tbr.getTrayBarcode());
@@ -707,31 +631,30 @@ public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITota
 
     @Override
     public void judge(String ids, String qualityGrade) throws Exception {
-
         List<TotalStatistics> list = getByIds(ids);
         for (TotalStatistics ts : list) {
             ts.setRollQualityGradeCode(qualityGrade);
             String barcode = ts.getRollBarcode();
             if (barcode.startsWith("R")) {
-                HashMap<String, Object> map = new HashMap<String, Object>();
+                HashMap<String, Object> map = new HashMap<>();
                 map.put("rollBarcode", barcode);
                 Roll roll = findUniqueByMap(Roll.class, map);
                 roll.setRollQualityGradeCode(qualityGrade);
                 update(roll);
             } else if (barcode.startsWith("P")) {
-                HashMap<String, Object> map = new HashMap<String, Object>();
+                HashMap<String, Object> map = new HashMap<>();
                 map.put("partBarcode", barcode);
                 Roll roll = findUniqueByMap(Roll.class, map);
                 roll.setRollQualityGradeCode(qualityGrade);
                 update(roll);
             } else if (barcode.startsWith("B")) {
-                HashMap<String, Object> map = new HashMap<String, Object>();
+                HashMap<String, Object> map = new HashMap<>();
                 map.put("boxBarcode", barcode);
                 Box box = findUniqueByMap(Box.class, map);
                 box.setRollQualityGradeCode(qualityGrade);
                 update(box);
             } else if (barcode.startsWith("T")) {
-                HashMap<String, Object> map = new HashMap<String, Object>();
+                HashMap<String, Object> map = new HashMap<>();
                 map.put("trayBarcode", barcode);
                 Tray tray = findUniqueByMap(Tray.class, map);
                 tray.setRollQualityGradeCode(qualityGrade);
@@ -743,36 +666,33 @@ public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITota
 
     @Override
     public Map<String, Object> productsShopSummary(Filter filter, Page page) throws Exception {
-        // TODO Auto-generated method stub
         return totalStatisticsDao.productsShopSummary(filter, page);
     }
 
     @Override
     public Map<String, Object> genericFactorySummary(Filter filter, Page page) throws Exception {
-        // TODO Auto-generated method stub
         return totalStatisticsDao.genericFactorySummary(filter, page);
     }
 
     @Override
     public Map<String, Object> getPickingStatistics(Filter filter, Page page) throws Exception {
-        // TODO Auto-generated method stub
         return totalStatisticsDao.getPickingStatistics(filter, page);
     }
 
     @Override
     public SXSSFWorkbook exportDailyStatistics(Filter filter, String searchType) throws Exception {
         Page page = new Page();
-        page.setAll(1);// 全部显示
+        page.setAll(1);
         page.setRows(999);
-        Map<String, Object> findPageInfo = new HashMap();
-        List<Map<String, Object>> rows = new ArrayList<Map<String, Object>>();
+        Map<String, Object> findPageInfo;
+        List<Map<String, Object>> rows = new ArrayList<>();
         if (searchType != null) {
             if ((searchType.equals("roll")) && filter.get("rollBarcode") == null) {
                 findPageInfo = findPageInfoByRoll(filter, page);
                 rows = (List<Map<String, Object>>) findPageInfo.get("rows");
                 if (rows.size() > 0) {
-                    for (int i = 0; i < rows.size(); i++) {
-                        rows.get(i).put("ROLLCOUNT", 1);
+                    for (Map<String, Object> row : rows) {
+                        row.put("ROLLCOUNT", 1);
                     }
                 }
             } else if (searchType.equals("box") && filter.get("rollBarcode") == null) {
@@ -785,24 +705,24 @@ public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITota
                 findPageInfo = findPageInfoByPart(filter, page);
                 rows = (List<Map<String, Object>>) findPageInfo.get("rows");
                 if (rows.size() > 0) {
-                    for (int i = 0; i < rows.size(); i++) {
-                        rows.get(i).put("ISPACKED", 1);
+                    for (Map<String, Object> row : rows) {
+                        row.put("ISPACKED", 1);
                     }
                 }
             } else if (filter.get("rollBarcode") != null && (filter.get("rollBarcode").startsWith("like:R") || filter.get("rollBarcode").startsWith("like:P"))) {
                 findPageInfo = findPageInfo(filter, page);
                 rows = (List<Map<String, Object>>) findPageInfo.get("rows");
                 if (rows.size() > 0) {
-                    for (int i = 0; i < rows.size(); i++) {
-                        rows.get(i).put("rollCount", 1);
-                        Object rollbarcode = rows.get(i).get("ROLLBARCODE");
+                    for (Map<String, Object> row : rows) {
+                        row.put("rollCount", 1);
+                        Object rollbarcode = row.get("ROLLBARCODE");
                         if (rollbarcode != null) {
                             // 查询该条码是否成托
                             String topBarcode = TopBarcode(rollbarcode.toString());
                             if (topBarcode.indexOf("T") == 0 || topBarcode.indexOf("P") == 0) {
-                                rows.get(i).put("ISPACKED", 1);
+                                row.put("ISPACKED", 1);
                             } else {
-                                rows.get(i).put("ISPACKED", 0);
+                                row.put("ISPACKED", 0);
                             }
                         }
                     }
@@ -819,7 +739,6 @@ public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITota
             rows = (List<Map<String, Object>>) findPageInfo.get("rows");
         }
 
-        String templateName = "生产统计表";
         SXSSFWorkbook wb = new SXSSFWorkbook();
         CellStyle cellStyle = wb.createCellStyle();
         cellStyle.setAlignment(HorizontalAlignment.CENTER); // 水平布局：居中
@@ -831,9 +750,9 @@ public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITota
         cellStyle.setWrapText(true);
         Sheet sheet = wb.createSheet();
         Integer xx = null;
-        Row row = null;
-        Cell cell = null;
-        String columnName[] = new String[]{"条码号", "条码类型", "计划单号", "订单号", "客户名称", "产品规格", "批次号", "质量等级", "机台号", "车间", "卷重（kg）", "门幅（mm）",
+        Row row;
+        Cell cell;
+        String[] columnName = new String[]{"条码号", "条码类型", "计划单号", "订单号", "客户名称", "产品规格", "批次号", "质量等级", "机台号", "车间", "卷重（kg）", "门幅（mm）",
                 "称重重量（kg）", "卷长（m）", "实际卷长（m）", "卷数", "生产时间", "操作人", "库存状态",
                 "状态", "是否作废", "是否打包", "是否拆包", "备注"};
         int r = 0;// 从第1行开始写数据
@@ -848,7 +767,7 @@ public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITota
         sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 23));
         r++;
         row = sheet.createRow(r);
-        cell = row.createCell(0);
+        row.createCell(0);
         for (int a = 0; a < columnName.length; a++) {
             cell = row.createCell(a);
             cell.setCellValue(columnName[a]);
@@ -1026,12 +945,12 @@ public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITota
             r++;
         }
         row = sheet.createRow(r);
-        cell = row.createCell(0);
+        row.createCell(0);
         return wb;
     }
 
     @Override
-    public String TopBarcode(String barcode) throws Exception {
+    public String TopBarcode(String barcode) {
         // 最顶级的条码，默认为当前查询条码，如果有父级条码，改为父级条码，用于最后查询拼装树状结构
         String topBarcode = barcode;
         // 根据条码查询托箱卷关系组织树状关系
@@ -1052,20 +971,15 @@ public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITota
                     topBarcode = br.getBoxBarcode();
                 }
             } else {
-
                 List<TrayBoxRoll> listTrayBoxRoll = find(TrayBoxRoll.class, "rollBarcode", barcode);
                 if (listTrayBoxRoll != null && listTrayBoxRoll.size() > 0) {
-                    Collections.sort(listTrayBoxRoll, new Comparator<TrayBoxRoll>() {
-                        public int compare(TrayBoxRoll o1, TrayBoxRoll o2) {
-                            return o2.getId().compareTo(o1.getId());
-                        }
-                    });
+                    listTrayBoxRoll.sort((o1, o2) -> o2.getId().compareTo(o1.getId()));
                     topBarcode = listTrayBoxRoll.get(0).getTrayBarcode();
                 }
 
             }
         } else if (barcode.startsWith("P")) {
-            HashMap<String, Object> map = new HashMap<String, Object>();
+            HashMap<String, Object> map = new HashMap<>();
             map.put("partBarcode", barcode);
             // 查询出对应的箱条码信息，如果没有，查询托条码信息
             BoxRoll br = findUniqueByMap(BoxRoll.class, map);
@@ -1087,15 +1001,13 @@ public class TotalStatisticsServiceImpl extends BaseServiceImpl implements ITota
                 }
             }
         } else if (barcode.startsWith("B")) {
-            HashMap<String, Object> map = new HashMap<String, Object>();
+            HashMap<String, Object> map = new HashMap<>();
             map.put("boxBarcode", barcode);
             TrayBoxRoll tbr = findUniqueByMap(TrayBoxRoll.class, map);
             if (tbr != null) {
                 topBarcode = tbr.getTrayBarcode();
             }
         }
-
         return topBarcode;
     }
-
 }

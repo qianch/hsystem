@@ -1,17 +1,13 @@
 package com.bluebirdme.mes.siemens.order.entity;
 
-import java.util.Date;
+import com.bluebirdme.mes.core.annotation.Desc;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import com.bluebirdme.mes.core.annotation.Desc;
-import com.bluebirdme.mes.core.base.entity.BaseEntity;
-
 /**
  * 裁剪任务单
- * 
+ *
  * @author Goofy
  * @Date 2017年7月26日 上午10:37:32
  */

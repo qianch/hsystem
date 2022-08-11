@@ -15,21 +15,25 @@ import javax.persistence.MappedSuperclass;
  */
 @MappedSuperclass
 public class BaseBarcode extends BaseEntity {
-
     @Desc("条码号")
     @Column(nullable = false)
     @Index(name = "barcode")
     private String barcode;
+
     @Desc("打印时间")
     @Column(nullable = false)
     private String printTime;
+
     @Desc("打印人员")
     @Column(nullable = false)
     private String printUser;
+
+    /**
+     * 补打，重打，正常打印
+     */
     @Desc("打印类型")
     @Column(nullable = false)
-    private String printType;// 补打，重打，正常打印
-
+    private String printType;
 
     public String getBarcode() {
         return barcode;

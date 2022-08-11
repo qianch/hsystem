@@ -6,41 +6,28 @@
  */
 package com.bluebirdme.mes.siemens.order.service.impl;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import com.bluebirdme.mes.planner.cut.dao.ICutDailyPlanDetailDao;
-import org.springframework.stereotype.Service;
-import org.xdemo.superutil.j2se.MathUtils;
-import org.xdemo.superutil.j2se.PathUtils;
-import org.xdemo.superutil.j2se.StringUtils;
-
 import com.bluebirdme.mes.core.annotation.AnyExceptionRollback;
 import com.bluebirdme.mes.core.base.dao.IBaseDao;
 import com.bluebirdme.mes.core.base.entity.Filter;
 import com.bluebirdme.mes.core.base.entity.Page;
 import com.bluebirdme.mes.core.base.service.BaseServiceImpl;
+import com.bluebirdme.mes.planner.cut.dao.ICutDailyPlanDetailDao;
 import com.bluebirdme.mes.siemens.barcode.entity.FragmentBarcode;
 import com.bluebirdme.mes.siemens.order.dao.ICutTaskOrderDao;
-import com.bluebirdme.mes.siemens.order.entity.CutTask;
-import com.bluebirdme.mes.siemens.order.entity.CutTaskDrawings;
-import com.bluebirdme.mes.siemens.order.entity.CutTaskOrder;
-import com.bluebirdme.mes.siemens.order.entity.CutTaskOrderDrawings;
-import com.bluebirdme.mes.siemens.order.entity.CutTaskOrderPrintTask;
+import com.bluebirdme.mes.siemens.order.entity.*;
 import com.bluebirdme.mes.siemens.order.service.ICutTaskOrderService;
 import com.bluebirdme.mes.siemens.order.service.ICutTaskService;
 import com.bluebirdme.mes.utils.MathTool;
 import com.bluebirdme.mes.utils.PrintUtils;
+import org.springframework.stereotype.Service;
+import org.xdemo.superutil.j2se.MathUtils;
+import org.xdemo.superutil.j2se.PathUtils;
+import org.xdemo.superutil.j2se.StringUtils;
+
+import javax.annotation.Resource;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @author 高飞
@@ -49,7 +36,6 @@ import com.bluebirdme.mes.utils.PrintUtils;
 @Service
 @AnyExceptionRollback
 public class CutTaskOrderServiceImpl extends BaseServiceImpl implements ICutTaskOrderService {
-
     @Resource
     ICutTaskOrderDao cutTaskOrderDao;
 
@@ -77,7 +63,7 @@ public class CutTaskOrderServiceImpl extends BaseServiceImpl implements ICutTask
     }
 
     public void save(CutTaskOrder cto) throws Exception {
-        int[] suitCountPerDrawings = cutTaskService.getSuitCountPerDrawings(cto.getPartId(),cto.getCtId());
+        int[] suitCountPerDrawings = cutTaskService.getSuitCountPerDrawings(cto.getPartId(), cto.getCtId());
 
         int lcm = MathTool.LCM(suitCountPerDrawings);
 
