@@ -20,24 +20,22 @@ import javax.annotation.Resource;
 import java.util.Map;
 
 /**
- * 
  * @author 宋黎明
  * @Date 2016-11-16 13:44:47
  */
 @Service
 @AnyExceptionRollback
 public class ProductReturnDetailServiceImpl extends BaseServiceImpl implements IProductReturnDetailService {
-	@Resource
-	IProductReturnDetailsDao productReturnDetailsDao;
+    @Resource
+    IProductReturnDetailsDao productReturnDetailsDao;
 
+    @Override
+    protected IBaseDao getBaseDao() {
+        return productReturnDetailsDao;
+    }
 
-	@Override
-	protected IBaseDao getBaseDao() {
-		return productReturnDetailsDao;
-	}
-
-	@Override
-	public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-		return productReturnDetailsDao.findPageInfo(filter, page);
-	}
+    @Override
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+        return productReturnDetailsDao.findPageInfo(filter, page);
+    }
 }

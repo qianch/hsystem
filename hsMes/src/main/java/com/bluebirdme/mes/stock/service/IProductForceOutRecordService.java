@@ -9,7 +9,6 @@ package com.bluebirdme.mes.stock.service;
 import com.bluebirdme.mes.core.base.service.IBaseService;
 
 /**
- * 
  * @author 徐波
  * @Date 2017-2-13 14:10:25
  */

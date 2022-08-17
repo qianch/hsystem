@@ -6,26 +6,7 @@
  */
 package com.bluebirdme.mes.stock.service.impl;
 
-import java.math.BigDecimal;
-import java.util.*;
-
-import javax.annotation.Resource;
-import javax.xml.crypto.Data;
-
 import com.bluebirdme.mes.core.annotation.AnyExceptionRollback;
-
-import com.bluebirdme.mes.core.constant.Constant;
-import com.bluebirdme.mes.cut.cutTcBom.entity.CutTcBomMain;
-import com.bluebirdme.mes.mobile.stock.controller.MobileProductStockController;
-import com.bluebirdme.mes.planner.deliveryontheway.service.IDeliveryOnTheWayPlanService;
-import com.bluebirdme.mes.platform.service.ILogService;
-import com.bluebirdme.mes.stock.entity.*;
-import com.bluebirdme.mes.store.dao.IWarehouseDao;
-import com.bluebirdme.mes.store.entity.*;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Service;
-
 import com.bluebirdme.mes.core.base.dao.IBaseDao;
 import com.bluebirdme.mes.core.base.entity.Filter;
 import com.bluebirdme.mes.core.base.entity.Page;
@@ -35,21 +16,33 @@ import com.bluebirdme.mes.mobile.common.service.IMobileService;
 import com.bluebirdme.mes.mobile.stock.service.IMobilePackageService;
 import com.bluebirdme.mes.planner.delivery.entity.DeliveryPlan;
 import com.bluebirdme.mes.planner.delivery.entity.DeliveryPlanSalesOrders;
+import com.bluebirdme.mes.planner.deliveryontheway.service.IDeliveryOnTheWayPlanService;
 import com.bluebirdme.mes.planner.produce.entity.ProducePlan;
 import com.bluebirdme.mes.planner.produce.entity.ProducePlanDetail;
 import com.bluebirdme.mes.planner.turnbag.service.ITurnBagPlanService;
 import com.bluebirdme.mes.planner.weave.entity.WeavePlan;
 import com.bluebirdme.mes.planner.weave.service.IWeavePlanService;
 import com.bluebirdme.mes.platform.entity.User;
+import com.bluebirdme.mes.platform.service.ILogService;
 import com.bluebirdme.mes.produce.entity.FinishedProduct;
 import com.bluebirdme.mes.sales.service.ISalesOrderStockService;
 import com.bluebirdme.mes.statistics.entity.TotalStatistics;
 import com.bluebirdme.mes.statistics.service.ITotalStatisticsService;
 import com.bluebirdme.mes.stock.dao.IProductStockDao;
+import com.bluebirdme.mes.stock.entity.*;
 import com.bluebirdme.mes.stock.service.IProductStockService;
+import com.bluebirdme.mes.store.dao.IWarehouseDao;
+import com.bluebirdme.mes.store.entity.*;
 import com.bluebirdme.mes.store.service.IBarCodeService;
 import com.bluebirdme.mes.utils.ProductState;
 import com.bluebirdme.mes.utils.StockState;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * @author 徐波
@@ -87,7 +80,7 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
         return productStockDao.findPageInfo(filter, page);
     }
 
@@ -97,19 +90,18 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
         List<StockMove> st = new ArrayList<StockMove>();
         List<ProductStockState> pss = new ArrayList<ProductStockState>();
 
-        for (int i = 0; i < codes.length; i++) {
+        for (String s : codes) {
             StockMove _stockMove = new StockMove();
             Map<String, Object> map = new HashMap<String, Object>();
-            map.put("barCode", codes[i]);
+            map.put("barCode", s);
             // 根据每个条码去库存表查询原来的库位库房代码
             List<ProductStockState> productStockState = this.findListByMap(ProductStockState.class, map);
-
-            for (int j = 0; j < productStockState.size(); j++) {
-                if (productStockState.get(j).getWarehouseCode().equals(stockMove.getNewWarehouseCode()) && productStockState.get(j).getWarehousePosCode().equals(stockMove.getNewWarehousePosCode())) {
+            for (ProductStockState stockState : productStockState) {
+                if (stockState.getWarehouseCode().equals(stockMove.getNewWarehouseCode()) && stockState.getWarehousePosCode().equals(stockMove.getNewWarehousePosCode())) {
                 } else {
                     // 保存信息到库存移库表
                     _stockMove.setMoveTime(new Date());
-                    _stockMove.setBarcode(codes[i]);
+                    _stockMove.setBarcode(s);
                     _stockMove.setNewWarehouseCode(stockMove.getNewWarehouseCode());
                     _stockMove.setNewWarehousePosCode(stockMove.getNewWarehousePosCode());
                     _stockMove.setOriginWarehouseCode(productStockState.get(0).getWarehouseCode());
@@ -134,16 +126,16 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
     public String saveAndUpdate1(StockFabricMove stockMove, String code) throws Exception {
         String result = "";
         String[] codes = code.split(",");
-        List<StockFabricMove> st = new ArrayList<StockFabricMove>();
-        List<ProductStockState> pss = new ArrayList<ProductStockState>();
-        for (int i = 0; i < codes.length; i++) {
+        List<StockFabricMove> st = new ArrayList<>();
+        List<ProductStockState> pss = new ArrayList<>();
+        for (String value : codes) {
             StockFabricMove _stockMove = new StockFabricMove();
-            Map<String, Object> map = new HashMap<String, Object>();
-            map.put("barCode", codes[i]);
+            Map<String, Object> map = new HashMap<>();
+            map.put("barCode", value);
             // 根据每个条码去库存表查询原来的库位库房代码
             List<ProductStockState> productStockState = this.findListByMap(ProductStockState.class, map);
             map.clear();
-            map.put("rollBarcode", codes[i]);
+            map.put("rollBarcode", value);
             TotalStatistics ts = findUniqueByMap(TotalStatistics.class, map);
             if (ts.getIsLocked() == 1) {
                 return "locked";
@@ -157,7 +149,7 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
                 if (p1.getBarCode().startsWith("T") || p1.getBarCode().startsWith("P")) {
                     p1.setStockState(-1);
                     productStockDao.update(p1);
-                    HashMap<String, Object> mm = new HashMap<String, Object>();
+                    HashMap<String, Object> mm = new HashMap<>();
                     mm.put("trayBarCode", p1.getBarCode());
                     List<TrayBoxRoll> tbr = productStockDao.findListByMap(TrayBoxRoll.class, mm);
                     for (TrayBoxRoll t : tbr) {
@@ -182,12 +174,12 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
                 }
             }
 
-            for (int j = 0; j < productStockState.size(); j++) {
-                if (productStockState.get(j).getWarehouseCode().equals(stockMove.getNewWarehouseCode()) && productStockState.get(j).getWarehousePosCode().equals(stockMove.getNewWarehousePosCode())) {
-                } else {
+            for (ProductStockState stockState : productStockState) {
+                boolean b = stockState.getWarehouseCode().equals(stockMove.getNewWarehouseCode()) && stockState.getWarehousePosCode().equals(stockMove.getNewWarehousePosCode());
+                if (!b) {
                     // 保存信息到库存移库表
                     _stockMove.setMoveTime(new Date());
-                    _stockMove.setBarcode(codes[i]);
+                    _stockMove.setBarcode(value);
                     _stockMove.setNewWarehouseCode(stockMove.getNewWarehouseCode());
                     _stockMove.setNewWarehousePosCode(stockMove.getNewWarehousePosCode());
                     _stockMove.setOriginWarehouseCode(productStockState.get(0).getWarehouseCode());
@@ -203,9 +195,7 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
                     pss.add(_productStockState);
                 }
             }
-
         }
-
         productStockDao.save(st.toArray(new StockFabricMove[]{}));
         productStockDao.update2(pss.toArray(new ProductStockState[]{}));
         return result;
@@ -377,14 +367,9 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
 
     /**
      * 胚布待入库
-     *
-     * @param PeiBuPendingInRecord peiBuPendingInRecord
-     * @param Long                 overTime
-     * @return
-     * @throws Exception
      */
     @Override
-    public String pbPendingIn(PendingInRecord pendingInRecord, Long overTime) throws Exception {
+    public String pbPendingIn(PendingInRecord pendingInRecord, Long overTime) {
         String result = "";
         ProductStockState productStockState = new ProductStockState();
         productStockState.setStockState(StockState.STOCKPENDING);
@@ -520,36 +505,26 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
 
     /**
      * 胚布新入库
-     *
-     * @param ProductInRecord productInRecord
-     * @param Long            overTime
-     * @return
-     * @throws Exception
      */
     @Override
     public String pbIn(ProductInRecord productInRecord) throws Exception {
-        List<ProductInRecord> productInRecordlist = new ArrayList<ProductInRecord>();
+        List<ProductInRecord> productInRecordlist = new ArrayList<>();
         return pbIns(productInRecordlist);
     }
 
 
     /**
      * 胚布老入库
-     *
-     * @param ProductInRecord productInRecord
-     * @param Long            overTime
-     * @return
-     * @throws Exception
      */
     @Override
-    public String savePbIn(ProductInRecord productInRecord, Long overTime) throws Exception {
+    public String savePbIn(ProductInRecord productInRecord, Long overTime) {
         String result = "";
         ProductStockState productStockState = new ProductStockState();
         productStockState.setStockState(StockState.IN);
         productStockState.setWarehouseCode(productInRecord.getWarehouseCode());
         productStockState.setWarehousePosCode(productInRecord.getWarehousePosCode());
         productStockState.setOverTime(overTime);
-        HashMap<String, Object> map = new HashMap<String, Object>();
+        HashMap<String, Object> map = new HashMap<>();
         productStockState.setBarCode(productInRecord.getBarCode());
         map.put("barCode", productInRecord.getBarCode());
         ProductStockState pss = productStockDao.findUniqueByMap(ProductStockState.class, map);
@@ -678,23 +653,14 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
 
     /**
      * 老出库
-     *
-     * @param String codes
-     * @param Long   UserId
-     * @param String packingNum
-     * @param String plate
-     * @param String boxNumber
-     * @param Double count
-     * @return
-     * @throws Exception
      */
     @Override
     public String saveOutRecordAndUpdateStock(String codes, Long UserId, String packingNum, String plate, String boxNumber, Double count) throws Exception {
-        HashMap<String, Object> map = new HashMap<String, Object>();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("packingNumber", packingNum);
         DeliveryPlanSalesOrders dpso = findUniqueByMap(DeliveryPlanSalesOrders.class, map);
         map.clear();
-        Long deliveryId = null;
+        Long deliveryId;
         if (dpso == null) {
             return "未找到出货计划";
         } else {
@@ -703,21 +669,19 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
         DeliveryPlan dp = productStockDao.findById(DeliveryPlan.class, deliveryId);
         String result = "";
         String[] code = codes.split(",");
-        List<ProductStockState> _pss = new ArrayList<ProductStockState>();
-        List<ProductOutRecord> _por = new ArrayList<ProductOutRecord>();
+        List<ProductStockState> _pss = new ArrayList<>();
+        List<ProductOutRecord> _por = new ArrayList<>();
         map.clear();
 
-        for (int i = 0; i < code.length; i++) {
-            if (totalStatisticsService.isFrozen(code[i]) == ProductState.FROZEN) {
-                return code[i] + "已冻结，禁止出库";
+        for (String s : code) {
+            if (totalStatisticsService.isFrozen(s) == ProductState.FROZEN) {
+                return s + "已冻结，禁止出库";
             }
             map.clear();
-            map.put("barCode", code[i]);
-            List<ProductInRecord> pir = productStockDao.findListByMap(ProductInRecord.class, map);
+            map.put("barCode", s);
             List<ProductStockState> li = productStockDao.findListByMap(ProductStockState.class, map);
             map.clear();
-            map.put("trayBarcode", code[i]);
-
+            map.put("trayBarcode", s);
             for (ProductStockState pss : li) {
                 if (pss == null) {
                     return "无库存记录，禁止出库";
@@ -732,7 +696,7 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
                 map.clear();
                 map.put("barcode", pss.getBarCode());
 
-                Long salesProductId = new Long(0);
+                Long salesProductId = 0L;
                 TrayBarCode trayBarCode = findUniqueByMap(TrayBarCode.class, map);
                 if (trayBarCode != null) {
                     salesProductId = trayBarCode.getSalesProductId();
@@ -782,10 +746,9 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
                 _por.add(por);
                 productStockDao.update(ts);
             }
-            String barcode = code[i];
 
-            HashMap<String, Object> map1 = new HashMap<String, Object>();
-            map1.put("trayBarcode", barcode);
+            HashMap<String, Object> map1 = new HashMap<>();
+            map1.put("trayBarcode", s);
             List<TrayBoxRoll> tbrList = findListByMap(TrayBoxRoll.class, map1);
             for (TrayBoxRoll tbr : tbrList) {
                 map1.clear();
@@ -823,8 +786,6 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
             }
         }
 
-        // dp.setIsComplete(1);// 设置该出库计划已完成
-        // dpso.setCount(count);
         dpso.setRealBoxNumber(boxNumber);
         dpso.setPlate(plate);
         dpso.setIsFinished(1);
@@ -866,10 +827,10 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
     }
 
     @Override
-    public Map<String, Object> findStateByCode(String barCode, String materialCode) throws Exception {
-        Map<String, Object> ret = new HashMap<String, Object>();
-        Map<String, Object> param = new HashMap<String, Object>();
-        String PRODUCED = "produced", STATE = "state", STOCK = "stock";
+    public Map<String, Object> findStateByCode(String barCode, String materialCode) {
+        Map<String, Object> ret = new HashMap<>();
+        Map<String, Object> param = new HashMap<>();
+        String PRODUCED = "produced", STOCK = "stock";
         // 成品条码
         if (!StringUtils.isBlank(barCode)) {
             // 如果是托条码
@@ -881,7 +842,6 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
                 } else {
                     ret.put(PRODUCED, false);
                 }
-
             } else if (barCode.startsWith("B")) {
                 // 箱信息查询
                 param.put("boxBarcode", barCode);
@@ -919,13 +879,13 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
     @Override
     public void doFreeze(String codes) throws Exception {
         String[] code = codes.split(",");
-        Map<String, Object> map = new HashMap<String, Object>();
-        List<ProductStockState> _pss = new ArrayList<ProductStockState>();
-        for (int i = 0; i < code.length; i++) {
-            map.put("barCode", code[i]);
+        Map<String, Object> map = new HashMap<>();
+        List<ProductStockState> _pss = new ArrayList<>();
+        for (String s : code) {
+            map.put("barCode", s);
             List<ProductStockState> li = productStockDao.findListByMap(ProductStockState.class, map);
             map.clear();
-            map.put("rollBarcode", code[i]);
+            map.put("rollBarcode", s);
             TotalStatistics ts = productStockDao.findUniqueByMap(TotalStatistics.class, map);
             ts.setIsLocked(1);
             productStockDao.update(ts);
@@ -955,20 +915,16 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
 
 
     public void abandon(String code) throws Exception {
-        Map<String, Object> param = new HashMap<String, Object>();
+        Map<String, Object> param = new HashMap<>();
         RollBarcode rbc;
         PartBarcode pbc;
-        boolean packed = false;
-
+        boolean packed;
         pbc = mobileService.findBarcodeInfo(BarCodeType.PART, code);
         rbc = mobileService.findBarcodeInfo(BarCodeType.ROLL, code);
-
         if (rbc == null) {
             throw new Exception("只有卷条码才能作废");
         }
-
         if (code.startsWith("P") && pbc != null) {
-            param.clear();
             param.put("partBarcode", code);
             boolean packedToBox = mobileService.isExist(BoxRoll.class, param, true);
             boolean packedToTray = mobileService.isExist(TrayBoxRoll.class, param, true);
@@ -976,13 +932,11 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
             pbc.setIsAbandon(1);
             update(pbc);
         } else {
-            param.clear();
             param.put("rollBarcode", code);
             boolean packedToBox = mobileService.isExist(BoxRoll.class, param, true);
             boolean packedToTray = mobileService.isExist(TrayBoxRoll.class, param, true);
             // 是否已打包
             packed = packedToBox || packedToTray;
-
             rbc.setIsAbandon(1);
             update(rbc);
             param.clear();
@@ -993,25 +947,22 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
                 WeavePlan w = weavePlanService.findById(WeavePlan.class, rbc.getPlanId());
                 List<Map<String, Object>> list = weavePlanService.findRollisNoA(rbc.getBatchCode());
                 w.setToVoid(Integer.parseInt(list.get(0).get("CC").toString()));
-                BigDecimal bg = new BigDecimal(Double.parseDouble(list.get(0).get("SS").toString()));
+                BigDecimal bg = BigDecimal.valueOf(Double.parseDouble(list.get(0).get("SS").toString()));
                 w.setToVoidWeight(bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue());
                 weavePlanService.update(w);
             }
         }
-
         if (packed) {
             throw new Exception("已被打包，无法作废");
         }
-
-
     }
 
     @Override
     public void abandon(String code, String userId) throws Exception {
-        Map<String, Object> param = new HashMap<String, Object>();
+        Map<String, Object> param = new HashMap<>();
         RollBarcode rbc;
         PartBarcode pbc;
-        boolean packed = false;
+        boolean packed;
 
         pbc = mobileService.findBarcodeInfo(BarCodeType.PART, code);
         rbc = mobileService.findBarcodeInfo(BarCodeType.ROLL, code);
@@ -1021,7 +972,6 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
         }
 
         if (code.startsWith("P") && pbc != null) {
-            param.clear();
             param.put("partBarcode", code);
             boolean packedToBox = mobileService.isExist(BoxRoll.class, param, true);
             boolean packedToTray = mobileService.isExist(TrayBoxRoll.class, param, true);
@@ -1029,13 +979,11 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
             pbc.setIsAbandon(1);
             update(pbc);
         } else {
-            param.clear();
             param.put("rollBarcode", code);
             boolean packedToBox = mobileService.isExist(BoxRoll.class, param, true);
             boolean packedToTray = mobileService.isExist(TrayBoxRoll.class, param, true);
             // 是否已打包
             packed = packedToBox || packedToTray;
-
             rbc.setIsAbandon(1);
             update(rbc);
             param.clear();
@@ -1046,25 +994,19 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
                 WeavePlan w = weavePlanService.findById(WeavePlan.class, rbc.getPlanId());
                 List<Map<String, Object>> list = weavePlanService.findRollisNoA(rbc.getBatchCode());
                 w.setToVoid(Integer.parseInt(list.get(0).get("CC").toString()));
-                BigDecimal bg = new BigDecimal(Double.parseDouble(list.get(0).get("SS").toString()));
+                BigDecimal bg = BigDecimal.valueOf(Double.parseDouble(list.get(0).get("SS").toString()));
                 w.setToVoidWeight(bg.setScale(1, BigDecimal.ROUND_HALF_UP).doubleValue());
                 weavePlanService.update(w);
             }
         }
-
-
         if (packed) {
             throw new Exception("已被打包，无法作废");
         }
-
         AbandonBarCode abandonBarCode = new AbandonBarCode();
         abandonBarCode.setBarCode(code);
         abandonBarCode.setUserId(userId);
         abandonBarCode.setCreateDate(new Date());
-
         save(abandonBarCode);
-
-
     }
 
 
@@ -1089,28 +1031,23 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
     }
 
 
-    public <T> Map<String, Object> stockView(Filter filter, Page page) throws Exception {
+    public Map<String, Object> stockView(Filter filter, Page page) throws Exception {
         return productStockDao.stockView(filter, page);
     }
 
     @Override
-    public <T> Map<String, Object> stockViewNew(Filter filter, Page page) throws Exception {
+    public Map<String, Object> stockViewNew(Filter filter, Page page) throws Exception {
         return productStockDao.stockViewNew(filter, page);
     }
 
     @Override
-    public <T> Map<String, Object> stockViewNewPcj(Filter filter, Page page) throws Exception {
+    public Map<String, Object> stockViewNewPcj(Filter filter, Page page) throws Exception {
         return productStockDao.stockViewNewPcj(filter, page);
     }
 
 
     /**
      * 待入库
-     *
-     * @param productInRecord,Long
-     * @param overTime
-     * @return
-     * @throws Exception
      */
     @Override
     public String saveStockPending(ProductInRecord productInRecord, Long overTime) throws Exception {
@@ -1120,7 +1057,7 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
         productStockState.setWarehouseCode(productInRecord.getWarehouseCode());
         productStockState.setWarehousePosCode(productInRecord.getWarehousePosCode());
         productStockState.setOverTime(overTime);
-        HashMap<String, Object> map = new HashMap();
+        HashMap<String, Object> map = new HashMap<>();
         productStockState.setBarCode(productInRecord.getBarCode());
         map.put("barCode", productInRecord.getBarCode());
         ProductStockState pss = productStockDao.findUniqueByMap(ProductStockState.class, map);
@@ -1178,7 +1115,7 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
 
         String barcode = productInRecord.getBarCode();
         if (barcode.startsWith("T") || barcode.startsWith("P")) {
-            HashMap<String, Object> map1 = new HashMap<String, Object>();
+            HashMap<String, Object> map1 = new HashMap<>();
             map1.put("trayBarcode", barcode);
             List<TrayBoxRoll> tbrList = findListByMap(TrayBoxRoll.class, map1);
             for (TrayBoxRoll tbr : tbrList) {
@@ -1244,7 +1181,7 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
             }
         }
 
-        List<ProductStockTran> st = new ArrayList<ProductStockTran>();
+        List<ProductStockTran> st = new ArrayList<>();
         productInRecord.setInTime(new Date());
         PendingInRecord record = productStockDao.findOne(PendingInRecord.class, "barCode", productInRecord.getBarCode());
         ProductStockTran productStockTran = new ProductStockTran();
@@ -1281,17 +1218,12 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
 
     /**
      * 新入库
-     *
-     * @param productInRecord,Long
-     * @param overTime
-     * @return
-     * @throws Exception
      */
     @Override
     public String pIn(ProductInRecord productInRecord, Long overTime) throws Exception {
         String result = "";
         productInRecord.setInTime(new Date());
-        HashMap<String, Object> map = new HashMap<String, Object>();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("barCode", productInRecord.getBarCode());
         ProductStockState pss = productStockDao.findUniqueByMap(ProductStockState.class, map);
         Tray t = codeService.findBarCodeReg(BarCodeRegType.TRAY, productInRecord.getBarCode());
@@ -1323,29 +1255,24 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
         }
         String barcode = productInRecord.getBarCode();
         if (barcode.startsWith("T") || barcode.startsWith("P")) {
-            HashMap<String, Object> map1 = new HashMap<String, Object>();
+            HashMap<String, Object> map1 = new HashMap<>();
             map1.put("trayBarcode", barcode);
             List<TrayBoxRoll> tbrList = findListByMap(TrayBoxRoll.class, map1);
             for (TrayBoxRoll tbr : tbrList) {
                 map1.clear();
                 if (tbr.getRollBarcode() != null) {
-
-                    if (tbr.getRollBarcode().equals("")) continue;//如果为空则循环跳过去
+                    //如果为空则循环跳过去
+                    if (tbr.getRollBarcode().equals("")) continue;
                     map1.clear();
                     map1.put("rollBarcode", tbr.getRollBarcode());
                     TotalStatistics ts = productStockDao.findUniqueByMap(TotalStatistics.class, map1);
                     ts.setState(StockState.IN);
                     ts.setInTime(productInRecord.getInTime());
                     productStockDao.update(ts);
-
                     //是托的话更新卷状态
                     List<ProductStockState> listProductStockState = productStockDao.find(ProductStockState.class, "barcode", tbr.getRollBarcode());
                     if (listProductStockState != null && listProductStockState.size() > 0) {
-                        Collections.sort(listProductStockState, new Comparator<ProductStockState>() {
-                            public int compare(ProductStockState o1, ProductStockState o2) {
-                                return o2.getId().compareTo(o1.getId());
-                            }
-                        });
+                        listProductStockState.sort((o1, o2) -> o2.getId().compareTo(o1.getId()));
                         ProductStockState pstockstate = listProductStockState.get(0);
                         pstockstate.setStockState(StockState.IN);
                         pstockstate.setWarehouseCode(productInRecord.getWarehouseCode());
@@ -1359,11 +1286,7 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
                     //对打托的卷进行入库记录
                     List<PendingInRecord> listProductInRecord = productStockDao.find(PendingInRecord.class, "barcode", tbr.getRollBarcode());
                     if (roll != null && listProductInRecord != null && listProductInRecord.size() > 0) {
-                        Collections.sort(listProductInRecord, new Comparator<PendingInRecord>() {
-                            public int compare(PendingInRecord o1, PendingInRecord o2) {
-                                return o2.getId().compareTo(o1.getId());
-                            }
-                        });
+                        listProductInRecord.sort((o1, o2) -> o2.getId().compareTo(o1.getId()));
                         PendingInRecord pdIn = listProductInRecord.get(0);
                         ProductInRecord pIn = new ProductInRecord();
                         BeanUtils.copyProperties(pdIn, pIn);
@@ -1378,13 +1301,12 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
                     }
 
                 } else if (tbr.getPartBarcode() != null) {
+                    //更新卷时间
                     map1.put("rollBarcode", tbr.getPartBarcode());
                     TotalStatistics ts = productStockDao.findUniqueByMap(TotalStatistics.class, map1);
                     ts.setState(StockState.IN);
                     ts.setInTime(productInRecord.getInTime());
                     productStockDao.update(ts);
-                    //更新卷时间
-
                 } else {
                     map1.put("rollBarcode", tbr.getBoxBarcode());
                     TotalStatistics ts = productStockDao.findUniqueByMap(TotalStatistics.class, map1);
@@ -1415,7 +1337,6 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
             }
         }
 
-
         ProductInRecord record = productStockDao.findOne(ProductInRecord.class, "barCode", productInRecord.getBarCode());
         if (record == null) {
             productStockDao.save(productInRecord);
@@ -1436,7 +1357,6 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
                 productStockDao.update(roll);
             }
         }
-
         return result;
     }
 
@@ -1447,8 +1367,6 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
      * @param warehousecode    终点仓库编码
      * @param logisticscompany 货运
      * @param plate            车牌
-     * @return
-     * @throws Exception
      */
     public String POnTheWay(String code, String warehousecode, String logisticscompany, String plate, long loginid) throws Exception {
         String result = "";
@@ -1457,11 +1375,8 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
         deliveryonthewayPlanService.saveDeliveryPlan(code, warehousecode, logisticscompany, plate, loginid);
         //更新在途状态逻辑
         String[] codes = code.split(",");
-        List<StockMove> st = new ArrayList<StockMove>();
-        List<ProductStockState> psslist = new ArrayList<ProductStockState>();
-        for (int i = 0; i < codes.length; i++) {
-            String barcode = codes[i];
-            Map<String, Object> map = new HashMap<String, Object>();
+        for (String barcode : codes) {
+            Map<String, Object> map = new HashMap<>();
             map.put("barCode", barcode);
             ProductStockState pss = productStockDao.findUniqueByMap(ProductStockState.class, map);
             if (pss != null) {
@@ -1476,57 +1391,37 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
      * 新移库
      *
      * @param stockMove String code
-     * @return
-     * @throws Exception
      */
     public String pMove(StockMove stockMove, String code) throws Exception {
         String result = "";
         String[] codes = code.split(",");
-        List<StockMove> st = new ArrayList<StockMove>();
-        List<ProductStockState> pss = new ArrayList<ProductStockState>();
-
-        Map<String, Object> map = new HashMap<String, Object>();
-
-        map.clear();
+        List<StockMove> st = new ArrayList<>();
+        List<ProductStockState> pss = new ArrayList<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("WAREHOUSECODE", stockMove.getNewWarehouseCode());
         Warehouse _newwarehouse = warehouseDao.findUniqueByMap(Warehouse.class, map);
         if (_newwarehouse == null) {
             return "未找到仓库编码：" + stockMove.getNewWarehouseCode();
         }
 
-        for (int i = 0; i < codes.length; i++) {
-            String barCode = codes[i];
+        for (String barCode : codes) {
             StockMove _stockMove = new StockMove();
             map.clear();
             map.put("barCode", barCode);
-
-
             // 根据每个条码去库存表查询原来的库位库房代码
             List<ProductStockState> listProductStockState = this.findListByMap(ProductStockState.class, map);
             if (listProductStockState != null && listProductStockState.size() > 0) {
-                Collections.sort(listProductStockState, new Comparator<ProductStockState>() {
-                    public int compare(ProductStockState o1, ProductStockState o2) {
-                        return o2.getId().compareTo(o1.getId());
-                    }
-                });
+                listProductStockState.sort((o1, o2) -> o2.getId().compareTo(o1.getId()));
                 ProductStockState _productStockState = listProductStockState.get(0);
-
                 if (_productStockState.getWarehouseCode().equals(stockMove.getNewWarehouseCode()) && _productStockState.getWarehousePosCode().equals(stockMove.getNewWarehousePosCode())) {
                     if (_productStockState.getStockState() != StockState.OnTheWay) {
                         result += barCode + "库位位置没变";
                         continue;
                     }
                 }
-
                 map.clear();
                 map.put("WAREHOUSECODE", _productStockState.getWarehouseCode());
-
                 //如果要移入到外库,外库可以直接到外库
-                if (_newwarehouse.getWareType() != null && _newwarehouse.getWareType().equals("cpwk")) {
-                    if (_productStockState.getStockState() != StockState.OnTheWay) {
-                    }
-                }
-
                 if (barCode.startsWith("PCJ")) {
                     PartBarcode partBarcode = findOne(PartBarcode.class, "barcode", barCode);
                     _stockMove.setProducePlanDetailId(partBarcode == null ? null : partBarcode.getProducePlanDetailId());
@@ -1534,7 +1429,6 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
                     TrayBarCode trayBarCode = findOne(TrayBarCode.class, "barcode", barCode);
                     _stockMove.setProducePlanDetailId(trayBarCode == null ? null : trayBarCode.getProducePlanDetailId());
                 }
-
                 // 保存信息到库存移库表
                 _stockMove.setMoveTime(new Date());
                 _stockMove.setBarcode(barCode);
@@ -1544,22 +1438,17 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
                 _stockMove.setOriginWarehousePosCode(_productStockState.getWarehousePosCode());
                 _stockMove.setMoveUserId(stockMove.getMoveUserId());
                 st.add(_stockMove);
-
                 _productStockState.setWarehouseCode(stockMove.getNewWarehouseCode());
                 _productStockState.setWarehousePosCode(stockMove.getNewWarehousePosCode());
-
                 if (_productStockState.getStockState() == StockState.OUT) {
                     _productStockState.setStockState(StockState.IN);
                 } else if (_productStockState.getStockState() == StockState.OnTheWay || _productStockState.getStockState() == StockState.Pick) {
                     _productStockState.setStockState(StockState.IN);
                     action(barCode, StockState.IN);
                 }
-
                 pss.add(_productStockState);
             }
         }
-
-
         productStockDao.save(st.toArray(new StockMove[]{}));
         productStockDao.update2(pss.toArray(new ProductStockState[]{}));
         return result;
@@ -1583,7 +1472,6 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
     public String pOut(String codes, Long UserId, String packingNum, String plate, String boxNumber, Double count, int isfinished) throws Exception {
         ProductOutOrder poo = new ProductOutOrder();
         poo.setOutTime(new Date());
-
         HashMap<String, Object> map = new HashMap<>();
         map.put("packingNumber", packingNum);
         DeliveryPlanSalesOrders dpso = findUniqueByMap(DeliveryPlanSalesOrders.class, map);
@@ -1601,12 +1489,10 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
         List<ProductOutRecord> _listporsave = new ArrayList<>();
         List<ProductOutRecord> _listporupdate = new ArrayList<>();
         map.clear();
-        for (int i = 0; i < code.length; i++) {
-            String barcode = code[i];
+        for (String barcode : code) {
             if (totalStatisticsService.isFrozen(barcode) == ProductState.FROZEN) {
                 return barcode + "已冻结，禁止出库";
             }
-
             map.clear();
             map.put("barCode", barcode);
             List<ProductStockState> listProductStockState = productStockDao.findListByMap(ProductStockState.class, map);
@@ -1616,11 +1502,9 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
                 if (pss == null) {
                     return "无库存记录，禁止出库";
                 }
-
                 if (pss.getStockState() == StockState.OUT) {
                     return pss.getBarCode() + "已出库，禁止重复出库";
                 }
-
                 map.clear();
                 map.put("rollBarcode", pss.getBarCode());
                 TotalStatistics ts = productStockDao.findUniqueByMap(TotalStatistics.class, map);
@@ -1628,7 +1512,7 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
                 ts.setOutTime(poo.getOutTime());
                 map.clear();
                 map.put("barcode", pss.getBarCode());
-                Long salesProductId = new Long(0);
+                Long salesProductId = 0L;
                 TrayBarCode trayBarCode = findUniqueByMap(TrayBarCode.class, map);
                 if (trayBarCode != null) {
                     salesProductId = trayBarCode.getSalesProductId();
@@ -1741,10 +1625,10 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
             }
         }
         if (boolisFinished) {
-            dp.setIsComplete(1);// 设置该出库计划已完成
+            // 设置该出库计划已完成
+            dp.setIsComplete(1);
             productStockDao.update2(dp);
         }
-
         poo.setBoxNumber(dpso.getBoxNumber());
         poo.setConsumerName(dp.getDeliveryTargetCompany());
         poo.setCount(count);
@@ -1773,19 +1657,13 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
 
     /**
      * 回库
-     *
-     * @param productStockTran
-     * @param code
-     * @return
-     * @throws Exception
      */
     public String pBack(ProductStockTran productStockTran, String code) throws Exception {
         String result = "";
         String[] codes = code.split(",");
-        List<ProductStockTran> st = new ArrayList<ProductStockTran>();
-        List<ProductStockState> pss = new ArrayList<ProductStockState>();
-        for (int i = 0; i < codes.length; i++) {
-            String barCode = codes[i];
+        List<ProductStockTran> st = new ArrayList<>();
+        List<ProductStockState> pss = new ArrayList<>();
+        for (String barCode : codes) {
             // 根据每个条码去库存表查询原来的库位库房代码
             ProductStockState productStockState = productStockDao.findOne(ProductStockState.class, "barCode", barCode);
             if (productStockState.getStockState() != StockState.OUT) {
@@ -1806,28 +1684,24 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
             _productStockTran.setOperateUserId(productStockTran.getOperateUserId());
             _productStockTran.setStatus(StockState.IN);
             st.add(_productStockTran);
-
             action(barCode, StockState.IN);
-
             pss.add(productStockState);
         }
-
         productStockDao.save(st.toArray(new ProductStockTran[]{}));
         productStockDao.update2(pss.toArray(new ProductStockState[]{}));
         return result;
     }
 
     @Override
-    public List<Map<String, Object>> getMoveInfoBybarcode(String barcode)
-            throws SQLTemplateException {
+    public List<Map<String, Object>> getMoveInfoBybarcode(String barcode) throws SQLTemplateException {
         return productStockDao.getMoveInfoBybarcode(barcode);
     }
 
     //在途，移库 根据托条码，更新托，托下面的卷，部件的ProductStockState的状态。
     public boolean action(String barcode, int stockState) throws Exception {
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        List<ProductStockState> listpss = new ArrayList<ProductStockState>();
-        List<TotalStatistics> listts = new ArrayList<TotalStatistics>();
+        HashMap<String, Object> map = new HashMap<>();
+        List<ProductStockState> listpss = new ArrayList<>();
+        List<TotalStatistics> listts = new ArrayList<>();
         map.put("barCode", barcode);
         ProductStockState pss = productStockDao.findUniqueByMap(ProductStockState.class, map);
         if (pss != null) {
@@ -1849,20 +1723,14 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
                 map.clear();
                 if (tbr.getRollBarcode() != null) {
                     if (tbr.getRollBarcode().equals("")) continue;//如果为空则循环跳过去
-
                     //是托的话更新卷状态
                     List<ProductStockState> listProductStockState = productStockDao.find(ProductStockState.class, "barcode", tbr.getRollBarcode());
                     if (listProductStockState != null && listProductStockState.size() > 0) {
-                        Collections.sort(listProductStockState, new Comparator<ProductStockState>() {
-                            public int compare(ProductStockState o1, ProductStockState o2) {
-                                return o2.getId().compareTo(o1.getId());
-                            }
-                        });
+                        listProductStockState.sort((o1, o2) -> o2.getId().compareTo(o1.getId()));
                         ProductStockState pstockstate = listProductStockState.get(0);
                         pstockstate.setStockState(stockState);
                         listpss.add(pstockstate);
                     }
-
                     map.clear();
                     map.put("rollBarcode", tbr.getRollBarcode());
                     TotalStatistics ts1 = productStockDao.findUniqueByMap(TotalStatistics.class, map);//找到托下面的卷
@@ -1916,9 +1784,9 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
 
     //在途，移库 根据托条码，更新托，托下面的卷，部件的ProductStockState的状态。
     public boolean actionBarCode(String barcode, int stockState, String warehouseCode, String warehousePosCode, String inBankSource) throws Exception {
-        HashMap<String, Object> map = new HashMap<String, Object>();
-        List<ProductStockState> listpss = new ArrayList<ProductStockState>();
-        List<TotalStatistics> listts = new ArrayList<TotalStatistics>();
+        HashMap<String, Object> map = new HashMap<>();
+        List<ProductStockState> listpss = new ArrayList<>();
+        List<TotalStatistics> listts = new ArrayList<>();
         map.put("barCode", barcode);
         ProductStockState pss = productStockDao.findUniqueByMap(ProductStockState.class, map);
         if (pss != null) {
@@ -1935,20 +1803,17 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
         if (barcode.startsWith("T") || barcode.startsWith("P")) {
             map.clear();
             map.put("trayBarcode", barcode);
-            List<TrayBoxRoll> tbrList = findListByMap(TrayBoxRoll.class, map);//找到托箱关系
+            //找到托箱关系
+            List<TrayBoxRoll> tbrList = findListByMap(TrayBoxRoll.class, map);
             for (TrayBoxRoll tbr : tbrList) {
                 map.clear();
                 if (tbr.getRollBarcode() != null) {
-                    if (tbr.getRollBarcode().equals("")) continue;//如果为空则循环跳过去
-
+                    //如果为空则循环跳过去
+                    if (tbr.getRollBarcode().equals("")) continue;
                     //是托的话更新卷状态
                     List<ProductStockState> listProductStockState = productStockDao.find(ProductStockState.class, "barcode", tbr.getRollBarcode());
                     if (listProductStockState != null && listProductStockState.size() > 0) {
-                        Collections.sort(listProductStockState, new Comparator<ProductStockState>() {
-                            public int compare(ProductStockState o1, ProductStockState o2) {
-                                return o2.getId().compareTo(o1.getId());
-                            }
-                        });
+                        listProductStockState.sort((o1, o2) -> o2.getId().compareTo(o1.getId()));
                         ProductStockState pstockstate = listProductStockState.get(0);
                         pstockstate.setStockState(stockState);
                         listpss.add(pstockstate);
@@ -1961,7 +1826,6 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
                         pss1.setWarehousePosCode(warehousePosCode);
                         productStockDao.save(pss1);
                     }
-
                     map.clear();
                     map.put("rollBarcode", tbr.getRollBarcode());
                     TotalStatistics ts1 = productStockDao.findUniqueByMap(TotalStatistics.class, map);//找到托下面的卷
@@ -1969,13 +1833,10 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
                         ts1.setState(stockState);
                         listts.add(ts1);
                     }
-
                     //对打托的卷进行入库记录
-
                     map.clear();
                     map.put("rollBarcode", tbr.getRollBarcode());
                     Roll r = productStockDao.findUniqueByMap(Roll.class, map);
-
                     if (r == null) {
                         map.clear();
                         map.put("partBarcode", tbr.getRollBarcode());
@@ -1983,7 +1844,7 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
                     }
 
                     switch (stockState) {
-                        case StockState.STOCKPENDING:
+                        case StockState.STOCKPENDING -> {
                             PendingInRecord pdIn = new PendingInRecord();
                             pdIn.setBarCode(tbr.getRollBarcode());
                             pdIn.setInTime(new Date());
@@ -1994,8 +1855,8 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
                             pdIn.setInBankSource(inBankSource);
                             pdIn.setSyncState(1);
                             productStockDao.save(pdIn);
-                            break;
-                        case StockState.IN:
+                        }
+                        case StockState.IN -> {
                             ProductInRecord productInRecord = new ProductInRecord();
                             productInRecord.setBarCode(tbr.getRollBarcode());
                             productInRecord.setInTime(new Date());
@@ -2006,8 +1867,8 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
                             productInRecord.setInBankSource(inBankSource);
                             productInRecord.setSyncState(1);
                             productStockDao.save(productInRecord);
-                            break;
-                        case StockState.Pick:
+                        }
+                        case StockState.Pick -> {
                             FabricPickRecord fabricPickRecord = new FabricPickRecord();
                             fabricPickRecord.setBarCode(tbr.getRollBarcode());
                             fabricPickRecord.setInTime(new Date());
@@ -2018,9 +1879,8 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
                             fabricPickRecord.setInBankSource(inBankSource);
                             fabricPickRecord.setSyncState(1);
                             productStockDao.save(fabricPickRecord);
-                            break;
+                        }
                     }
-
                 } else if (tbr.getPartBarcode() != null) {
                     map.put("rollBarcode", tbr.getPartBarcode());
                     TotalStatistics ts2 = productStockDao.findUniqueByMap(TotalStatistics.class, map);
@@ -2067,33 +1927,23 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
 
 
     public String GetStockState(int stockState) {
-        switch (stockState) {
-            case -1:
-                return "不在库";
-            case 1:
-                return "在库";
-            case 2:
-                return "待入库";
-            case 3:
-                return "在途";
-            case 4:
-                return "领料";
-            default:
-                return "未知";
-        }
+        return switch (stockState) {
+            case -1 -> "不在库";
+            case 1 -> "在库";
+            case 2 -> "待入库";
+            case 3 -> "在途";
+            case 4 -> "领料";
+            default -> "未知";
+        };
     }
 
-
     @Override
-    public <T> Map<String, Object> findPageInfoMoveList(Filter filter, Page page) {
+    public Map<String, Object> findPageInfoMoveList(Filter filter, Page page) {
         return productStockDao.findPageInfoMoveList(filter, page);
     }
 
     /**
      * 查询仓库中文名称
-     *
-     * @param warehouseCode
-     * @return
      */
     @Override
     public String pwarhourseName(String warehouseCode) {
@@ -2106,7 +1956,7 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
     }
 
     @Override
-    public String pendingWarhourse(String salesOrderCode, String batchCode, String productModel) throws Exception {
+    public String pendingWarhourse(String salesOrderCode, String batchCode, String productModel) {
         List<Map<String, Object>> findWarhourse = productStockDao.findPendingWarhourse(salesOrderCode, batchCode, productModel);
         String warehouse = "";
         if (findWarhourse.size() > 0) {
@@ -2121,48 +1971,34 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
 
     /**
      * 新成品批量入库
-     *
-     * @param productInRecordlist
-     * @return
-     * @throws Exception
      */
     public String pIns(List<ProductInRecord> productInRecordlist) throws Exception {
-        String result = "";
-        List<ProductStockState> pss = new ArrayList<ProductStockState>();
+        StringBuilder result = new StringBuilder();
+        List<ProductStockState> pss = new ArrayList<>();
         for (ProductInRecord productInRecord : productInRecordlist) {
             String barCode = productInRecord.getBarCode();
             productInRecord.setInTime(new Date());
             List<ProductStockState> listProductStockState = productStockDao.find(ProductStockState.class, "barcode", barCode);
             if (listProductStockState != null && listProductStockState.size() > 0) {
-                Collections.sort(listProductStockState, new Comparator<ProductStockState>() {
-                    public int compare(ProductStockState o1, ProductStockState o2) {
-                        return o2.getId().compareTo(o1.getId());
-                    }
-                });
+                listProductStockState.sort((o1, o2) -> o2.getId().compareTo(o1.getId()));
             } else {
-                result += barCode + "未找到库存状态!";
+                result.append(barCode).append("未找到库存状态!");
                 continue;
             }
 
             ProductStockState _productStockState = listProductStockState.get(0);
             if (_productStockState.getWarehouseCode().equals(productInRecord.getWarehouseCode()) && _productStockState.getWarehousePosCode().equals(productInRecord.getWarehousePosCode())) {
-                result += barCode + "库位位置没变!";
+                result.append(barCode).append("库位位置没变!");
                 continue;
             }
-
             _productStockState.setWarehouseCode(productInRecord.getWarehouseCode());
             _productStockState.setWarehousePosCode(productInRecord.getWarehousePosCode());
             _productStockState.setStockState(StockState.IN);
             pss.add(_productStockState);
             actionBarCode(barCode, StockState.IN, productInRecord.getWarehouseCode(), productInRecord.getWarehousePosCode(), productInRecord.getInBankSource());
-
             List<ProductInRecord> listProductInRecord = productStockDao.find(ProductInRecord.class, "barcode", barCode);
             if (listProductInRecord != null && listProductInRecord.size() > 0) {
-                Collections.sort(listProductInRecord, new Comparator<ProductInRecord>() {
-                    public int compare(ProductInRecord o1, ProductInRecord o2) {
-                        return o2.getId().compareTo(o1.getId());
-                    }
-                });
+                listProductInRecord.sort((o1, o2) -> o2.getId().compareTo(o1.getId()));
                 ProductInRecord record = listProductInRecord.get(0);
                 record.setInTime(productInRecord.getInTime());
                 record.setOperateUserId(productInRecord.getOperateUserId());
@@ -2171,16 +2007,8 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
                 record.setWeight(productInRecord.getWeight());
                 productStockDao.update(record);
             } else {
-                ProductInRecord record = new ProductInRecord();
-                record.setBarCode(productInRecord.getBarCode());
-                record.setInTime(productInRecord.getInTime());
-                record.setOperateUserId(productInRecord.getOperateUserId());
-                record.setWarehouseCode(productInRecord.getWarehouseCode());
-                record.setWarehousePosCode(productInRecord.getWarehousePosCode());
-                record.setWeight(productInRecord.getWeight());
                 productStockDao.save(productInRecord);
             }
-
             //部件条码直接入库
             if (barCode.startsWith("PCJ")) {
                 Roll roll = findOne(Roll.class, "partBarcode", barCode);
@@ -2190,50 +2018,38 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
                 }
             }
         }
-
         productStockDao.update2(pss.toArray(new ProductStockState[]{}));
-        return result;
+        return result.toString();
     }
 
     /**
      * 新胚布批量入库
-     *
-     * @param StockMove stockMove String code
-     * @return
-     * @throws Exception
      */
     public String pbIns(List<ProductInRecord> productInRecordlist) throws Exception {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         int intStockState = StockState.IN;
-        List<ProductStockState> pss = new ArrayList<ProductStockState>();
+        List<ProductStockState> pss = new ArrayList<>();
         for (ProductInRecord productInRecord : productInRecordlist) {
-            HashMap<String, Object> map = new HashMap<String, Object>();
+            HashMap<String, Object> map = new HashMap<>();
             String barCode = productInRecord.getBarCode();
             productInRecord.setInTime(new Date());
             List<ProductStockState> listProductStockState = productStockDao.find(ProductStockState.class, "barcode", barCode);
             if (listProductStockState != null && listProductStockState.size() > 0) {
-                Collections.sort(listProductStockState, new Comparator<ProductStockState>() {
-                    public int compare(ProductStockState o1, ProductStockState o2) {
-                        return o2.getId().compareTo(o1.getId());
-                    }
-                });
+                listProductStockState.sort((o1, o2) -> o2.getId().compareTo(o1.getId()));
             } else {
-                result += barCode + "未找到库存状态!";
+                result.append(barCode).append("未找到库存状态!");
                 continue;
             }
-
             ProductStockState _productStockState = listProductStockState.get(0);
             if (_productStockState.getWarehouseCode().equals(productInRecord.getWarehouseCode()) && _productStockState.getWarehousePosCode().equals(productInRecord.getWarehousePosCode())) {
-                result += barCode + "库位位置没变!";
+                result.append(barCode).append("库位位置没变!");
                 continue;
             }
-
             _productStockState.setWarehouseCode(productInRecord.getWarehouseCode());
             _productStockState.setWarehousePosCode(productInRecord.getWarehousePosCode());
             _productStockState.setStockState(intStockState);
             pss.add(_productStockState);
 
-            map.clear();
             map.put("rollBarcode", _productStockState.getBarCode());
             TotalStatistics ts = productStockDao.findUniqueByMap(TotalStatistics.class, map);
             Tray t = codeService.findBarCodeReg(BarCodeRegType.TRAY, productInRecord.getBarCode());
@@ -2268,22 +2084,14 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
                     ts.setState(intStockState);
                     save(ts);
                 }
-
             } else {
                 ts.setState(intStockState);
                 productStockDao.update(ts);
             }
-
             actionBarCode(barCode, StockState.IN, productInRecord.getWarehouseCode(), productInRecord.getWarehousePosCode(), productInRecord.getInBankSource());
-
-
             List<ProductInRecord> listProductInRecord = productStockDao.find(ProductInRecord.class, "barcode", barCode);
             if (listProductInRecord != null && listProductInRecord.size() > 0) {
-                Collections.sort(listProductInRecord, new Comparator<ProductInRecord>() {
-                    public int compare(ProductInRecord o1, ProductInRecord o2) {
-                        return o2.getId().compareTo(o1.getId());
-                    }
-                });
+                listProductInRecord.sort((o1, o2) -> o2.getId().compareTo(o1.getId()));
                 ProductInRecord record = listProductInRecord.get(0);
                 record.setInTime(productInRecord.getInTime());
                 record.setOperateUserId(productInRecord.getOperateUserId());
@@ -2292,16 +2100,8 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
                 record.setWeight(productInRecord.getWeight());
                 productStockDao.update(record);
             } else {
-                ProductInRecord record = new ProductInRecord();
-                record.setBarCode(productInRecord.getBarCode());
-                record.setInTime(productInRecord.getInTime());
-                record.setOperateUserId(productInRecord.getOperateUserId());
-                record.setWarehouseCode(productInRecord.getWarehouseCode());
-                record.setWarehousePosCode(productInRecord.getWarehousePosCode());
-                record.setWeight(productInRecord.getWeight());
                 productStockDao.save(productInRecord);
             }
-
             //部件条码直接入库
             if (barCode.startsWith("PCJ")) {
                 Roll roll = findOne(Roll.class, "partBarcode", barCode);
@@ -2311,40 +2111,31 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
                 }
             }
         }
-
         productStockDao.update2(pss.toArray(new ProductStockState[]{}));
-        return result;
+        return result.toString();
     }
 
     /**
      * 胚布批量领料
-     *
-     * @param List<FabricPickRecord> fabricPickRecordlist
-     * @return
-     * @throws Exception
      */
     public String pbPicks(List<FabricPickRecord> fabricPickRecordlist) throws Exception {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         int intStockState = StockState.Pick;
-        List<ProductStockState> pss = new ArrayList<ProductStockState>();
+        List<ProductStockState> pss = new ArrayList<>();
         for (FabricPickRecord fabricPickRecord : fabricPickRecordlist) {
             String barCode = fabricPickRecord.getBarCode();
             fabricPickRecord.setInTime(new Date());
             List<ProductStockState> listProductStockState = productStockDao.find(ProductStockState.class, "barcode", barCode);
             if (listProductStockState != null && listProductStockState.size() > 0) {
-                Collections.sort(listProductStockState, new Comparator<ProductStockState>() {
-                    public int compare(ProductStockState o1, ProductStockState o2) {
-                        return o2.getId().compareTo(o1.getId());
-                    }
-                });
+                listProductStockState.sort((o1, o2) -> o2.getId().compareTo(o1.getId()));
             } else {
-                result += barCode + "未找到库存状态!";
+                result.append(barCode).append("未找到库存状态!");
                 continue;
             }
 
             ProductStockState _productStockState = listProductStockState.get(0);
             if (_productStockState.getWarehouseCode().equals(fabricPickRecord.getWarehouseCode()) && _productStockState.getWarehousePosCode().equals(fabricPickRecord.getWarehousePosCode())) {
-                result += barCode + "库位位置没变!";
+                result.append(barCode).append("库位位置没变!");
                 continue;
             }
 
@@ -2356,11 +2147,7 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
 
             List<FabricPickRecord> listPendingPickRecord = productStockDao.find(FabricPickRecord.class, "barcode", barCode);
             if (listPendingPickRecord != null && listPendingPickRecord.size() > 0) {
-                Collections.sort(listPendingPickRecord, new Comparator<FabricPickRecord>() {
-                    public int compare(FabricPickRecord o1, FabricPickRecord o2) {
-                        return o2.getId().compareTo(o1.getId());
-                    }
-                });
+                listPendingPickRecord.sort((o1, o2) -> o2.getId().compareTo(o1.getId()));
                 FabricPickRecord record = listPendingPickRecord.get(0);
                 record.setInTime(fabricPickRecord.getInTime());
                 record.setOperateUserId(fabricPickRecord.getOperateUserId());
@@ -2369,26 +2156,15 @@ public class ProductStockServiceImpl extends BaseServiceImpl implements IProduct
                 record.setWeight(fabricPickRecord.getWeight());
                 productStockDao.update(record);
             } else {
-                FabricPickRecord record = new FabricPickRecord();
-                record.setBarCode(fabricPickRecord.getBarCode());
-                record.setInTime(fabricPickRecord.getInTime());
-                record.setOperateUserId(fabricPickRecord.getOperateUserId());
-                record.setWarehouseCode(fabricPickRecord.getWarehouseCode());
-                record.setWarehousePosCode(fabricPickRecord.getWarehousePosCode());
-                record.setWeight(fabricPickRecord.getWeight());
                 productStockDao.save(fabricPickRecord);
             }
-
         }
-
         productStockDao.update2(pss.toArray(new ProductStockState[]{}));
-        return result;
+        return result.toString();
     }
 
     @Override
-    public <T> Map<String, Object> moveInfolist(Filter filter, Page page) {
+    public Map<String, Object> moveInfolist(Filter filter, Page page) {
         return productStockDao.moveInfolist(filter, page);
     }
-
-
 }

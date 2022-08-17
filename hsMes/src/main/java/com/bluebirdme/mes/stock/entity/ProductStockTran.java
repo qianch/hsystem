@@ -11,151 +11,149 @@ import java.util.Date;
 
 @Desc("成品入库事务表")
 @Entity
-@Table(name="hs_product_stock_tran")
+@Table(name = "hs_product_stock_tran")
 public class ProductStockTran extends BaseEntity {
 
-	@Desc("原库位")
-	@Index(name="originWarehousePosCode")
-	private String originWarehousePosCode;
+    @Desc("原库位")
+    @Index(name = "originWarehousePosCode")
+    private String originWarehousePosCode;
 
-	@Desc("原库房")
-	@Index(name="originWarehouseCode")
-	private String originWarehouseCode;
+    @Desc("原库房")
+    @Index(name = "originWarehouseCode")
+    private String originWarehouseCode;
 
-	@Desc("库位编码")
-	@Column(nullable=false)
-	@Index(name="newWarehousePosCode")
-	private String newWarehousePosCode;
-	
-	@Desc("仓库编码")
-	@Column(nullable=false)
-	@Index(name="newWarehouseCode")
-	private String newWarehouseCode;
+    @Desc("库位编码")
+    @Column(nullable = false)
+    @Index(name = "newWarehousePosCode")
+    private String newWarehousePosCode;
 
-	@Desc("条码")
-	@Column
-	@Index(name="barCode")
-	private String barCode;
-	
-	@Desc("入库时间")
-	@Column(nullable=false)
-	private Date inTime;
+    @Desc("仓库编码")
+    @Column(nullable = false)
+    @Index(name = "newWarehouseCode")
+    private String newWarehouseCode;
 
-	@Desc("操作人")
-	private Long operateUserId;
+    @Desc("条码")
+    @Column
+    @Index(name = "barCode")
+    private String barCode;
 
-	@Desc("状态")
-	private int status;
+    @Desc("入库时间")
+    @Column(nullable = false)
+    private Date inTime;
 
-	/**
-	 * **get**
-	 */
-	public String getOriginWarehousePosCode() {
-		return originWarehousePosCode;
-	}
+    @Desc("操作人")
+    private Long operateUserId;
 
-	/**
-	 * **set**
-	 */
-	public void setOriginWarehousePosCode(String originWarehousePosCode) {
-		this.originWarehousePosCode = originWarehousePosCode;
-	}
+    @Desc("状态")
+    private int status;
 
-	/**
-	 * **get**
-	 */
-	public String getOriginWarehouseCode() {
-		return originWarehouseCode;
-	}
+    /**
+     * **get**
+     */
+    public String getOriginWarehousePosCode() {
+        return originWarehousePosCode;
+    }
 
-	/**
-	 * **set**
-	 */
-	public void setOriginWarehouseCode(String originWarehouseCode) {
-		this.originWarehouseCode = originWarehouseCode;
-	}
+    /**
+     * **set**
+     */
+    public void setOriginWarehousePosCode(String originWarehousePosCode) {
+        this.originWarehousePosCode = originWarehousePosCode;
+    }
+
+    /**
+     * **get**
+     */
+    public String getOriginWarehouseCode() {
+        return originWarehouseCode;
+    }
+
+    /**
+     * **set**
+     */
+    public void setOriginWarehouseCode(String originWarehouseCode) {
+        this.originWarehouseCode = originWarehouseCode;
+    }
 
 
-	/**
-	 * **get**
-	 */
-	public String getNewWarehousePosCode() {
-		return newWarehousePosCode;
-	}
+    /**
+     * **get**
+     */
+    public String getNewWarehousePosCode() {
+        return newWarehousePosCode;
+    }
 
-	/**
-	 * **set**
-	 */
-	public void setNewWarehousePosCode(String newWarehousePosCode) {
-		this.newWarehousePosCode = newWarehousePosCode;
-	}
+    /**
+     * **set**
+     */
+    public void setNewWarehousePosCode(String newWarehousePosCode) {
+        this.newWarehousePosCode = newWarehousePosCode;
+    }
 
-	/**
-	 * **get**
-	 */
-	public String getNewWarehouseCode() {
-		return newWarehouseCode;
-	}
+    /**
+     * **get**
+     */
+    public String getNewWarehouseCode() {
+        return newWarehouseCode;
+    }
 
-	/**
-	 * **set**
-	 */
-	public void setNewWarehouseCode(String newWarehouseCode) {
-		this.newWarehouseCode = newWarehouseCode;
-	}
+    /**
+     * **set**
+     */
+    public void setNewWarehouseCode(String newWarehouseCode) {
+        this.newWarehouseCode = newWarehouseCode;
+    }
 
-	
 
-	public String getBarCode() {
-		return barCode;
-	}
+    public String getBarCode() {
+        return barCode;
+    }
 
-	public void setBarCode(String barCode) {
-		this.barCode = barCode;
-	}
+    public void setBarCode(String barCode) {
+        this.barCode = barCode;
+    }
 
-	/**
-	 * **get**
-	 */
-	public Date getInTime() {
-		return inTime;
-	}
+    /**
+     * **get**
+     */
+    public Date getInTime() {
+        return inTime;
+    }
 
-	/**
-	 * **set**
-	 */
-	public void setInTime(Date inTime) {
-		this.inTime = inTime;
-	}
+    /**
+     * **set**
+     */
+    public void setInTime(Date inTime) {
+        this.inTime = inTime;
+    }
 
-	/**
-	 * **get**
-	 */
-	public Long getOperateUserId() {
-		return operateUserId;
-	}
+    /**
+     * **get**
+     */
+    public Long getOperateUserId() {
+        return operateUserId;
+    }
 
-	/**
-	 * **set**
-	 */
-	public void setOperateUserId(Long operateUserId) {
-		this.operateUserId = operateUserId;
-	}
+    /**
+     * **set**
+     */
+    public void setOperateUserId(Long operateUserId) {
+        this.operateUserId = operateUserId;
+    }
 
-	/**
-	 * **get**
-	 */
-	public int getStatus() {
-		return status;
-	}
+    /**
+     * **get**
+     */
+    public int getStatus() {
+        return status;
+    }
 
-	/**
-	 * **set**
-	 */
-	public void setStatus(int status) {
-		this.status = status;
-	}
-
+    /**
+     * **set**
+     */
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
 
 }

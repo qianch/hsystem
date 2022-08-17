@@ -1,98 +1,100 @@
 package com.bluebirdme.mes.stock.entity;
 
+import com.bluebirdme.mes.core.annotation.Desc;
+import com.bluebirdme.mes.core.base.entity.BaseEntity;
+import org.hibernate.annotations.Index;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.Index;
-
-import com.bluebirdme.mes.core.annotation.Desc;
-import com.bluebirdme.mes.core.base.entity.BaseEntity;
 
 @Desc("原料强制出库")
 @Entity
 @Table(name = "HS_Material_ForceOut_Record")
 public class MaterialForceOutRecord extends BaseEntity {
-	@Desc("托盘ID")
-	@Column(nullable = false,unique=true)
-	private Long mssId;
-	@Desc("出库时间")
-	@Column(nullable = false)
-	private Long outTime;
-	//以下需要从PDA带出
-	@Desc("仓库编码")
-	@Index(name = "warehouseCode")
-	private String warehouseCode;
-	@Desc("库位编码")
-	@Index(name = "warehousePosCode")
-	private String warehousePosCode;
+    @Desc("托盘ID")
+    @Column(nullable = false, unique = true)
+    private Long mssId;
+    @Desc("出库时间")
+    @Column(nullable = false)
+    private Long outTime;
 
-	@Desc("出库地址")
-	@Index(name = "outAddress")
-	private String outAddress;
-	@Desc("操作人")
-	@Index(name = "outUser")
-	private String outUser;
-	
-	@Desc("K3同步状态")
-	@Column(nullable=false)
-	@Index(name="syncState")
-	private Integer syncState=0;
+    /**
+     * 以下需要从PDA带出
+     */
+    @Desc("仓库编码")
+    @Index(name = "warehouseCode")
+    private String warehouseCode;
+    @Desc("库位编码")
+    @Index(name = "warehousePosCode")
+    private String warehousePosCode;
 
-	public Long getMssId() {
-		return mssId;
-	}
+    @Desc("出库地址")
+    @Index(name = "outAddress")
+    private String outAddress;
+    @Desc("操作人")
+    @Index(name = "outUser")
+    private String outUser;
 
-	public void setMssId(Long mssId) {
-		this.mssId = mssId;
-	}
+    @Desc("K3同步状态")
+    @Column(nullable = false)
+    @Index(name = "syncState")
+    private Integer syncState = 0;
 
-	public Long getOutTime() {
-		return outTime;
-	}
+    public Long getMssId() {
+        return mssId;
+    }
 
-	public void setOutTime(Long outTime) {
-		this.outTime = outTime;
-	}
+    public void setMssId(Long mssId) {
+        this.mssId = mssId;
+    }
 
-	public String getWarehouseCode() {
-		return warehouseCode;
-	}
+    public Long getOutTime() {
+        return outTime;
+    }
 
-	public void setWarehouseCode(String warehouseCode) {
-		this.warehouseCode = warehouseCode;
-	}
+    public void setOutTime(Long outTime) {
+        this.outTime = outTime;
+    }
 
-	public String getWarehousePosCode() {
-		return warehousePosCode;
-	}
+    public String getWarehouseCode() {
+        return warehouseCode;
+    }
 
-	public void setWarehousePosCode(String warehousePosCode) {
-		this.warehousePosCode = warehousePosCode;
-	}
+    public void setWarehouseCode(String warehouseCode) {
+        this.warehouseCode = warehouseCode;
+    }
 
-	public String getOutAddress() {
-		return outAddress;
-	}
+    public String getWarehousePosCode() {
+        return warehousePosCode;
+    }
 
-	public void setOutAddress(String outAddress) {
-		this.outAddress = outAddress;
-	}
+    public void setWarehousePosCode(String warehousePosCode) {
+        this.warehousePosCode = warehousePosCode;
+    }
 
-	public String getOutUser() {
-		return outUser;
-	}
+    public String getOutAddress() {
+        return outAddress;
+    }
 
-	public void setOutUser(String outUser) {
-		this.outUser = outUser;
-	}
+    public void setOutAddress(String outAddress) {
+        this.outAddress = outAddress;
+    }
 
-	public Integer getSyncState() {
-		return syncState;
-	}
+    public String getOutUser() {
+        return outUser;
+    }
 
-	public void setSyncState(Integer syncState) {
-		this.syncState = syncState;
-	}
+    public void setOutUser(String outUser) {
+        this.outUser = outUser;
+    }
+
+    public Integer getSyncState() {
+        return syncState;
+    }
+
+    public void setSyncState(Integer syncState) {
+        this.syncState = syncState;
+    }
 
 }
