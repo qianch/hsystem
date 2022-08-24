@@ -1,78 +1,69 @@
 package com.bluebirdme.mes.store.entity;
 
 import java.util.Date;
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Transient;
-
-import com.bluebirdme.mes.core.annotation.Desc;
-import com.bluebirdme.mes.planner.delivery.entity.DeliveryPlanDetails;
-import com.bluebirdme.mes.printer.entity.BarCodePrintRecord;
 
 public interface IBarcode {
-	public String getIndividualOutPutString();
+    String getIndividualOutPutString();
 
-	public String getOutPutString();
+    String getOutPutString();
 
-	public String getBarcode();
+    String getBarcode();
 
-	public String getSalesOrderCode();
+    String getSalesOrderCode();
 
-	public Long getSalesProductId();
+    Long getSalesProductId();
 
-	public String getPartName();
+    String getPartName();
 
-	public Long getPlanId();
+    Long getPlanId();
 
-	public String getBatchCode();
+    String getBatchCode();
 
-	public Long getPartId();
-	
-	public Long getSalesOrderDetailId();
-	
-	public Long getProducePlanDetailId();
+    Long getPartId();
 
+    Long getSalesOrderDetailId();
 
-	public Long getBtwfileId();
-
-	public Long getMirrorProcBomId();
-
-	public  String  getCustomerBarCode();
-
-	public  String  getAgentBarCode();
+    Long getProducePlanDetailId();
 
 
-	public void setIndividualOutPutString(String individualOutputString);
+    Long getBtwfileId();
 
-	public void setProducePlanDetailId(Long producePlanDetailId);
+    Long getMirrorProcBomId();
 
-	public void setBarcode(String barcode);
+    String getCustomerBarCode();
 
-	public void setOutPutString(String outputString);
+    String getAgentBarCode();
 
-	public void setSalesOrderCode(String code);
 
-	public void setSalesProductId(Long id);
+    void setIndividualOutPutString(String individualOutputString);
 
-	public void setBatchCode(String batchCode);
+    void setProducePlanDetailId(Long producePlanDetailId);
 
-	public void setPartName(String partName);
+    void setBarcode(String barcode);
 
-	public void setPlanId(Long id);
+    void setOutPutString(String outputString);
 
-	public void setPartId(Long partId);
+    void setSalesOrderCode(String code);
 
-	public void setPrintDate(Date printDate);
-	
-	public void setSalesOrderDetailId(Long salesOrderDetailId);
+    void setSalesProductId(Long id);
 
-	public void setBtwfileId(Long btwfileId);
+    void setBatchCode(String batchCode);
 
-	public void setMirrorProcBomId(Long mirrorProcBomId);
+    void setPartName(String partName);
 
-	public void setCustomerBarCode(String customerBarCode);
+    void setPlanId(Long id);
 
-	public void setAgentBarCode(String agentBarCode);
+    void setPartId(Long partId);
 
+    void setPrintDate(Date printDate);
+
+    void setSalesOrderDetailId(Long salesOrderDetailId);
+
+    void setBtwfileId(Long btwfileId);
+
+    void setMirrorProcBomId(Long mirrorProcBomId);
+
+    void setCustomerBarCode(String customerBarCode);
+
+    void setAgentBarCode(String agentBarCode);
 }

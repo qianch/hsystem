@@ -1,198 +1,197 @@
 package com.bluebirdme.mes.store.entity;
 
-import java.util.Date;
+import com.bluebirdme.mes.core.annotation.Desc;
+import com.bluebirdme.mes.core.base.entity.BaseEntity;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.Index;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.Index;
-
-import com.bluebirdme.mes.core.annotation.Desc;
-import com.bluebirdme.mes.core.base.entity.BaseEntity;
+import java.util.Date;
 
 
 /**
  * 箱
+ *
  * @author 宋黎明
  * @Date 2016年11月08日 上午10:02:34
  */
 @Desc("箱")
 @Entity
-@Table(name="hs_Box")
+@Table(name = "hs_Box")
 @DynamicInsert
 public class Box extends BaseEntity {
-	@Desc("打包时间")
-	private Date packagingTime;
-	
-	@Desc("打包人")
-	private Long packagingStaff;
-	
-	@Column(unique=true)
-	@Desc("箱条码号")
-	@Index(name="boxBarcode")
-	private String boxBarcode;
-	
-	@Desc("重量")
-	private Double weight;
-	
-	@Desc("批次号")
-	private String batchCode;
+    @Desc("打包时间")
+    private Date packagingTime;
 
-	@Desc("产品规格")
-	private String productModel;
+    @Desc("打包人")
+    private Long packagingStaff;
 
-	@Desc("产出机台")
-	private String deviceCode;
+    @Column(unique = true)
+    @Desc("箱条码号")
+    @Index(name = "boxBarcode")
+    private String boxBarcode;
 
-	@Desc("计划单号")
-	private String producePlanCode;
+    @Desc("重量")
+    private Double weight;
 
-	@Desc("产出车间")
-	private String name;
+    @Desc("批次号")
+    private String batchCode;
 
-	@Desc("状态")
-	@Column(nullable=false)
-	private Integer state;
+    @Desc("产品规格")
+    private String productModel;
 
-	@Desc("产品质量等级")
-	private String rollQualityGradeCode;
-	
-	
-	@Desc("备注")
-	@Column(nullable=true,length=16777215)
-	private String memo;
-	
-	
-	public String getMemo() {
-		return memo;
-	}
+    @Desc("产出机台")
+    private String deviceCode;
 
-	public void setMemo(String memo) {
-		this.memo = memo;
-	}
-	
-	/**
-	 * 1:打包结束
-	 * 0：打包未结束
-	 */
-	@Desc("状态")
-	@Column(nullable=false,columnDefinition="int(2) default 1")
-	private Integer endPack;
-	
-	public String getRollQualityGradeCode() {
-		return rollQualityGradeCode;
-	}
+    @Desc("计划单号")
+    private String producePlanCode;
 
-	public void setRollQualityGradeCode(String rollQualityGradeCode) {
-		this.rollQualityGradeCode = rollQualityGradeCode;
-	}
+    @Desc("产出车间")
+    private String name;
 
-	public Double getWeight() {
-		return weight;
-	}
+    @Desc("状态")
+    @Column(nullable = false)
+    private Integer state;
 
-	public void setWeight(Double weight) {
-		this.weight = weight;
-	}
+    @Desc("产品质量等级")
+    private String rollQualityGradeCode;
 
-	public String getBatchCode() {
-		return batchCode;
-	}
 
-	public void setBatchCode(String batchCode) {
-		this.batchCode = batchCode;
-	}
+    @Desc("备注")
+    @Column(nullable = true, length = 16777215)
+    private String memo;
 
-	public String getProductModel() {
-		return productModel;
-	}
 
-	public void setProductModel(String productModel) {
-		this.productModel = productModel;
-	}
+    public String getMemo() {
+        return memo;
+    }
 
-	public String getDeviceCode() {
-		return deviceCode;
-	}
+    public void setMemo(String memo) {
+        this.memo = memo;
+    }
 
-	public void setDeviceCode(String deviceCode) {
-		this.deviceCode = deviceCode;
-	}
+    /**
+     * 1:打包结束
+     * 0：打包未结束
+     */
+    @Desc("状态")
+    @Column(nullable = false, columnDefinition = "int(2) default 1")
+    private Integer endPack;
 
-	public String getProducePlanCode() {
-		return producePlanCode;
-	}
+    public String getRollQualityGradeCode() {
+        return rollQualityGradeCode;
+    }
 
-	public void setProducePlanCode(String producePlanCode) {
-		this.producePlanCode = producePlanCode;
-	}
+    public void setRollQualityGradeCode(String rollQualityGradeCode) {
+        this.rollQualityGradeCode = rollQualityGradeCode;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public Double getWeight() {
+        return weight;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setWeight(Double weight) {
+        this.weight = weight;
+    }
 
-	/**
-	 * **get**
-	 */
-	public Date getPackagingTime() {
-		return packagingTime;
-	}
+    public String getBatchCode() {
+        return batchCode;
+    }
 
-	/**
-	 * **set**
-	 */
-	public void setPackagingTime(Date packagingTime) {
-		this.packagingTime = packagingTime;
-	}
+    public void setBatchCode(String batchCode) {
+        this.batchCode = batchCode;
+    }
 
-	/**
-	 * **get**
-	 */
-	public Long getPackagingStaff() {
-		return packagingStaff;
-	}
+    public String getProductModel() {
+        return productModel;
+    }
 
-	/**
-	 * **set**
-	 */
-	public void setPackagingStaff(Long packagingStaff) {
-		this.packagingStaff = packagingStaff;
-	}
+    public void setProductModel(String productModel) {
+        this.productModel = productModel;
+    }
 
-	/**
-	 * **get**
-	 */
-	public String getBoxBarcode() {
-		return boxBarcode;
-	}
+    public String getDeviceCode() {
+        return deviceCode;
+    }
 
-	/**
-	 * **set**
-	 */
-	public void setBoxBarcode(String boxBarcode) {
-		this.boxBarcode = boxBarcode;
-	}
+    public void setDeviceCode(String deviceCode) {
+        this.deviceCode = deviceCode;
+    }
 
-	public Integer getState() {
-		return state;
-	}
+    public String getProducePlanCode() {
+        return producePlanCode;
+    }
 
-	public void setState(Integer state) {
-		this.state = state;
-	}
+    public void setProducePlanCode(String producePlanCode) {
+        this.producePlanCode = producePlanCode;
+    }
 
-	public Integer getEndPack() {
-		return endPack;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setEndPack(Integer endPack) {
-		this.endPack = endPack;
-	}
-	
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * **get**
+     */
+    public Date getPackagingTime() {
+        return packagingTime;
+    }
+
+    /**
+     * **set**
+     */
+    public void setPackagingTime(Date packagingTime) {
+        this.packagingTime = packagingTime;
+    }
+
+    /**
+     * **get**
+     */
+    public Long getPackagingStaff() {
+        return packagingStaff;
+    }
+
+    /**
+     * **set**
+     */
+    public void setPackagingStaff(Long packagingStaff) {
+        this.packagingStaff = packagingStaff;
+    }
+
+    /**
+     * **get**
+     */
+    public String getBoxBarcode() {
+        return boxBarcode;
+    }
+
+    /**
+     * **set**
+     */
+    public void setBoxBarcode(String boxBarcode) {
+        this.boxBarcode = boxBarcode;
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
+
+    public Integer getEndPack() {
+        return endPack;
+    }
+
+    public void setEndPack(Integer endPack) {
+        this.endPack = endPack;
+    }
+
 }

@@ -7,12 +7,12 @@
 package com.bluebirdme.mes.store.dao;
 
 import com.bluebirdme.mes.core.base.dao.IBaseDao;
+
 /**
- * 
  * @author 高飞
  * @Date 2017-3-20 20:34:16
  */
 
 public interface IBarCodeDao extends IBaseDao {
-	public int countRollsInTray(String trayCode);
+    int countRollsInTray(String trayCode);
 }

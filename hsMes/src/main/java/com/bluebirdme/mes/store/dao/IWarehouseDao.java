@@ -6,23 +6,23 @@
  */
 package com.bluebirdme.mes.store.dao;
 
+import com.bluebirdme.mes.core.base.dao.IBaseDao;
+import com.bluebirdme.mes.core.sql.SQLTemplateException;
+
 import java.util.List;
 import java.util.Map;
 
-import com.bluebirdme.mes.core.base.dao.IBaseDao;
-
-import com.bluebirdme.mes.core.sql.SQLTemplateException;
-import org.springframework.stereotype.Repository;
 /**
- * 
  * @author 肖文彬
  * @Date 2016-9-29 15:45:32
  */
 
 public interface IWarehouseDao extends IBaseDao {
-	public void delete(String ids);
-	public void updateS(String ids);
-	public List<Map<String, Object>> combobox();
+    void delete(String ids);
 
-	public List<Map<String, Object>> queryWarehousebyType(String waretype) throws SQLTemplateException;
+    void updateS(String ids);
+
+    List<Map<String, Object>> combobox();
+
+    List<Map<String, Object>> queryWarehousebyType(String waretype) throws SQLTemplateException;
 }

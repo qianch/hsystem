@@ -4,7 +4,6 @@ import com.bluebirdme.mes.core.annotation.Desc;
 import com.bluebirdme.mes.core.base.entity.BaseEntity;
 import org.hibernate.annotations.DynamicInsert;
 
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -12,7 +11,7 @@ import java.util.Date;
 
 @Desc("条码作废记录")
 @Entity
-@Table(name = "hs_abandon_barcode" )
+@Table(name = "hs_abandon_barcode")
 @DynamicInsert
 public class AbandonBarCode extends BaseEntity {
     @Desc("条码号")

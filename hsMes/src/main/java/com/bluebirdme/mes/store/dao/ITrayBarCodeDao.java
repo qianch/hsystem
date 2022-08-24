@@ -6,12 +6,10 @@
  */
 package com.bluebirdme.mes.store.dao;
 
-import java.util.List;
-import java.util.Map;
-
 import com.bluebirdme.mes.core.base.dao.IBaseDao;
 
-import org.springframework.stereotype.Repository;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author 宋黎明
@@ -25,7 +23,7 @@ public interface ITrayBarCodeDao extends IBaseDao {
      * @param code 卷条码
      * @return
      */
-    public List<Map<String, Object>> findSalesOrderByRollcode(String code);
+    List<Map<String, Object>> findSalesOrderByRollcode(String code);
 
     /**
      * 根据箱条码查询销售订单信息
@@ -33,7 +31,7 @@ public interface ITrayBarCodeDao extends IBaseDao {
      * @param code 箱条码
      * @return
      */
-    public List<Map<String, Object>> findSalesOrderByBoxcode(String code);
+    List<Map<String, Object>> findSalesOrderByBoxcode(String code);
 
     /**
      * 根据托条码查询销售订单信息
@@ -41,7 +39,7 @@ public interface ITrayBarCodeDao extends IBaseDao {
      * @param code 托条码
      * @return
      */
-    public List<Map<String, Object>> findSalesOrderByTraycode(String code);
+    List<Map<String, Object>> findSalesOrderByTraycode(String code);
 
     /**
      * 根据卷条码查询产品信息
@@ -49,7 +47,7 @@ public interface ITrayBarCodeDao extends IBaseDao {
      * @param code 卷条码
      * @return
      */
-    public List<Map<String, Object>> findProductByRollcode(String code);
+    List<Map<String, Object>> findProductByRollcode(String code);
 
     /**
      * 根据箱条码查询产品信息
@@ -57,7 +55,7 @@ public interface ITrayBarCodeDao extends IBaseDao {
      * @param code 箱条码
      * @return
      */
-    public List<Map<String, Object>> findProductByBoxcode(String code);
+    List<Map<String, Object>> findProductByBoxcode(String code);
 
 
     /**
@@ -66,7 +64,7 @@ public interface ITrayBarCodeDao extends IBaseDao {
      * @param code 托条码
      * @return
      */
-    public List<Map<String, Object>> findSalesOrderByBarcode(String code);
+    List<Map<String, Object>> findSalesOrderByBarcode(String code);
 
     /**
      * 根据条码查询卷或者部件条码信息
@@ -74,16 +72,16 @@ public interface ITrayBarCodeDao extends IBaseDao {
      * @param code 卷，部件条码
      * @return
      */
-    public List<Map<String, Object>> findIbarcodeByBarcode(String code);
+    List<Map<String, Object>> findIbarcodeByBarcode(String code);
 
     /**
      * 获取托箱盒条码信息
      *
-     * @paramtrayBarcode 托条码
      * @param code 卷，部件条码
      * @return
+     * @paramtrayBarcode 托条码
      */
-    public List<Map<String, Object>> findTrayBoxRollByBarcode(String code);
+    List<Map<String, Object>> findTrayBoxRollByBarcode(String code);
 
     /**
      * 根据标签id查询条码里面的最大值
@@ -91,10 +89,10 @@ public interface ITrayBarCodeDao extends IBaseDao {
      * @param btwfileId 标签id
      * @return
      */
-    public List<Map<String, Object>> findMaxTrayBarCode(long btwfileId);
+    List<Map<String, Object>> findMaxTrayBarCode(long btwfileId);
 
-    public List<Map<String, Object>> findMaxTrayBarCodeCount();
+    List<Map<String, Object>> findMaxTrayBarCodeCount();
 
-    public List<Map<String, Object>> findMaxTrayPartBarCodeCount();
+    List<Map<String, Object>> findMaxTrayPartBarCodeCount();
 
 }

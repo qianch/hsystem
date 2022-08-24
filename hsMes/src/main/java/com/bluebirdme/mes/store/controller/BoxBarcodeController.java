@@ -71,7 +71,7 @@ public class BoxBarcodeController extends BaseController {
         if (!StringUtils.isEmpty(filterRules)) {
             JsonParser parser = new JsonParser();
             JsonArray array = parser.parse(filterRules).getAsJsonArray();
-            FilterRules rule = null;
+            FilterRules rule;
             Gson gson = new Gson();
             for (JsonElement obj : array) {
                 rule = gson.fromJson(obj, FilterRules.class);
@@ -133,7 +133,7 @@ public class BoxBarcodeController extends BaseController {
     @Journal(name = "查询打印信息", logType = LogType.DB)
     @RequestMapping(value = "FindPrints", method = RequestMethod.POST)
     @Valid
-    public String FindPrints(Long id) throws Exception {
+    public String FindPrints(Long id) {
         BoxBarcode boxBarcode = boxBarcodeService.findById(BoxBarcode.class, id);
         Gson gson = new Gson();
         List<BarCodePrintRecord> list = gson.fromJson(boxBarcode.getIndividualOutPutString(), new TypeToken<List<BarCodePrintRecord>>() {

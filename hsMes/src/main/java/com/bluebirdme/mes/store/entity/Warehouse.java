@@ -1,15 +1,14 @@
 package com.bluebirdme.mes.store.entity;
 
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
+import com.bluebirdme.mes.core.annotation.Desc;
+import com.bluebirdme.mes.core.base.entity.BaseEntity;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.Index;
 
-import com.bluebirdme.mes.core.annotation.Desc;
-import com.bluebirdme.mes.core.base.entity.BaseEntity;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Desc("仓库管理")
 @Entity
@@ -30,6 +29,7 @@ public class Warehouse extends BaseEntity {
 
     @Desc("是否作废")
     private Integer isCancellation;
+
     public String getWarehouseCode() {
         return warehouseCode;
     }

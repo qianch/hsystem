@@ -8,14 +8,13 @@ package com.bluebirdme.mes.store.dao;
 
 import com.bluebirdme.mes.core.base.dao.IBaseDao;
 
-import org.springframework.stereotype.Repository;
 /**
- * 
  * @author 肖文彬
  * @Date 2016-9-29 16:26:04
  */
 
 public interface IWarehosePosDao extends IBaseDao {
-	public void delete(String ids);
-	public void updateS(String ids);
+    void delete(String ids);
+
+    void updateS(String ids);
 }
