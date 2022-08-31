@@ -6,9 +6,8 @@
  */
 package com.bluebirdme.mes.task.k3;
 
-import org.quartz.JobExecutionContext;
-
 import com.bluebirdme.mes.core.schedule.Task;
+import org.quartz.JobExecutionContext;
 
 /**
  * @author Goofy
@@ -16,10 +15,9 @@ import com.bluebirdme.mes.core.schedule.Task;
  */
 @Task("原料外购入库同步")
 public class MaterialInSync extends Url {
-	
-	@Override
-	public boolean doJob(JobExecutionContext ctx) {
-		return doSync(M_IN);
-	}
+    @Override
+    public boolean doJob(JobExecutionContext ctx) {
+        return doSync(M_IN);
+    }
 
 }

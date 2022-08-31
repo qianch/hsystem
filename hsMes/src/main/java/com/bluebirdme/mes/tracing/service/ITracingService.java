@@ -1,9 +1,5 @@
 package com.bluebirdme.mes.tracing.service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.bluebirdme.mes.core.base.service.IBaseService;
 import com.bluebirdme.mes.planner.cut.entity.CutPlan;
 import com.bluebirdme.mes.planner.produce.entity.ProducePlan;
@@ -17,23 +13,34 @@ import com.bluebirdme.mes.store.entity.RollBarcode;
 import com.bluebirdme.mes.store.entity.TrayBarCode;
 import com.bluebirdme.mes.store.entity.TrayBoxRoll;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public interface ITracingService extends IBaseService {
-	public HashMap<String, List<TrayBarCode>> findTrayBarCode(
-			List<String> trayCodeList);
-	public HashMap<String, List<ProductOutRecord>> findOutStockRecordByCondition(
-			List<String> barcode,int type);
-	public HashMap<String,List<ProductInRecord>> findProductInRecord(List<String> barcode,int type);
-	public HashMap<String, List<TrayBoxRoll>> findTrayBoxRollByCondition(
-			List<String> barcode, int type);
-	public HashMap<String, List<SalesOrder>> findSalesOrder(
-			List<String> salesOrderCode);
-	public HashMap<Long, List<SalesOrderDetail>> findSalesOrderDetail(
-			List<Long> ids, int type) ;
-	public HashMap<String,List<ProducePlan>> findProducePlan(List<String> salesOrderCodeList);
-	public HashMap<Long,List<ProducePlanDetail>> findProducePlanDetail(List<Long> producePlanId);
-	public HashMap<String,List<RollBarcode>> findRollBarcodes(List<String> batchCodes);
-	public HashMap<String,List<ProducePlanDetail>> findProducePlanDetailByBatchCode(List<String> batchCodes);
-	public HashMap<String,List<WeavePlan>> findWeavePlanByBatchCode(List<String> batchCodes);
-	public HashMap<String,List<CutPlan>> findCutPlanByBatchCode(List<String> batchCodes);
-	public Map<String, Object> tracing(String code);
+    HashMap<String, List<TrayBarCode>> findTrayBarCode(List<String> trayCodeList);
+
+    HashMap<String, List<ProductOutRecord>> findOutStockRecordByCondition(List<String> barcode, int type);
+
+    HashMap<String, List<ProductInRecord>> findProductInRecord(List<String> barcode, int type);
+
+    HashMap<String, List<TrayBoxRoll>> findTrayBoxRollByCondition(List<String> barcode, int type);
+
+    HashMap<String, List<SalesOrder>> findSalesOrder(List<String> salesOrderCode);
+
+    HashMap<Long, List<SalesOrderDetail>> findSalesOrderDetail(List<Long> ids, int type);
+
+    HashMap<String, List<ProducePlan>> findProducePlan(List<String> salesOrderCodeList);
+
+    HashMap<Long, List<ProducePlanDetail>> findProducePlanDetail(List<Long> producePlanId);
+
+    HashMap<String, List<RollBarcode>> findRollBarcodes(List<String> batchCodes);
+
+    HashMap<String, List<ProducePlanDetail>> findProducePlanDetailByBatchCode(List<String> batchCodes);
+
+    HashMap<String, List<WeavePlan>> findWeavePlanByBatchCode(List<String> batchCodes);
+
+    HashMap<String, List<CutPlan>> findCutPlanByBatchCode(List<String> batchCodes);
+
+    Map<String, Object> tracing(String code);
 }

@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class FtcProcBomTask extends  AbstractBomTask {
-    private static Logger log = LoggerFactory.getLogger(FtcProcBomTask.class);
+public class FtcProcBomTask extends AbstractBomTask {
+    private static final Logger log = LoggerFactory.getLogger(FtcProcBomTask.class);
     @Resource
     public IFtcProcBomOaService ftcProcBomOaService;
     @Resource
@@ -39,17 +39,17 @@ public class FtcProcBomTask extends  AbstractBomTask {
         File file = new File(ftcProcBomOa.getTcProcBomPath());
         Long fileId = saveFile(file);
         FtcBom ftcBom = new FtcBom();
-        BeanUtils.copyProperties(ftcProcBomOa,ftcBom);
+        BeanUtils.copyProperties(ftcProcBomOa, ftcBom);
         FtcBomVersion ftcBomVersion = new FtcBomVersion();
         ftcBomVersion.setFtcConsumerVersionCode(String.valueOf(ftcProcBomOa.getFtcConsumerVersionCode()));
         ftcBomVersion.setFtcProcBomVersionCode(String.valueOf(ftcProcBomOa.getFtcProcBomVersionCode()));
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("ftcProcBomCode", ftcBom.getFtcProcBomCode());
         if (!ftcBomService.isExist(FtcBom.class, map)) {
-            ExcelImportMessage eim=ftcBomService.doAddFtcBom(ftcBom, ftcBomVersion, fileId);
-            if(eim != null && eim.hasError()){
-                Map<String,String> excelErrorMsg=new HashMap<>();
-                excelErrorMsg.put("excelErrorMsg",eim.getMessage());
+            ExcelImportMessage eim = ftcBomService.doAddFtcBom(ftcBom, ftcBomVersion, fileId);
+            if (eim != null && eim.hasError()) {
+                Map<String, String> excelErrorMsg = new HashMap<>();
+                excelErrorMsg.put("excelErrorMsg", eim.getMessage());
             }
         } else {
             ftcProcBomOa.setReason("BOM代码重复！");

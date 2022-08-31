@@ -6,71 +6,55 @@
  */
 package com.bluebirdme.mes.store.service.impl;
 
-import java.io.Serializable;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import com.bluebirdme.mes.btwManager.entity.BtwFile;
 import com.bluebirdme.mes.btwManager.service.IBtwFileService;
 import com.bluebirdme.mes.core.annotation.AnyExceptionRollback;
-
-import com.bluebirdme.mes.printer.service.impl.MergePrinterServiceImpl;
-import com.bluebirdme.mes.stock.entity.ProductStockState;
-import com.bluebirdme.mes.store.entity.RollBarcode;
-import com.bluebirdme.mes.store.entity.TrayBarCode;
-import org.springframework.stereotype.Service;
-
 import com.bluebirdme.mes.core.base.dao.IBaseDao;
 import com.bluebirdme.mes.core.base.entity.Filter;
 import com.bluebirdme.mes.core.base.entity.Page;
 import com.bluebirdme.mes.core.base.service.BaseServiceImpl;
-import com.bluebirdme.mes.store.service.IRollBarcodeService;
 import com.bluebirdme.mes.store.dao.IRollBarcodeDao;
+import com.bluebirdme.mes.store.entity.RollBarcode;
+import com.bluebirdme.mes.store.service.IRollBarcodeService;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.List;
+import java.util.Map;
 
 /**
- *
  * @author 徐波
  * @Date 2016-11-14 14:37:30
  */
 @Service
 @AnyExceptionRollback
 public class RollBarcodeServiceImpl extends BaseServiceImpl implements IRollBarcodeService {
+    @Resource
+    IRollBarcodeDao rollBarcodeDao;
 
-	@Resource
-	IRollBarcodeDao rollBarcodeDao;
+    @Resource
+    IBtwFileService btwFileService;
 
-	@Resource
-	IBtwFileService btwFileService;
+    @Override
+    protected IBaseDao getBaseDao() {
+        return rollBarcodeDao;
+    }
 
-	@Override
-	protected IBaseDao getBaseDao() {
-		return rollBarcodeDao;
-	}
-
-	@Override
-	public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-		return rollBarcodeDao.findPageInfo(filter, page);
-	}
+    @Override
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+        return rollBarcodeDao.findPageInfo(filter, page);
+    }
 
 
-	public String clearRoll(String ids) throws Exception {
+    public String clearRoll(String ids) throws Exception {
+        String[] ids_temp = ids.split(",");
+        for (String s : ids_temp) {
+            RollBarcode rollBarcode = findById(RollBarcode.class, Long.parseLong(s));
+            btwFileService.clearBacode(rollBarcode);
+        }
+        return "";
+    }
 
-		String ids_temp[] = ids.split(",");
-		Serializable ids_target[] = new Serializable[ids_temp.length];
-		for (int i = 0; i < ids_temp.length; i++) {
-			RollBarcode rollBarcode = findById(RollBarcode.class, Long.parseLong(ids_temp[i]));
-			btwFileService.clearBacode(rollBarcode);
-		}
-		return "";
-	}
-
-	public List<Map<String, Object>> findMaxRollBarCodeCount()
-	{
-		return rollBarcodeDao.findMaxRollBarCodeCount();
-	}
-
+    public List<Map<String, Object>> findMaxRollBarCodeCount() {
+        return rollBarcodeDao.findMaxRollBarCodeCount();
+    }
 }

@@ -16,21 +16,21 @@ import javax.annotation.Resource;
 @RequestMapping("/tracing")
 @Journal(name = "产品追溯")
 public class TracingController extends BaseController {
-	@Resource
-	ITracingService tracingService;
-	// 根据产品条码追溯
-	final String index = "tracing/tracing";
+    @Resource
+    ITracingService tracingService;
+    // 根据产品条码追溯
+    final String index = "tracing/tracing";
 
-	@Journal(name = "首页")
-	@RequestMapping(method = RequestMethod.GET)
-	public String index() {
-		return index;
-	}
+    @Journal(name = "首页")
+    @RequestMapping(method = RequestMethod.GET)
+    public String index() {
+        return index;
+    }
 
-	@ResponseBody
-	@Journal(name = "根据产品条码查询")
-	@RequestMapping(value = "{code}")
-	public String barcode(@PathVariable("code") String code) throws Exception {
-		return GsonTools.toJson(tracingService.tracing(code));
-	}
+    @ResponseBody
+    @Journal(name = "根据产品条码查询")
+    @RequestMapping(value = "{code}")
+    public String barcode(@PathVariable("code") String code) throws Exception {
+        return GsonTools.toJson(tracingService.tracing(code));
+    }
 }

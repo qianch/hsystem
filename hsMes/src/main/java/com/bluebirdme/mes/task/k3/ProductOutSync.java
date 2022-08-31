@@ -6,9 +6,8 @@
  */
 package com.bluebirdme.mes.task.k3;
 
-import org.quartz.JobExecutionContext;
-
 import com.bluebirdme.mes.core.schedule.Task;
+import org.quartz.JobExecutionContext;
 
 /**
  * @author Goofy
@@ -16,10 +15,8 @@ import com.bluebirdme.mes.core.schedule.Task;
  */
 @Task("销售出库单同步")
 public class ProductOutSync extends Url {
-	
-	@Override
-	public boolean doJob(JobExecutionContext ctx) {
-		return doSync(P_OUT);
-	}
-
+    @Override
+    public boolean doJob(JobExecutionContext ctx) {
+        return doSync(P_OUT);
+    }
 }

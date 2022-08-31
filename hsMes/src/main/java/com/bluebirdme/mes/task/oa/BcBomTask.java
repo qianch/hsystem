@@ -20,7 +20,7 @@ import java.util.List;
 
 @Component
 public class BcBomTask extends AbstractBomTask {
-    private static Logger log = LoggerFactory.getLogger(BcBomTask.class);
+    private static final Logger log = LoggerFactory.getLogger(BcBomTask.class);
     @Resource
     public IBcBomOaService bcBomOaService;
     @Resource

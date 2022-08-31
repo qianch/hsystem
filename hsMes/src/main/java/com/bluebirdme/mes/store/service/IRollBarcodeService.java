@@ -8,18 +8,15 @@ package com.bluebirdme.mes.store.service;
 
 import com.bluebirdme.mes.core.base.service.IBaseService;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 /**
- *
  * @author 徐波
  * @Date 2016-11-14 14:37:30
  */
 public interface IRollBarcodeService extends IBaseService {
+    String clearRoll(String ids) throws Exception;
 
-    public String clearRoll(String ids) throws Exception;
-
-    public List<Map<String, Object>> findMaxRollBarCodeCount();
+    List<Map<String, Object>> findMaxRollBarCodeCount();
 }

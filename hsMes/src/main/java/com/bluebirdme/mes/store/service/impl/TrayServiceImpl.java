@@ -5,9 +5,7 @@ import com.bluebirdme.mes.core.base.dao.IBaseDao;
 import com.bluebirdme.mes.core.base.entity.Filter;
 import com.bluebirdme.mes.core.base.entity.Page;
 import com.bluebirdme.mes.core.base.service.BaseServiceImpl;
-import com.bluebirdme.mes.produce.entity.FinishedProduct;
 import com.bluebirdme.mes.store.dao.ITrayDao;
-import com.bluebirdme.mes.store.service.ITrayBarCodeService;
 import com.bluebirdme.mes.store.service.ITrayService;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +25,7 @@ public class TrayServiceImpl extends BaseServiceImpl implements ITrayService {
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
         return trayDao.findPageInfo(filter, page);
     }
 

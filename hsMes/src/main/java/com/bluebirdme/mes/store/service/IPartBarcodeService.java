@@ -12,13 +12,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
  * @author 徐波
  * @Date 2016-11-14 14:37:30
  */
 public interface IPartBarcodeService extends IBaseService {
+    String clearPart(String ids) throws Exception;
 
-    public String clearPart(String ids) throws Exception ;
-
-    public List<Map<String, Object>> findMaxPartBarCodeCount();
+    List<Map<String, Object>> findMaxPartBarCodeCount();
 }

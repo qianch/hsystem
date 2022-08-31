@@ -27,34 +27,31 @@ import java.util.Map;
 @Component
 @DisallowConcurrentExecution
 public class ProducePlanCreator {
-    private static Logger logger = LoggerFactory.getLogger(ProducePlanCreator.class);
+    private static final Logger logger = LoggerFactory.getLogger(ProducePlanCreator.class);
     @Resource
     IProducePlanService planService;
 
     @Scheduled(fixedRate = 300000)
     public synchronized void creator() throws IOException {
         SystemProperties properties = new SystemProperties();
-        if (properties.getAsBoolean("Task") == false) {
+        if (!properties.getAsBoolean("Task")) {
             logger.info("编织和裁剪计划为关闭状态，如要开启请配置system.properties中Task=true");
             return;
         }
 
-        Map<String, Object> param = new HashMap();
+        Map<String, Object> param = new HashMap<>();
         param.put("auditState", AuditConstant.RS.PASS);
         param.put("hasCreatedCutAndWeavePlan", 0);
         List<ProducePlan> plans = planService.findListByMap(ProducePlan.class, param);
         param.put("hasCreatedCutAndWeavePlan", null);
         plans.addAll(planService.findListByMap(ProducePlan.class, param));
-
         for (ProducePlan pp : plans) {
             try {
                 logger.info("正在生成任务单" + pp.getProducePlanCode() + "创建编织和裁剪计划");
-
                 if (null != pp.getCreateFeedback()) {
-                    logger.info("单号:" + pp.getProducePlanCode()+":{"+pp.getCreateFeedback()+"};");
+                    logger.info("单号:" + pp.getProducePlanCode() + ":{" + pp.getCreateFeedback() + "};");
                     continue;
                 }
-
                 param.clear();
                 param.put("planCode", pp.getProducePlanCode());
                 // 检查是否有创建过，如果创建过，那么则不再创建新的计划
@@ -71,7 +68,6 @@ public class ProducePlanCreator {
                     planService.update(pp);
                     continue;
                 }
-
                 planService.createCutAndWeavePlans(pp);
                 logger.info("任务单编织和裁剪计划创建完毕");
             } catch (Exception e) {

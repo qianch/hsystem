@@ -6,31 +6,22 @@
  */
 package com.bluebirdme.mes.store.service.impl;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import com.bluebirdme.mes.btwManager.entity.BtwFile;
 import com.bluebirdme.mes.btwManager.service.IBtwFileService;
 import com.bluebirdme.mes.core.annotation.AnyExceptionRollback;
-
-import com.bluebirdme.mes.core.sql.SQL;
-import com.bluebirdme.mes.store.entity.*;
-import org.hibernate.SQLQuery;
-import org.hibernate.transform.Transformers;
-import org.springframework.stereotype.Service;
-
 import com.bluebirdme.mes.core.base.dao.IBaseDao;
 import com.bluebirdme.mes.core.base.entity.Filter;
 import com.bluebirdme.mes.core.base.entity.Page;
 import com.bluebirdme.mes.core.base.service.BaseServiceImpl;
 import com.bluebirdme.mes.produce.entity.FinishedProduct;
 import com.bluebirdme.mes.store.dao.ITrayBarCodeDao;
+import com.bluebirdme.mes.store.entity.*;
 import com.bluebirdme.mes.store.service.ITrayBarCodeService;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author 宋黎明
@@ -39,7 +30,6 @@ import com.bluebirdme.mes.store.service.ITrayBarCodeService;
 @Service
 @AnyExceptionRollback
 public class TrayBarCodeServiceImpl extends BaseServiceImpl implements ITrayBarCodeService {
-
     @Resource
     ITrayBarCodeDao trayBarCodeDao;
 
@@ -52,7 +42,7 @@ public class TrayBarCodeServiceImpl extends BaseServiceImpl implements ITrayBarC
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
         return trayBarCodeDao.findPageInfo(filter, page);
     }
 
@@ -83,19 +73,20 @@ public class TrayBarCodeServiceImpl extends BaseServiceImpl implements ITrayBarC
 
     @Override
     public FinishedProduct findProductByTraycode(String productIsTc, String trayCode) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        Map<String, Object> bbmap = new HashMap<String, Object>();
-        Map<String, Object> brmap = new HashMap<String, Object>();
-        Map<String, Object> pbmap = new HashMap<String, Object>();
-        Map<String, Object> rbmap = new HashMap<String, Object>();
-        List<FinishedProduct> fpList = new ArrayList<FinishedProduct>();
+        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> bbmap = new HashMap<>();
+        Map<String, Object> brmap = new HashMap<>();
+        Map<String, Object> pbmap = new HashMap<>();
+        Map<String, Object> rbmap = new HashMap<>();
         FinishedProduct finishedProduct = new FinishedProduct();
         map.put("trayBarcode", trayCode);
         List<TrayBoxRoll> li = trayBarCodeDao.findListByMap(TrayBoxRoll.class, map);
         //遍历托箱卷关系
         for (TrayBoxRoll tbr : li) {
-            if (productIsTc.equals("1")) {//套材
-                if (tbr.getBoxBarcode() != null) { //(托-拖箱卷-箱-箱中卷信息-部件条码-产品)
+            if (productIsTc.equals("1")) {
+                //套材
+                if (tbr.getBoxBarcode() != null) {
+                    //(托-拖箱卷-箱-箱中卷信息-部件条码-产品)
                     bbmap.put("boxBarcode", tbr.getBoxBarcode());
                     List<Box> bbli = trayBarCodeDao.findListByMap(Box.class, bbmap);
                     //遍历箱表，获取箱条码，根据箱条码，查询箱中卷信息表
@@ -122,8 +113,10 @@ public class TrayBarCodeServiceImpl extends BaseServiceImpl implements ITrayBarC
                         //fpList.add(finishedProduct);
                     }
                 }
-            } else {//非套材
-                if (tbr.getBoxBarcode() != null) {//(托-拖箱卷-箱-卷条码-产品)
+            } else {
+                //非套材
+                if (tbr.getBoxBarcode() != null) {
+                    //(托-拖箱卷-箱-卷条码-产品)
                     bbmap.put("boxBarcode", tbr.getBoxBarcode());
                     List<Box> bbli = trayBarCodeDao.findListByMap(Box.class, bbmap);
                     //遍历箱表，获取箱条码，根据箱条码，查询箱中卷信息表
@@ -141,42 +134,36 @@ public class TrayBarCodeServiceImpl extends BaseServiceImpl implements ITrayBarC
                             }
                         }
                     }
-                } else {//(托-拖箱卷-卷条码-产品)
+                } else {
+                    //(托-拖箱卷-卷条码-产品)
                     rbmap.put("barcode", tbr.getRollBarcode());
                     List<RollBarcode> rbli = trayBarCodeDao.findListByMap(RollBarcode.class, rbmap);
                     //遍历卷条码表，根据产品id获取，产品信息
                     for (RollBarcode rb : rbli) {
                         finishedProduct = trayBarCodeDao.findById(FinishedProduct.class, rb.getSalesProductId());
-                        //fpList.add(finishedProduct);
                     }
                 }
-
             }
         }
         return finishedProduct;
     }
 
     public String clearTray(String ids) throws Exception {
-
-        String ids_temp[] = ids.split(",");
-        Serializable ids_target[] = new Serializable[ids_temp.length];
-        for (int i = 0; i < ids_temp.length; i++) {
-            TrayBarCode trayBarcode = findById(TrayBarCode.class, Long.parseLong(ids_temp[i]));
+        String[] ids_temp = ids.split(",");
+        for (String s : ids_temp) {
+            TrayBarCode trayBarcode = findById(TrayBarCode.class, Long.parseLong(s));
             btwFileService.clearBacode(trayBarcode);
         }
         return "";
     }
 
     @Override
-    public List<Map<String, Object>> findMaxTrayBarCodeCount()
-    {
+    public List<Map<String, Object>> findMaxTrayBarCodeCount() {
         return trayBarCodeDao.findMaxTrayBarCodeCount();
     }
 
     @Override
-    public List<Map<String, Object>> findMaxTrayPartBarCodeCount()
-    {
+    public List<Map<String, Object>> findMaxTrayPartBarCodeCount() {
         return trayBarCodeDao.findMaxTrayPartBarCodeCount();
     }
-
 }

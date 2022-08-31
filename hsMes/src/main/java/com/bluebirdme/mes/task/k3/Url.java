@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
  * @Date 2018年4月2日 下午1:36:56
  */
 public abstract class Url extends BaseSchedule {
-    private static Logger log = LoggerFactory.getLogger(Url.class);
+    private static final Logger log = LoggerFactory.getLogger(Url.class);
     /**
      * 销售出库
      */

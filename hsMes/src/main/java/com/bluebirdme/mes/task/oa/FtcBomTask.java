@@ -18,8 +18,8 @@ import java.io.File;
 import java.util.*;
 
 @Component
-public class FtcBomTask extends  AbstractBomTask {
-    private static Logger log = LoggerFactory.getLogger(FtcBomTask.class);
+public class FtcBomTask extends AbstractBomTask {
+    private static final Logger log = LoggerFactory.getLogger(FtcBomTask.class);
     @Resource
     public IFtcBomOaService ftcBomOaService;
     @Resource
@@ -72,14 +72,14 @@ public class FtcBomTask extends  AbstractBomTask {
             ftcBcBom.setLevel(Integer.valueOf(s));
 
             FtcBcBomVersion ftcBcBomVersion = new FtcBcBomVersion();
-            BeanUtils.copyProperties(ftcBomOa,ftcBcBomVersion);
+            BeanUtils.copyProperties(ftcBomOa, ftcBcBomVersion);
             ftcBcBomVersion.setBcTotalWeight(ftcBomOa.getBcTotalWeight());
             List<FtcBcBomVersion> ftcBcBomVersionList = ftcBcBomVersionService.findAll(FtcBcBomVersion.class);
             List<Long> bidList = new ArrayList<>();
             for (FtcBcBomVersion ftcV : ftcBcBomVersionList) {
                 bidList.add(ftcV.getBid());
             }
-            ftcBcBomVersion.setBid(Collections.max(bidList)+1);
+            ftcBcBomVersion.setBid(Collections.max(bidList) + 1);
 
             ftcBcBomVersion.setEnabled(0);
             HashMap<String, Object> map = new HashMap<String, Object>();
@@ -111,7 +111,7 @@ public class FtcBomTask extends  AbstractBomTask {
             if (ftcBcBomVersion.getEnabled() == null) {
                 ftcBcBomVersion.setEnabled(1);
             }
-            System.out.println("===========ftcBcBomVersion:"+ftcBcBomVersion);
+            System.out.println("===========ftcBcBomVersion:" + ftcBcBomVersion);
             ftcBcBomService.save(ftcBcBomVersion);
         }
         HashMap<String, Object> map = new HashMap<>();

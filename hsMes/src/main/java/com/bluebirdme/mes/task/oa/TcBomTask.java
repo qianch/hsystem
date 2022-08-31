@@ -18,7 +18,7 @@ import java.util.List;
 
 @Component
 public class TcBomTask extends AbstractBomTask {
-    private static Logger log = LoggerFactory.getLogger(TcBomTask.class);
+    private static final Logger log = LoggerFactory.getLogger(TcBomTask.class);
 
     @Resource
     public ITcBomOaService tcBomOaService;
@@ -61,7 +61,7 @@ public class TcBomTask extends AbstractBomTask {
                 }
             }
         } catch (Exception e) {
-            log.error(e.getLocalizedMessage(),e);
+            log.error(e.getLocalizedMessage(), e);
         }
     }
 }

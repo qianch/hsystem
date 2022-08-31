@@ -14,51 +14,59 @@ import com.bluebirdme.mes.store.entity.BarCodeRegType;
 import com.bluebirdme.mes.store.entity.BarCodeType;
 
 /**
- * 
  * @author 高飞
  * @Date 2017-3-20 20:34:16
  */
 public interface IBarCodeService extends IBaseService {
-	/**
-	 * 通过条码获取订单明细
-	 * @param code
-	 * @return
-	 */
-	public SalesOrderDetail getSalesOrderDetail(String code);
-	/**
-	 * 通过条码获取裁剪计划
-	 * @param code
-	 * @return
-	 */
-	public CutPlan getCutPlan(String code);
-	/**
-	 * 通过条码获取编织计划
-	 * @param code
-	 * @return
-	 */
-	public WeavePlan getWeavePlan(String code);
-	/**
-	 * 通过条码获取条码登记信息
-	 * @param type
-	 * @param barcode
-	 * @return
-	 */
-	public <T> T findBarCodeReg(BarCodeRegType type,String barcode);
-	/**
-	 * 通过条码获取条码信息
-	 * @param type
-	 * @param barcode
-	 * @return
-	 */
-	public <T> T findBarcodeInfo(BarCodeType type,String barcode);
-	
-	public int countRollsInTray(String trayCode);
-	
-	/**
-	 * 校验条码是否被打包
-	 * @param code
-	 * @return
-	 */
-	public boolean packed(String code);
-	
+    /**
+     * 通过条码获取订单明细
+     *
+     * @param code
+     * @return
+     */
+    SalesOrderDetail getSalesOrderDetail(String code);
+
+    /**
+     * 通过条码获取裁剪计划
+     *
+     * @param code
+     * @return
+     */
+    CutPlan getCutPlan(String code);
+
+    /**
+     * 通过条码获取编织计划
+     *
+     * @param code
+     * @return
+     */
+    WeavePlan getWeavePlan(String code);
+
+    /**
+     * 通过条码获取条码登记信息
+     *
+     * @param type
+     * @param barcode
+     * @return
+     */
+    <T> T findBarCodeReg(BarCodeRegType type, String barcode);
+
+    /**
+     * 通过条码获取条码信息
+     *
+     * @param type
+     * @param barcode
+     * @return
+     */
+    <T> T findBarcodeInfo(BarCodeType type, String barcode);
+
+    int countRollsInTray(String trayCode);
+
+    /**
+     * 校验条码是否被打包
+     *
+     * @param code
+     * @return
+     */
+    boolean packed(String code);
 }
