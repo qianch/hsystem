@@ -7,8 +7,10 @@
 package com.bluebirdme.mes.tracings.dao;
 
 import com.bluebirdme.mes.core.base.dao.IBaseDao;
+
 /**
  * 冻结解冻记录
+ *
  * @author 宋黎明
  * @Date 2016年12月6日 下午1:35:34
  */

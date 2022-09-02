@@ -7,5 +7,5 @@ import com.bluebirdme.mes.core.base.service.IBaseService;
 import java.util.Map;
 
 public interface TrayBoxRollRelationService extends IBaseService {
-    <T> Map<String,Object> findPageInfoRollWeight(Filter filter, Page page) throws Exception;
+    Map<String, Object> findPageInfoRollWeight(Filter filter, Page page) throws Exception;
 }

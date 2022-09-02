@@ -30,7 +30,9 @@ import javax.annotation.Resource;
 @RequestMapping("/tracingLog/freezeLog")
 @Journal(name = "冻结解冻记录表")
 public class FreezeLogController extends BaseController {
-    //冻结解冻记录页面
+    /**
+     * 冻结解冻记录页面
+     */
     final String index = "tracings/freezeLog/freezeLog";
 
     @Resource

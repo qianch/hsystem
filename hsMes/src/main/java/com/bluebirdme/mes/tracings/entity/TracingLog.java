@@ -1,14 +1,12 @@
 package com.bluebirdme.mes.tracings.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.Index;
-
-import java.util.Date;
-
 import com.bluebirdme.mes.core.annotation.Desc;
 import com.bluebirdme.mes.core.base.entity.BaseEntity;
+import org.hibernate.annotations.Index;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.util.Date;
 
 @Desc("生产追溯日志")
 @Entity
@@ -17,10 +15,6 @@ public class TracingLog extends BaseEntity {
     /**
      * 通用字段 1：销售 2：计调 3：排产 4：产出 5：打包 6：入库 7：出库 8：翻包 9：冻结10：解冻11投料
      */
-    public TracingLog() {
-
-    }
-
     @Desc("产品ID")
     @Index(name = "productId")
     private Long productId;

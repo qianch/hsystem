@@ -7,6 +7,5 @@ import com.bluebirdme.mes.core.base.entity.Page;
 import java.util.Map;
 
 public interface TrayBoxRollRelationDao extends IBaseDao {
-
-    <T> Map<String,Object> findPageInfoRollWeight(Filter filter, Page page) throws Exception;
+    Map<String, Object> findPageInfoRollWeight(Filter filter, Page page) throws Exception;
 }
