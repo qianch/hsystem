@@ -12,7 +12,6 @@ import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
 public abstract class BaseEntityExt extends BaseEntity {
-
     @Desc("卷号")
     @Column
     private String rollNo;

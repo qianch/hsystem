@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.xdemo.superutil.thirdparty.gson.GsonTools;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,39 +20,25 @@ import java.util.Map;
 @Controller
 @RequestMapping("/error")
 public class ExceptionController extends BaseController {
-    private static Logger log = LoggerFactory.getLogger(ExceptionController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ExceptionController.class);
     private boolean isAjax = false;
 
     /**
      * 拦截http状态异常
-     *
-     * @param httpStatusCode
-     * @return
-     * @throws IOException
      */
     @RequestMapping("{httpStatusCode}")
     public ModelAndView error(@PathVariable("httpStatusCode") Integer httpStatusCode) {
         try {
-            isAjax = null != request.getHeader("X-Requested-With") ? true : false;
+            isAjax = null != request.getHeader("X-Requested-With");
             httpStatusCode = httpStatusCode == null ? 0 : httpStatusCode;
             switch (httpStatusCode) {
-                case 400:
-                    request.setAttribute("error", "参数错误");
-                    break;
-                case 403:
-                    request.setAttribute("error", "禁止访问");
-                    break;
-                case 404:
-                    request.setAttribute("error", "请求地址未找到");
-                    break;
-                case 405:
-                    request.setAttribute("error", "请确认GET还是POST请求");
-                    break;
-                case 415:
-                    request.setAttribute("error", "请求的类型不支持,可能请求参数不正确");
-                    break;
-                default:
-                    break;
+                case 400 -> request.setAttribute("error", "参数错误");
+                case 403 -> request.setAttribute("error", "禁止访问");
+                case 404 -> request.setAttribute("error", "请求地址未找到");
+                case 405 -> request.setAttribute("error", "请确认GET还是POST请求");
+                case 415 -> request.setAttribute("error", "请求的类型不支持,可能请求参数不正确");
+                default -> {
+                }
             }
             if (isAjax) {
                 return new ModelAndView("error/ajaxError", model).addObject("_HTTP_STATUS_CODE_", httpStatusCode);
@@ -67,8 +52,6 @@ public class ExceptionController extends BaseController {
 
     /**
      * 会话过期
-     *
-     * @return
      */
     @RequestMapping("expired")
     public ModelAndView expired() {
@@ -82,9 +65,6 @@ public class ExceptionController extends BaseController {
 
     /**
      * 拦截Ajax请求异常
-     *
-     * @return
-     * @throws IOException
      */
     @ResponseBody
     @RequestMapping("ajaxError")
@@ -96,7 +76,7 @@ public class ExceptionController extends BaseController {
                 int code = request.getAttribute("_HTTP_STATUS_CODE_") == null ? 500 : Integer.valueOf(request.getAttribute("_HTTP_STATUS_CODE_") + "");
                 response.setStatus(code);
             } catch (Exception ex) {
-                log.error(ex.getLocalizedMessage(), ex);
+                logger.error(ex.getLocalizedMessage(), ex);
             }
             return GsonTools.toJson(error);
         } catch (Exception e) {

@@ -21,7 +21,7 @@ public abstract class BaseSchedule implements Job {
         Long start = System.currentTimeMillis();
         String executeResult = this.doJob(ctx) ? "成功" : "失败";
         Long end = System.currentTimeMillis();
-        Class<? extends Object> clazz = this.getClass();
+        Class<?> clazz = this.getClass();
         Task task = clazz.getAnnotation(Task.class);
         logger.debug("[" + task.value() + "::" + clazz.getName() + "]执行" + executeResult + ",耗时：" + (end - start) + "ms");
     }

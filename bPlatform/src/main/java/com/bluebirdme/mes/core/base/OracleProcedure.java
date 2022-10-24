@@ -1,14 +1,14 @@
 package com.bluebirdme.mes.core.base;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.SQLException;
-
 import oracle.sql.ARRAY;
 import oracle.sql.ArrayDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xdemo.superutil.thirdparty.gson.GsonTools;
+
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  * @author qianchen
@@ -60,20 +60,11 @@ public class OracleProcedure {
             call.execute();
             for (i = 0; i < outPositions.length; ++i) {
                 switch (outTypes[i]) {
-                    case -5:
-                        objects[i] = call.getLong(outPositions[i]);
-                        break;
-                    case 4:
-                        objects[i] = call.getInt(outPositions[i]);
-                        break;
-                    case 12:
-                        objects[i] = call.getString(outPositions[i]);
-                        break;
-                    case 2003:
-                        objects[i] = call.getArray(outPositions[i]);
-                        break;
-                    default:
-                        objects[i] = call.getObject(outPositions[i]);
+                    case -5 -> objects[i] = call.getLong(outPositions[i]);
+                    case 4 -> objects[i] = call.getInt(outPositions[i]);
+                    case 12 -> objects[i] = call.getString(outPositions[i]);
+                    case 2003 -> objects[i] = call.getArray(outPositions[i]);
+                    default -> objects[i] = call.getObject(outPositions[i]);
                 }
             }
             if (autoCommit) {

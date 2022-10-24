@@ -132,7 +132,7 @@ public abstract class BaseController {
     }
 
     public String ajaxError(Object msg) {
-        Map<String, Object> map = new HashMap();
+        Map<String, Object> map = new HashMap<>();
         map.put("error", msg);
         return GsonTools.toJson(map);
     }
@@ -142,7 +142,7 @@ public abstract class BaseController {
     }
 
     public String ajaxSuccess(Object msg) {
-        Map<String, Object> map = new HashMap();
+        Map<String, Object> map = new HashMap<>();
         map.put("msg", msg);
         return GsonTools.toJson(map);
     }

@@ -233,9 +233,8 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
     @Override
     public <T> boolean has(Class<T> clazz, Map<String, Object> map, Long id) {
         StringBuilder builder = new StringBuilder("From " + clazz.getSimpleName() + " where 1=1 ");
-
         try {
-            builder.append(clazz.getField("isDeleted") == null ? "" : " and isDeleted<>1");
+            builder.append(" and isDeleted<>1");
         } catch (Exception ignored) {
         }
 
@@ -275,7 +274,7 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
     public <T> boolean isExist(Class<T> clazz, Map<String, Object> map, boolean isAndCondition) {
         StringBuilder builder = new StringBuilder("From " + clazz.getSimpleName() + " where 1=1 ");
         try {
-            builder.append(clazz.getField("isDeleted") == null ? "" : " and isDeleted<>1");
+            builder.append(" and isDeleted<>1");
         } catch (Exception ignored) {
 
         }

@@ -20,16 +20,12 @@ public abstract class LanguageProvider {
 
     public static Locale getLocale() {
         HttpServletRequest request = getRequest();
-        if (request == null) {
+        HttpSession session = request.getSession();
+        if (session == null) {
             return new Locale("zh", "CN");
         } else {
-            HttpSession session = request.getSession();
-            if (session == null) {
-                return new Locale("zh", "CN");
-            } else {
-                Locale locale = (Locale) session.getAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME);
-                return locale;
-            }
+            Locale locale = (Locale) session.getAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME);
+            return locale;
         }
     }
 
