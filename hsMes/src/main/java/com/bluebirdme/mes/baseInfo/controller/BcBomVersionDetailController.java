@@ -120,8 +120,9 @@ public class BcBomVersionDetailController extends BaseController {
     public void rebuildBcAudit() throws Exception {
         List<BCBomVersion> versionList = bCBomVersionService.findAll(BCBomVersion.class);
         for (BCBomVersion bv : versionList) {
-            if (bv.getAuditState() == null)
+            if (bv.getAuditState() == null) {
                 continue;
+            }
             if (bv.getAuditState() == 1) {
                 BcBom bom = bCBomVersionService.findById(BcBom.class, bv.getPackBomId());
                 commit(bv.getId() + "", "包材BOM审核：BOM名称：" + bom.getPackBomName() + "/" + bom.getPackBomCode() + "BOM版本：" + bv.getPackVersion());
