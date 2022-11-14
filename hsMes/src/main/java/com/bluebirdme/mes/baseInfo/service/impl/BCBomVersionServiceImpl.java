@@ -78,7 +78,7 @@ public class BCBomVersionServiceImpl extends BaseServiceImpl implements IBCBomVe
      * @return List<Map < String, Object>>
      */
     public List<Map<String, Object>> getBcBomJson(String id) {
-        List<Map<String, Object>> listMap = new ArrayList<>();
+        List<Map<String, Object>> listMap;
         try {
             listMap = bCBomVersionDao.getBcBomJson(id);
         } catch (SQLTemplateException e) {

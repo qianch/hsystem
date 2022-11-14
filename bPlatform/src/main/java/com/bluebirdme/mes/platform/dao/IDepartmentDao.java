@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public interface IDepartmentDao extends IBaseDao {
     @Override
-    <T> Map<String, Object> findPageInfo(final Filter p0, final Page p1) throws Exception;
+    <T> Map<String, Object> findPageInfo(final Filter filter, final Page page) throws Exception;
 
     void batchUpdateDepartmentLevel(final List<Department> p0);
 

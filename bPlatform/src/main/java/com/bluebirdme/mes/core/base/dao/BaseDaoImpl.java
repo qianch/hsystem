@@ -48,8 +48,8 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
     }
 
     @Override
-    public void save(Object... object) {
-        for (Object o : object) {
+    public void save(Object... objects) {
+        for (Object o : objects) {
             getSession().save(o);
         }
         //缓存写入数据库,一个事务中有一个失败，全部回滚
@@ -165,14 +165,14 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
      */
     @Override
     @Deprecated
-    public <T> boolean isExist(Class<T> clazz, Map<String, Object> map) {
+    public <T> boolean isExist(Class<T> clazz, Map<String, Object> condition) {
         StringBuilder builder = new StringBuilder("From " + clazz.getSimpleName() + " where 1=1 ");
         try {
             builder.append(clazz.getField("isDeleted") == null ? "" : " and isDeleted<>1");
         } catch (Exception ignored) {
         }
 
-        Set<Entry<String, Object>> set = map.entrySet();
+        Set<Entry<String, Object>> set = condition.entrySet();
         Iterator<Entry<String, Object>> iterator = set.iterator();
         int i = 0;
         while (iterator.hasNext()) {
@@ -191,14 +191,14 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
     }
 
     @Override
-    public <T> boolean has(Class<T> clazz, Map<String, Object> map) {
+    public <T> boolean has(Class<T> clazz, Map<String, Object> condition) {
         StringBuilder builder = new StringBuilder("From " + clazz.getSimpleName() + " where 1=1 ");
         try {
             builder.append(clazz.getField("isDeleted") == null ? "" : " and isDeleted<>1");
         } catch (Exception ignored) {
         }
 
-        Set<Entry<String, Object>> set = map.entrySet();
+        Set<Entry<String, Object>> set = condition.entrySet();
         Iterator<Entry<String, Object>> iterator = set.iterator();
         while (iterator.hasNext()) {
             Entry<String, Object> entry = iterator.next();
@@ -229,14 +229,14 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
     }
 
     @Override
-    public <T> boolean has(Class<T> clazz, Map<String, Object> map, Long id) {
+    public <T> boolean has(Class<T> clazz, Map<String, Object> condition, Long id) {
         StringBuilder builder = new StringBuilder("From " + clazz.getSimpleName() + " where 1=1 ");
         try {
             builder.append(" and isDeleted<>1");
         } catch (Exception ignored) {
         }
 
-        Set<Entry<String, Object>> set = map.entrySet();
+        Set<Entry<String, Object>> set = condition.entrySet();
         Iterator<Entry<String, Object>> iterator = set.iterator();
         while (iterator.hasNext()) {
             Entry<String, Object> entry = iterator.next();
@@ -470,9 +470,9 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
     }
 
     @Override
-    public <T> T findUniqueByMap(Class<T> clazz, Map<String, Object> map) {
+    public <T> T findUniqueByMap(Class<T> clazz, Map<String, Object> condition) {
         StringBuilder builder = new StringBuilder("From " + clazz.getSimpleName() + " where 1=1 ");
-        Iterator<Entry<String, Object>> iterator = map.entrySet().iterator();
+        Iterator<Entry<String, Object>> iterator = condition.entrySet().iterator();
         while (iterator.hasNext()) {
             Entry<String, Object> entry = iterator.next();
             if (entry.getValue() == null) {
@@ -484,7 +484,7 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
             }
         }
         Query query = this.getSession().createQuery(builder.toString());
-        iterator = map.entrySet().iterator();
+        iterator = condition.entrySet().iterator();
         while (iterator.hasNext()) {
             Entry<String, Object> entry = iterator.next();
             if (entry.getValue() == null) {
@@ -499,9 +499,9 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
     }
 
     @Override
-    public <T> List<T> findListByMap(Class<T> clazz, Map<String, Object> map) {
+    public <T> List<T> findListByMap(Class<T> clazz, Map<String, Object> condition) {
         StringBuilder builder = new StringBuilder("From " + clazz.getSimpleName() + " where 1=1 ");
-        Iterator<Entry<String, Object>> iterator = map.entrySet().iterator();
+        Iterator<Entry<String, Object>> iterator = condition.entrySet().iterator();
         while (iterator.hasNext()) {
             Entry<String, Object> entry = iterator.next();
             if (entry.getValue() == null) {
@@ -514,7 +514,7 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
         }
         Query query = this.getSession().createQuery(builder.toString());
 
-        iterator = map.entrySet().iterator();
+        iterator = condition.entrySet().iterator();
         while (iterator.hasNext()) {
             Entry<String, Object> entry = iterator.next();
             if (entry.getValue() == null) {
@@ -529,9 +529,9 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
     }
 
     @Override
-    public <T> List<Map<String, Object>> findListMapByMap(String sql, Map<String, Object> map) {
+    public List<Map<String, Object>> findListMapByMap(String sql, Map<String, Object> condition) {
         SQLQuery query = this.getSession().createSQLQuery(sql);
-        for (Entry entry : map.entrySet()) {
+        for (Entry entry : condition.entrySet()) {
             query.setParameter(entry.getKey().toString(), entry.getValue());
         }
         query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
@@ -539,10 +539,10 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
     }
 
     @Override
-    public abstract Map<String, Object> findPageInfo(Filter var1, Page var2) throws Exception;
+    public abstract Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception;
 
     @Override
-    public <T> void delete(Class clazz, boolean inheritBaseEntity, List<T> list) throws Exception {
+    public <T> void delete(Class clazz, boolean isAndCondition, List<T> list) throws Exception {
         if (list != null && list.size() != 0) {
             Long[] ids = new Long[list.size()];
             List<Field> fields = ReflectUtils.getFields(clazz, true);
@@ -576,8 +576,8 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
     }
 
     @Override
-    public void updateList(List<Object> list) {
-        for (Object o : list) {
+    public void updateList(List<Object> objects) {
+        for (Object o : objects) {
             getSession().update(o);
         }
         getSession().flush();

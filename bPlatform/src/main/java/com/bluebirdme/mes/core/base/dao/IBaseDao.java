@@ -12,69 +12,69 @@ import java.util.Map;
  * @date 2020/05/21
  */
 public interface IBaseDao {
-    <T> void empty(Class<T> var1) throws Exception;
+    <T> void empty(Class<T> clazz) throws Exception;
 
-    void empty(String var1);
+    void empty(String tableName);
 
-    void save(Object... var1);
+    void save(Object... objects);
 
-    <T> void saveList(List<T> var1);
+    <T> void saveList(List<T> list);
 
-    void updateList(List<Object> var1);
+    void updateList(List<Object> objects);
 
-    void merge(Object... var1);
+    void merge(Object... object);
 
-    void update(Object... var1);
+    void update(Object... object);
 
-    void update2(Object... var1) throws Exception;
+    void update2(Object... object) throws Exception;
 
-    void delete(Object... var1);
+    void delete(Object... object);
 
-    <T> void delete(Class<T> var1, Serializable... var2);
+    <T> void delete(Class<T> clazz, Serializable... ids);
 
-    <T> void delete(Class var1, boolean var2, List<T> var3) throws Exception;
+    <T> void delete(Class clazz, boolean isAndCondition, List<T> list) throws Exception;
 
-    <T> List<T> findAll(Class<T> var1);
+    <T> List<T> findAll(Class<T> clazz);
 
-    <T> T findById(Class<T> var1, Serializable var2);
-
-    /**
-     * @deprecated
-     */
-    @Deprecated
-    <T> boolean isExist(Class<T> var1, Map<String, Object> var2);
+    <T> T findById(Class<T> clazz, Serializable id);
 
     /**
      * @deprecated
      */
     @Deprecated
-    <T> boolean isExist(Class<T> var1, Map<String, Object> var2, Long var3) throws Exception;
+    <T> boolean isExist(Class<T> clazz, Map<String, Object> condition);
 
-    <T> boolean isExist(Class<T> var1, Map<String, Object> var2, boolean var3);
+    /**
+     * @deprecated
+     */
+    @Deprecated
+    <T> boolean isExist(Class<T> clazz, Map<String, Object> map, Long id) throws Exception;
 
-    <T> boolean isExist(Class<T> var1, Map<String, Object> var2, Long var3, boolean var4) throws Exception;
+    <T> boolean isExist(Class<T> clazz, Map<String, Object> map, boolean isAndCondition);
 
-    <T> Map<String, Object> findPageInfo(Filter var1, Page var2) throws Exception;
+    <T> boolean isExist(Class<T> clazz, Map<String, Object> map, Long id, boolean isAndCondition) throws Exception;
 
-    <T> T findUniqueByMap(Class<T> var1, Map<String, Object> var2);
+    <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception;
 
-    <T> List<T> findListByMap(Class<T> var1, Map<String, Object> var2);
+    <T> T findUniqueByMap(Class<T> clazz, Map<String, Object> condition);
 
-    <T> List<Map<String, Object>> findListMapByMap(String var1, Map<String, Object> var2);
+    <T> List<T> findListByMap(Class<T> clazz, Map<String, Object> condition);
 
-    <T> void fakeDelete(Class<T> var1, Serializable... var2);
+    List<Map<String, Object>> findListMapByMap(String sql, Map<String, Object> condition);
 
-    <T> void fakeDelete(Class<T> var1, String var2);
+    <T> void fakeDelete(Class<T> clazz, Serializable... ids);
 
-    <T> void delete(Class<T> var1, String var2);
+    <T> void fakeDelete(Class<T> clazz, String ids);
 
-    <T> void delete(Class<T> var1, Map<String, Object> var2);
+    <T> void delete(Class<T> clazz, String ids);
 
-    <T> boolean has(Class<T> var1, Map<String, Object> var2, Long var3);
+    <T> void delete(Class<T> clazz, Map<String, Object> condition);
 
-    <T> boolean has(Class<T> var1, Map<String, Object> var2);
+    <T> boolean has(Class<T> clazz, Map<String, Object> condition, Long id);
 
-    <T> List<T> find(Class<T> var1, String var2, Object var3);
+    <T> boolean has(Class<T> clazz, Map<String, Object> condition);
 
-    <T> T findOne(Class<T> var1, String var2, Object var3);
+    <T> List<T> find(Class<T> clazz, String column, Object value);
+
+    <T> T findOne(Class<T> clazz, String column, Object value);
 }

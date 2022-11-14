@@ -16,7 +16,7 @@ import java.util.Map;
 
 public interface IRoleDao extends IBaseDao {
     @Override
-    <T> Map<String, Object> findPageInfo(final Filter p0, final Page p1) throws Exception;
+    <T> Map<String, Object> findPageInfo(final Filter filter, final Page page) throws Exception;
 
     void delete(final List<Role> p0);
 

@@ -15,7 +15,7 @@ import java.util.Map;
 
 public interface IMessageDao extends IBaseDao {
     @Override
-    <T> Map<String, Object> findPageInfo(final Filter p0, final Page p1) throws Exception;
+    <T> Map<String, Object> findPageInfo(final Filter filter, final Page page) throws Exception;
 
     List<Message> myMessage(final Integer p0, final Long p1, final Integer p2);
 
