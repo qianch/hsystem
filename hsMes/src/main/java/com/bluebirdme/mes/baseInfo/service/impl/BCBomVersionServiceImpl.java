@@ -86,28 +86,11 @@ public class BCBomVersionServiceImpl extends BaseServiceImpl implements IBCBomVe
             return null;
         }
         Map<String, Object> ret;
-        List<Map<String, Object>> _ret = new ArrayList<Map<String, Object>>();
+        List<Map<String, Object>> _ret = new ArrayList<>();
         for (Map<String, Object> map : listMap) {
-            ret = new HashMap<String, Object>();
+            ret = new HashMap<>();
             ret.put("id", MapUtils.getAsLong(map, "ID"));
-//			String s = "";
-//			if (MapUtils.getAsInt(map, "PACKISDEFAULT") == 1) {
-//				s = "[默认-";
-//			} else {
-//				s += "[";
-//			}
-//			if (MapUtils.getAsInt(map, "PACKENABLED") == 1) {
-//				s += "启用]";
-//			} else if (MapUtils.getAsInt(map, "PACKENABLED") == 0) {
-//				s += "改版]";
-//			} else {
-//				s += "停用]";
-//			}
             ret.put("text", MapUtils.getAsString(map, "packVersion".toUpperCase()));
-            // + "/"
-            // + MapUtils.getAsString(map,
-            // "packCode".toUpperCase()));
-
             map.put("nodeType", "version");
             ret.put("attributes", map);
             _ret.add(ret);
@@ -127,10 +110,10 @@ public class BCBomVersionServiceImpl extends BaseServiceImpl implements IBCBomVe
         // 根据id查询需要复制的版本对象
         BCBomVersion bmVersion = findById(BCBomVersion.class, Long.parseLong(id));
         // 根据字段查询对象的集合
-        HashMap map = new HashMap();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("packVersionId", bmVersion.getId());
         List<BcBomVersionDetail> li = bcBomVersionDetailDao.findListByMap(BcBomVersionDetail.class, map);
-        ArrayList<BcBomVersionDetail> saveLi = new ArrayList<BcBomVersionDetail>();
+        ArrayList<BcBomVersionDetail> saveLi = new ArrayList<>();
         // 保存新的version对象
         BCBomVersion newVersion = new BCBomVersion();
         ObjectUtils.clone(bmVersion, newVersion);
@@ -153,10 +136,10 @@ public class BCBomVersionServiceImpl extends BaseServiceImpl implements IBCBomVe
         // 根据id查询需要复制的版本对象
         BCBomVersion bmVersion = findById(BCBomVersion.class, Long.parseLong(id));
         // 根据字段查询对象的集合
-        HashMap map = new HashMap();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("packVersionId", bmVersion.getId());
         List<BcBomVersionDetail> li = bcBomVersionDetailDao.findListByMap(BcBomVersionDetail.class, map);
-        ArrayList<BcBomVersionDetail> saveLi = new ArrayList<BcBomVersionDetail>();
+        ArrayList<BcBomVersionDetail> saveLi = new ArrayList<>();
         // 保存新的version对象
         BCBomVersion newVersion = new BCBomVersion();
         ObjectUtils.clone(bmVersion, newVersion);
@@ -164,7 +147,6 @@ public class BCBomVersionServiceImpl extends BaseServiceImpl implements IBCBomVe
             newVersion.setPackIsDefault(-1);
             newVersion.setPackVersion(versionName);
         }
-//		newVersion.setPackVersion(newVersion.getPackVersion() + "(复制)");
         newVersion.setAuditState(AuditConstant.RS.SUBMIT);
         bCBomVersionDao.save(newVersion);
         for (BcBomVersionDetail d : li) {
@@ -190,7 +172,7 @@ public class BCBomVersionServiceImpl extends BaseServiceImpl implements IBCBomVe
         ObjectUtils.clone(bom, newbom);
         newbom.setPackBomGenericName(bom.getPackBomGenericName() + "(复制)");
         bCBomVersionDao.save(newbom);
-        HashMap<String, Object> map = new HashMap<String, Object>();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("packBomId", bom.getId());
         List<BCBomVersion> bmVersionList = findListByMap(BCBomVersion.class, map);
         // 根据字段查询对象的集合
@@ -198,7 +180,7 @@ public class BCBomVersionServiceImpl extends BaseServiceImpl implements IBCBomVe
             map.clear();
             map.put("packVersionId", bmVersion.getId());
             List<BcBomVersionDetail> li = bcBomVersionDetailDao.findListByMap(BcBomVersionDetail.class, map);
-            ArrayList<BcBomVersionDetail> saveLi = new ArrayList<BcBomVersionDetail>();
+            ArrayList<BcBomVersionDetail> saveLi = new ArrayList<>();
             // 保存新的version对象
             BCBomVersion newVersion = new BCBomVersion();
             ObjectUtils.clone(bmVersion, newVersion);
@@ -209,7 +191,6 @@ public class BCBomVersionServiceImpl extends BaseServiceImpl implements IBCBomVe
             newVersion.setAuditState(AuditConstant.RS.SUBMIT);
             newVersion.setPackBomId(newbom.getId());
             bCBomVersionDao.save(newVersion);
-
             for (BcBomVersionDetail d : li) {
                 BcBomVersionDetail saveDetail = new BcBomVersionDetail();
                 ObjectUtils.clone(d, saveDetail);
@@ -226,7 +207,6 @@ public class BCBomVersionServiceImpl extends BaseServiceImpl implements IBCBomVe
             update2(bcBomVersion);
             Attachment att = bCBomVersionDao.findById(Attachment.class, fileId);
             BcBom bcBom = bCBomVersionDao.findById(BcBom.class, bcBomVersion.getPackBomId());
-            //String msg = ConvertPDFUtils.convert("BC", bcBom.getPackBomCode(),bcBomVersion.getPackVersion(), att.getFilePath());
             String msg = "";
             List<String> paths = new ArrayList<>();
             try {
@@ -291,7 +271,6 @@ public class BCBomVersionServiceImpl extends BaseServiceImpl implements IBCBomVe
                 param.clear();
                 param.put("bomFileId", bomFile.getId());
                 bCBomVersionDao.delete(BomFilePdf.class, param);
-
                 com.aspose.cells.Workbook workbook = new com.aspose.cells.Workbook(att.getFilePath());
                 for (int i = 0; i < workbook.getWorksheets().getCount(); i++) {
                     if (workbook.getWorksheets().get(i).isVisible()) {
@@ -307,26 +286,20 @@ public class BCBomVersionServiceImpl extends BaseServiceImpl implements IBCBomVe
 
 
     @Override
-    public String importBcBomMainUploadFile(MultipartFile file, String userId,String packVersionId) throws IOException {
-        String jsonData = "";
-
+    public String importBcBomMainUploadFile(MultipartFile file, String userId, String packVersionId) throws IOException {
         Boolean bool = ImportExcel.checkFile(file);
         if (!bool) {
             return "文件类型不正确或为空";
         }
-
         //工具类在下面
         HashMap<String, ArrayList<String[]>> hashMap = ImportExcel.analysisFile(file);
         ArrayList<String[]> arrayList = hashMap.get("OK");
         if (arrayList == null) {
             return "文件内容为空";
         }
-
-        String tcProcBomCodeVersion = "";
         if (arrayList.size() > 0) {
             if (arrayList.get(0).length < 6) {
                 return "文件格式";
-
             }
             List<BcBomVersionDetail> bcs = new ArrayList<>();
             String packRequire = null;
@@ -343,11 +316,10 @@ public class BCBomVersionServiceImpl extends BaseServiceImpl implements IBCBomVe
                 bcbd.setPackMaterialUnit(packMaterialUnit);
                 String packMemo = arrayList.get(i)[5];
                 bcbd.setPackMemo(packMemo);
-               if(packRequire==null) {
-                   packRequire = arrayList.get(i)[6];
-               }
+                if (packRequire == null) {
+                    packRequire = arrayList.get(i)[6];
+                }
                 bcbd.setPackRequire(packRequire);
-
                 bcs.add(bcbd);
                 bcbd.setPackVersionId(Long.parseLong(packVersionId));
             }

@@ -71,13 +71,14 @@ public class BomServiceImpl extends BaseServiceImpl implements IBomService {
 
     @Override
     public List<TcBomVersion> getTcVersions(String tcBomCode) {
-        Map<String, Object> param = new HashMap<String, Object>();
+        Map<String, Object> param = new HashMap<>();
         param.put("tcProcBomCode", tcBomCode);
         // 查询BOM信息
         TcBom bom = tcBomService.findUniqueByMap(TcBom.class, param);
-        List<TcBomVersion> list = new ArrayList<TcBomVersion>();
-        if (bom == null)
+        List<TcBomVersion> list = new ArrayList<>();
+        if (bom == null) {
             return list;
+        }
         // 查询BOM的版本信息
         param.clear();
         param.put("tcProcBomId", bom.getId());
@@ -87,20 +88,19 @@ public class BomServiceImpl extends BaseServiceImpl implements IBomService {
         list = tcBomService.findListByMap(TcBomVersion.class, param);
         param.put("tcProcBomVersionEnabled", 0);
         list.addAll(tcBomService.findListByMap(TcBomVersion.class, param));
-        return list == null ? new ArrayList<TcBomVersion>() : list;
+        return list;
     }
 
     @Override
     public List<FtcBomVersion> getFtcVersions(String ftcBomCode) {
-        Map<String, Object> param = new HashMap<String, Object>();
+        Map<String, Object> param = new HashMap<>();
         param.put("ftcProcBomCode", ftcBomCode);
-
         // 查询BOM信息
         FtcBom bom = ftcBomService.findUniqueByMap(FtcBom.class, param);
-        List<FtcBomVersion> list = new ArrayList<FtcBomVersion>();
-        if (bom == null)
+        List<FtcBomVersion> list = new ArrayList<>();
+        if (bom == null) {
             return list;
-
+        }
         // 查询BOM的版本信息
         param.clear();
         param.put("ftcProcBomId", bom.getId());
@@ -109,8 +109,7 @@ public class BomServiceImpl extends BaseServiceImpl implements IBomService {
         list = ftcBomService.findListByMap(FtcBomVersion.class, param);
         param.put("ftcProcBomVersionEnabled", 0);
         list.addAll(ftcBomService.findListByMap(FtcBomVersion.class, param));
-
-        return list == null ? new ArrayList<FtcBomVersion>() : list;
+        return list;
     }
 
     @Override
@@ -122,18 +121,16 @@ public class BomServiceImpl extends BaseServiceImpl implements IBomService {
     public List<FtcBomDetail> getBomDetails(FinishedProduct product) {
         String bomCode = product.getProductProcessCode();
         String bomVersion = product.getProductProcessBomVersion();
-        List<FtcBomDetail> resultList = getBomDetails(FtcBomDetail.class, bomCode, bomVersion);
-        return resultList;
+        return getBomDetails(FtcBomDetail.class, bomCode, bomVersion);
     }
 
     @Override
     public void setDefult(String type, int defultType, Long id) {
         if (type.equals("tc")) {
             TcBomVersion version = findById(TcBomVersion.class, id);
-            HashMap<String, Object> map = new HashMap<String, Object>();
+            HashMap<String, Object> map = new HashMap<>();
             map.put("tcProcBomId", version.getTcProcBomId());
-            List<TcBomVersion> saveList = new ArrayList<TcBomVersion>();
-
+            List<TcBomVersion> saveList = new ArrayList<>();
             if (defultType == 1) {
                 List<TcBomVersion> versionList = findListByMap(TcBomVersion.class, map);
                 for (TcBomVersion v : versionList) {
@@ -148,13 +145,11 @@ public class BomServiceImpl extends BaseServiceImpl implements IBomService {
             save(saveList.toArray(new TcBomVersion[]{}));
         } else if (type.equals("ftc")) {
             FtcBomVersion version = findById(FtcBomVersion.class, id);
-            HashMap<String, Object> map = new HashMap<String, Object>();
+            HashMap<String, Object> map = new HashMap<>();
             map.put("ftcProcBomId", version.getFtcProcBomId());
-
-            List<FtcBomVersion> saveList = new ArrayList<FtcBomVersion>();
+            List<FtcBomVersion> saveList = new ArrayList<>();
             if (defultType == 1) {
-                List<FtcBomVersion> versionList = findListByMap(
-                        FtcBomVersion.class, map);
+                List<FtcBomVersion> versionList = findListByMap(FtcBomVersion.class, map);
                 for (FtcBomVersion v : versionList) {
                     if (v.getFtcProcBomVersionDefault() == 1) {
                         v.setFtcProcBomVersionDefault(-1);
@@ -167,10 +162,9 @@ public class BomServiceImpl extends BaseServiceImpl implements IBomService {
             save(saveList.toArray(new FtcBomVersion[]{}));
         } else {
             BCBomVersion version = findById(BCBomVersion.class, id);
-            HashMap<String, Object> map = new HashMap<String, Object>();
+            HashMap<String, Object> map = new HashMap<>();
             map.put("packBomId", version.getPackBomId());
-
-            List<BCBomVersion> saveList = new ArrayList<BCBomVersion>();
+            List<BCBomVersion> saveList = new ArrayList<>();
             if (defultType == 1) {
                 List<BCBomVersion> versionList = findListByMap(BCBomVersion.class, map);
                 for (BCBomVersion v : versionList) {

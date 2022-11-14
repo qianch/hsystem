@@ -97,14 +97,12 @@ public class FtcBcBomServiceImpl extends BaseServiceImpl implements IFtcBcBomSer
      * @return 无
      */
     public void deleteAll(String ids) throws Exception {
-//		bcBomDao.delete(ids);
-//		bcBomVersionDao.deleteByPid(ids);
-//		bcBomVersionDetailDao.deleteByPid();
         String[] id = ids.split(",");
         for (String s : id) {
             FtcBcBom fbc = findById(FtcBcBom.class, Long.valueOf(s));
             HashMap<String, Object> map = new HashMap<>();
-            if (fbc.getLevel() == 3) { //三级包装
+            //三级包装
+            if (fbc.getLevel() == 3) {
                 map.put("bid", fbc.getId());
                 List<FtcBcBomVersion> versionList = findListByMap(FtcBcBomVersion.class, map);
                 for (FtcBcBomVersion version : versionList) {
@@ -160,7 +158,8 @@ public class FtcBcBomServiceImpl extends BaseServiceImpl implements IFtcBcBomSer
     @Override
     public ExcelImportMessage doAddFtcBcBom(FtcBcBom ftcBcBom, Long fileId) throws Exception {
         ftcBcBomDao.save(ftcBcBom);
-        ExcelImportMessage eim = new ExcelImportMessage();//存放错误消息
+        //存放错误消息
+        ExcelImportMessage eim = new ExcelImportMessage();
         if (ftcBcBom.getId() != null && fileId != null) {
             Attachment att = ftcBcBomDao.findById(Attachment.class, fileId);
             String filePath = att.getFilePath();
@@ -213,12 +212,12 @@ public class FtcBcBomServiceImpl extends BaseServiceImpl implements IFtcBcBomSer
                         }
                     }
                 }
-
-            }//end for 第一个sheet循环
+            }
             if (fi == -1) {
                 eim.addMessage("Excel文件格式错误");
             }
-            int sheetCount = wb.getNumberOfSheets();  //Excel文件中sheet的个数
+            //Excel文件中sheet的个数
+            int sheetCount = wb.getNumberOfSheets();
             Map<String, String> titleMap = new HashMap<>();
             for (Map<String, Object> map : data) {
                 String code3 = MapUtils.getAsString(map, "code3");
@@ -231,13 +230,14 @@ public class FtcBcBomServiceImpl extends BaseServiceImpl implements IFtcBcBomSer
                         sheet = sheet0;
                         break;
                     }
-                }//end for inner
-
+                }
                 if (sheet == null) {
                     eim.addMessage(code3 + "对应的sheet不存在");
                 } else {
-                    int fa = -1;  //包装材料 所在的行号
-                    int fb = -1;  //包装要求 所在的行号
+                    //包装材料 所在的行号
+                    int fa = -1;
+                    //包装要求 所在的行号
+                    int fb = -1;
                     List<Packaging> packagingList = new ArrayList<>();
                     for (int i = 0; i < sheet.getLastRowNum(); i++) {
                         Row row = sheet.getRow(i);
@@ -367,23 +367,18 @@ public class FtcBcBomServiceImpl extends BaseServiceImpl implements IFtcBcBomSer
                                     } else {
                                         pack.setMaterialCode(cell1.toString());
                                     }
-
                                     pack.setStandardCode(cell2.toString());
-
                                     if (StringUtils.isBlank(cell3.toString())) {
                                         eim.addMessage(i + 1, 3, "材料名称不能为空");
                                     } else {
                                         pack.setMaterialName(cell3.toString());
                                     }
-
                                     pack.setSpecifications(cell4.toString());
-
                                     if (StringUtils.isBlank(cell5.toString())) {
                                         eim.addMessage(i + 1, 7, "单位不能为空");
                                     } else {
                                         pack.setUnit(cell5.toString());
                                     }
-
                                     if (StringUtils.isBlank(cell6.toString())) {
                                         eim.addMessage(i + 1, 8, "数量不能为空");
                                     } else if (cell6.getCellType() != CellType.NUMERIC) {
@@ -394,10 +389,9 @@ public class FtcBcBomServiceImpl extends BaseServiceImpl implements IFtcBcBomSer
                                     pack.setRemarks(cell7.toString());
                                     packagingList.add(pack);
                                 }
-
                             }
-                        }//end if
-                    }//end for i 行的循环夫
+                        }
+                    }
                     if (fa == -1) {
                         eim.addMessage(code3 + "工作表\"包装材料\"标题不存在");
                     }
@@ -457,7 +451,7 @@ public class FtcBcBomServiceImpl extends BaseServiceImpl implements IFtcBcBomSer
                     }
                     map.put("packagingList", packagingList);
                 }
-            }//end for sheet的循环
+            }
 
             if (!eim.hasError()) {
                 //把数据放入非套材包材BOM
@@ -482,14 +476,12 @@ public class FtcBcBomServiceImpl extends BaseServiceImpl implements IFtcBcBomSer
                     String requirement_tuobiaoqian = MapUtils.getAsString(map, "requirement_tuobiaoqian");
                     String requirement_chanrao = MapUtils.getAsString(map, "requirement_chanrao");
                     String requirement_other = MapUtils.getAsString(map, "requirement_other");
-
                     FtcBcBom ftcBcBom3 = new FtcBcBom();
                     ftcBcBom3.setCode(code);
                     ftcBcBom3.setName(name);
                     ftcBcBom3.setLevel(3);
                     ftcBcBom3.setPid(ftcBcBom.getId());
                     ftcBcBomDao.save(ftcBcBom3);
-
                     //添加非套材包材版本
                     FtcBcBomVersion ftcBcBomVersion = new FtcBcBomVersion();
                     ftcBcBomVersion.setBid(ftcBcBom3.getId());
@@ -514,15 +506,12 @@ public class FtcBcBomServiceImpl extends BaseServiceImpl implements IFtcBcBomSer
                     ftcBcBomVersion.setRequirement_tuobiaoqian(requirement_tuobiaoqian);
                     ftcBcBomVersion.setRequirement_chanrao(requirement_chanrao);
                     ftcBcBomVersion.setRequirement_other(requirement_other);
-                    if (fileId != null) {
-                        ftcBcBomVersion.setAttachmentId(fileId.intValue());
-                    }
+                    ftcBcBomVersion.setAttachmentId(fileId.intValue());
                     ftcBcBomDao.save(ftcBcBomVersion);
                     //添加非套材包材版本明细
                     @SuppressWarnings("unchecked")
                     List<Packaging> packagingList = (List<Packaging>) map.get("packagingList");
                     for (Packaging packaging : packagingList) {
-
                         FtcBcBomVersionDetail vd = new FtcBcBomVersionDetail();
                         vd.setPackVersionId(ftcBcBomVersion.getId());
                         vd.setPackMaterialCode(packaging.getMaterialCode());
@@ -545,11 +534,11 @@ public class FtcBcBomServiceImpl extends BaseServiceImpl implements IFtcBcBomSer
     @Override
     public ExcelImportMessage doUpdateFtcBcBom(FtcBcBom ftcBcBom, Long fileId, StringBuffer info) throws Exception {
         ftcBcBomDao.update2(ftcBcBom);
-        ExcelImportMessage eim = new ExcelImportMessage();//存放错误消息
+        //存放错误消息
+        ExcelImportMessage eim = new ExcelImportMessage();
         if (ftcBcBom.getId() != null && fileId != null) {
             Attachment att = ftcBcBomDao.findById(Attachment.class, fileId);
             String filePath = att.getFilePath();
-            // 读取文件
             InputStream is = new FileInputStream(filePath);
             Workbook wb = WorkbookFactory.create(is);
             List<Map<String, Object>> data = new ArrayList<>();
@@ -580,27 +569,23 @@ public class FtcBcBomServiceImpl extends BaseServiceImpl implements IFtcBcBomSer
                             } else {
                                 map.put("name3", str1);
                             }
-
                             if (StringUtils.isBlank(str2)) {
                                 eim.addMessage(i + 1, 16, sheet1.getSheetName() + "工作表\"三级包装工艺代码\"不能为空");
                             } else {
                                 map.put("code3", str2);
                             }
-
                             if (StringUtils.isBlank(str3)) {
                                 eim.addMessage(i + 1, 18, sheet1.getSheetName() + "工作表\"版本\"不能为空");
                             } else {
                                 map.put("version", str3);
                             }
-
                             data.add(map);
                         } else {
                             break;
                         }
                     }
                 }
-
-            }//end for 第一个sheet循环行
+            }
             if (fi == -1) {
                 eim.addMessage("Excel文件格式错误");
             }
@@ -620,21 +605,21 @@ public class FtcBcBomServiceImpl extends BaseServiceImpl implements IFtcBcBomSer
                     List<FtcBcBomVersion> fbbvL = findListByMap(FtcBcBomVersion.class, param);
                     for (FtcBcBomVersion ftcBcBomVersion : fbbvL) {
                         if (StringUtils.equals(ftcBcBomVersion.getVersion(), version)) {
-                            info.append("三级包装：" + name + "/" + code + "存在重复版本:" + version + "(忽略导入)<br/>");
+                            info.append("三级包装：").append(name).append("/").append(code).append("存在重复版本:").append(version).append("(忽略导入)<br/>");
                             iterator.remove();
                             break;
                         }
                         if (ftcBcBomVersion.getAuditState() < 2) {
-                            info.append("三级包装：" + name + "/" + code + "存在[未提交]、[不通过]或[审核中]的版本(忽略导入)<br/>");
+                            info.append("三级包装：").append(name).append("/").append(code).append("存在[未提交]、[不通过]或[审核中]的版本(忽略导入)<br/>");
                             iterator.remove();
                             break;
                         }
                     }
                 }
             }
-
-            info.append("<hr/>本次导入版本为" + data.size() + "条");
-            int sheetCount = wb.getNumberOfSheets();  //Excel文件中sheet的个数
+            info.append("<hr/>本次导入版本为").append(data.size()).append("条");
+            //Excel文件中sheet的个数
+            int sheetCount = wb.getNumberOfSheets();
             Map<String, String> titleMap = new HashMap<>();
             for (Map<String, Object> map : data) {
                 String code3 = MapUtils.getAsString(map, "code3");
@@ -647,13 +632,14 @@ public class FtcBcBomServiceImpl extends BaseServiceImpl implements IFtcBcBomSer
                         sheet = sheet0;
                         break;
                     }
-                }//end for inner
-
+                }
                 if (sheet == null) {
                     eim.addMessage(code3 + "对应的sheet不存在");
                 } else {
-                    int fa = -1;  //包装材料 所在的行号
-                    int fb = -1;  //包装要求 所在的行号
+                    //包装材料 所在的行号
+                    int fa = -1;
+                    //包装要求 所在的行号
+                    int fb = -1;
                     List<Packaging> packagingList = new ArrayList<>();
                     for (int i = 0; i < sheet.getLastRowNum(); i++) {
                         Row row = sheet.getRow(i);
@@ -679,9 +665,7 @@ public class FtcBcBomServiceImpl extends BaseServiceImpl implements IFtcBcBomSer
                                         } else {
                                             map.put("productType", 2);
                                         }
-
                                     }
-
                                 }
                                 if (StringUtils.equals(cell.toString(), "客户代码")) {
                                     titleMap.put("consumerCode", "客户代码");
@@ -756,8 +740,7 @@ public class FtcBcBomServiceImpl extends BaseServiceImpl implements IFtcBcBomSer
                                     titleMap.put("requirement_other", "其他要求");
                                     map.put("requirement_other", row.getCell(j + 1, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK).toString());
                                 }
-                            }//end for j
-
+                            }
                             if (StringUtils.equals(row.getCell(0, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK).toString(), "包装材料")) {
                                 fa = i;
                                 continue;
@@ -784,17 +767,13 @@ public class FtcBcBomServiceImpl extends BaseServiceImpl implements IFtcBcBomSer
                                     } else {
                                         pack.setMaterialCode(cell1.toString());
                                     }
-
                                     pack.setStandardCode(cell2.toString());
-
                                     if (StringUtils.isBlank(cell3.toString())) {
                                         eim.addMessage(i + 1, 3, "材料名称不能为空");
                                     } else {
                                         pack.setMaterialName(cell3.toString());
                                     }
-
                                     pack.setSpecifications(cell4.toString());
-
                                     if (StringUtils.isBlank(cell5.toString())) {
                                         eim.addMessage(i + 1, 7, "单位不能为空");
                                     } else {
@@ -812,8 +791,8 @@ public class FtcBcBomServiceImpl extends BaseServiceImpl implements IFtcBcBomSer
                                     packagingList.add(pack);
                                 }
                             }
-                        }//end if
-                    }//end for i 行的循环夫
+                        }
+                    }
                     if (fa == -1) {
                         eim.addMessage(code3 + "工作表\"包装材料\"标题不存在");
                     }
@@ -911,7 +890,8 @@ public class FtcBcBomServiceImpl extends BaseServiceImpl implements IFtcBcBomSer
                             break;
                         }
                     }
-                    if (!ftcBcBom3Exists) {//3级BOM不存在就新建
+                    //3级BOM不存在就新建
+                    if (!ftcBcBom3Exists) {
                         ftcBcBom3 = new FtcBcBom();
                         ftcBcBom3.setCode(code);
                         ftcBcBom3.setName(name);
@@ -932,8 +912,8 @@ public class FtcBcBomServiceImpl extends BaseServiceImpl implements IFtcBcBomSer
                             ftcBcBomVersionNotPass = true;
                         }
                     }
-
-                    if (!ftcBcBomVersionExists && !ftcBcBomVersionNotPass) {//没有重复版本即可添加新版本
+                    //没有重复版本即可添加新版本
+                    if (!ftcBcBomVersionExists && !ftcBcBomVersionNotPass) {
                         //添加非套材包材版本
                         FtcBcBomVersion ftcBcBomVersion = new FtcBcBomVersion();
                         ftcBcBomVersion.setBid(ftcBcBom3.getId());
@@ -977,7 +957,8 @@ public class FtcBcBomServiceImpl extends BaseServiceImpl implements IFtcBcBomSer
                     }
                 }
             } else {
-                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); //手动回滚事物
+                //手动回滚事物
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             }
         }
         return eim;
@@ -1038,8 +1019,7 @@ public class FtcBcBomServiceImpl extends BaseServiceImpl implements IFtcBcBomSer
                         }
                     }
                 }
-            }//end for 第一个sheet循环行
-
+            }
             //String msg = ConvertPDFUtils.convert("FTCBC", ftcBcBom.getCode(), "", att.getFilePath());
             String msg = "";
             List<String> paths = new ArrayList<>();
@@ -1140,7 +1120,6 @@ public class FtcBcBomServiceImpl extends BaseServiceImpl implements IFtcBcBomSer
                 param.clear();
                 param.put("bomFileId", bomFile.getId());
                 ftcBcBomDao.delete(BomFilePdf.class, param);
-
                 com.aspose.cells.Workbook workbook = new com.aspose.cells.Workbook(filePath);
                 for (int i = 0; i < workbook.getWorksheets().getCount(); i++) {
                     if (workbook.getWorksheets().get(i).isVisible()) {
