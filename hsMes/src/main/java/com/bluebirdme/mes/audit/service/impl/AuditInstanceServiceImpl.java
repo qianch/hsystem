@@ -6,43 +6,38 @@
  */
 package com.bluebirdme.mes.audit.service.impl;
 
-import java.util.*;
-
-import javax.annotation.Resource;
-
-import com.bluebirdme.mes.baseInfo.dao.IFtcBcBomVersionDao;
-import com.bluebirdme.mes.baseInfo.dao.ITcBomVersionDao;
-import com.bluebirdme.mes.baseInfo.entity.*;
-import com.bluebirdme.mes.baseInfo.entityMirror.*;
-import com.bluebirdme.mes.core.annotation.AnyExceptionRollback;
-
-import com.bluebirdme.mes.planner.produce.dao.IProducePlanDao;
-import com.bluebirdme.mes.produce.entity.FinishedProductMirror;
-import com.bluebirdme.mes.sales.dao.ISalesOrderDao;
-import com.bluebirdme.mes.sales.entity.SalesOrderDetailPartsCount;
-import com.bluebirdme.mes.sales.entity.SalesOrderDetailTemp;
-import com.bluebirdme.mes.utils.ProductIsTc;
-import org.apache.poi.ss.formula.functions.T;
-import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Service;
-
 import com.bluebirdme.mes.audit.dao.IAuditInstanceDao;
 import com.bluebirdme.mes.audit.entity.AuditConstant;
 import com.bluebirdme.mes.audit.entity.AuditInstance;
 import com.bluebirdme.mes.audit.entity.AuditProcessSetting;
 import com.bluebirdme.mes.audit.service.IAuditInstanceService;
+import com.bluebirdme.mes.baseInfo.dao.IFtcBcBomVersionDao;
+import com.bluebirdme.mes.baseInfo.dao.ITcBomVersionDao;
+import com.bluebirdme.mes.baseInfo.entity.*;
+import com.bluebirdme.mes.baseInfo.entityMirror.*;
 import com.bluebirdme.mes.common.service.IMessageCreateService;
+import com.bluebirdme.mes.core.annotation.AnyExceptionRollback;
 import com.bluebirdme.mes.core.base.dao.IBaseDao;
 import com.bluebirdme.mes.core.base.entity.Filter;
 import com.bluebirdme.mes.core.base.entity.Page;
 import com.bluebirdme.mes.core.base.service.BaseServiceImpl;
 import com.bluebirdme.mes.planner.cut.entity.CutDailyPlan;
+import com.bluebirdme.mes.planner.produce.dao.IProducePlanDao;
 import com.bluebirdme.mes.planner.produce.entity.ProducePlan;
 import com.bluebirdme.mes.planner.produce.entity.ProducePlanDetail;
 import com.bluebirdme.mes.planner.produce.service.IProducePlanService;
 import com.bluebirdme.mes.produce.entity.FinishedProduct;
+import com.bluebirdme.mes.produce.entity.FinishedProductMirror;
 import com.bluebirdme.mes.sales.entity.SalesOrder;
 import com.bluebirdme.mes.sales.entity.SalesOrderDetail;
+import com.bluebirdme.mes.sales.entity.SalesOrderDetailPartsCount;
+import com.bluebirdme.mes.sales.entity.SalesOrderDetailTemp;
+import com.bluebirdme.mes.utils.ProductIsTc;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.*;
 
 /**
  * @author 高飞
@@ -70,7 +65,7 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
         return auditInstanceDao.findPageInfo(filter, page);
     }
 
@@ -127,17 +122,13 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
         // 审核不通过
         if (result.intValue() == AuditConstant.RS.REJECT) {
             // 表单数据，审核状态改为待提交
-            Class clazz = Class.forName(audit.getEntityJavaClass());
-
-            Map<String, Object> condition = new HashMap<String, Object>();
+            Class<?> clazz = Class.forName(audit.getEntityJavaClass());
+            Map<String, Object> condition = new HashMap<>();
             condition.put("id", audit.getFormId());
-
-            Map<String, Object> values = new HashMap<String, Object>();
+            Map<String, Object> values = new HashMap<>();
             values.put("auditState", AuditConstant.RS.REJECT);
-
             updateByCondition(clazz, condition, values);
-
-            if (level.intValue() == 1) {
+            if (level == 1) {
                 audit.setFirstAuditMsg(msg);
                 audit.setFirstAuditResult(result);
                 audit.setFirstAuditTime(new Date());
@@ -151,21 +142,21 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
             audit.setFinalResult(result);
             audit.setIsCompleted(AuditConstant.STATE.FINISHED);
         } else {// 审核通过
-            if (level.intValue() == 1) {
+            if (level == 1) {
                 audit.setFirstAuditMsg(msg);
                 audit.setFirstAuditResult(result);
                 audit.setFirstAuditTime(new Date());
                 audit.setFirstRealAuditUserId(uid);
                 audit.setCurrentAuditProcessNode(2);
                 // 如果审核级别是1，那么审核就结束了
-                if (aps.getAuditLevel().intValue() == 1) {
+                if (aps.getAuditLevel() == 1) {
                     audit.setFinalResult(result);
                     audit.setIsCompleted(AuditConstant.STATE.FINISHED);
                     // 更改产品状态，通过
-                    Class clazz = Class.forName(audit.getEntityJavaClass());
-                    Map<String, Object> condition = new HashMap<String, Object>();
+                    Class<?> clazz = Class.forName(audit.getEntityJavaClass());
+                    Map<String, Object> condition = new HashMap<>();
                     condition.put("id", audit.getFormId());
-                    Map<String, Object> values = new HashMap<String, Object>();
+                    Map<String, Object> values = new HashMap<>();
                     values.put("auditState", AuditConstant.RS.PASS);
                     updateByCondition(clazz, condition, values);
                 }
@@ -178,10 +169,10 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
                 audit.setIsCompleted(AuditConstant.STATE.FINISHED);
                 audit.setCurrentAuditProcessNode(2);
                 // 更改产品状态，通过
-                Class clazz = Class.forName(audit.getEntityJavaClass());
-                Map<String, Object> condition = new HashMap<String, Object>();
+                Class<?> clazz = Class.forName(audit.getEntityJavaClass());
+                Map<String, Object> condition = new HashMap<>();
                 condition.put("id", audit.getFormId());
-                Map<String, Object> values = new HashMap<String, Object>();
+                Map<String, Object> values = new HashMap<>();
                 values.put("auditState", AuditConstant.RS.PASS);
                 updateByCondition(clazz, condition, values);
             }
@@ -190,7 +181,7 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
         msgService.createAuditState(audit);
 
         // 完全通过的审核
-        if (audit.getIsCompleted() != null && audit.getIsCompleted() == 1 && audit.getFirstAuditResult() != null && audit.getFirstAuditResult() == AuditConstant.RS.PASS && (audit.getSecondAuditResult() == null || audit.getSecondAuditResult() == AuditConstant.RS.PASS)) {
+        if (audit.getIsCompleted() != null && audit.getIsCompleted() == 1 && audit.getFirstAuditResult() != null && Objects.equals(audit.getFirstAuditResult(), AuditConstant.RS.PASS) && (audit.getSecondAuditResult() == null || Objects.equals(audit.getSecondAuditResult(), AuditConstant.RS.PASS))) {
             // 如果是生产任务的审核，那么改变订单的已分配数量
             if (audit.getAuditCode().equals("SC")) {
                 // udpateSalesOrderAssignedCount(audit.getFormId());
@@ -234,7 +225,7 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
                 Long tcBomVersionId = audit.getFormId();
                 TcBomVersion tcv = findById(TcBomVersion.class, tcBomVersionId);
                 TcBom tb = findById(TcBom.class, tcv.getTcProcBomId());
-                HashMap<String, Object> map = new HashMap();
+                HashMap<String, Object> map = new HashMap<>();
                 map.put("procBomId", tcBomVersionId);
                 map.put("productIsTc", 1);
                 List<FinishedProduct> fpList = findListByMap(FinishedProduct.class, map);
@@ -250,7 +241,7 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
                 Long ftcBomVersionId = audit.getFormId();
                 FtcBomVersion ftcv = findById(FtcBomVersion.class, ftcBomVersionId);
                 FtcBom ftcb = findById(FtcBom.class, ftcv.getFtcProcBomId());
-                HashMap<String, Object> map = new HashMap();
+                HashMap<String, Object> map = new HashMap<>();
                 map.put("procBomId", ftcBomVersionId);
                 map.put("productIsTc", 2);
                 List<FinishedProduct> fpList = findListByMap(FinishedProduct.class, map);
@@ -275,7 +266,6 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
                 Long ftcBcBomVersionId = audit.getFormId();
                 FtcBcBomVersion fbcv = findById(FtcBcBomVersion.class, ftcBcBomVersionId);
                 FtcBcBom bb = findById(FtcBcBom.class, fbcv.getBid());
-
                 //找到同bom下的版本并设置为不可用
                 Map<String, Object> param = new HashMap<>();
                 param.put("bid", bb.getId());
@@ -315,7 +305,6 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
                         tcBomMirror.setSalesOrderId(salesOrderDetail.getSalesOrderId());
                         tcBomMirror.setGmtCreate(audit.getSecondAuditTime());
                         save(tcBomMirror);
-
                         //保存套材bom版本镜像
                         TcBomVersionMirror tcBomVersionMirror = new TcBomVersionMirror();
                         BeanUtils.copyProperties(tcBomVersion, tcBomVersionMirror);
@@ -327,15 +316,12 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
                         //镜像成品信息添加镜像版本id
                         finishedProductMirror.setProcBomId(tcBomVersionMirror.getId());
                         update(finishedProductMirror);
-
                         salesOrderDetail.setMirrorProcBomVersionId(tcBomVersionMirror.getId());
                         salesOrderDetail.setMirrorProductId(finishedProductMirror.getId());
                         update(salesOrderDetail);
-
                         map.clear();
                         map.put("salesOrderDetailId", salesOrderDetail.getId());
                         List<SalesOrderDetailPartsCount> salesOrderDetailPartsCountList = findListByMap(SalesOrderDetailPartsCount.class, map);
-
                         for (SalesOrderDetailPartsCount s : salesOrderDetailPartsCountList) {
                             TcBomVersionParts tcBomVersionParts = findById(TcBomVersionParts.class, s.getPartId());
                             //保存套材版本部件镜像
@@ -361,7 +347,6 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
                                 finishedProductMirror1.setMirrorPartId(tcBomVersionParts.getId());
                                 finishedProductMirror1.setSalesOrderDetailId(salesOrderDetail.getId());
                                 save(finishedProductMirror1);
-
                                 FtcBomVersion ftcBomVersion = ftcBcBomVersionDao.findById(FtcBomVersion.class, tcfp.getProcBomId());
                                 FtcBom ftcBom = findById(FtcBom.class, ftcBomVersion.getFtcProcBomId());
                                 if (ftcBomVersion.getAuditState() != 2) {
@@ -373,7 +358,6 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
                                 ftcBomMirror.setSalesOrderId(salesOrderDetail.getSalesOrderId());
                                 ftcBomMirror.setGmtCreate(audit.getSecondAuditTime());
                                 save(ftcBomMirror);
-
                                 FtcBomVersionMirror ftcBomVersionMirror = new FtcBomVersionMirror();
                                 BeanUtils.copyProperties(ftcBomVersion, ftcBomVersionMirror);
                                 ftcBomVersionMirror.setFtcProcBomVersionId(ftcBomVersion.getId());
@@ -381,10 +365,8 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
                                 ftcBomVersionMirror.setFtcProcBomId(ftcBomMirror.getId());
                                 ftcBomVersionMirror.setSalesOrderId(salesOrderDetail.getSalesOrderId());
                                 save(ftcBomVersionMirror);
-
                                 finishedProductMirror1.setProcBomId(ftcBomVersionMirror.getId());
                                 update(finishedProductMirror1);
-
                                 map.clear();
                                 map.put("ftcBomVersionId", ftcBomVersion.getId());
                                 List<FtcBomDetail> bomDetails = findListByMap(FtcBomDetail.class, map);
@@ -406,7 +388,6 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
                                 tcBomVersionPartsDetailMirror.setSalesOrderId(salesOrderDetail.getSalesOrderId());
                                 save(tcBomVersionPartsDetailMirror);
                             }
-
                             //部件成品重量胚布信息镜像
                             map.clear();
                             map.put("tcProcBomPartsId", tcBomVersionParts.getId());
@@ -453,7 +434,6 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
                         salesOrderDetail.setMirrorProcBomVersionId(ftcBomVersionMirror.getId());
                         salesOrderDetail.setMirrorProductId(finishedProductMirror.getId());
                         update(salesOrderDetail);
-
                         map.clear();
                         map.put("ftcBomVersionId", finishedProduct.getProcBomId());
                         List<FtcBomDetail> bomDetail = findListByMap(FtcBomDetail.class, map);
@@ -479,14 +459,12 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
                             ftcBomMirror1.setSalesOrderId(salesOrderDetail.getSalesOrderId());
                             ftcBomMirror1.setGmtCreate(audit.getFirstAuditTime());
                             save(ftcBomMirror1);
-
                             FtcBomVersionMirror ftcBomVersionMirror1 = new FtcBomVersionMirror();
                             BeanUtils.copyProperties(ftcBomVersionMirror, ftcBomVersionMirror1);
                             ftcBomVersionMirror1.setGmtCreate(ftcBomMirror1.getGmtCreate());
                             ftcBomVersionMirror1.setFtcProcBomId(ftcBomMirror1.getId());
                             ftcBomVersionMirror1.setSalesOrderId(salesOrderDetail.getSalesOrderId());
                             save(ftcBomVersionMirror1);
-
                             //镜像成品信息添加镜像版本id
                             finishedProductMirror.setGmtCreate(audit.getFirstAuditTime());
                             finishedProductMirror.setProcBomId(ftcBomVersionMirror1.getId());
@@ -494,7 +472,6 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
                             salesOrderDetail.setMirrorProcBomVersionId(ftcBomVersionMirror1.getId());
                             salesOrderDetail.setMirrorProductId(finishedProductMirror.getId());
                             update(salesOrderDetail);
-
                             map.clear();
                             map.put("ftcBomVersionId", ftcBomVersionMirror.getId());
                             List<FtcBomDetailMirror> bomDetail = findListByMap(FtcBomDetailMirror.class, map);
@@ -506,7 +483,6 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
                                 ftcBomDetailMirror1.setSalesOrderId(salesOrderDetail.getSalesOrderId());
                                 save(ftcBomDetailMirror1);
                             }
-
                             TcBomVersionPartsMirror tcBomVersionPartsMirror = findById(TcBomVersionPartsMirror.class, salesOrderDetail.getMirrorPartId());
                             TcBomVersionMirror tcBomVersionMirror = findById(TcBomVersionMirror.class, tcBomVersionPartsMirror.getTcProcBomVersoinId());
                             TcBomMirror tcBomMirror = findById(TcBomMirror.class, tcBomVersionMirror.getTcProcBomId());
@@ -515,7 +491,6 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
                             tcBomMirror1.setSalesOrderId(salesOrderDetail.getSalesOrderId());
                             tcBomMirror1.setGmtCreate(audit.getSecondAuditTime());
                             save(tcBomMirror1);
-
                             //保存套材bom版本镜像
                             TcBomVersionMirror tcBomVersionMirror1 = new TcBomVersionMirror();
                             BeanUtils.copyProperties(tcBomVersionMirror, tcBomVersionMirror1);
@@ -523,7 +498,6 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
                             tcBomVersionMirror1.setSalesOrderId(salesOrderDetail.getSalesOrderId());
                             tcBomVersionMirror1.setTcProcBomId(tcBomMirror1.getId());
                             save(tcBomVersionMirror1);
-
                             //保存套材版本部件镜像
                             TcBomVersionPartsMirror tcBomVersionPartsMirror1 = new TcBomVersionPartsMirror();
                             BeanUtils.copyProperties(tcBomVersionPartsMirror, tcBomVersionPartsMirror1);
@@ -532,7 +506,6 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
                             tcBomVersionPartsMirror1.setSalesOrderId(salesOrderDetail.getSalesOrderId());
                             tcBomVersionPartsMirror1.setSalesOrderDetailId(salesOrderDetail.getId());
                             save(tcBomVersionPartsMirror1);
-
                             salesOrderDetail.setMirrorPartId(tcBomVersionPartsMirror1.getId());
                             update(salesOrderDetail);
                         } else {
@@ -565,7 +538,6 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
                             salesOrderDetail.setMirrorProcBomVersionId(ftcBomVersionMirror.getId());
                             salesOrderDetail.setMirrorProductId(finishedProductMirror.getId());
                             update(salesOrderDetail);
-
                             map.clear();
                             map.put("ftcBomVersionId", finishedProduct.getProcBomId());
                             List<FtcBomDetail> bomDetail = findListByMap(FtcBomDetail.class, map);
@@ -578,7 +550,6 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
                                 ftcBomDetailMirror.setSalesOrderId(salesOrderDetail.getSalesOrderId());
                                 save(ftcBomDetailMirror);
                             }
-
                             if (null != salesOrderDetail.getPartId()) {
                                 TcBomVersionParts tcBomVersionParts = findById(TcBomVersionParts.class, salesOrderDetail.getPartId());
                                 TcBomVersion tcBomVersion = findById(TcBomVersion.class, tcBomVersionParts.getTcProcBomVersoinId());
@@ -589,7 +560,6 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
                                 tcBomMirror.setSalesOrderId(salesOrderDetail.getSalesOrderId());
                                 tcBomMirror.setGmtCreate(audit.getSecondAuditTime());
                                 save(tcBomMirror);
-
                                 //保存套材bom版本镜像
                                 TcBomVersionMirror tcBomVersionMirror = new TcBomVersionMirror();
                                 BeanUtils.copyProperties(tcBomVersion, tcBomVersionMirror);
@@ -598,7 +568,6 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
                                 tcBomVersionMirror.setSalesOrderId(salesOrderDetail.getSalesOrderId());
                                 tcBomVersionMirror.setTcProcBomId(tcBomMirror.getId());
                                 save(tcBomVersionMirror);
-
                                 //保存套材版本部件镜像
                                 TcBomVersionPartsMirror tcBomVersionPartsMirror = new TcBomVersionPartsMirror();
                                 BeanUtils.copyProperties(tcBomVersionParts, tcBomVersionPartsMirror);
@@ -608,7 +577,6 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
                                 tcBomVersionPartsMirror.setSalesOrderId(salesOrderDetail.getSalesOrderId());
                                 tcBomVersionPartsMirror.setSalesOrderDetailId(salesOrderDetail.getId());
                                 save(tcBomVersionPartsMirror);
-
                                 salesOrderDetail.setMirrorPartId(tcBomVersionPartsMirror.getId());
                                 update(salesOrderDetail);
                             }
@@ -643,7 +611,7 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
 
     @Override
     public void reloadAudit(Long id, Integer type) {
-        HashMap<String, Object> map = new HashMap();
+        HashMap<String, Object> map = new HashMap<>();
         List<AuditInstance> ailist;
         switch (type) {
             case 1:

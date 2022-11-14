@@ -38,7 +38,8 @@ import org.xdemo.superutil.j2se.PathUtils;
 import org.xdemo.superutil.thirdparty.gson.GsonTools;
 
 import javax.annotation.Resource;
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -90,10 +91,9 @@ public class BcBomVersionDetailController extends BaseController {
         BCBomVersion bCBomVersion = bCBomVersionService.findById(BCBomVersion.class, Long.parseLong(id));
         BcBom bcBom = bCBomVersionService.findById(BcBom.class, bCBomVersion.getPackBomId());
         Consumer consumer = bCBomVersionService.findById(Consumer.class, bcBom.getPackBomConsumerId());
-        HashMap<String, Object> map = new HashMap();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("packVersionId", bCBomVersion.getId());
         List<BcBomVersionDetail> li = bcBomVersionDetailService.findListByMap(BcBomVersionDetail.class, map);
-
         return new ModelAndView(auditBomVersion, model.addAttribute("bCBomVersion", bCBomVersion)
                 .addAttribute("details", GsonTools.toJson(li))
                 .addAttribute("bcBom", bcBom)
@@ -135,7 +135,7 @@ public class BcBomVersionDetailController extends BaseController {
     @RequestMapping("copyVersion")
     public String toComplite(String ids, String name) throws Exception {
         BCBomVersion bCBomVersion = bCBomVersionService.findById(BCBomVersion.class, Long.parseLong(ids));
-        HashMap<String, Object> map = new HashMap();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("packBomId", bCBomVersion.getPackBomId());
         List<BCBomVersion> li = bCBomVersionService.findListByMap(BCBomVersion.class, map);
         for (BCBomVersion bv : li) {
@@ -152,11 +152,10 @@ public class BcBomVersionDetailController extends BaseController {
     @RequestMapping("updateByCode")
     public String updateByCode(String ids, String name) throws Exception {
         BCBomVersion bCBomVersion = bCBomVersionService.findById(BCBomVersion.class, Long.parseLong(ids));
-        HashMap<String, Object> map = new HashMap();
+        HashMap<String, Object> map = new HashMap<>();
         BcBom bom = bCBomVersionService.findById(BcBom.class, bCBomVersion.getPackBomId());
         String packBomCode = bom.getPackBomCode();
         String bomVersion = bCBomVersion.getPackVersion();
-        map.clear();
         map.put("packBomCode", packBomCode);
         List<BcBom> bomList = bCBomVersionService.findListByMap(BcBom.class, map);
         for (BcBom b : bomList) {
@@ -178,7 +177,7 @@ public class BcBomVersionDetailController extends BaseController {
     @RequestMapping("copyBom")
     public String copyBom(String ids) throws Exception {
         BcBom bcBom = bCBomVersionService.findById(BcBom.class, Long.parseLong(ids));
-        HashMap<String, Object> map = new HashMap<String, Object>();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("packBomGenericName", bcBom.getPackBomGenericName() + "(复制)");
         if (bCBomVersionService.isExist(BcBom.class, map, true)) {
             return ajaxError("已经有相同名字的版本");
@@ -543,15 +542,12 @@ public class BcBomVersionDetailController extends BaseController {
                 return ajaxError("已经有相同名字的版本");
             }
         }
-
         if (bCBomVersion.getPackEnabled() == null) {
             bCBomVersion.setPackEnabled(1);
         }
-
         if (bCBomVersion.getPackIsDefault() == null) {
             bCBomVersion.setPackIsDefault(1);
         }
-
         bCBomVersionService.save(bCBomVersion);
         bCBomVersionService.savePdfFile(bCBomVersion, fileId, new ExcelImportMessage());
         return GsonTools.toJson(bCBomVersion);
@@ -572,7 +568,7 @@ public class BcBomVersionDetailController extends BaseController {
     @RequestMapping(value = "editBomVersion", method = RequestMethod.POST)
     @Valid
     public String editBomVersion(BCBomVersion bCBomVersion, Long fileId) throws Exception {
-        HashMap<String, Object> map = new HashMap();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("packBomId", bCBomVersion.getPackBomId());
         List<BCBomVersion> li = bCBomVersionService.findListByMap(BCBomVersion.class, map);
         for (BCBomVersion bv : li) {
@@ -615,7 +611,7 @@ public class BcBomVersionDetailController extends BaseController {
     @Journal(name = "查看BOM下的版本")
     @RequestMapping(value = "findV", method = RequestMethod.POST)
     public String findV(String id) {
-        HashMap<String, Object> map = new HashMap();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("packBomId", Long.valueOf(id));
         List<BCBomVersion> list = bCBomVersionService.findListByMap(BCBomVersion.class, map);
         if (list.size() == 0) {

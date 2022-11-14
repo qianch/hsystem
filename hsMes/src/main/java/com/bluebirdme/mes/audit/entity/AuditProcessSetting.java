@@ -1,13 +1,13 @@
 package com.bluebirdme.mes.audit.entity;
 
+import com.bluebirdme.mes.core.annotation.Desc;
+import com.bluebirdme.mes.core.base.entity.BaseEntity;
+import com.bluebirdme.mes.core.dev.DevHelper;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-
-import com.bluebirdme.mes.core.annotation.Desc;
-import com.bluebirdme.mes.core.base.entity.BaseEntity;
-import com.bluebirdme.mes.core.dev.DevHelper;
 
 /**
  * 流程设置
@@ -19,7 +19,6 @@ import com.bluebirdme.mes.core.dev.DevHelper;
 @Entity
 @Table(name = "HS_Audit_Process_Setting")
 public class AuditProcessSetting extends BaseEntity {
-
     @Desc("流程代码")
     @Column(nullable = false)
     private String auditCode;
@@ -107,5 +106,4 @@ public class AuditProcessSetting extends BaseEntity {
     public static void main(String[] args) throws Exception {
         DevHelper.genAll(AuditProcessSetting.class, "高飞");
     }
-
 }

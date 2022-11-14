@@ -18,7 +18,6 @@ import java.util.Date;
 @Entity
 @Table(name = "hs_audit_instance")
 public class AuditInstance extends BaseEntity {
-
     @Desc("流程标题")
     @Column(nullable = false)
     private String auditTitle;

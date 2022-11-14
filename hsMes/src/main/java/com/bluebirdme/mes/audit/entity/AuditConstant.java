@@ -8,7 +8,7 @@ package com.bluebirdme.mes.audit.entity;
  */
 public interface AuditConstant {
 
-    public interface LEVEL {
+    interface LEVEL {
 
         /**
          * 第一级节点
@@ -20,7 +20,7 @@ public interface AuditConstant {
         Integer TWO = 2;
     }
 
-    public interface RS {
+    interface RS {
         /**
          * 不通过
          */
@@ -42,7 +42,7 @@ public interface AuditConstant {
         Integer SUBMIT = 0;
     }
 
-    public interface STATE {
+    interface STATE {
         /**
          * 结束
          */
@@ -55,7 +55,7 @@ public interface AuditConstant {
 
     }
 
-    public interface CODE {
+    interface CODE {
         /**
          * 销售
          */

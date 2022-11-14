@@ -6,21 +6,19 @@
  */
 package com.bluebirdme.mes.audit.dao.impl;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.annotation.Resource;
-
+import com.bluebirdme.mes.audit.dao.IAuditInstanceDao;
+import com.bluebirdme.mes.core.base.dao.BaseDaoImpl;
+import com.bluebirdme.mes.core.base.entity.Filter;
+import com.bluebirdme.mes.core.base.entity.Page;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
-import com.bluebirdme.mes.audit.dao.IAuditInstanceDao;
-import com.bluebirdme.mes.core.base.dao.BaseDaoImpl;
-import com.bluebirdme.mes.core.base.entity.Filter;
-import com.bluebirdme.mes.core.base.entity.Page;
+import javax.annotation.Resource;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * @author 高飞
@@ -57,23 +55,22 @@ public class AuditInstanceDaoImpl extends BaseDaoImpl implements IAuditInstanceD
     }
 
     public <T> void updateByCondition(Class<T> clazz, Map<String, Object> condition, Map<String, Object> values) {
-        StringBuffer sb = new StringBuffer("update " + clazz.getSimpleName() + " set ");
-
+        StringBuilder builder = new StringBuilder("update " + clazz.getSimpleName() + " set ");
         Iterator<Entry<String, Object>> it = values.entrySet().iterator();
         Entry<String, Object> entry;
         int count = 0;
         while (it.hasNext()) {
             entry = it.next();
-            sb.append((count == 0 ? "" : ",") + entry.getKey() + "=:v" + entry.getKey());
+            builder.append(count == 0 ? "" : ",").append(entry.getKey()).append("=:v").append(entry.getKey());
             count++;
         }
         it = condition.entrySet().iterator();
-        sb.append(" where 1=1 ");
+        builder.append(" where 1=1 ");
         while (it.hasNext()) {
             entry = it.next();
-            sb.append(" and " + entry.getKey() + "=:w" + entry.getKey());
+            builder.append(" and ").append(entry.getKey()).append("=:w").append(entry.getKey());
         }
-        Query query = getSession().createQuery(sb.toString());
+        Query query = getSession().createQuery(builder.toString());
 
         it = values.entrySet().iterator();
         while (it.hasNext()) {

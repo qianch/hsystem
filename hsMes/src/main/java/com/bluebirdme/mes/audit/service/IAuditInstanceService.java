@@ -29,7 +29,7 @@ public interface IAuditInstanceService extends IBaseService {
      * @param formId       表单对应实体类ID
      * @param clazz        表单对应的实体类
      */
-    public <T> void submitAudit(String auditTitle, String auditCode, Long submitUserId, String formUrl, Long formId, Class<T> clazz) throws Exception;
+    <T> void submitAudit(String auditTitle, String auditCode, Long submitUserId, String formUrl, Long formId, Class<T> clazz) throws Exception;
 
     /**
      * 我的待审核任务
@@ -38,7 +38,7 @@ public interface IAuditInstanceService extends IBaseService {
      * @param page
      * @return
      */
-    public Map<String, Object> auditTask(Filter filter, Page page);
+    Map<String, Object> auditTask(Filter filter, Page page);
 
     /**
      * 我提交的审核任务
@@ -47,7 +47,7 @@ public interface IAuditInstanceService extends IBaseService {
      * @param page
      * @return
      */
-    public Map<String, Object> myAuditTask(Filter filter, Page page);
+    Map<String, Object> myAuditTask(Filter filter, Page page);
 
     /**
      * 已审核任务
@@ -56,11 +56,11 @@ public interface IAuditInstanceService extends IBaseService {
      * @param page
      * @return
      */
-    public Map<String, Object> finishedAuditTask(Filter filter, Page page);
+    Map<String, Object> finishedAuditTask(Filter filter, Page page);
 
-    public void audit(AuditInstance audit, AuditProcessSetting aps, Long uid, Integer level, String msg, Integer result) throws Exception;
+    void audit(AuditInstance audit, AuditProcessSetting aps, Long uid, Integer level, String msg, Integer result) throws Exception;
 
-    public <T> void updateByCondition(Class<T> clazz, Map<String, Object> condition, Map<String, Object> values);
+    <T> void updateByCondition(Class<T> clazz, Map<String, Object> condition, Map<String, Object> values);
 
     /**
      * type:1=销售订单，2=producePlan，3=weaveDailyPlan，4=cutDailyPlan
@@ -69,5 +69,5 @@ public interface IAuditInstanceService extends IBaseService {
      * @param type
      * @throws Exception
      */
-    public void reloadAudit(Long id, Integer type) throws Exception;
+    void reloadAudit(Long id, Integer type) throws Exception;
 }

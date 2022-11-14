@@ -6,24 +6,16 @@
  */
 package com.bluebirdme.mes.audit.dao.impl;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import javax.annotation.Resource;
-
-import org.apache.poi.ss.formula.functions.T;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-
+import com.bluebirdme.mes.audit.dao.IAuditProcessSettingDao;
 import com.bluebirdme.mes.core.base.dao.BaseDaoImpl;
 import com.bluebirdme.mes.core.base.entity.Filter;
 import com.bluebirdme.mes.core.base.entity.Page;
-
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
-import com.bluebirdme.mes.audit.dao.IAuditProcessSettingDao;
+import javax.annotation.Resource;
+import java.util.Map;
 
 /**
  * @author 高飞
@@ -31,7 +23,6 @@ import com.bluebirdme.mes.audit.dao.IAuditProcessSettingDao;
  */
 @Repository
 public class AuditProcessSettingDaoImpl extends BaseDaoImpl implements IAuditProcessSettingDao {
-
     @Resource
     SessionFactory factory;
 
@@ -41,9 +32,7 @@ public class AuditProcessSettingDaoImpl extends BaseDaoImpl implements IAuditPro
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
         return this.findPageInfo(filter, page, "auditProcessSetting-list");
     }
-
-
 }

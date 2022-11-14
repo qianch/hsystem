@@ -17,7 +17,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "HS_Audit_USERS")
 public class AuditUsers extends BaseEntity {
-
     /**
      * 1,2
      */

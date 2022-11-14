@@ -25,7 +25,7 @@ public interface IAuditInstanceDao extends IBaseDao {
      * @param page
      * @return
      */
-    public Map<String, Object> auditTask(Filter filter, Page page);
+    Map<String, Object> auditTask(Filter filter, Page page);
 
     /**
      * 已审核任务
@@ -34,7 +34,7 @@ public interface IAuditInstanceDao extends IBaseDao {
      * @param page
      * @return
      */
-    public Map<String, Object> finishedAuditTask(Filter filter, Page page);
+    Map<String, Object> finishedAuditTask(Filter filter, Page page);
 
     /**
      * 我提交的审核任务
@@ -43,8 +43,8 @@ public interface IAuditInstanceDao extends IBaseDao {
      * @param page
      * @return
      */
-    public Map<String, Object> myAuditTask(Filter filter, Page page);
+    Map<String, Object> myAuditTask(Filter filter, Page page);
 
 
-    public <T> void updateByCondition(Class<T> clazz, Map<String, Object> condition, Map<String, Object> values);
+    <T> void updateByCondition(Class<T> clazz, Map<String, Object> condition, Map<String, Object> values);
 }
