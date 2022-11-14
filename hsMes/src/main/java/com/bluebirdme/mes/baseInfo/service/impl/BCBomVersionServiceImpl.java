@@ -52,7 +52,7 @@ public class BCBomVersionServiceImpl extends BaseServiceImpl implements IBCBomVe
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
         return bCBomVersionDao.findPageInfo(filter, page);
     }
 
@@ -85,7 +85,7 @@ public class BCBomVersionServiceImpl extends BaseServiceImpl implements IBCBomVe
             log.error(e.getLocalizedMessage(), e);
             return null;
         }
-        Map<String, Object> ret = null;
+        Map<String, Object> ret;
         List<Map<String, Object>> _ret = new ArrayList<Map<String, Object>>();
         for (Map<String, Object> map : listMap) {
             ret = new HashMap<String, Object>();

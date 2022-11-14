@@ -40,11 +40,6 @@ public class CutDailyPlanDetailServiceImpl extends BaseServiceImpl implements IC
         return cutDailyPlanDetailDao;
     }
 
-    @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-        Map<String, Object> pageInfo = cutDailyPlanDetailDao.findPageInfo(filter, page);
-        return pageInfo;
-    }
 
     @Override
     public Map<String, Object> findNofinish(Filter filter, Page page) {

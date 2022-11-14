@@ -17,8 +17,6 @@ import com.bluebirdme.mes.cut.cutTcBom.entity.CutTcBomPartDetail;
 import com.bluebirdme.mes.cut.cutTcBom.entity.CutTcBomPartMain;
 import com.bluebirdme.mes.cut.cutTcBom.service.ICutTcBomPartMainService;
 import com.bluebirdme.mes.utils.ImportExcel;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -43,13 +41,6 @@ public class CutTcBomPartMainServiceImpl extends BaseServiceImpl implements ICut
     @Override
     protected IBaseDao getBaseDao() {
         return cutTcBomPartMainDao;
-    }
-
-    @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-
-        Map<String, Object> findPageInfo = cutTcBomPartMainDao.findPageInfo(filter, page);
-        return findPageInfo;
     }
 
     @Override

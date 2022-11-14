@@ -39,7 +39,7 @@ public class FtcBomDaoImpl extends BaseDaoImpl implements IFtcBomDao {
 
     //非套材明细列表
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
         return findPageInfo(filter, page, "ftc-bom-detailList");
     }
 

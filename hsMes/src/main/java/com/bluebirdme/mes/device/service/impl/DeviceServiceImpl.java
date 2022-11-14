@@ -14,7 +14,6 @@ import com.bluebirdme.mes.core.base.service.BaseServiceImpl;
 import com.bluebirdme.mes.core.sql.SQLTemplateException;
 import com.bluebirdme.mes.device.dao.IDeviceDao;
 import com.bluebirdme.mes.device.service.IDeviceService;
-import com.bluebirdme.mes.planner.weave.service.IWeavePlanService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -28,20 +27,12 @@ import java.util.Map;
 @Service
 @AnyExceptionRollback
 public class DeviceServiceImpl extends BaseServiceImpl implements IDeviceService {
-
     @Resource
     IDeviceDao deviceDao;
-    @Resource
-    IWeavePlanService wpService;
 
     @Override
     protected IBaseDao getBaseDao() {
         return deviceDao;
-    }
-
-    @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-        return deviceDao.findPageInfo(filter, page);
     }
 
     public void delete(String ids) {

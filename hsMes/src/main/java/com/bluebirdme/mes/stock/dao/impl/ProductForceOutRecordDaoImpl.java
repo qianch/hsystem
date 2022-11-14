@@ -32,7 +32,7 @@ public class ProductForceOutRecordDaoImpl extends BaseDaoImpl implements IProduc
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
         return this.findPageInfo(filter, page, "productForceOutRecord-list");
     }
 }

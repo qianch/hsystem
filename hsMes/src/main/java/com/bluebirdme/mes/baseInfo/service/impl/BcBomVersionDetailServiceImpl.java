@@ -39,7 +39,7 @@ public class BcBomVersionDetailServiceImpl extends BaseServiceImpl implements IB
 	}
 
 	@Override
-	public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+	public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
 		return bcBomVersionDetailDao.findPageInfo(filter, page);
 	}
 

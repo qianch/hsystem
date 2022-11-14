@@ -50,11 +50,6 @@ public class TurnBagPlanServiceImpl extends BaseServiceImpl implements ITurnBagP
         return turnBagPlanDao;
     }
 
-    @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-        return turnBagPlanDao.findPageInfo(filter, page);
-    }
-
     public <T> Map<String, Object> findOrderPageInfo(Filter filter, Page page) throws Exception {
         return turnBagPlanDao.findOrderPageInfo(filter, page);
     }

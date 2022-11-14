@@ -40,7 +40,7 @@ public class ProductInRecordDaoImpl extends BaseDaoImpl implements IProductInRec
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
         Map<String, Object> pageInfo = this.findPageInfo(filter, page, "productInRecord-list");
         SQLQuery query = getSession().createSQLQuery(SQL.get(filter.getFilter(), "productInRecord-list-weight"));
         Iterator<Entry<String, String>> it = filter.getFilter().entrySet().iterator();

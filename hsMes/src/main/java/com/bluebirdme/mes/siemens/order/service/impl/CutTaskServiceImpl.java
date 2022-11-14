@@ -49,10 +49,6 @@ public class CutTaskServiceImpl extends BaseServiceImpl implements ICutTaskServi
         return cutTaskDao;
     }
 
-    @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-        return cutTaskDao.findPageInfo(filter, page);
-    }
 
     public String getSerial() {
         return cutTaskDao.getSerial();

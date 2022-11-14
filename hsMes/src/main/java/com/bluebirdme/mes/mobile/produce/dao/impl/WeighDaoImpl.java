@@ -43,7 +43,6 @@ import java.util.Map;
  */
 @Repository
 public class WeighDaoImpl extends BaseDaoImpl implements IWeighDao {
-
     @Override
     public boolean shouldWeigh(String barcode, String deviceCode) throws ParseException {
         RollBarcode rbc = findOne(RollBarcode.class, "barcode", barcode);
@@ -412,7 +411,7 @@ public class WeighDaoImpl extends BaseDaoImpl implements IWeighDao {
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
         return null;
     }
 }

@@ -97,9 +97,11 @@ public abstract class BaseServiceImpl extends LanguageProvider implements IBaseS
     public <T> boolean isExist(final Class<T> clazz, final Map<String, Object> map, final Long id, final boolean isAndCondition) throws Exception {
         return getBaseDao().isExist(clazz, map, id, isAndCondition);
     }
-
+    
     @Override
-    public abstract <T> Map<String, Object> findPageInfo(final Filter p0, final Page p1) throws Exception;
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+        return getBaseDao().findPageInfo(filter, page);
+    }
 
     @Override
     public <T> T findUniqueByMap(final Class<T> clazz, final Map<String, Object> map) {
@@ -111,7 +113,7 @@ public abstract class BaseServiceImpl extends LanguageProvider implements IBaseS
         return getBaseDao().findListByMap(clazz, map);
     }
 
-    public <T> List<Map<String, Object>> findListMapByMap(final String sql, final Map<String, Object> map) {
+    public List<Map<String, Object>> findListMapByMap(final String sql, final Map<String, Object> map) {
         return getBaseDao().findListMapByMap(sql, map);
     }
 

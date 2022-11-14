@@ -25,11 +25,6 @@ public class QmsAndMesServiceImpl extends BaseServiceImpl implements QmsAndMesSe
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-        return null;
-    }
-
-    @Override
     public List<Map<String, Object>> findRollandPartByBatchCode(String batchCode, String deliveryCode) throws Exception {
         return qmsAndMesDao.findRollandPartByBatchCode(batchCode, deliveryCode);
     }

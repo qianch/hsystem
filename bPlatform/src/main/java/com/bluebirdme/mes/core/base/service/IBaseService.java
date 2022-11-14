@@ -49,7 +49,7 @@ public interface IBaseService {
     @Deprecated
     <T> boolean isExist(final Class<T> p0, final Map<String, Object> p1, final Long p2) throws Exception;
 
-    <T> Map<String, Object> findPageInfo(final Filter p0, final Page p1) throws Exception;
+    Map<String, Object> findPageInfo(final Filter p0, final Page p1) throws Exception;
 
     <T> T findUniqueByMap(final Class<T> p0, final Map<String, Object> p1);
 

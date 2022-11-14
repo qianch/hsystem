@@ -8,8 +8,6 @@ package com.bluebirdme.mes.mobile.common.service.impl;
 
 import com.bluebirdme.mes.core.annotation.AnyExceptionRollback;
 import com.bluebirdme.mes.core.base.dao.IBaseDao;
-import com.bluebirdme.mes.core.base.entity.Filter;
-import com.bluebirdme.mes.core.base.entity.Page;
 import com.bluebirdme.mes.core.base.service.BaseServiceImpl;
 import com.bluebirdme.mes.mobile.common.dao.IMobileDao;
 import com.bluebirdme.mes.mobile.common.service.IMobileService;
@@ -34,11 +32,6 @@ public class MobileServiceImpl extends BaseServiceImpl implements IMobileService
     @Override
     protected IBaseDao getBaseDao() {
         return mobileDao;
-    }
-
-    @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-        return null;
     }
 
     @SuppressWarnings("unchecked")
@@ -71,20 +64,24 @@ public class MobileServiceImpl extends BaseServiceImpl implements IMobileService
     public <T> T findBarcodeInfo(BarCodeType type, String barcode) {
         Map<String, Object> param = new HashMap<>();
         switch (type) {
-            case TRAY:
+            case TRAY -> {
                 param.put("barcode", barcode);
                 return (T) findUniqueByMap(TrayBarCode.class, param);
-            case BOX:
+            }
+            case BOX -> {
                 param.put("barcode", barcode);
                 return (T) findUniqueByMap(BoxBarcode.class, param);
-            case ROLL:
+            }
+            case ROLL -> {
                 param.put("barcode", barcode);
                 return (T) findUniqueByMap(RollBarcode.class, param);
-            case PART:
+            }
+            case PART -> {
                 param.put("barcode", barcode);
                 return (T) findUniqueByMap(PartBarcode.class, param);
-            default:
-                break;
+            }
+            default -> {
+            }
         }
         return null;
     }

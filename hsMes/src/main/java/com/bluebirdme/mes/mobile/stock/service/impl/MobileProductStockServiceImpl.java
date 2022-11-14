@@ -26,11 +26,6 @@ public class MobileProductStockServiceImpl extends BaseServiceImpl implements IM
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-        return null;
-    }
-
-    @Override
     public String findDeliveryPlanDetail(String project, String content) throws Exception {
         return productStockDao.findDeliveryPlanDetail(project, content);
     }

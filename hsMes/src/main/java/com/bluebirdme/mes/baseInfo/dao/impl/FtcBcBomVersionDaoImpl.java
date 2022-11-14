@@ -31,7 +31,7 @@ import java.util.Map;
  */
 @Repository
 public class FtcBcBomVersionDaoImpl extends BaseDaoImpl implements IFtcBcBomVersionDao {
-    private static Logger logger = LoggerFactory.getLogger(FtcBcBomVersionDaoImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(FtcBcBomVersionDaoImpl.class);
     @Resource
     SessionFactory factory;
 
@@ -41,7 +41,7 @@ public class FtcBcBomVersionDaoImpl extends BaseDaoImpl implements IFtcBcBomVers
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
         return findPageInfo(filter, page, "bcBomVersion-list");
     }
 

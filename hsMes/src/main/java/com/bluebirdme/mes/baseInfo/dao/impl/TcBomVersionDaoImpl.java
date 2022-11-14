@@ -34,7 +34,7 @@ public class TcBomVersionDaoImpl extends BaseDaoImpl implements ITcBomVersionDao
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
         return null;
     }
 }

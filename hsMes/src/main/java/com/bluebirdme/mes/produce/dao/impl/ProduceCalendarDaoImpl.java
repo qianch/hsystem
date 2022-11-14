@@ -36,7 +36,7 @@ public class ProduceCalendarDaoImpl extends BaseDaoImpl implements IProduceCalen
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
         return this.findPageInfo(filter, page, "produceCalendar-list");
     }
 

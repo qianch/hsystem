@@ -48,7 +48,7 @@ public class UserServiceImpl extends BaseServiceImpl implements IUserService {
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(final Filter filter, final Page page) throws Exception {
+    public Map<String, Object> findPageInfo(final Filter filter, final Page page) throws Exception {
         return this.userDao.findPageInfo(filter, page);
     }
 

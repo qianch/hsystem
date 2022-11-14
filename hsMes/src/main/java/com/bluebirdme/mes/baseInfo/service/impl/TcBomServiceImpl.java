@@ -49,7 +49,7 @@ import java.util.*;
 @Service
 @AnyExceptionRollback
 public class TcBomServiceImpl extends BaseServiceImpl implements ITcBomService {
-    private static Logger logger = LoggerFactory.getLogger(TcBomServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(TcBomServiceImpl.class);
 
     @Resource
     ITcBomDao tcBomDao;
@@ -66,7 +66,7 @@ public class TcBomServiceImpl extends BaseServiceImpl implements ITcBomService {
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
         return tcBomDao.findPageInfo(filter, page);
     }
 
@@ -78,10 +78,10 @@ public class TcBomServiceImpl extends BaseServiceImpl implements ITcBomService {
     public List<Map<String, Object>> findBom(String data, String state) throws SQLTemplateException {
         List<Map<String, Object>> listMap = tcBomDao.findBom(data, state);
         Map<String, Object> ret;
-        List<Map<String, Object>> _ret = new ArrayList();
+        List<Map<String, Object>> _ret = new ArrayList<>();
         for (Map<String, Object> map : listMap) {
             map.put("status", "1");
-            ret = new HashMap();
+            ret = new HashMap<>();
             ret.put("id", MapUtils.getAsLong(map, "ID"));
             ret.put("text", MapUtils.getAsString(map, "TCPROCBOMNAME") + "/" + MapUtils.getAsString(map, "TCPROCBOMCODE"));
             ret.put("state", "closed");
@@ -95,7 +95,7 @@ public class TcBomServiceImpl extends BaseServiceImpl implements ITcBomService {
     public List<Map<String, Object>> getTcBomJsonTest(String data, String state) throws SQLTemplateException {
         List<Map<String, Object>> listMap = tcBomDao.getTcBomJsonTest(data, state);
         Map<String, Object> ret;
-        List<Map<String, Object>> _ret = new ArrayList<Map<String, Object>>();
+        List<Map<String, Object>> _ret = new ArrayList<>();
         for (Map<String, Object> map : listMap) {
             map.put("status", "1");
             ret = new HashMap<String, Object>();
@@ -111,11 +111,11 @@ public class TcBomServiceImpl extends BaseServiceImpl implements ITcBomService {
     @Override
     public List<Map<String, Object>> getTcBomJsonTest1(String data, String state) throws SQLTemplateException {
         List<Map<String, Object>> listMap = tcBomDao.getTcBomJsonTest1(data, state);
-        Map<String, Object> ret = null;
-        List<Map<String, Object>> _ret = new ArrayList<Map<String, Object>>();
+        Map<String, Object> ret;
+        List<Map<String, Object>> _ret = new ArrayList<>();
         for (Map<String, Object> map : listMap) {
             map.put("status", "1");
-            ret = new HashMap<String, Object>();
+            ret = new HashMap<>();
             ret.put("id", MapUtils.getAsLong(map, "ID"));
             ret.put("text", MapUtils.getAsString(map, "TCPROCBOMNAME") + "/" + MapUtils.getAsString(map, "TCPROCBOMCODE"));
             ret.put("state", "closed");
@@ -128,26 +128,12 @@ public class TcBomServiceImpl extends BaseServiceImpl implements ITcBomService {
     @Override
     public List<Map<String, Object>> findV(String id) {
         List<Map<String, Object>> listMap = tcBomDao.findV(id);
-        Map<String, Object> ret = null;
-        List<Map<String, Object>> _ret = new ArrayList<Map<String, Object>>();
+        Map<String, Object> ret;
+        List<Map<String, Object>> _ret = new ArrayList<>();
         for (Map<String, Object> map : listMap) {
-            ret = new HashMap<String, Object>();
+            ret = new HashMap<>();
             ret.put("id", MapUtils.getAsLong(map, "ID"));
-            String s = "";
-            // if(MapUtils.getAsInt(map, "TCPROCBOMVERSIONDEFAULT")==1){
-            // s="[默认-";
-            // }else{
-            // s+="[";
-            // }
-            // if(MapUtils.getAsInt(map, "TCPROCBOMVERSIONENABLED")==1){
-            // s+="启用]";
-            // }else if(MapUtils.getAsInt(map, "TCPROCBOMVERSIONENABLED")==0){
-            // s+="改版]";
-            // }else{
-            // s+="停用]";
-            // }
             ret.put("text", MapUtils.getAsString(map, "tcProcBomVersionCode".toUpperCase()));
-
             map.put("status", "2");
             ret.put("state", "closed");
             ret.put("attributes", map);
@@ -159,12 +145,12 @@ public class TcBomServiceImpl extends BaseServiceImpl implements ITcBomService {
     @Override
     public List<Map<String, Object>> findP(String id) {
         List<Map<String, Object>> listMap = tcBomDao.findP(id);
-        Map<String, Object> ret = null;
-        List<Map<String, Object>> _ret = new ArrayList<Map<String, Object>>();
+        Map<String, Object> ret;
+        List<Map<String, Object>> _ret = new ArrayList<>();
         for (Map<String, Object> map : listMap) {
             map.put("status", "3");
             map.put("vId", id);
-            ret = new HashMap<String, Object>();
+            ret = new HashMap<>();
             ret.put("id", MapUtils.getAsLong(map, "ID"));
             ret.put("text", MapUtils.getAsString(map, "TCPROCBOMVERSIONPARTSNAME"));
             ret.put("state", "closed");
@@ -176,20 +162,7 @@ public class TcBomServiceImpl extends BaseServiceImpl implements ITcBomService {
 
     @Override
     public void deleteP(String ids) {
-		/*if (ids.length() > 0) {
-			String _ids[] = ids.split(",");
-			List<Long> list = new ArrayList<>();
-			for (int i = 0; i < _ids.length; i++) {
-				list.add(Long.parseLong(_ids[i]));
-			}
-			result.addAll(list);
-
-			Set<Long> partsIds = this.deleteParts(list, result);
-			tcBomDao.deleteParts(partsIds);
-			tcBomDao.deleteD(partsIds);
-		}*/
         fakeDelete(TcBomVersionParts.class, ids);
-
     }
 
     public Set<Long> deleteParts(List<Long> list, Set<Long> result) {
@@ -200,7 +173,7 @@ public class TcBomServiceImpl extends BaseServiceImpl implements ITcBomService {
             parts.add(tcBomVersionParts.getId());
         }
         result.addAll(parts);
-        if (list1 != null && list1.size() != 0) {
+        if (list1.size() != 0) {
             this.deleteParts(parts, result);
         }
         return result;
@@ -209,12 +182,12 @@ public class TcBomServiceImpl extends BaseServiceImpl implements ITcBomService {
     @Override
     public List<Map<String, Object>> findPC(String id, String vId) {
         List<Map<String, Object>> listMap = tcBomDao.findPC(id);
-        Map<String, Object> ret = null;
-        List<Map<String, Object>> _ret = new ArrayList<Map<String, Object>>();
+        Map<String, Object> ret;
+        List<Map<String, Object>> _ret = new ArrayList<>();
         for (Map<String, Object> map : listMap) {
             map.put("status", "3");
             map.put("vId", vId);
-            ret = new HashMap<String, Object>();
+            ret = new HashMap<>();
             ret.put("id", MapUtils.getAsLong(map, "ID"));
             ret.put("text", MapUtils.getAsString(map, "TCPROCBOMVERSIONPARTSNAME"));
             ret.put("state", "closed");
@@ -238,10 +211,9 @@ public class TcBomServiceImpl extends BaseServiceImpl implements ITcBomService {
         tcBomVersionDao.save(tcBomV);
         List<TcBomVersionParts> list = tcBomDao.findPP(tcBomVersion.getId());
 
-        ArrayList<Long> list1 = new ArrayList<Long>();
+        ArrayList<Long> list1 = new ArrayList<>();
         HashMap map1 = new HashMap();
         for (TcBomVersionParts parts : list) {
-
             TcBomVersionParts tcBomP = new TcBomVersionParts();
             ObjectUtils.clone(parts, tcBomP);
             tcBomP.setTcProcBomVersoinId(tcBomV.getId());
@@ -250,15 +222,15 @@ public class TcBomServiceImpl extends BaseServiceImpl implements ITcBomService {
             list1.add(parts.getId());
             map1.put(parts.getId(), tcBomP.getId());
         }
-        if (list != null && list.size() != 0) {
+        if (list.size() != 0) {
             this.saveParts(list1, map1, tcBomV);
         }
 
     }
 
     public void saveParts(ArrayList<Long> list1, Map<Long, Long> map1, TcBomVersion tcBomV) throws Exception {
-        Map<Long, Long> map = new HashMap<Long, Long>();
-        ArrayList<Long> list = new ArrayList<Long>();
+        Map<Long, Long> map = new HashMap<>();
+        ArrayList<Long> list = new ArrayList<>();
         List<TcBomVersionParts> listP = tcBomDao.findParts(list1);
         for (TcBomVersionParts tcBomVersionParts : listP) {
             TcBomVersionParts tcBomPN = new TcBomVersionParts();
@@ -270,7 +242,7 @@ public class TcBomServiceImpl extends BaseServiceImpl implements ITcBomService {
             list.add(tcBomVersionParts.getId());
             map.put(tcBomVersionParts.getId(), tcBomPN.getId());
         }
-        if (listP != null && listP.size() != 0) {
+        if (listP.size() != 0) {
             this.saveParts(list, map, tcBomV);
         }
     }
@@ -318,44 +290,41 @@ public class TcBomServiceImpl extends BaseServiceImpl implements ITcBomService {
     @Override
     public List<Map<String, Object>> find1(String id) {
         List<Map<String, Object>> tcBomVersion = tcBomDao.findP(id);
-
-        Map<String, Object> ret = null;
-        List<Map<String, Object>> listMap1 = new ArrayList<Map<String, Object>>();
+        Map<String, Object> ret;
+        List<Map<String, Object>> listMap1 = new ArrayList<>();
         for (Map<String, Object> map : tcBomVersion) {
-            ret = new HashMap<String, Object>();
+            ret = new HashMap<>();
             ret.put("id", MapUtils.getAsString(map, "ID"));
             ret.put("text", MapUtils.getAsString(map, "TCPROCBOMVERSIONPARTSNAME"));
             // 裁剪计划中查询部件所对应的人员并封装到tree
-            Map<String, Object> map2 = new HashMap<String, Object>();
+            Map<String, Object> map2 = new HashMap<>();
             map2.put("tcBomPartId", Long.valueOf(MapUtils.getAsString(map, "ID")));
             List<PlanUsers> planUsers = tcBomDao.findListByMap(PlanUsers.class, map2);
-            String userId = "";
-            String userName = "";
-            User user = new User();
+            StringBuilder userId = new StringBuilder();
+            StringBuilder userName = new StringBuilder();
+            User user;
             for (int a = 0; a < planUsers.size(); a++) {
                 user = tcBomDao.findById(User.class, planUsers.get(a).getUserId());
-                userName += user.getUserName() + (a == planUsers.size() - 1 ? "" : ",");
-                userId += planUsers.get(a).getUserId() + (a == planUsers.size() - 1 ? "" : ",");
+                userName.append(user.getUserName()).append(a == planUsers.size() - 1 ? "" : ",");
+                userId.append(planUsers.get(a).getUserId()).append(a == planUsers.size() - 1 ? "" : ",");
             }
             long level = 1L;
             ret.put("level", level);
-            ret.put("userId", userId);
-            ret.put("userName", userName);
+            ret.put("userId", userId.toString());
+            ret.put("userName", userName.toString());
             ret.put("children", children(MapUtils.getAsLong(map, "ID"), ++level));
             listMap1.add(ret);
-
         }
-
         return listMap1;
     }
 
     private List<Map<String, Object>> children(Long id, Long level) {
-        List<Map<String, Object>> listMap2 = new ArrayList<Map<String, Object>>();
-        Map<String, Object> ret = null;
+        List<Map<String, Object>> listMap2 = new ArrayList<>();
+        Map<String, Object> ret;
         List<Map<String, Object>> list = tcBomDao.findPC(String.valueOf(id));
         if (list.size() == 0) {
             for (Map<String, Object> map : list) {
-                ret = new HashMap<String, Object>();
+                ret = new HashMap<>();
                 ret.put("id", MapUtils.getAsString(map, "ID"));
                 ret.put("text", MapUtils.getAsString(map, "TCPROCBOMVERSIONPARTSNAME"));
                 ret.put("level", level);
@@ -363,35 +332,30 @@ public class TcBomServiceImpl extends BaseServiceImpl implements ITcBomService {
             }
         } else {
             for (Map<String, Object> map : list) {
-                ret = new HashMap<String, Object>();
+                ret = new HashMap<>();
                 ret.put("id", MapUtils.getAsString(map, "ID"));
                 ret.put("text", MapUtils.getAsString(map, "TCPROCBOMVERSIONPARTSNAME"));
                 Map<String, Object> mm = new HashMap<String, Object>();
                 mm.put("tcBomPartId", Long.valueOf(MapUtils.getAsString(map, "ID")));
                 List<PlanUsers> planUsers = tcBomDao.findListByMap(PlanUsers.class, mm);
-                String userId = "";
-                String userName = "";
-                User user = new User();
+                StringBuilder userId = new StringBuilder();
+                StringBuilder userName = new StringBuilder();
+                User user;
                 for (int a = 0; a < planUsers.size(); a++) {
                     user = tcBomDao.findById(User.class, planUsers.get(a).getUserId());
-                    userName += user.getUserName() + (a == planUsers.size() - 1 ? "" : ",");
-                    userId += planUsers.get(a).getUserId() + (a == planUsers.size() - 1 ? "" : ",");
+                    userName.append(user.getUserName()).append(a == planUsers.size() - 1 ? "" : ",");
+                    userId.append(planUsers.get(a).getUserId()).append(a == planUsers.size() - 1 ? "" : ",");
                 }
                 ret.put("level", level);
-                ret.put("userId", userId);
-                ret.put("userName", userName);
+                ret.put("userId", userId.toString());
+                ret.put("userName", userName.toString());
                 ret.put("children", children(MapUtils.getAsLong(map, "ID"), ++level));
                 listMap2.add(ret);
             }
         }
-
         return listMap2;
     }
 
-    //	@Override
-//	public List<Map<String, Object>> findFtc(String id) {
-//		return tcBomDao.findFtc(id);
-//	}
     @Override
     public Map<String, Object> findFtc(Filter filter, Page page) {
         return tcBomDao.findFtc(filter, page);
@@ -413,12 +377,8 @@ public class TcBomServiceImpl extends BaseServiceImpl implements ITcBomService {
         map.put("tcProcBomId", tb.getId());
         List<TcBomVersion> tbvList = tcBomDao.findListByMap(TcBomVersion.class, map);
         for (TcBomVersion tcBomVersion : tbvList) {
-            // TcBomVersion tcBomVersion = tcBomDao.findById(TcBomVersion.class,
-            // Long.valueOf(ids));
             TcBomVersion tcBomV = new TcBomVersion();
             ObjectUtils.clone(tcBomVersion, tcBomV);
-            // tcBomV.setTcProcBomVersionCode(tcBomVersion.getTcProcBomVersionCode()
-            // + "(复制)");
             tcBomV.setTcProcBomId(newbom.getId());
             tcBomV.setAuditState(0);
             if (tcBomVersion.getTcProcBomVersionDefault() == 1) {
@@ -426,8 +386,7 @@ public class TcBomServiceImpl extends BaseServiceImpl implements ITcBomService {
             }
             tcBomVersionDao.save(tcBomV);
             List<TcBomVersionParts> list = tcBomDao.findPP(tcBomVersion.getId());
-
-            ArrayList<Long> list1 = new ArrayList<Long>();
+            ArrayList<Long> list1 = new ArrayList<>();
             Map<Long, Long> map1 = new HashMap<>();
             for (TcBomVersionParts parts : list) {
                 parts.setIsDeleted(0);
@@ -440,7 +399,7 @@ public class TcBomServiceImpl extends BaseServiceImpl implements ITcBomService {
                 list1.add(parts.getId());
                 map1.put(parts.getId(), tcBomP.getId());
             }
-            if (list != null && list.size() != 0) {
+            if (list.size() != 0) {
                 this.saveParts(list1, map1, tcBomV);
             }
         }
@@ -459,11 +418,10 @@ public class TcBomServiceImpl extends BaseServiceImpl implements ITcBomService {
                 tcBomVersion.setTcProcBomVersionDefault(1);
                 tcBomVersion.setTcProcBomVersionEnabled(1);
                 tcBomVersion.setAuditState(AuditConstant.RS.SUBMIT);
-                if(fileId != null){
+                if (fileId != null) {
                     tcBomVersion.setAttachmentId(fileId.intValue());
                 }
                 tcBomVersionDao.save(tcBomVersion);
-
                 //判断有Excel文件要解析？
                 if (fileId != null) {
                     Attachment att = tcBomDao.findById(Attachment.class, fileId);
@@ -472,26 +430,25 @@ public class TcBomServiceImpl extends BaseServiceImpl implements ITcBomService {
                     InputStream is = new FileInputStream(filePath);
                     Workbook wb = WorkbookFactory.create(is);
                     List<PartsDesc> data = new ArrayList<>();
-
                     //从第一个sheet中读取部件名称、判断部件类型、读取工艺代码
                     Sheet sheet1 = wb.getSheetAt(0);
-
-                    int fi = -1;    //部件物料号、部件物料名称、子工艺代码所在的行号
+                    //部件物料号、部件物料名称、子工艺代码所在的行号
+                    int fi = -1;
                     for (int i = 0; i < sheet1.getLastRowNum(); i++) {
                         Row row = sheet1.getRow(i);
                         if (row != null && "文件说明".equals(row.getCell(0, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK).toString())) {
                             fi = i + 3;
                             continue;
                         }
-
                         if (fi != -1 && fi < i) {
                             if (row != null) {
                                 PartsDesc pdesc = new PartsDesc();
                                 String str1 = row.getCell(0, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK) + "";
-                                String custommerMaterialCode=row.getCell(1, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK) + "";
+                                String custommerMaterialCode = row.getCell(1, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK) + "";
                                 String str2 = row.getCell(2, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK) + "";
                                 String str3 = row.getCell(5, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK) + "";
-                                Cell cell4 = row.getCell(6, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);        //套重量
+                                //套重量
+                                Cell cell4 = row.getCell(6, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
                                 if (StringUtils.isNotBlank(custommerMaterialCode) || StringUtils.isNotBlank(str1) || StringUtils.isNotBlank(str2) || StringUtils.isNotBlank(str3) || StringUtils.isNotBlank(cell4.toString())) {
                                     if (StringUtils.isBlank(str1)) {
                                         eim.addMessage(i + 1, 1, "部件物料号不能为空");
@@ -516,7 +473,6 @@ public class TcBomServiceImpl extends BaseServiceImpl implements ITcBomService {
                                             } else {
                                                 eim.addMessage(i + 1, 3, "部件物料名称格式错误");
                                             }
-
                                         }
                                     } else {
                                         eim.addMessage(i + 1, 3, "部件物料名称格式错误");
@@ -543,15 +499,13 @@ public class TcBomServiceImpl extends BaseServiceImpl implements ITcBomService {
                             } else {
                                 break;
                             }
-
-
                         }
-                    }//end for
+                    }
                     if (fi == -1) {
                         eim.addMessage("Excel文件格式错误");
                     }
-
-                    int sheetCount = wb.getNumberOfSheets();        //Excel文件中sheet的个数
+                    //Excel文件中sheet的个数
+                    int sheetCount = wb.getNumberOfSheets();
                     for (PartsDesc partsDesc : data) {
                         String partsName = partsDesc.getPartsName();
                         //从第2个sheet开始循环
@@ -563,8 +517,7 @@ public class TcBomServiceImpl extends BaseServiceImpl implements ITcBomService {
                                 sheet = sheet0;
                                 break;
                             }
-                        }//end for inner
-
+                        }
                         if (sheet == null) {
                             eim.addMessage(partsName + "对应的sheet不存在");
                         } else {
@@ -582,13 +535,12 @@ public class TcBomServiceImpl extends BaseServiceImpl implements ITcBomService {
                                     fc = j + 2;
                                     continue;
                                 }
-
                                 if (row != null && "原材料信息".equals(row.getCell(0, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK).toString())) {
                                     fe = j + 1;
                                     continue;
                                 }
-
-                                if (fc != -1 && fc < j && fd == -1) {//行号j在fc找到"卷/套"之后和在fd找到"图纸文件信息"之前这段区间进行"卷/套"的累加
+                                //行号j在fc找到"卷/套"之后和在fd找到"图纸文件信息"之前这段区间进行"卷/套"的累加
+                                if (fc != -1 && fc < j && fd == -1) {
                                     if (row != null && "图纸文件信息".equals(row.getCell(0, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK).toString())) {
                                         fd = j;
                                         continue;
@@ -750,7 +702,7 @@ public class TcBomServiceImpl extends BaseServiceImpl implements ITcBomService {
                                                     log.setLogDate(new Date());
                                                     log.setOperate("工艺代码校验");
                                                     log.setLoginName("");
-                                                    log.setUserId(new Long(-999));
+                                                    log.setUserId((long) -999);
                                                     log.setParamsValue("工艺代码:" + pc + ",成品信息:" + fp.getProductProcessCode() + ",成品ID:" + fp.getId());
                                                     logService.save(log);
                                                 } else {
@@ -764,8 +716,8 @@ public class TcBomServiceImpl extends BaseServiceImpl implements ITcBomService {
                                                 eim.addMessage(j + 1, 7, partsName + "工作表\"门幅\"只能为数字");
                                             } else {
                                                 double width = cell6.getNumericCellValue();
-                                                if(fp != null && null == fp.getProductWidth()){
-                                                    eim.addMessage(j + 1, 7, partsName+"的物料代码为"+fp.getMaterielCode() + "成品信息中门幅未填");
+                                                if (fp != null && null == fp.getProductWidth()) {
+                                                    eim.addMessage(j + 1, 7, partsName + "的物料代码为" + fp.getMaterielCode() + "成品信息中门幅未填");
                                                 } else {
                                                     if (fp != null && width != fp.getProductWidth()) {
                                                         eim.addMessage(j + 1, 7, partsName + "工作表\"门幅\"与\"成品信息\"中不一致");
@@ -863,7 +815,7 @@ public class TcBomServiceImpl extends BaseServiceImpl implements ITcBomService {
                         //把数据放入套材BOM版本部件列表
                         for (PartsDesc fd : data) {
                             String partsName = fd.getPartsName();
-                            String customerMaterialCode=fd.getCustomerMaterialCode();
+                            String customerMaterialCode = fd.getCustomerMaterialCode();
                             String partType = fd.getPartsType();
                             String partNo = fd.getMaterialNumber();
                             Double partsWeight = fd.getPartsWeight();
@@ -977,7 +929,7 @@ public class TcBomServiceImpl extends BaseServiceImpl implements ITcBomService {
                     if (row != null) {
                         PartsDesc pdesc = new PartsDesc();
                         String str1 = row.getCell(0, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK) + "";
-                        String custommerMaterialCode=row.getCell(1, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK) + "";
+                        String custommerMaterialCode = row.getCell(1, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK) + "";
                         String str2 = row.getCell(2, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK) + "";
                         String str3 = row.getCell(5, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK) + "";
                         Cell cell4 = row.getCell(6, Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);        //套重量
@@ -1220,7 +1172,7 @@ public class TcBomServiceImpl extends BaseServiceImpl implements ITcBomService {
                                             log.setLogDate(new Date());
                                             log.setOperate("工艺代码校验");
                                             log.setLoginName("");
-                                            log.setUserId(new Long(-999));
+                                            log.setUserId((long) -999);
                                             log.setParamsValue("工艺代码:" + pc + ",成品信息:" + fp.getProductProcessCode() + ",成品ID:" + fp.getId());
                                             logService.save(log);
                                         } else {
@@ -1234,10 +1186,10 @@ public class TcBomServiceImpl extends BaseServiceImpl implements ITcBomService {
                                         eim.addMessage(j + 1, 7, partsName + "工作表\"门幅\"只能为数字");
                                     } else {
                                         double width = cell6.getNumericCellValue();
-                                        if (fp != null && null == fp.getProductWidth()){
-                                            eim.addMessage(j + 1, 7, partsName+"的物料代码为"+fp.getMaterielCode() + "成品信息中门幅未填");
+                                        if (fp != null && null == fp.getProductWidth()) {
+                                            eim.addMessage(j + 1, 7, partsName + "的物料代码为" + fp.getMaterielCode() + "成品信息中门幅未填");
                                         } else {
-                                            if (fp != null && width != fp.getProductWidth()){
+                                            if (fp != null && width != fp.getProductWidth()) {
                                                 eim.addMessage(j + 1, 7, partsName + "工作表\"门幅\"与\"成品信息\"中不一致");
                                             } else {
                                                 rm.setWidth(width);
@@ -1344,7 +1296,7 @@ public class TcBomServiceImpl extends BaseServiceImpl implements ITcBomService {
                 //把数据放入套材BOM版本部件列表
                 for (PartsDesc fd : data) {
                     String partsName = fd.getPartsName();
-                    String customerMaterialCode=fd.getCustomerMaterialCode();
+                    String customerMaterialCode = fd.getCustomerMaterialCode();
                     String partType = fd.getPartsType();
                     String partNo = fd.getMaterialNumber();
                     Double partsWeight = fd.getPartsWeight();

@@ -19,8 +19,6 @@ import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +30,6 @@ import java.util.Map;
  */
 @Repository
 public class CutTcBomMainDaoImpl extends BaseDaoImpl implements ICutTcBomMainDao {
-
     @Resource
     SessionFactory factory;
 
@@ -42,7 +39,7 @@ public class CutTcBomMainDaoImpl extends BaseDaoImpl implements ICutTcBomMainDao
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
         return this.findPageInfo(filter, page, "cutTcBomMainDao-list");
     }
 
@@ -57,14 +54,11 @@ public class CutTcBomMainDaoImpl extends BaseDaoImpl implements ICutTcBomMainDao
 
     @Override
     public List<Map<String, Object>> getCutBomJson(String data) throws SQLTemplateException {
-        HashMap<String, Object> map = new HashMap<String, Object>();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("data", data);
         String sql = SQL.get(map, "cutTcBomMainDao-list");
         SQLQuery query = getSession().createSQLQuery(sql);
         query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
-
         return query.list();
     }
-
-
 }

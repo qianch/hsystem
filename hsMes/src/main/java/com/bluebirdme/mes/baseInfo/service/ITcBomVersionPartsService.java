@@ -19,5 +19,5 @@ import java.util.Map;
  */
 public interface ITcBomVersionPartsService extends IBaseService {
 
- public <T> Map<String, Object> findPageInfo1(Filter filter, Page page);
+ public Map<String, Object> findPageInfo1(Filter filter, Page page);
 }

@@ -6,27 +6,10 @@
  */
 package com.bluebirdme.mes.baseInfo.service.impl;
 
-import java.io.File;
-import java.util.*;
-
-import javax.annotation.Resource;
-
 import com.aspose.cells.Worksheet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-import org.xdemo.superutil.j2se.MapUtils;
-import org.xdemo.superutil.j2se.ObjectUtils;
-
 import com.bluebirdme.mes.audit.entity.AuditConstant;
 import com.bluebirdme.mes.baseInfo.dao.IFtcBomDao;
-import com.bluebirdme.mes.baseInfo.entity.BCBomVersion;
-import com.bluebirdme.mes.baseInfo.entity.BcBom;
-import com.bluebirdme.mes.baseInfo.entity.BomFile;
-import com.bluebirdme.mes.baseInfo.entity.BomFilePdf;
-import com.bluebirdme.mes.baseInfo.entity.FtcBom;
-import com.bluebirdme.mes.baseInfo.entity.FtcBomDetail;
-import com.bluebirdme.mes.baseInfo.entity.FtcBomVersion;
+import com.bluebirdme.mes.baseInfo.entity.*;
 import com.bluebirdme.mes.baseInfo.service.IFtcBomService;
 import com.bluebirdme.mes.core.annotation.AnyExceptionRollback;
 import com.bluebirdme.mes.core.base.dao.IBaseDao;
@@ -37,6 +20,15 @@ import com.bluebirdme.mes.core.excel.ExcelImportMessage;
 import com.bluebirdme.mes.core.sql.SQLTemplateException;
 import com.bluebirdme.mes.platform.entity.Attachment;
 import com.bluebirdme.mes.produce.entity.FinishedProduct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.xdemo.superutil.j2se.MapUtils;
+import org.xdemo.superutil.j2se.ObjectUtils;
+
+import javax.annotation.Resource;
+import java.io.File;
+import java.util.*;
 
 /**
  * @author 宋黎明
@@ -45,7 +37,7 @@ import com.bluebirdme.mes.produce.entity.FinishedProduct;
 @Service
 @AnyExceptionRollback
 public class FtcBomServiceImpl extends BaseServiceImpl implements IFtcBomService {
-    private static Logger logger = LoggerFactory.getLogger(FtcBomServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(FtcBomServiceImpl.class);
     @Resource
     IFtcBomDao fTc_BomDao;
 
@@ -55,7 +47,7 @@ public class FtcBomServiceImpl extends BaseServiceImpl implements IFtcBomService
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
         return fTc_BomDao.findPageInfo(filter, page);
     }
 
@@ -80,24 +72,15 @@ public class FtcBomServiceImpl extends BaseServiceImpl implements IFtcBomService
         try {
             listMap = fTc_BomDao.getFtcBomJson(data);
         } catch (SQLTemplateException e) {
-            logger.error(e.getLocalizedMessage(),e);
+            logger.error(e.getLocalizedMessage(), e);
             return null;
         }
-        Map<String, Object> ret = null;
-        List<Map<String, Object>> _ret = new ArrayList<Map<String, Object>>();
-        // Map<String, Object> map1=new HashMap<>();
+        Map<String, Object> ret;
+        List<Map<String, Object>> _ret = new ArrayList<>();
         for (Map<String, Object> map : listMap) {
-            // System.out.println(MapUtils.getAsLong(map, "ID"));
-            ret = new HashMap<String, Object>();
+            ret = new HashMap<>();
             ret.put("id", MapUtils.getAsLong(map, "ID"));
             ret.put("text", MapUtils.getAsString(map, "ftcProcBomName".toUpperCase()) + "/" + MapUtils.getAsString(map, "ftcProcBomCode".toUpperCase()));
-            /*
-             * map1.put("ftcProcBomId", MapUtils.getAsLong(map, "ID"));
-             * List<FtcBomVersion>
-             * ftcBomVerson1=fTc_BomDao.findListByMap(FtcBomVersion.class,map1);
-             * if(ftcBomVerson1.isEmpty()){ ret.put("state", ""); }else{
-             * ret.put("state", "closed"); }
-             */
             ret.put("state", "closed");
             map.put("nodeType", "bom");
             ret.put("attributes", map);
@@ -112,24 +95,15 @@ public class FtcBomServiceImpl extends BaseServiceImpl implements IFtcBomService
         try {
             listMap = fTc_BomDao.getFtcBomJsonTest(data);
         } catch (SQLTemplateException e) {
-            logger.error(e.getLocalizedMessage(),e);
+            logger.error(e.getLocalizedMessage(), e);
             return null;
         }
-        Map<String, Object> ret = null;
-        List<Map<String, Object>> _ret = new ArrayList<Map<String, Object>>();
-        // Map<String, Object> map1=new HashMap<>();
+        Map<String, Object> ret;
+        List<Map<String, Object>> _ret = new ArrayList<>();
         for (Map<String, Object> map : listMap) {
-            // System.out.println(MapUtils.getAsLong(map, "ID"));
-            ret = new HashMap<String, Object>();
+            ret = new HashMap<>();
             ret.put("id", MapUtils.getAsLong(map, "ID"));
             ret.put("text", MapUtils.getAsString(map, "ftcProcBomName".toUpperCase()) + "/" + MapUtils.getAsString(map, "ftcProcBomCode".toUpperCase()));
-            /*
-             * map1.put("ftcProcBomId", MapUtils.getAsLong(map, "ID"));
-             * List<FtcBomVersion>
-             * ftcBomVerson1=fTc_BomDao.findListByMap(FtcBomVersion.class,map1);
-             * if(ftcBomVerson1.isEmpty()){ ret.put("state", ""); }else{
-             * ret.put("state", "closed"); }
-             */
             ret.put("state", "closed");
             map.put("nodeType", "bom");
             ret.put("attributes", map);
@@ -140,33 +114,19 @@ public class FtcBomServiceImpl extends BaseServiceImpl implements IFtcBomService
 
     // 获取BOM版本数据并封装树数据
     public List<Map<String, Object>> getFtcBomByVersionJson(String id) {
-        List<Map<String, Object>> listMap = new ArrayList<>();
+        List<Map<String, Object>> listMap;
         try {
             listMap = fTc_BomDao.getFtcBomByVersionJson(id);
         } catch (SQLTemplateException e) {
-            logger.error(e.getLocalizedMessage(),e);
+            logger.error(e.getLocalizedMessage(), e);
             return null;
         }
-        Map<String, Object> ret = null;
-        List<Map<String, Object>> _ret = new ArrayList<Map<String, Object>>();
+        Map<String, Object> ret;
+        List<Map<String, Object>> _ret = new ArrayList<>();
         for (Map<String, Object> map : listMap) {
-            ret = new HashMap<String, Object>();
+            ret = new HashMap<>();
             ret.put("id", MapUtils.getAsLong(map, "ID"));
-            // String s="";
-            // if(MapUtils.getAsInt(map, "FTCPROCBOMVERSIONDEFAULT")==1){
-            // s="[默认-";
-            // }else{
-            // s+="[";
-            // }
-            // if(MapUtils.getAsInt(map, "FTCPROCBOMVERSIONENABLED")==1){
-            // s+="启用]";
-            // }else if(MapUtils.getAsInt(map, "FTCPROCBOMVERSIONENABLED")==0){
-            // s+="改版]";
-            // }else{
-            // s+="停用]";
-            // }
             ret.put("text", MapUtils.getAsString(map, "ftcProcBomVersionCode".toUpperCase()));
-            // ret.put("state", "closed");
             map.put("nodeType", "version");
             ret.put("attributes", map);
             _ret.add(ret);
@@ -204,11 +164,9 @@ public class FtcBomServiceImpl extends BaseServiceImpl implements IFtcBomService
 
     /**
      * 批量更新非套材的bom信息
-     *
-     * @param
      */
     public void updateFtcInfos(int value) {
-        HashMap<String, Object> map = new HashMap<String, Object>();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("productIsTc", value);
         List<FinishedProduct> fpList = findListByMap(FinishedProduct.class, map);
         for (FinishedProduct fp : fpList) {
@@ -250,24 +208,15 @@ public class FtcBomServiceImpl extends BaseServiceImpl implements IFtcBomService
         try {
             listMap = fTc_BomDao.getFtcBomJsonTest1(data);
         } catch (SQLTemplateException e) {
-            logger.error(e.getLocalizedMessage(),e);
+            logger.error(e.getLocalizedMessage(), e);
             return null;
         }
-        Map<String, Object> ret = null;
-        List<Map<String, Object>> _ret = new ArrayList<Map<String, Object>>();
-        // Map<String, Object> map1=new HashMap<>();
+        Map<String, Object> ret;
+        List<Map<String, Object>> _ret = new ArrayList<>();
         for (Map<String, Object> map : listMap) {
-            // System.out.println(MapUtils.getAsLong(map, "ID"));
-            ret = new HashMap<String, Object>();
+            ret = new HashMap<>();
             ret.put("id", MapUtils.getAsLong(map, "ID"));
             ret.put("text", MapUtils.getAsString(map, "ftcProcBomName".toUpperCase()) + "/" + MapUtils.getAsString(map, "ftcProcBomCode".toUpperCase()));
-            /*
-             * map1.put("ftcProcBomId", MapUtils.getAsLong(map, "ID"));
-             * List<FtcBomVersion>
-             * ftcBomVerson1=fTc_BomDao.findListByMap(FtcBomVersion.class,map1);
-             * if(ftcBomVerson1.isEmpty()){ ret.put("state", ""); }else{
-             * ret.put("state", "closed"); }
-             */
             ret.put("state", "closed");
             map.put("nodeType", "bom");
             ret.put("attributes", map);
@@ -279,7 +228,8 @@ public class FtcBomServiceImpl extends BaseServiceImpl implements IFtcBomService
     @Override
     public ExcelImportMessage doAddFtcBom(FtcBom ftcBom, FtcBomVersion ftcBomVersion, Long fileId) throws Exception {
         fTc_BomDao.save(ftcBom);
-        ExcelImportMessage eim = new ExcelImportMessage();//存放错误消息
+        //存放错误消息
+        ExcelImportMessage eim = new ExcelImportMessage();
         if (ftcBom.getId() != null) {
             String fpbvc = ftcBomVersion.getFtcProcBomVersionCode();
             if (fpbvc != null && !fpbvc.equals("")) {
@@ -288,217 +238,13 @@ public class FtcBomServiceImpl extends BaseServiceImpl implements IFtcBomService
                 ftcBomVersion.setFtcProcBomVersionDefault(1);
                 ftcBomVersion.setFtcProcBomVersionEnabled(1);
                 ftcBomVersion.setAuditState(AuditConstant.RS.SUBMIT);
-                if (fileId != null){
+                if (fileId != null) {
                     ftcBomVersion.setAttachmentId(fileId.intValue());
                 }
                 fTc_BomDao.save(ftcBomVersion);
-
                 //判断有Excel文件要解析？
                 if (fileId != null) {
                     Attachment att = fTc_BomDao.findById(Attachment.class, fileId);
-//					String filePath=att.getFilePath();
-//					// 读取文件
-//					InputStream is = new FileInputStream(filePath);
-//					Workbook wb = WorkbookFactory.create(is);
-//					Sheet sheet = wb.getSheetAt(1);		//获取第2个sheet
-//					List<ConstructionParameter> data=new ArrayList<>();
-//					int fa=-1;		//"结构参数"所在的行号
-//					int fb=-1;		//"缝编针数"所在的行号
-//					Map<String,Integer> titleIndexMap=new LinkedHashMap<>();
-//					for (int i = 0; i <= sheet.getLastRowNum(); i++) {
-//						Row row =sheet.getRow(i);
-//						if(fa == -1 && row != null && StringUtils.startsWith(row.getCell(0,Row.CREATE_NULL_AS_BLANK).toString(),"结构参数")){
-//							fa=i;
-//							continue;
-//						}
-//						if(fa != -1 && fa<i && fb == -1){
-//							if(row!=null && StringUtils.startsWith(row.getCell(0,Row.CREATE_NULL_AS_BLANK).toString(),"缝编针数")){
-//								fb=i;
-//								continue;
-//							}
-//							if(row != null){
-//								if(fa+1 == i){//标题
-//									for (int j = 0; j < row.getLastCellNum(); j++) {
-//										if(StringUtils.startsWith(row.getCell(j,Row.CREATE_NULL_AS_BLANK).toString(),"织物结构")){
-//											titleIndexMap.put("Product_feature", j);
-//										}else if(StringUtils.startsWith(row.getCell(j,Row.CREATE_NULL_AS_BLANK).toString(),"原料规格")){
-//											titleIndexMap.put("raw_material", j);
-//										}else if(StringUtils.startsWith(row.getCell(j,Row.CREATE_NULL_AS_BLANK).toString(),"物料代码")){
-//											titleIndexMap.put("Item_number", j);
-//										}else if(StringUtils.startsWith(row.getCell(j,Row.CREATE_NULL_AS_BLANK).toString(),"单位面积质量")){
-//											titleIndexMap.put("Nominal_area_weight", j);
-//										}else if(StringUtils.startsWith(row.getCell(j,Row.CREATE_NULL_AS_BLANK).toString(),"钢筘规格")){
-//											titleIndexMap.put("Reed", j);
-//										}else if(StringUtils.startsWith(row.getCell(j,Row.CREATE_NULL_AS_BLANK).toString(),"导纱针规格")){
-//											titleIndexMap.put("Guide_needle", j);
-//										}else if(StringUtils.startsWith(row.getCell(j,Row.CREATE_NULL_AS_BLANK).toString(),"备注")){
-//											titleIndexMap.put("Remark", j);
-//										}
-//									}
-//									//检查标题
-//									if(!titleIndexMap.containsKey("Product_feature")){
-//										eim.addMessage("第 "+i+"行 \"织物结构\"标题不存在");
-//									}
-//									if(!titleIndexMap.containsKey("raw_material")){
-//										eim.addMessage("第 "+i+"行 \"原料规格\"标题不存在");
-//									}
-//									if(!titleIndexMap.containsKey("Item_number")){
-//										eim.addMessage("第 "+i+"行 \"物料代码\"标题不存在");
-//									}
-//									if(!titleIndexMap.containsKey("Nominal_area_weight")){
-//										eim.addMessage("第 "+i+"行 \"单位面积质量\"标题不存在");
-//									}
-//									if(!titleIndexMap.containsKey("Reed")){
-//										eim.addMessage("第 "+i+"行 \"钢筘规格\"标题不存在");
-//									}
-//									if(!titleIndexMap.containsKey("Guide_needle")){
-//										eim.addMessage("第 "+i+"行 \"导纱针规格\"标题不存在");
-//									}
-//									if(!titleIndexMap.containsKey("Remark")){
-//										eim.addMessage("第 "+i+"行 \"备注\"标题不存在");
-//									}
-//									
-//								}else if(fa+2 <=i){//数据 start
-//									if(fa+2 ==i){
-//										titleIndexMap.put("baseIndex",i+1);
-//									}
-//									boolean rowNotBlank=false;
-//									for(Integer index:titleIndexMap.values()){
-//										Cell cell=row.getCell(index,Row.CREATE_NULL_AS_BLANK);
-//										if(StringUtils.isNotBlank(cell.toString())){
-//											rowNotBlank=true;
-//										}
-//									}
-//									if(rowNotBlank){
-//										ConstructionParameter cp=new ConstructionParameter();
-//										for(String key:titleIndexMap.keySet()){
-//											int index=titleIndexMap.get(key);
-//											Cell cell=row.getCell(index,Row.CREATE_NULL_AS_BLANK);
-//											String value=cell.toString();
-//											if(StringUtils.equals(key,"Product_feature")){//织物结构
-//												if(StringUtils.isBlank(value)){
-//													eim.addMessage(i+1,index+1,"织物结构不能为空");
-//												}else{
-//													cp.setProductFeature(value);
-//												}
-//												continue;
-//											}
-//											
-//											if(StringUtils.equals(key, "raw_material")){//原料规格
-//												if(StringUtils.isBlank(value)){
-//													eim.addMessage(i+1,index+1,"原料规格不能为空");
-//												}else{
-//													cp.setRawMaterial(value);
-//												}
-//												continue;
-//											}
-//											
-//											if(StringUtils.equals(key, "Item_number")){//物料代码
-//												if(StringUtils.isBlank(value)){
-//													eim.addMessage(i+1,index+1,"物料代码不能为空");
-//												}else{
-//													cp.setItemNumber(value);
-//												}
-//												continue;
-//											}
-//											
-//											if(StringUtils.equals(key, "Nominal_area_weight")){//单位面积质量
-//												if(StringUtils.isBlank(value)){
-//													eim.addMessage(i+1,index+1,"单位面积质量不能为空");
-//												}else if(!this.isNumber(value)){
-//													eim.addMessage(i+1,index+1,"单位面积质量只能是数字");
-//												}else{
-//													cp.setNominalAreaWeight(value);
-//												}
-//												continue;
-//											}
-//											
-//											if(StringUtils.equals(key, "Reed")){//钢筘规格
-//												if(StringUtils.isBlank(value) || StringUtils.equals("-",value.trim()) || StringUtils.equals("/",value.trim())){
-//													cp.setReed("");
-//												}else{
-//													cp.setReed(value);
-//												}
-//												continue;
-//											}
-//											
-//											if(StringUtils.equals(key, "Guide_needle")){//导纱针规格
-//												if(StringUtils.isBlank(value) || StringUtils.equals("-",value.trim()) || StringUtils.equals("/",value.trim())){
-//													cp.setGuideNeedle("");
-//												}else{
-//													cp.setGuideNeedle(value);
-//												}
-//												continue;
-//											}
-//											
-//											if(StringUtils.equals(key, "Remark")){//备注
-//												if(StringUtils.isBlank(value) || StringUtils.equals("-",value.trim()) || StringUtils.equals("/",value.trim())){
-//													cp.setRemark("");
-//												}else{
-//													cp.setRemark(value);
-//												}
-//											}
-//											
-//										}//end for key
-//										data.add(cp);
-//									}
-//								}//数据 end
-//							}
-//
-//						}
-//						
-//					}//end for
-//					if(fa==-1){
-//						eim.addMessage("第二个工作表\"结构参数\"标题不存在");
-//					}
-//					
-//					if(fb==-1){
-//						eim.addMessage("第二个工作表\"缝编针数\"不存在");
-//					}
-//					
-//					List<Material> plist=fTc_BomDao.findAll(Material.class);
-//					
-//					//验证合法性
-//					for(int i=0;i<data.size();i++){
-//						String name=data.get(i).getProductFeature();	//原料名称
-//						String model=data.get(i).getRawMaterial();		//原料规格
-//						String itemNumber=data.get(i).getItemNumber();	//物料代码
-//						String weightPerSquareMetre=data.get(i).getNominalAreaWeight();	//单位面积质量
-//						if(StringUtils.isNotBlank(model) && StringUtils.isNotBlank(itemNumber)){
-//							boolean findModel=false;	//ture为原料信息中有该信息
-//							for(Material m:plist){
-//								//TODO 原料信息修改
-//								if(model.equals(m.getMaterialModel())&&itemNumber.equals(null)){
-//									findModel=true;
-//									break;
-//								}
-//							}
-//							if(!findModel){
-//								eim.addMessage("第 "+(titleIndexMap.get("baseIndex")+i)+"行:原料规格("+model+")或物料代码("+itemNumber+")在原料信息中不存在");
-//							}
-//						}
-//						
-//					}
-//					if(!eim.hasError()){
-//						//把数据放入非套材BOM明细列表
-////						List<FtcBomDetail> detailList=new ArrayList<>();
-//						for(ConstructionParameter cp : data){
-//							FtcBomDetail detail=new FtcBomDetail();
-//							detail.setFtcBomVersionId(ftcBomVersion.getId());		//非套材BOM版本信息ID
-//							detail.setFtcBomDetailName(cp.getProductFeature());		//原料名称
-//							detail.setFtcBomDetailModel(cp.getRawMaterial());		//原料规格
-//							detail.setFtcBomDetailItemNumber(cp.getItemNumber());	//物料代码
-//							detail.setFtcBomDetailWeightPerSquareMetre(Double.valueOf(cp.getNominalAreaWeight()));//单位面积质量
-//							detail.setFtcBomDetailReed(cp.getReed());				//钢筘规格
-//							detail.setFtcBomDetailGuideNeedle(cp.getGuideNeedle());	//导纱针规格
-//							detail.setFtcBomDetailRemark(cp.getRemark());			//备注
-////							detailList.add(detail);
-//							fTc_BomDao.save(detail);
-//						}
-////						fTc_BomDao.saveList(detailList);
-//					}else{
-//						TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();	//手动回滚事物
-//					}
                     savePdfFile(ftcBomVersion, att, eim);
                 }
             }
@@ -509,218 +255,11 @@ public class FtcBomServiceImpl extends BaseServiceImpl implements IFtcBomService
     @Override
     public ExcelImportMessage doUpdateFtcBomVersion(FtcBomVersion ftcBomVersion, Long fileId) throws Exception {
         fTc_BomDao.update2(ftcBomVersion);
-        ExcelImportMessage eim = new ExcelImportMessage();//存放错误消息
+        //存放错误消息
+        ExcelImportMessage eim = new ExcelImportMessage();
         //判断有Excel文件要解析？
         if (fileId != null) {
             Attachment att = fTc_BomDao.findById(Attachment.class, fileId);
-//			String filePath=att.getFilePath();
-//			// 读取文件
-//			InputStream is = new FileInputStream(filePath);
-//			Workbook wb = WorkbookFactory.create(is);
-//			Sheet sheet = wb.getSheetAt(1);		//获取第2个sheet
-//			List<ConstructionParameter> data=new ArrayList<>();
-//			int fa=-1;		//"结构参数"所在的行号
-//			int fb=-1;		//"缝编针数"所在的行号
-//			Map<String,Integer> titleIndexMap=new LinkedHashMap<>();
-//			for (int i = 0; i <= sheet.getLastRowNum(); i++) {
-//				Row row =sheet.getRow(i);
-//				if(fa == -1 && row != null && StringUtils.startsWith(row.getCell(0,Row.CREATE_NULL_AS_BLANK).toString(),"结构参数")){
-//					fa=i;
-//					continue;
-//				}
-//				if(fa != -1 && fa<i && fb == -1){
-//					if(row!=null && StringUtils.startsWith(row.getCell(0,Row.CREATE_NULL_AS_BLANK).toString(),"缝编针数")){
-//						fb=i;
-//						continue;
-//					}
-//					if(row != null){
-//						if(fa+1 == i){//标题
-//							for (int j = 0; j < row.getLastCellNum(); j++) {
-//								if(StringUtils.startsWith(row.getCell(j,Row.CREATE_NULL_AS_BLANK).toString(),"织物结构")){
-//									titleIndexMap.put("Product_feature", j);
-//								}else if(StringUtils.startsWith(row.getCell(j,Row.CREATE_NULL_AS_BLANK).toString(),"原料规格")){
-//									titleIndexMap.put("raw_material", j);
-//								}else if(StringUtils.startsWith(row.getCell(j,Row.CREATE_NULL_AS_BLANK).toString(),"物料代码")){
-//									titleIndexMap.put("Item_number", j);
-//								}else if(StringUtils.startsWith(row.getCell(j,Row.CREATE_NULL_AS_BLANK).toString(),"单位面积质量")){
-//									titleIndexMap.put("Nominal_area_weight", j);
-//								}else if(StringUtils.startsWith(row.getCell(j,Row.CREATE_NULL_AS_BLANK).toString(),"钢筘规格")){
-//									titleIndexMap.put("Reed", j);
-//								}else if(StringUtils.startsWith(row.getCell(j,Row.CREATE_NULL_AS_BLANK).toString(),"导纱针规格")){
-//									titleIndexMap.put("Guide_needle", j);
-//								}else if(StringUtils.startsWith(row.getCell(j,Row.CREATE_NULL_AS_BLANK).toString(),"备注")){
-//									titleIndexMap.put("Remark", j);
-//								}
-//							}
-//							//检查标题
-//							if(!titleIndexMap.containsKey("Product_feature")){
-//								eim.addMessage("第 "+i+"行 \"织物结构\"标题不存在");
-//							}
-//							if(!titleIndexMap.containsKey("raw_material")){
-//								eim.addMessage("第 "+i+"行 \"原料规格\"标题不存在");
-//							}
-//							if(!titleIndexMap.containsKey("Item_number")){
-//								eim.addMessage("第 "+i+"行 \"物料代码\"标题不存在");
-//							}
-//							if(!titleIndexMap.containsKey("Nominal_area_weight")){
-//								eim.addMessage("第 "+i+"行 \"单位面积质量\"标题不存在");
-//							}
-//							if(!titleIndexMap.containsKey("Reed")){
-//								eim.addMessage("第 "+i+"行 \"钢筘规格\"标题不存在");
-//							}
-//							if(!titleIndexMap.containsKey("Guide_needle")){
-//								eim.addMessage("第 "+i+"行 \"导纱针规格\"标题不存在");
-//							}
-//							if(!titleIndexMap.containsKey("Remark")){
-//								eim.addMessage("第 "+i+"行 \"备注\"标题不存在");
-//							}
-//							
-//						}else if(fa+2 <=i){//数据 start
-//							if(fa+2 ==i){
-//								titleIndexMap.put("baseIndex",i+1);
-//							}
-//							boolean rowNotBlank=false;
-//							for(Integer index:titleIndexMap.values()){
-//								Cell cell=row.getCell(index,Row.CREATE_NULL_AS_BLANK);
-//								if(StringUtils.isNotBlank(cell.toString())){
-//									rowNotBlank=true;
-//								}
-//							}
-//							if(rowNotBlank){
-//								ConstructionParameter cp=new ConstructionParameter();
-//								for(String key:titleIndexMap.keySet()){
-//									int index=titleIndexMap.get(key);
-//									Cell cell=row.getCell(index,Row.CREATE_NULL_AS_BLANK);
-//									String value=cell.toString();
-//									if(StringUtils.equals(key,"Product_feature")){//织物结构
-//										if(StringUtils.isBlank(value)){
-//											eim.addMessage(i+1,index+1,"织物结构不能为空");
-//										}else{
-//											cp.setProductFeature(value);
-//										}
-//										continue;
-//									}
-//									
-//									if(StringUtils.equals(key, "raw_material")){//原料规格
-//										if(StringUtils.isBlank(value)){
-//											eim.addMessage(i+1,index+1,"原料规格不能为空");
-//										}else{
-//											cp.setRawMaterial(value);
-//										}
-//										continue;
-//									}
-//									
-//									if(StringUtils.equals(key, "Item_number")){//物料代码
-//										if(StringUtils.isBlank(value)){
-//											eim.addMessage(i+1,index+1,"物料代码不能为空");
-//										}else{
-//											cp.setItemNumber(value);
-//										}
-//										continue;
-//									}
-//									
-//									if(StringUtils.equals(key, "Nominal_area_weight")){//单位面积质量
-//										if(StringUtils.isBlank(value)){
-//											eim.addMessage(i+1,index+1,"单位面积质量不能为空");
-//										}else if(!this.isNumber(value)){
-//											eim.addMessage(i+1,index+1,"单位面积质量只能是数字");
-//										}else{
-//											cp.setNominalAreaWeight(value);
-//										}
-//										continue;
-//									}
-//									
-//									if(StringUtils.equals(key, "Reed")){//钢筘规格
-//										if(StringUtils.isBlank(value) || StringUtils.equals("-",value.trim()) || StringUtils.equals("/",value.trim())){
-//											cp.setReed("");
-//										}else{
-//											cp.setReed(value);
-//										}
-//										continue;
-//									}
-//									
-//									if(StringUtils.equals(key, "Guide_needle")){//导纱针规格
-//										if(StringUtils.isBlank(value) || StringUtils.equals("-",value.trim()) || StringUtils.equals("/",value.trim())){
-//											cp.setGuideNeedle("");
-//										}else{
-//											cp.setGuideNeedle(value);
-//										}
-//										continue;
-//									}
-//									
-//									if(StringUtils.equals(key, "Remark")){//备注
-//										if(StringUtils.isBlank(value) || StringUtils.equals("-",value.trim()) || StringUtils.equals("/",value.trim())){
-//											cp.setRemark("");
-//										}else{
-//											cp.setRemark(value);
-//										}
-//									}
-//									
-//								}//end for key
-//								data.add(cp);
-//							}
-//						}//数据 end
-//					}
-//
-//				}
-//				
-//			}//end for
-//			if(fa==-1){
-//				eim.addMessage("第二个工作表\"结构参数\"标题不存在");
-//			}
-//			
-//			if(fb==-1){
-//				eim.addMessage("第二个工作表\"缝编针数\"不存在");
-//			}
-//			
-//			List<Material> plist=fTc_BomDao.findAll(Material.class);
-//			
-//			//验证合法性
-//			for(int i=0;i<data.size();i++){
-//				String name=data.get(i).getProductFeature();	//原料名称
-//				String model=data.get(i).getRawMaterial();		//原料规格
-//				String itemNumber=data.get(i).getItemNumber();	//物料代码
-//				String weightPerSquareMetre=data.get(i).getNominalAreaWeight();	//单位面积质量
-//				if(StringUtils.isNotBlank(model) && StringUtils.isNotBlank(itemNumber)){
-//					boolean findModel=false;	//ture为原料信息中有该信息
-//					for(Material m:plist){
-//						//TODO 原料信息修改
-//						if(model.equals(m.getMaterialModel())&&itemNumber.equals(null)){
-//							findModel=true;
-//							break;
-//						}
-//					}
-//					if(!findModel){
-//						eim.addMessage("第 "+(titleIndexMap.get("baseIndex")+i)+"行:原料规格("+model+")或物料代码("+itemNumber+")在原料信息中不存在");
-//					}
-//				}
-//				
-//			}
-//			if(!eim.hasError()){
-//				//删除以前的非套材BOM明细
-//				Map<String,Object> map=new HashMap<>();
-//				map.put("ftcBomVersionId", ftcBomVersion.getId());
-//				fTc_BomDao.delete(FtcBomDetail.class, map);
-//				
-//				//把数据放入非套材BOM明细列表
-////				List<FtcBomDetail> detailList=new ArrayList<>();
-//				for(ConstructionParameter cp : data){
-//					FtcBomDetail detail=new FtcBomDetail();
-//					detail.setFtcBomVersionId(ftcBomVersion.getId());		//非套材BOM版本信息ID
-//					detail.setFtcBomDetailName(cp.getProductFeature());		//原料名称
-//					detail.setFtcBomDetailModel(cp.getRawMaterial());		//原料规格
-//					detail.setFtcBomDetailItemNumber(cp.getItemNumber());	//物料代码
-//					detail.setFtcBomDetailWeightPerSquareMetre(Double.valueOf(cp.getNominalAreaWeight()));//单位面积质量
-//					detail.setFtcBomDetailReed(cp.getReed());				//钢筘规格
-//					detail.setFtcBomDetailGuideNeedle(cp.getGuideNeedle());	//导纱针规格
-//					detail.setFtcBomDetailRemark(cp.getRemark());			//备注
-////							detailList.add(detail);
-//					fTc_BomDao.save(detail);
-//				}
-////						fTc_BomDao.saveList(detailList);
-//			}else{
-//				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();	//手动回滚事物
-//			}
             savePdfFile(ftcBomVersion, att, eim);
         }
         return eim;
@@ -749,7 +288,7 @@ public class FtcBomServiceImpl extends BaseServiceImpl implements IFtcBomService
                 String path = file.getParent() + File.separator + ftcBom.getFtcProcBomCode() + "_" + ftcBomVersion.getFtcProcBomVersionCode() + "_" + ws.getName() + "(" + ftcBomVersion.getFtcProcBomVersionCode() + ").pdf";
                 workbook.save(path);
                 path = path.substring(path.lastIndexOf("upload"));
-                path = path.replace("upload","\\upload\\");
+                path = path.replace("upload", "\\upload\\");
                 paths.add(path);
                 if (j < workbook.getWorksheets().getCount() - 1) {
                     workbook.getWorksheets().get(j + 1).setVisible(true);
@@ -757,7 +296,7 @@ public class FtcBomServiceImpl extends BaseServiceImpl implements IFtcBomService
                 }
             }
         } catch (Exception e) {
-            logger.error(e.getLocalizedMessage(),e);
+            logger.error(e.getLocalizedMessage(), e);
             msg = "ERROR";
         }
 
@@ -795,7 +334,7 @@ public class FtcBomServiceImpl extends BaseServiceImpl implements IFtcBomService
 
             com.aspose.cells.Workbook workbook = new com.aspose.cells.Workbook(att.getFilePath());
             for (int i = 0; i < workbook.getWorksheets().getCount(); i++) {
-                if(workbook.getWorksheets().get(i).isVisible()){
+                if (workbook.getWorksheets().get(i).isVisible()) {
                     BomFilePdf bomFilePdf = new BomFilePdf();
                     bomFilePdf.setBomFileId(bomFile.getId());
                     bomFilePdf.setPDFfilePath(paths.get(i));
@@ -808,8 +347,6 @@ public class FtcBomServiceImpl extends BaseServiceImpl implements IFtcBomService
     /**
      * 判断字符串是不是数字
      *
-     * @param str
-     * @return
      */
     private boolean isNumber(String str) {
         try {

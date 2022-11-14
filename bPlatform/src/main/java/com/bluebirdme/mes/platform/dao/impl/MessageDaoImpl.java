@@ -29,7 +29,7 @@ public class MessageDaoImpl extends BaseDaoImpl implements IMessageDao {
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(final Filter filter, final Page page) throws Exception {
+    public Map<String, Object> findPageInfo(final Filter filter, final Page page) throws Exception {
         return this.findPageInfo(filter, page, "message-all-list");
     }
 

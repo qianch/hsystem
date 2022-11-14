@@ -25,7 +25,6 @@ import java.util.Map;
  */
 @Repository
 public class FeedingRecordDaoImpl extends BaseDaoImpl implements IFeedingRecordDao {
-
     @Resource
     SessionFactory factory;
 
@@ -35,7 +34,7 @@ public class FeedingRecordDaoImpl extends BaseDaoImpl implements IFeedingRecordD
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
         return this.findPageInfo(filter, page, "feedingRecord-list-weave1");
     }
 
@@ -46,7 +45,6 @@ public class FeedingRecordDaoImpl extends BaseDaoImpl implements IFeedingRecordD
 
     @Override
     public List<Map<String, Object>> querylist(String deviceCode) {
-        // TODO Auto-generated method stub
         String sql = "select * from HS_Feeding_Record where deviceCode='" + deviceCode + "' ORDER BY feedingDate DESC LIMIT 1";
         String sql1 = "select a.materialCode,a.id,a.deviceCode,a.weaveId,b.salesOrderCode,b.batchCode from HS_Feeding_Record a LEFT JOIN HS_Weave_Plan b on a.weaveId=b.id where a.deviceCode='" + deviceCode + "'";
         List<Map<String, Object>> list = getSession().createSQLQuery(sql).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP).list();
@@ -59,7 +57,6 @@ public class FeedingRecordDaoImpl extends BaseDaoImpl implements IFeedingRecordD
 
     @Override
     public void editInfo(String weaveid, String userid, String tlids) {
-        // TODO Auto-generated method stub
         String sql = "update HS_Feeding_Record set weaveid=" + weaveid
                 + ", operateUserId=" + userid + " where id in(" + tlids + ")";
         getSession().createSQLQuery(sql).executeUpdate();
@@ -68,7 +65,6 @@ public class FeedingRecordDaoImpl extends BaseDaoImpl implements IFeedingRecordD
 
     @Override
     public List<Map<String, Object>> querylist2(String deviceCode) {
-        // TODO Auto-generated method stub
         String sql = "select * from HS_Feeding_Record where deviceCode='" + deviceCode + "' ORDER BY feedingDate DESC LIMIT 1";
         String sql1 = "select id,salesOrderCode,batchCode,productName from HS_Weave_Plan ";
         List<Map<String, Object>> list = getSession().createSQLQuery(sql).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP).list();
@@ -81,7 +77,6 @@ public class FeedingRecordDaoImpl extends BaseDaoImpl implements IFeedingRecordD
 
     @Override
     public List<Map<String, Object>> queryYlbh(String ylbh, String oldweaveId, String deviceCode) {
-        // TODO Auto-generated method stub
         String sql = "select * from HS_Feeding_Record where weaveId='" + oldweaveId + "' and materialCode='" + ylbh + "' and deviceCode='" + deviceCode + "'";
         List<Map<String, Object>> list1 = getSession().createSQLQuery(sql).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP).list();
         return list1;
@@ -89,7 +84,6 @@ public class FeedingRecordDaoImpl extends BaseDaoImpl implements IFeedingRecordD
 
     @Override
     public void deleteYlbh(String ylbh, String oldweaveId, String deviceCode) {
-        // TODO Auto-generated method stub
         String sql = "delete from HS_Feeding_Record where materialCode='" + ylbh + "' and weaveId='" + oldweaveId + "' and deviceCode='" + deviceCode + "'";
         getSession().createSQLQuery(sql).executeUpdate();
     }

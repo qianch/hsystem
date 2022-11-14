@@ -60,10 +60,6 @@ public class DeliveryPlanServiceImpl extends BaseServiceImpl implements IDeliver
         return deliveryPlanDao;
     }
 
-    @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-        return deliveryPlanDao.findPageInfo(filter, page);
-    }
 
     @Override
     public <T> Map<String, Object> findTcPageInfo(Filter filter, Page page) throws Exception {

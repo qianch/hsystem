@@ -22,7 +22,7 @@ public class FtcProcBomOaServiceImpl extends BaseServiceImpl implements IFtcProc
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
         return iFtcProcBomOaDao.findPageInfo(filter, page);
     }
 }

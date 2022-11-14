@@ -36,11 +36,11 @@ public class FinishedProductPrintRecordDaoImpl extends BaseDaoImpl implements IF
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
         return null;
     }
 
-    public List<Map<String, Object>> findFinishedProductPrintRecords(Long productId) throws Exception {
+    public List<Map<String, Object>> findFinishedProductPrintRecords(Long productId) {
         String sql = SQL.get("findFinishedProductPrintRecords");
         SQLQuery query = getSession().createSQLQuery(sql);
         query.setParameter("productId", productId);

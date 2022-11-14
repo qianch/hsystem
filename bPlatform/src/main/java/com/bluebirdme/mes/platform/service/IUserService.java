@@ -17,7 +17,7 @@ import java.util.Map;
 
 public interface IUserService extends IBaseService {
     @Override
-    <T> Map<String, Object> findPageInfo(final Filter p0, final Page p1) throws Exception;
+    Map<String, Object> findPageInfo(final Filter p0, final Page p1) throws Exception;
 
     List<Map<String, Object>> getMenuPermissions(final Serializable p0);
 

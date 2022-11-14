@@ -36,11 +36,6 @@ public class WeightCarrierServiceImpl extends BaseServiceImpl implements IWeight
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-        return weightCarrierDao.findPageInfo(filter, page);
-    }
-
-    @Override
     public List<String> getWeightCodes() {
         return weightCarrierDao.getWeightCodes();
     }

@@ -37,10 +37,6 @@ public class PackageTaskServiceImpl extends BaseServiceImpl implements IPackageT
         return packageTaskDao;
     }
 
-    @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-        return packageTaskDao.findPageInfo(filter, page);
-    }
 
     @Override
     public List<Map<String, Object>> findTasks(Long planDetailId) {

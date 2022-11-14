@@ -38,7 +38,7 @@ public class PackTaskDaoImpl extends BaseDaoImpl implements IPackTaskDao {
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
         return null;
     }
 
@@ -47,7 +47,7 @@ public class PackTaskDaoImpl extends BaseDaoImpl implements IPackTaskDao {
         if (product == null || product.getProductIsTc() != 2) {
             return new ArrayList<>();
         }
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         map.put("code", product.getProductPackagingCode());
         FtcBcBom fbb = findUniqueByMap(FtcBcBom.class, map);
         if (fbb == null) {

@@ -36,7 +36,7 @@ public class DrawingsDaoImpl extends BaseDaoImpl implements IDrawingsDao {
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+    public  Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
         return this.findPageInfo(filter, page, "drawings-list");
     }
 

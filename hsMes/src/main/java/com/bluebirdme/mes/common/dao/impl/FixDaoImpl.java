@@ -28,7 +28,7 @@ public class FixDaoImpl extends BaseDaoImpl implements IFixDao {
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfo(Filter var1, Page var2) throws Exception {
         return null;
     }
 }

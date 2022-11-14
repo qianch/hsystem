@@ -39,11 +39,6 @@ public class ProcessServiceImpl extends BaseServiceImpl implements IProcessServi
         return dao;
     }
 
-    @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-        return null;
-    }
-
     /**
      * 编织计划生产进度，不涉及套材的进度更新 如果是套材，暂不更新进度，由裁剪计划来更新进度
      *

@@ -29,7 +29,7 @@ public class LogServceImpl extends BaseServiceImpl implements ILogService {
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(final Filter filter, final Page page) throws Exception {
+    public Map<String, Object> findPageInfo(final Filter filter, final Page page) throws Exception {
         return logDao.findPageInfo(filter, page);
     }
 

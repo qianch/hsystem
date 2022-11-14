@@ -39,15 +39,17 @@ import java.util.*;
 @Service
 @AnyExceptionRollback
 public class FtcBcBomServiceImpl extends BaseServiceImpl implements IFtcBcBomService {
-    private static Logger log = LoggerFactory.getLogger(FtcBcBomServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(FtcBcBomServiceImpl.class);
     @Resource
     IFtcBcBomDao ftcBcBomDao;
+
     @Override
     protected IBaseDao getBaseDao() {
         return ftcBcBomDao;
     }
+
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
         return ftcBcBomDao.findPageInfo(filter, page);
     }
 
@@ -59,17 +61,17 @@ public class FtcBcBomServiceImpl extends BaseServiceImpl implements IFtcBcBomSer
      * @return 类型:List<Map<String, Object>>，返回组装完成的非套材包材bom的json数据
      */
     public List<Map<String, Object>> getFtcBcBomJson(String pid, String queryData, Integer level) {
-        List<FtcBcBom> ftcBcBomList = null;
+        List<FtcBcBom> ftcBcBomList;
         try {
             ftcBcBomList = ftcBcBomDao.tree(pid, queryData, level);
         } catch (Exception e) {
-            log.error(e.getLocalizedMessage(),e);
+            log.error(e.getLocalizedMessage(), e);
             return null;
         }
-        Map<String, Object> ret = null;
-        List<Map<String, Object>> _ret = new ArrayList<Map<String, Object>>();
+        Map<String, Object> ret;
+        List<Map<String, Object>> _ret = new ArrayList<>();
         for (FtcBcBom ftcBcBom : ftcBcBomList) {
-            ret = new HashMap<String, Object>();
+            ret = new HashMap<>();
             ret.put("id", ftcBcBom.getId());
             if (ftcBcBom.getPackCanceled() != null && -1 == ftcBcBom.getPackCanceled()) {
                 ret.put("text", ftcBcBom.getName() + "/" + ftcBcBom.getCode() + "<font color='red'>[作废]</font>");
@@ -98,10 +100,10 @@ public class FtcBcBomServiceImpl extends BaseServiceImpl implements IFtcBcBomSer
 //		bcBomDao.delete(ids);
 //		bcBomVersionDao.deleteByPid(ids);
 //		bcBomVersionDetailDao.deleteByPid();
-        String id[] = ids.split(",");
-        for (int a = 0; a < id.length; a++) {
-            FtcBcBom fbc = findById(FtcBcBom.class, Long.valueOf(id[a]));
-            HashMap<String, Object> map = new HashMap<String, Object>();
+        String[] id = ids.split(",");
+        for (String s : id) {
+            FtcBcBom fbc = findById(FtcBcBom.class, Long.valueOf(s));
+            HashMap<String, Object> map = new HashMap<>();
             if (fbc.getLevel() == 3) { //三级包装
                 map.put("bid", fbc.getId());
                 List<FtcBcBomVersion> versionList = findListByMap(FtcBcBomVersion.class, map);
@@ -512,7 +514,7 @@ public class FtcBcBomServiceImpl extends BaseServiceImpl implements IFtcBcBomSer
                     ftcBcBomVersion.setRequirement_tuobiaoqian(requirement_tuobiaoqian);
                     ftcBcBomVersion.setRequirement_chanrao(requirement_chanrao);
                     ftcBcBomVersion.setRequirement_other(requirement_other);
-                    if (fileId != null){
+                    if (fileId != null) {
                         ftcBcBomVersion.setAttachmentId(fileId.intValue());
                     }
                     ftcBcBomDao.save(ftcBcBomVersion);
@@ -1058,7 +1060,7 @@ public class FtcBcBomServiceImpl extends BaseServiceImpl implements IFtcBcBomSer
                     }
                     workbook.save(path);
                     path = path.substring(path.lastIndexOf("upload"));
-                    path = path.replace("upload","\\upload\\");
+                    path = path.replace("upload", "\\upload\\");
                     paths.add(path);
                     if (j < workbook.getWorksheets().getCount() - 1) {
                         workbook.getWorksheets().get(j + 1).setVisible(true);
@@ -1066,7 +1068,7 @@ public class FtcBcBomServiceImpl extends BaseServiceImpl implements IFtcBcBomSer
                     }
                 }
             } catch (Exception e) {
-                log.error(e.getLocalizedMessage(),e);
+                log.error(e.getLocalizedMessage(), e);
                 msg = "ERROR";
             }
 
@@ -1141,7 +1143,7 @@ public class FtcBcBomServiceImpl extends BaseServiceImpl implements IFtcBcBomSer
 
                 com.aspose.cells.Workbook workbook = new com.aspose.cells.Workbook(filePath);
                 for (int i = 0; i < workbook.getWorksheets().getCount(); i++) {
-                    if(workbook.getWorksheets().get(i).isVisible()){
+                    if (workbook.getWorksheets().get(i).isVisible()) {
                         BomFilePdf bomFilePdf = new BomFilePdf();
                         bomFilePdf.setBomFileId(bomFile.getId());
                         bomFilePdf.setPDFfilePath(paths.get(i));

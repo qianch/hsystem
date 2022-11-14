@@ -31,7 +31,7 @@ public class NoticeServiceImpl extends BaseServiceImpl implements INoticeService
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(final Filter filter, final Page page) throws Exception {
+    public Map<String, Object> findPageInfo(final Filter filter, final Page page) throws Exception {
         return this.noticedao.findPageInfo(filter, page);
     }
 

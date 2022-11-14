@@ -25,10 +25,6 @@ public class DeviceTypeServiceImpl extends BaseServiceImpl implements IDeviceTyp
         return deviceTypeDao;
     }
 
-    @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-        return deviceTypeDao.findPageInfo(filter, page);
-    }
 
     public void delete(String ids) {
         deviceTypeDao.delete(ids);

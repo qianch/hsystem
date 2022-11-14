@@ -35,7 +35,7 @@ public class AppVersionDaoImpl extends BaseDaoImpl implements IAppVersionDao {
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
         return this.findPageInfo(filter, page, "appVersion-list");
     }
 

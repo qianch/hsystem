@@ -43,12 +43,6 @@ public class ProducePlanDetailServiceImpl extends BaseServiceImpl implements IPr
         return producePlanDetailDao;
     }
 
-    @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-
-        Map<String, Object> findPageInfo = producePlanDetailDao.findPageInfo(filter, page);
-        return findPageInfo;
-    }
 
     @Override
     public Map<String, Object> findProducePlanDetail(Filter filter, Page page) throws Exception {

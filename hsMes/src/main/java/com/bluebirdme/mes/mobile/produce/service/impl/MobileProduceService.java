@@ -39,11 +39,6 @@ public class MobileProduceService extends BaseServiceImpl implements IMobileProd
     IDeviceService deviceService;
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter arg0, Page arg1) throws Exception {
-        return null;
-    }
-
-    @Override
     protected IBaseDao getBaseDao() {
         return feedingRecordDao;
     }

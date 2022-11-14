@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public interface IDepartmentService extends IBaseService {
     @Override
-    <T> Map<String, Object> findPageInfo(final Filter p0, final Page p1) throws Exception;
+    Map<String, Object> findPageInfo(final Filter p0, final Page p1) throws Exception;
 
     void batchUpdateDepartmentLevel(final List<Department> p0);
 

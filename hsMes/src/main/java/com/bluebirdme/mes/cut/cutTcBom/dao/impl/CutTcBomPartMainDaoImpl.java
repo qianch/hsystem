@@ -28,7 +28,6 @@ import java.util.Map;
  */
 @Repository
 public class CutTcBomPartMainDaoImpl extends BaseDaoImpl implements ICutTcBomPartMainDao {
-
     @Resource
     SessionFactory factory;
 
@@ -38,7 +37,7 @@ public class CutTcBomPartMainDaoImpl extends BaseDaoImpl implements ICutTcBomPar
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
         return this.findPageInfo(filter, page, "cutTcBomMainDao-list");
     }
 
@@ -52,8 +51,7 @@ public class CutTcBomPartMainDaoImpl extends BaseDaoImpl implements ICutTcBomPar
     }
 
     @Override
-    public List<Map<String, Object>> findCutTcBomPartDetailByMainId(Long mainId)
-    {
+    public List<Map<String, Object>> findCutTcBomPartDetailByMainId(Long mainId) {
         String sql = SQL.get("findCutTcBomPartDetailByMainId");
         SQLQuery query = getSession().createSQLQuery(sql);
         query.setParameter("mainId", mainId);

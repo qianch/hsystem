@@ -8,8 +8,6 @@ package com.bluebirdme.mes.cut.cutTcBom.service.impl;
 
 import com.bluebirdme.mes.core.annotation.AnyExceptionRollback;
 import com.bluebirdme.mes.core.base.dao.IBaseDao;
-import com.bluebirdme.mes.core.base.entity.Filter;
-import com.bluebirdme.mes.core.base.entity.Page;
 import com.bluebirdme.mes.core.base.service.BaseServiceImpl;
 import com.bluebirdme.mes.core.sql.SQLTemplateException;
 import com.bluebirdme.mes.cut.cutTcBom.dao.ICutTcBomMainDao;
@@ -36,7 +34,6 @@ import java.util.*;
 @Service
 @AnyExceptionRollback
 public class CutTcBomMainServiceImpl extends BaseServiceImpl implements ICutTcBomMainService {
-
     @Resource
     ICutTcBomMainDao cutTcBomMainDao;
 
@@ -46,20 +43,12 @@ public class CutTcBomMainServiceImpl extends BaseServiceImpl implements ICutTcBo
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-
-        Map<String, Object> findPageInfo = cutTcBomMainDao.findPageInfo(filter, page);
-        return findPageInfo;
-    }
-
-    @Override
     public List<Map<String, Object>> findCutTcBomDetailByMainId(Long mainId) {
         return cutTcBomMainDao.findCutTcBomDetailByMainId(mainId);
     }
 
     @Override
     public String saveCutTcBomMain(CutTcBomMain cutTcBomMain, String userId) throws Exception {
-
         String result = "";
         cutTcBomMain.setState(State.Effect);
         if (cutTcBomMain.getId() != null) {
@@ -77,7 +66,7 @@ public class CutTcBomMainServiceImpl extends BaseServiceImpl implements ICutTcBo
             cutTcBomMainDao.save(cutTcBomMain);
         }
 
-        List<CutTcBomDetail> listCutTcBomDetailsave = new ArrayList<CutTcBomDetail>();
+        List<CutTcBomDetail> listCutTcBomDetailsave = new ArrayList<>();
         for (CutTcBomDetail cutTcBomDetail : cutTcBomMain.getListCutTcBomDetail()) {
             cutTcBomDetail.setMainId(cutTcBomMain.getId());
             cutTcBomDetail.setCreateTime(new Date());
@@ -86,28 +75,22 @@ public class CutTcBomMainServiceImpl extends BaseServiceImpl implements ICutTcBo
             cutTcBomDetail.setModifyUser(userId);
             listCutTcBomDetailsave.add(cutTcBomDetail);
         }
-
         cutTcBomMainDao.save(listCutTcBomDetailsave.toArray(new CutTcBomDetail[]{}));
-
         return result;
     }
 
     @Override
     public String importCutTcBomMainUploadFile(MultipartFile file, String userId) throws Exception {
-        String jsonData = "";
-
         Boolean bool = ImportExcel.checkFile(file);
         if (!bool) {
             return "文件类型不正确或为空";
         }
-
         //工具类在下面
         HashMap<String, ArrayList<String[]>> hashMap = ImportExcel.analysisFile(file);
         ArrayList<String[]> arrayList = hashMap.get("OK");
         if (arrayList == null) {
             return "文件内容为空";
         }
-
         CutTcBomMain cutTcBomMain;
         String tcProcBomCodeVersion = "";
         if (arrayList.size() > 0) {
@@ -115,22 +98,17 @@ public class CutTcBomMainServiceImpl extends BaseServiceImpl implements ICutTcBo
                 return "文件格式";
 
             }
-
             String tcProcBomCodeVersionText = arrayList.get(0)[0];
             tcProcBomCodeVersion = arrayList.get(0)[1];
-
             String bladeTypeName = arrayList.get(0)[5];
             String customerName = arrayList.get(0)[3];
-
             if (!tcProcBomCodeVersionText.equals("版本")) {
                 return "文件格式不对，请检查第一个单元格是否为版本!";
             }
-
             Consumer consumer = findOne(Consumer.class, "consumerName", customerName);
             if (consumer == null) {
                 return "客户名称：" + customerName + " 在客户表中不存在，请核对!";
             }
-
             cutTcBomMain = findOne(CutTcBomMain.class, "tcProcBomCodeVersion", tcProcBomCodeVersion);
             if (cutTcBomMain == null) {
                 cutTcBomMain = new CutTcBomMain();
@@ -144,7 +122,6 @@ public class CutTcBomMainServiceImpl extends BaseServiceImpl implements ICutTcBo
             cutTcBomMain.setCustomerName(customerName);
             cutTcBomMain.setModifyTime(new Date());
             cutTcBomMain.setModifyUser(userId);
-
             if (cutTcBomMain.getId() == null) {
                 save(cutTcBomMain);
             } else {
@@ -153,9 +130,7 @@ public class CutTcBomMainServiceImpl extends BaseServiceImpl implements ICutTcBo
                 map.put("mainId", cutTcBomMain.getId());
                 delete(CutTcBomDetail.class, map);
             }
-
         }
-
         List<CutTcBomDetail> listCutTcBomDetail = new ArrayList<>();
         cutTcBomMain = findOne(CutTcBomMain.class, "tcProcBomCodeVersion", tcProcBomCodeVersion);
         for (int i = 0; i < arrayList.size(); i++) {
@@ -169,11 +144,6 @@ public class CutTcBomMainServiceImpl extends BaseServiceImpl implements ICutTcBo
             String gramWeight = arrayList.get(i)[6];
             String productionRate = arrayList.get(i)[7];
             String unitPrice = arrayList.get(i)[8];
-//            String upperSizeLimit = arrayList.get(i)[8];
-//            String lowerSizeLimit = arrayList.get(i)[9];
-//            String sizePercentage = arrayList.get(i)[10];
-//            String sizeAbsoluteValue = arrayList.get(i)[11];
-
             CutTcBomDetail cutTcBomDetail = new CutTcBomDetail();
             cutTcBomDetail.setCreateTime(new Date());
             cutTcBomDetail.setCreater(userId);
@@ -189,10 +159,6 @@ public class CutTcBomMainServiceImpl extends BaseServiceImpl implements ICutTcBo
             cutTcBomDetail.setGramWeight(Double.parseDouble(gramWeight));
             cutTcBomDetail.setProductionRate(Double.parseDouble(productionRate));
             cutTcBomDetail.setUnitPrice(Double.parseDouble(unitPrice));
-//            cutTcBomDetail.setUpperSizeLimit(Double.parseDouble(upperSizeLimit));
-//            cutTcBomDetail.setLowerSizeLimit(Double.parseDouble(lowerSizeLimit));
-//            cutTcBomDetail.setSizePercentage(Double.parseDouble(sizePercentage));
-//            cutTcBomDetail.setSizeAbsoluteValue(Double.parseDouble(sizeAbsoluteValue));
             listCutTcBomDetail.add(cutTcBomDetail);
         }
         saveList(listCutTcBomDetail);
@@ -200,10 +166,7 @@ public class CutTcBomMainServiceImpl extends BaseServiceImpl implements ICutTcBo
     }
 
     @Override
-    public SXSSFWorkbook exportcutTcBomMain(Long id) throws Exception {
-        SimpleDateFormat sf = new SimpleDateFormat("yyyy年MM月dd日");
-        String templateName = "裁剪套才bom";
-        SimpleDateFormat sdf = new SimpleDateFormat("MM月dd日");
+    public SXSSFWorkbook exportcutTcBomMain(Long id) {
         SXSSFWorkbook wb = new SXSSFWorkbook();
         Font font = wb.createFont();
         font.setFontHeightInPoints((short) 18);
@@ -238,14 +201,10 @@ public class CutTcBomMainServiceImpl extends BaseServiceImpl implements ICutTcBo
         cellStyle3.setBorderLeft(BorderStyle.THIN);
         cellStyle3.setFont(font1);
         Sheet sheet = wb.createSheet();
-
-
-        Row row = null;
-        Cell cell = null;
-
+        Row row;
+        Cell cell;
         CutTcBomMain cutTcBomMain = findById(CutTcBomMain.class, id);
         List<CutTcBomDetail> listCutTcBomDetail = find(CutTcBomDetail.class, "mainId", cutTcBomMain.getId());
-
         int r = 0;// 从第1行开始写数据
         row = sheet.createRow(r);
         cell = row.createCell(0);
@@ -277,64 +236,37 @@ public class CutTcBomMainServiceImpl extends BaseServiceImpl implements ICutTcBo
         sheet.setColumnWidth(5, 16 * 256);
         cell.setCellStyle(cellStyle);
         cell.setCellValue(cutTcBomMain.getBladeTypeName());
-
-        // sheet.addMergedRegion(new CellRangeAddress(r, r, 0, 10));
-
         r++;
-        String cellName[] = new String[]{"部件", "图纸", "朝向", "规格", "门幅", "米长", "克重", "制成率", "单价"};
+        String[] cellName = new String[]{"部件", "图纸", "朝向", "规格", "门幅", "米长", "克重", "制成率", "单价"};
         row = sheet.createRow(r);
         for (int b = 0; b < cellName.length; b++) {
             Cell cell2 = row.createCell(b);
             cell2.setCellValue(cellName[b]);
             cell2.setCellStyle(cellStyle0);
         }
-
         for (CutTcBomDetail cutTcBomDetail : listCutTcBomDetail) {
             r++;
             row = sheet.createRow(r);
-
             for (int b = 0; b < cellName.length; b++) {
                 Cell cell2 = row.createCell(b);
                 cell2.setCellStyle(cellStyle0);
                 switch (cellName[b]) {
-                    case "部件":
-                        cell2.setCellValue(cutTcBomDetail.getPartName());
-                        break;
-                    case "图纸":
-                        cell2.setCellValue(cutTcBomDetail.getDrawName());
-                        break;
-                    case "朝向":
-                        cell2.setCellValue(cutTcBomDetail.getOrientation());
-                        break;
-                    case "规格":
-                        cell2.setCellValue(cutTcBomDetail.getProductModel());
-                        break;
-                    case "门幅":
-                        cell2.setCellValue(cutTcBomDetail.getProductWidth());
-                        break;
-                    case "米长":
-                        cell2.setCellValue(cutTcBomDetail.getLength());
-                        break;
-                    case "克重":
-                        cell2.setCellValue(cutTcBomDetail.getGramWeight());
-                        break;
-                    case "制成率":
-                        cell2.setCellValue(cutTcBomDetail.getProductionRate());
-                        break;
-                    case "单价":
-                        cell2.setCellValue(cutTcBomDetail.getUnitPrice());
-                        break;
-                    default:
-                        break;
+                    case "部件" -> cell2.setCellValue(cutTcBomDetail.getPartName());
+                    case "图纸" -> cell2.setCellValue(cutTcBomDetail.getDrawName());
+                    case "朝向" -> cell2.setCellValue(cutTcBomDetail.getOrientation());
+                    case "规格" -> cell2.setCellValue(cutTcBomDetail.getProductModel());
+                    case "门幅" -> cell2.setCellValue(cutTcBomDetail.getProductWidth());
+                    case "米长" -> cell2.setCellValue(cutTcBomDetail.getLength());
+                    case "克重" -> cell2.setCellValue(cutTcBomDetail.getGramWeight());
+                    case "制成率" -> cell2.setCellValue(cutTcBomDetail.getProductionRate());
+                    case "单价" -> cell2.setCellValue(cutTcBomDetail.getUnitPrice());
+                    default -> {
+                    }
                 }
             }
         }
-
         return wb;
     }
-
-
-
 
     @Override
     public List<Map<String, Object>> getCutBomJson(String data) {
@@ -344,10 +276,10 @@ public class CutTcBomMainServiceImpl extends BaseServiceImpl implements ICutTcBo
         } catch (SQLTemplateException e) {
             return null;
         }
-        Map<String, Object> ret = null;
-        List<Map<String, Object>> _ret = new ArrayList<Map<String, Object>>();
+        Map<String, Object> ret;
+        List<Map<String, Object>> _ret = new ArrayList<>();
         for (Map<String, Object> map : listMap) {
-            ret = new HashMap<String, Object>();
+            ret = new HashMap<>();
             ret.put("id", MapUtils.getAsLong(map, "ID"));
             ret.put("text", MapUtils.getAsString(map, "tcProcBomCodeVersion".toUpperCase()));
             ret.put("state", "closed");

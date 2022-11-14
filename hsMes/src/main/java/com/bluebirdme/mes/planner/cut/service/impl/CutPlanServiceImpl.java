@@ -46,7 +46,7 @@ import java.util.Map.Entry;
 @Service
 @AnyExceptionRollback
 public class CutPlanServiceImpl extends BaseServiceImpl implements ICutPlanService {
-    private static Logger log = LoggerFactory.getLogger(CutPlanServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(CutPlanServiceImpl.class);
     @Resource
     ICutPlanDao cutPlanDao;
 
@@ -57,11 +57,6 @@ public class CutPlanServiceImpl extends BaseServiceImpl implements ICutPlanServi
     @Override
     protected IBaseDao getBaseDao() {
         return cutPlanDao;
-    }
-
-    @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-        return cutPlanDao.findPageInfo(filter, page);
     }
 
     @Override

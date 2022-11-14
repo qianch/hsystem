@@ -7,8 +7,6 @@ import com.bluebirdme.mes.baseInfo.entityMirror.TcBomVersionPartsMirror;
 import com.bluebirdme.mes.baseInfo.service.IBomService;
 import com.bluebirdme.mes.core.annotation.AnyExceptionRollback;
 import com.bluebirdme.mes.core.base.dao.IBaseDao;
-import com.bluebirdme.mes.core.base.entity.Filter;
-import com.bluebirdme.mes.core.base.entity.Page;
 import com.bluebirdme.mes.core.base.service.BaseServiceImpl;
 import com.bluebirdme.mes.core.sql.SQLTemplateException;
 import com.bluebirdme.mes.planner.material.dao.IMrpDao;
@@ -62,12 +60,8 @@ public class MrpServiceImpl extends BaseServiceImpl implements IMrpService {
         return mrpDao;
     }
 
-    @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-        return null;
-    }
 
-    public Map<String, Object> findRequirementPlans(Long ids[]) {
+    public Map<String, Object> findRequirementPlans(Long[] ids) {
         return mrpDao.findRequirementPlans(ids);
     }
 

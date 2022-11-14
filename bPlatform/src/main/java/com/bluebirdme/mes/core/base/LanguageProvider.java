@@ -24,8 +24,7 @@ public abstract class LanguageProvider {
         if (session == null) {
             return new Locale("zh", "CN");
         } else {
-            Locale locale = (Locale) session.getAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME);
-            return locale;
+            return (Locale) session.getAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME);
         }
     }
 

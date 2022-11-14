@@ -37,11 +37,6 @@ public class WeighServiceImpl extends BaseServiceImpl implements IWeighService {
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-        return null;
-    }
-
-    @Override
     public boolean shouldWeigh(String barcode, String deviceCode) throws ParseException {
         return wd.shouldWeigh(barcode, deviceCode);
     }

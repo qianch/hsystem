@@ -44,10 +44,6 @@ public class FeedingRecordServiceImpl extends BaseServiceImpl implements IFeedin
         return feedingRecordDao;
     }
 
-    @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-        return feedingRecordDao.findPageInfo(filter, page);
-    }
 
     @Override
     public <T> Map<String, Object> findPageInfo2(Filter filter, Page page) throws Exception {

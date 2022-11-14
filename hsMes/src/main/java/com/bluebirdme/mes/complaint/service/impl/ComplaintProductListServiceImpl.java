@@ -32,9 +32,4 @@ public class ComplaintProductListServiceImpl extends BaseServiceImpl implements 
     protected IBaseDao getBaseDao() {
         return complaintProductListDao;
     }
-
-    @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-        return complaintProductListDao.findPageInfo(filter, page);
-    }
 }

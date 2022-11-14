@@ -1,8 +1,6 @@
 package com.bluebirdme.mes.printer.service.impl;
 
 import com.bluebirdme.mes.core.base.dao.IBaseDao;
-import com.bluebirdme.mes.core.base.entity.Filter;
-import com.bluebirdme.mes.core.base.entity.Page;
 import com.bluebirdme.mes.core.base.service.BaseServiceImpl;
 import com.bluebirdme.mes.printer.dao.IPrinterManageDao;
 import com.bluebirdme.mes.printer.service.IPrinterManageSerivice;
@@ -25,11 +23,6 @@ public class PrinterManageServiceImpl extends BaseServiceImpl implements IPrinte
         return printerManageDao;
     }
 
-    @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page)
-            throws Exception {
-        return printerManageDao.findPageInfo(filter, page);
-    }
 
     @Override
     public List<Map<String, Object>> findALLDepartment() {

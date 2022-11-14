@@ -10,13 +10,10 @@ import com.bluebirdme.mes.complaint.dao.IComplaintDao;
 import com.bluebirdme.mes.complaint.service.IComplaintService;
 import com.bluebirdme.mes.core.annotation.AnyExceptionRollback;
 import com.bluebirdme.mes.core.base.dao.IBaseDao;
-import com.bluebirdme.mes.core.base.entity.Filter;
-import com.bluebirdme.mes.core.base.entity.Page;
 import com.bluebirdme.mes.core.base.service.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Map;
 
 /**
  * @author 高飞
@@ -31,11 +28,6 @@ public class ComplaintServiceImpl extends BaseServiceImpl implements IComplaintS
     @Override
     protected IBaseDao getBaseDao() {
         return complaintDao;
-    }
-
-    @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-        return complaintDao.findPageInfo(filter, page);
     }
 
     public int getSerial(String code, String year) {

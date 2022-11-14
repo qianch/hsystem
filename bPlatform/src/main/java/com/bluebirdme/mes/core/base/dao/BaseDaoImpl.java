@@ -87,10 +87,8 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
                     builder.append(!builder.toString().contains("=") ? "" : ",").append(" ").append(field.getName()).append("=:").append(field.getName());
                 }
             }
-
             builder.append(" where id=:id");
             SQLQuery query = this.getSession().createSQLQuery(builder.toString());
-
             iterator = fields.iterator();
             while (iterator.hasNext()) {
                 Field field = iterator.next();
@@ -541,7 +539,7 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
     }
 
     @Override
-    public abstract <T> Map<String, Object> findPageInfo(Filter var1, Page var2) throws Exception;
+    public abstract Map<String, Object> findPageInfo(Filter var1, Page var2) throws Exception;
 
     @Override
     public <T> void delete(Class clazz, boolean inheritBaseEntity, List<T> list) throws Exception {

@@ -47,11 +47,6 @@ public class CommonServiceImpl extends BaseServiceImpl implements ICommonService
         return commonDao;
     }
 
-    @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-        return commonDao.findPageInfo(filter, page);
-    }
-
     public List<Map<String, Object>> getMsg() {
         return commonDao.getMsg();
     }

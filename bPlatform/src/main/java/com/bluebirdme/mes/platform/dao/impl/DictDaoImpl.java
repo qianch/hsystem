@@ -37,7 +37,7 @@ public class DictDaoImpl extends BaseDaoImpl implements IDictDao {
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(final Filter filter, final Page page) throws Exception {
+    public Map<String, Object> findPageInfo(final Filter filter, final Page page) throws Exception {
         final Map<String, Object> ret = super.findPageInfo(filter, page, "dict-list");
         final List<Map<String, Object>> list = (List<Map<String, Object>>) ret.get("rows");
         for (final Map<String, Object> map : list) {

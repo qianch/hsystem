@@ -56,11 +56,6 @@ public class FixServiceImpl extends BaseServiceImpl implements IFixService {
         return fixDao;
     }
 
-    @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-        return null;
-    }
-
     public void fixRollNO(String[] batchCodes) {
         Map<String, Object> map = new HashMap<String, Object>();
         List<WeavePlan> wList = new ArrayList<WeavePlan>();

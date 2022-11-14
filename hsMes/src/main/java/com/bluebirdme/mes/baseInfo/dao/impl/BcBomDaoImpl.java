@@ -39,7 +39,7 @@ public class BcBomDaoImpl extends BaseDaoImpl implements IBcBomDao {
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
         return findPageInfo(filter, page, "bcBom-list");
     }
 

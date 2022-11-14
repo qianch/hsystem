@@ -60,7 +60,6 @@ import java.util.Map.Entry;
 @AnyExceptionRollback
 public class ProducePlanServiceImpl extends BaseServiceImpl implements IProducePlanService {
     private static final Logger log = LoggerFactory.getLogger(ProducePlanServiceImpl.class);
-
     @Resource
     IProducePlanDao producePlanDao;
     @Resource
@@ -87,10 +86,6 @@ public class ProducePlanServiceImpl extends BaseServiceImpl implements IProduceP
         return producePlanDao;
     }
 
-    @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-        return producePlanDao.findPageInfo(filter, page);
-    }
 
     public Map<String, Object> findOrderPageInfo(Filter filter, Page page) throws Exception {
         return producePlanDao.findOrderPageInfo(filter, page);

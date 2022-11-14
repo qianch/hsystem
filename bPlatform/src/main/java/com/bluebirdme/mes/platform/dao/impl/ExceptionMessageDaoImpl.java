@@ -27,7 +27,7 @@ public class ExceptionMessageDaoImpl extends BaseDaoImpl implements IExceptionMe
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(final Filter filter, final Page page) throws Exception {
+    public Map<String, Object> findPageInfo(final Filter filter, final Page page) throws Exception {
         return this.findPageInfo(filter, page, "exception-list");
     }
 

@@ -14,8 +14,6 @@ import com.bluebirdme.mes.baseInfo.entityMirror.TcBomVersionPartsMirror;
 import com.bluebirdme.mes.btwManager.entity.BtwFile;
 import com.bluebirdme.mes.core.annotation.AnyExceptionRollback;
 import com.bluebirdme.mes.core.base.dao.IBaseDao;
-import com.bluebirdme.mes.core.base.entity.Filter;
-import com.bluebirdme.mes.core.base.entity.Page;
 import com.bluebirdme.mes.core.base.service.BaseServiceImpl;
 import com.bluebirdme.mes.planner.cut.entity.CutPlan;
 import com.bluebirdme.mes.planner.cut.entity.Iplan;
@@ -63,7 +61,6 @@ public class MergePrinterServiceImpl extends BaseServiceImpl implements IMergePr
     private static final Logger logger = LoggerFactory.getLogger(MergePrinterServiceImpl.class);
     private final String fileUrl = new File(PathUtils.getClassPath()) + File.separator + "BtwFiles" + File.separator;
     private static String btwName = null;
-
     @Resource
     IPrinterDao printerDao;
 
@@ -76,11 +73,6 @@ public class MergePrinterServiceImpl extends BaseServiceImpl implements IMergePr
     @Override
     protected IBaseDao getBaseDao() {
         return printerDao;
-    }
-
-    @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-        return printerDao.findPageInfo(filter, page);
     }
 
     /**

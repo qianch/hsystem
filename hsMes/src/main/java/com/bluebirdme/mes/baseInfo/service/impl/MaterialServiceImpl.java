@@ -6,43 +6,41 @@
  */
 package com.bluebirdme.mes.baseInfo.service.impl;
 
-import java.util.Map;
-
-import javax.annotation.Resource;
+import com.bluebirdme.mes.baseInfo.dao.IMaterialDao;
+import com.bluebirdme.mes.baseInfo.service.IMaterialService;
 import com.bluebirdme.mes.core.annotation.AnyExceptionRollback;
-
-import org.springframework.stereotype.Service;
-
 import com.bluebirdme.mes.core.base.dao.IBaseDao;
 import com.bluebirdme.mes.core.base.entity.Filter;
 import com.bluebirdme.mes.core.base.entity.Page;
 import com.bluebirdme.mes.core.base.service.BaseServiceImpl;
-import com.bluebirdme.mes.baseInfo.service.IMaterialService;
-import com.bluebirdme.mes.baseInfo.dao.IMaterialDao;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.Map;
 
 /**
- * 
  * @author 高飞
  * @Date 2016-10-12 11:06:09
  */
 @Service
 @AnyExceptionRollback
 public class MaterialServiceImpl extends BaseServiceImpl implements IMaterialService {
-	
-	@Resource IMaterialDao materialDao;
-	
-	@Override
-	protected IBaseDao getBaseDao() {
-		return materialDao;
-	}
 
-	@Override
-	public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-		return materialDao.findPageInfo(filter,page);
-	}
-	
-	public Map<String,Object> materialInfo(String code){
-		return materialDao.materialInfo(code);
-	}
+    @Resource
+    IMaterialDao materialDao;
+
+    @Override
+    protected IBaseDao getBaseDao() {
+        return materialDao;
+    }
+
+    @Override
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+        return materialDao.findPageInfo(filter, page);
+    }
+
+    public Map<String, Object> materialInfo(String code) {
+        return materialDao.materialInfo(code);
+    }
 
 }

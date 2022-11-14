@@ -31,7 +31,7 @@ public class LanguageServiceImpl extends BaseServiceImpl implements ILanguageSer
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
         return languageDaoDao.findPageInfo(filter, page);
     }
 

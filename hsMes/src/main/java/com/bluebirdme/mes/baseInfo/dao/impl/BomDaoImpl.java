@@ -37,7 +37,7 @@ public class BomDaoImpl extends BaseDaoImpl implements IBomDao {
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
         return null;
     }
 

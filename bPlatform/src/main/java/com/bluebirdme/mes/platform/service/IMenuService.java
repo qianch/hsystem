@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public interface IMenuService extends IBaseService {
     @Override
-    <T> Map<String, Object> findPageInfo(final Filter p0, final Page p1) throws Exception;
+    Map<String, Object> findPageInfo(final Filter p0, final Page p1) throws Exception;
 
     void batchUpdateMenuLevel(final List<Menu> p0);
 

@@ -36,7 +36,7 @@ public class BtwFilePrintDaoImpl extends BaseDaoImpl implements IBtwFilePrintDao
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
         return null;
     }
 

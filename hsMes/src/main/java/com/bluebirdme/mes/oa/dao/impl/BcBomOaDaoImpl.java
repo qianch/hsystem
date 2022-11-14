@@ -22,7 +22,7 @@ public class BcBomOaDaoImpl extends BaseDaoImpl implements IBcBomOaDao {
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
         return null;
     }
 }

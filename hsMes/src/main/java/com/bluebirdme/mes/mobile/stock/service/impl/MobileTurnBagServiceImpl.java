@@ -39,11 +39,6 @@ public class MobileTurnBagServiceImpl extends BaseServiceImpl implements IMobile
         return turnbagDao;
     }
 
-    @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-        return null;
-    }
-
     /**
      * 翻包
      */

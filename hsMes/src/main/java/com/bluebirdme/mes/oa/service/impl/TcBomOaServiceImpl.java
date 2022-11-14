@@ -22,7 +22,7 @@ public class TcBomOaServiceImpl extends BaseServiceImpl implements ITcBomOaServi
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
         return tcBomOaDao.findPageInfo(filter, page);
     }
 }

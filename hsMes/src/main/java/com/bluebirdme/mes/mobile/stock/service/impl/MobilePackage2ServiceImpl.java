@@ -58,10 +58,6 @@ public class MobilePackage2ServiceImpl extends BaseServiceImpl implements IMobil
         return packageDao;
     }
 
-    @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-        return null;
-    }
 
     @Override
     public String tray(String puname, Long packagingStaff, String trayCode, String boxCodes, String rollCodes, Long planId, String partName, String model, Long partId) throws Exception {

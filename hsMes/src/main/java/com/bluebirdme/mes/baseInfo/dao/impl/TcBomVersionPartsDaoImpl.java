@@ -33,7 +33,7 @@ public class TcBomVersionPartsDaoImpl extends BaseDaoImpl implements ITcBomVersi
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
         return findPageInfo(filter, page, "part-list");
     }
 

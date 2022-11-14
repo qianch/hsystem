@@ -37,10 +37,6 @@ public class PackTaskServiceImpl extends BaseServiceImpl implements IPackTaskSer
         return ptDao;
     }
 
-    @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-        return null;
-    }
 
     @Override
     public void saveOrUpdate(List<PackTask> list) {

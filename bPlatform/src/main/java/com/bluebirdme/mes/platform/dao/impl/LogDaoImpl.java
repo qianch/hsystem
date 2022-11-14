@@ -27,7 +27,7 @@ public class LogDaoImpl extends BaseDaoImpl implements ILogDao {
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(final Filter filter, final Page page) throws Exception {
+    public Map<String, Object> findPageInfo(final Filter filter, final Page page) throws Exception {
         return this.findPageInfo(filter, page, "log-list");
     }
 

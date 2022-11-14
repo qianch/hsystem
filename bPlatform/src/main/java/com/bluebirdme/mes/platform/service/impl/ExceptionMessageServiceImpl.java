@@ -29,7 +29,7 @@ public class ExceptionMessageServiceImpl extends BaseServiceImpl implements IExc
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(final Filter filter, final Page page) throws Exception {
+    public Map<String, Object> findPageInfo(final Filter filter, final Page page) throws Exception {
         return this.exceptionMessageDao.findPageInfo(filter, page);
     }
 

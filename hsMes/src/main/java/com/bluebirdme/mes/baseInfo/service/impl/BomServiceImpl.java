@@ -1,37 +1,24 @@
 package com.bluebirdme.mes.baseInfo.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import com.bluebirdme.mes.core.annotation.AnyExceptionRollback;
-
-import com.bluebirdme.mes.sales.entity.SalesOrderDetail;
-import org.springframework.stereotype.Service;
-
 import com.bluebirdme.mes.baseInfo.dao.IBomDao;
-import com.bluebirdme.mes.baseInfo.entity.BCBomVersion;
-import com.bluebirdme.mes.baseInfo.entity.BcBom;
-import com.bluebirdme.mes.baseInfo.entity.BcBomVersionDetail;
-import com.bluebirdme.mes.baseInfo.entity.FtcBom;
-import com.bluebirdme.mes.baseInfo.entity.FtcBomDetail;
-import com.bluebirdme.mes.baseInfo.entity.FtcBomVersion;
-import com.bluebirdme.mes.baseInfo.entity.TcBom;
-import com.bluebirdme.mes.baseInfo.entity.TcBomVersion;
-import com.bluebirdme.mes.baseInfo.entity.TcBomVersionParts;
-import com.bluebirdme.mes.baseInfo.entity.TcBomVersionPartsDetail;
+import com.bluebirdme.mes.baseInfo.entity.*;
 import com.bluebirdme.mes.baseInfo.service.IBcBomService;
 import com.bluebirdme.mes.baseInfo.service.IBomService;
 import com.bluebirdme.mes.baseInfo.service.IFtcBomService;
 import com.bluebirdme.mes.baseInfo.service.ITcBomService;
+import com.bluebirdme.mes.core.annotation.AnyExceptionRollback;
 import com.bluebirdme.mes.core.base.dao.IBaseDao;
 import com.bluebirdme.mes.core.base.entity.Filter;
 import com.bluebirdme.mes.core.base.entity.Page;
 import com.bluebirdme.mes.core.base.service.BaseServiceImpl;
 import com.bluebirdme.mes.produce.entity.FinishedProduct;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * BOM统一Service
@@ -42,7 +29,6 @@ import com.bluebirdme.mes.produce.entity.FinishedProduct;
 @Service
 @AnyExceptionRollback
 public class BomServiceImpl extends BaseServiceImpl implements IBomService {
-
     @Resource
     IBomDao bomDao;
     @Resource
@@ -58,21 +44,20 @@ public class BomServiceImpl extends BaseServiceImpl implements IBomService {
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page)
-            throws Exception {
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
         return null;
     }
 
     @Override
     public List<BCBomVersion> getBcVersions(String bcBomCode) {
-        Map<String, Object> param = new HashMap<String, Object>();
+        Map<String, Object> param = new HashMap<>();
         param.put("packBomCode", bcBomCode);
         // 查询BOM信息
         BcBom bom = bcBomService.findUniqueByMap(BcBom.class, param);
-        List<BCBomVersion> list = new ArrayList<BCBomVersion>();
-        if (bom == null)
+        List<BCBomVersion> list = new ArrayList<>();
+        if (bom == null) {
             return list;
-
+        }
         // 查询BOM的版本信息
         param.clear();
         param.put("packBomId", bom.getId());
@@ -81,8 +66,7 @@ public class BomServiceImpl extends BaseServiceImpl implements IBomService {
         list = bcBomService.findListByMap(BCBomVersion.class, param);
         param.put("packEnabled", 0);
         list.addAll(bcBomService.findListByMap(BCBomVersion.class, param));
-
-        return list == null ? new ArrayList<BCBomVersion>() : list;
+        return list;
     }
 
     @Override
@@ -203,12 +187,12 @@ public class BomServiceImpl extends BaseServiceImpl implements IBomService {
     }
 
     @Override
-    public List<Map<String,Object>> findSalesOrderDetail(Long id,String c) throws Exception{
-        return bomDao.findSalesOrderDetail(id,c);
+    public List<Map<String, Object>> findSalesOrderDetail(Long id, String c) throws Exception {
+        return bomDao.findSalesOrderDetail(id, c);
     }
 
     @Override
-    public List<Map<String, Object>> findSalesOrderDetail1(Long id)  throws Exception{
+    public List<Map<String, Object>> findSalesOrderDetail1(Long id) throws Exception {
         return bomDao.findSalesOrderDetail1(id);
     }
 }

@@ -35,7 +35,7 @@ public class AuditInstanceDaoImpl extends BaseDaoImpl implements IAuditInstanceD
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
         return this.findPageInfo(filter, page, "auditInstance-list");
     }
 
@@ -50,8 +50,7 @@ public class AuditInstanceDaoImpl extends BaseDaoImpl implements IAuditInstanceD
 
     @Override
     public Map<String, Object> myAuditTask(Filter filter, Page page) {
-        Map<String, Object> findPageInfo = this.findPageInfo(filter, page, "auditTask-myAudit");
-        return findPageInfo;
+        return this.findPageInfo(filter, page, "auditTask-myAudit");
     }
 
     public <T> void updateByCondition(Class<T> clazz, Map<String, Object> condition, Map<String, Object> values) {

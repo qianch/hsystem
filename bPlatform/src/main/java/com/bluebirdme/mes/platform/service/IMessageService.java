@@ -18,7 +18,7 @@ public interface IMessageService extends IBaseService {
     void save(final Message p0);
 
     @Override
-    <T> Map<String, Object> findPageInfo(final Filter p0, final Page p1) throws Exception;
+    Map<String, Object> findPageInfo(final Filter p0, final Page p1) throws Exception;
 
     List<Message> myMessage(final Integer p0, final Long p1, final Integer p2);
 

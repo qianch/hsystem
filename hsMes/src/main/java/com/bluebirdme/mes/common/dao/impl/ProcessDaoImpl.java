@@ -31,7 +31,7 @@ public class ProcessDaoImpl extends BaseDaoImpl implements IProcessDao {
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
+    public Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
         return null;
     }
 

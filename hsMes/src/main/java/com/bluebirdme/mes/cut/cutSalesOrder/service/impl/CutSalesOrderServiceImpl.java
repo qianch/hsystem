@@ -8,8 +8,6 @@ package com.bluebirdme.mes.cut.cutSalesOrder.service.impl;
 
 import com.bluebirdme.mes.core.annotation.AnyExceptionRollback;
 import com.bluebirdme.mes.core.base.dao.IBaseDao;
-import com.bluebirdme.mes.core.base.entity.Filter;
-import com.bluebirdme.mes.core.base.entity.Page;
 import com.bluebirdme.mes.core.base.service.BaseServiceImpl;
 import com.bluebirdme.mes.cut.cutSalesOrder.dao.ICutSalesOrderDao;
 import com.bluebirdme.mes.cut.cutSalesOrder.entity.CutSalesOrder;
@@ -20,8 +18,7 @@ import com.bluebirdme.mes.sales.entity.Consumer;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.io.Serializable;
-import java.util.*;
+import java.util.Date;
 
 /**
  * @author 季晓龙
@@ -30,7 +27,6 @@ import java.util.*;
 @Service
 @AnyExceptionRollback
 public class CutSalesOrderServiceImpl extends BaseServiceImpl implements ICutSalesOrderService {
-
     @Resource
     ICutSalesOrderDao CutSalesOrderDao;
 
@@ -40,18 +36,9 @@ public class CutSalesOrderServiceImpl extends BaseServiceImpl implements ICutSal
     }
 
     @Override
-    public <T> Map<String, Object> findPageInfo(Filter filter, Page page) throws Exception {
-
-        Map<String, Object> findPageInfo = CutSalesOrderDao.findPageInfo(filter, page);
-        return findPageInfo;
-    }
-
-    @Override
-    public String saveCutSalesOrder(CutSalesOrder cutSalesOrder, String userId) throws Exception {
-
+    public String saveCutSalesOrder(CutSalesOrder cutSalesOrder, String userId) {
         String result = "";
-
-        ProducePlanDetail producePlanDetail=findById(ProducePlanDetail.class,cutSalesOrder.getProducePlanDetailId());
+        ProducePlanDetail producePlanDetail = findById(ProducePlanDetail.class, cutSalesOrder.getProducePlanDetailId());
         FinishedProduct fp = findById(FinishedProduct.class, producePlanDetail.getProductId());
         Consumer c = findById(Consumer.class, fp.getProductConsumerId());
         cutSalesOrder.setCustomerCode(c.getConsumerCode().trim());
@@ -68,16 +55,14 @@ public class CutSalesOrderServiceImpl extends BaseServiceImpl implements ICutSal
             cutSalesOrder.setModifyUser(userId);
             save(cutSalesOrder);
         }
-
         return result;
     }
 
     @Override
-    public String doDeleteCutSalesOrder(String ids) throws Exception {
-        String ids_temp[] = ids.split(",");
-        Serializable ids_target[] = new Serializable[ids_temp.length];
-        for (int i = 0; i < ids_temp.length; i++) {
-            CutSalesOrder cutSalesOrder = findById(CutSalesOrder.class, Long.parseLong(ids_temp[i]));
+    public String doDeleteCutSalesOrder(String ids) {
+        String[] ids_temp = ids.split(",");
+        for (String s : ids_temp) {
+            CutSalesOrder cutSalesOrder = findById(CutSalesOrder.class, Long.parseLong(s));
             if (cutSalesOrder == null) {
                 continue;
             }
@@ -85,6 +70,4 @@ public class CutSalesOrderServiceImpl extends BaseServiceImpl implements ICutSal
         }
         return "";
     }
-
-
 }
