@@ -74,7 +74,6 @@
 
     $(function () {
         loadProducePlans();
-
         $("#dg").datagrid({
             url: "${path}",
             onBeforeLoad: dgOnBeforeLoad,
@@ -222,13 +221,11 @@
                         return value + " <font color=red>" + rows.length
                             + "条计划</font>";
                     }/* ,
-																																																																																																																																								textFormatter : function(value, row, index) {
-																																																																																																																																									if(row.SALESORDERCODE==null){
-																																																																																																																																										return value + " [临时计划,无订单号]";
-																																																																																																																																									}else{
-																																																																																																																																										return value + " [订单号" + row.SALESORDERCODE + "]";
-																																																																																																																																									}
-																																																																																																																																								} */
+                    textFormatter : function(value, row, index) {
+                    	if(row.SALESORDERCODE==null){
+                    		return value + " [临时计划,无订单号]";
+                    	}else{
+                    		return value + " [订单号" + row.SALESORDERCODE + "]";       																																																																																																																																																																																																																																																																											} */
                 });
             //默认选中第一行的生产计划
             if (rs.length != 0) {
@@ -295,7 +292,7 @@
                 var userName = "";
                 var a = "";
                 for (var i = 0; i < r.length; i++) {
-                    if (i == 0) {
+                    if (i === 0) {
                         a = "";
                     } else {
                         a = ",";
@@ -322,7 +319,6 @@
                     $("#_common_user_dg").datagrid("selectRow", a);
                 }
             }
-
         }
     }
 
@@ -442,7 +438,7 @@
         //需要增加胚布订单的裁剪计划
         var id = r[0].ID;
 
-        if (r[0].ISCREATWEAVE == 1) {
+        if (r[0].ISCREATWEAVE === 1) {
             //获取添加订单页面，默认客户为裁剪车间，默认订单备注为裁剪任务的批次号和生产任务单号，产品为BOM中的胚布
             var wid = Dialog.open("胚布订单", 380, 155,
                 addUrl + "?cutPlanId=" + id, [EasyUI.window.button(
@@ -512,7 +508,7 @@
             Tip.warn("最多只能选择一条产品");
             return;
         }
-        if (rows.length == 1) {
+        if (rows.length === 1) {
             productModel = rows[0].productModel;
             productWidth = rows[0].productWidth;
             prossBom = rows[0].productProcessCode;
@@ -541,7 +537,7 @@
                         .button("icon-ok", "选择",
                             function () {
                                 var rows = $("#_common_product_dg").datagrid("getChecked");
-                                if (rows.length == 0) {
+                                if (rows.length === 0) {
                                     Tip.warn("至少选择一个产品");
                                     return;
                                 }
@@ -620,7 +616,6 @@
             "procBomId": r.PROCBOMID,
             "packBomId": r.PACKBOMID,
             "packagingCount": 0
-
         };
         $("#product_dg").datagrid("appendRow", _row);
     }
@@ -751,9 +746,7 @@
     }
 
     function copyProduct() {
-
         var rows = EasyUI.grid.getSelections("_common_product_dg");
-
         if (rows.length == 0) {
             Tip.warn("请选择一条数据进行复制");
             return;
@@ -765,8 +758,7 @@
         var id = rows[0].ID;
         var finalConsumerId = $("#finalConsumerId").val();
         //打开产品信息编辑页面
-        var wid = Dialog.open("复制产品", 380, 155, copyProductUrl + "?productId="
-            + id + "&finalConsumerId=" + finalConsumerId, [
+        var wid = Dialog.open("复制产品", 380, 155, copyProductUrl + "?productId=" + id + "&finalConsumerId=" + finalConsumerId, [
             EasyUI.window.button("icon-save", "保存", function () {
                 //saveForm();
                 EasyUI.form.submit("finishProductForm", saveFabricUrl,
@@ -780,7 +772,6 @@
             })], function () {
             $("#" + wid).dialog("maximize");
         });
-
     }
 
     function formatterIsCreateWeave(value, row, index) {
@@ -815,17 +806,12 @@
             return null;
         return new Calendar(value).format("yyyy-MM-dd");
     }
-
     var buttonId = undefined;
-
     //部件计划数量明细ID，订单号,批次号，部件名称，部件ID，客户简称，客户ID，客户大类，套数，发货日期，创建时间，创建人，裁剪计划ID
-
-
     function createCutTask(taskId) {
         var task = tasks[taskId];
         buttonId = task.id;
         //log(pcId,order,batch,partName,partId,consumerSimpleName,consumerId,consumerCategory,suitCount,deliveryDate,createTime,createUserName,cpId);
-
         Loading.show("正在获取单号");
         $.ajax({
             url: path + "siemens/cutTask/serial",
@@ -863,5 +849,4 @@
             $("#" + buttonId).remove();
         })
     }
-
 </script>
