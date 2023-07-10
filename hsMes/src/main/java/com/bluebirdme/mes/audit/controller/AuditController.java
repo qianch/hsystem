@@ -20,7 +20,6 @@ import com.bluebirdme.mes.core.base.controller.BaseController;
 import com.bluebirdme.mes.core.base.entity.Filter;
 import com.bluebirdme.mes.core.base.entity.Page;
 import com.bluebirdme.mes.core.constant.Constant;
-import com.bluebirdme.mes.platform.entity.Attachment;
 import com.bluebirdme.mes.platform.entity.Department;
 import com.bluebirdme.mes.platform.entity.User;
 import com.bluebirdme.mes.platform.service.IUserService;

@@ -7,7 +7,6 @@ package com.bluebirdme.mes.audit.entity;
  * @Date 2016年10月24日 下午2:36:01
  */
 public interface AuditConstant {
-
     interface LEVEL {
 
         /**
