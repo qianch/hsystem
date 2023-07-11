@@ -85,7 +85,6 @@ $(function() {
 		var m = today.getMinutes();
 		var s = today.getSeconds();
 		var systime = y + (month < 10 ? "0" + month : month) + (td < 10 ? "0" + td : td) + ' ' + (d < 10 ? "0" + d : d) + ' ' + (h < 10 ?
-
 		"0" + h : h) + ':' + (m < 10 ? "0" + m : m) + ':' + (s < 10 ? "0" + s : s);
 		$("#ctime").text(systime);
 	}
@@ -95,7 +94,6 @@ $(function() {
 		$("#sectionpage").window('open');
 	});
 	$("#homebut").click()
-
 });
 
 function Clearnav() {
@@ -137,7 +135,6 @@ function InitsubMenu(data) {
 			menulist += '<li><div><a ref="' + sm.id + '" href="javascript:void(0)" rel="' + sm.url + '" ><span class="icon' + sm.icon + '" >&nbsp;</span><span class="nav">' + sm.text + '</span></a></div></li> ';
 		}
 		menulist += '</ul>';
-
 		$("#wnav").accordion('add', {
 			title : sm.text,
 			content : menulist,
@@ -153,7 +150,6 @@ function InitsubMenu(data) {
 // 初始化左侧
 function InitLeftMenu() {
 	hoverMenuItem();
-
 	$("#wnav li a").live('click', function() {
 		var tabTitle = $(this).children('.nav').text();
 		var url = $(this).parent().find('a').attr("rel");
@@ -163,7 +159,6 @@ function InitLeftMenu() {
 		$("#wnav li div").removeClass("selected");
 		$(this).parent().addClass("selected");
 	});
-
 }
 
 /**
@@ -208,14 +203,12 @@ function addTab(subtitle, url, icon, menuid) {
 			}
 			tabClose();
 			$("#tabs").tabs('select', subtitle);
-
 		}
 	});
 }
 
 function createFrame(url) {
-	var s = '<iframe scrolling="auto" frameborder="0"  src="' + url + '" style="width:100%;height:100%;"></iframe>';
-	return s;
+	return '<iframe scrolling="auto" frameborder="0"  src="' + url + '" style="width:100%;height:100%;"></iframe>';
 }
 
 function tabClose() {
@@ -230,9 +223,7 @@ function tabClose() {
 			left : e.pageX,
 			top : e.pageY
 		});
-
 		var subtitle = $(this).children(".tabs-closable").text();
-
 		$("#mm").data("currtab", subtitle);
 		$("#tabs").tabs("select", subtitle);
 		return false;
@@ -244,7 +235,7 @@ function tabCloseEven() {
 	$('#mm-tabupdate').click(function() {
 		var currTab = $('#tabs').tabs('getSelected');
 		var title = currTab.panel('options').tab.text();
-		if ("欢迎页面" != title) {
+		if ("欢迎页面" !== title) {
 			var url = $(currTab.panel('options').content).attr('src');
 			$('#tabs').tabs('update', {
 				tab : currTab,
@@ -274,7 +265,7 @@ function tabCloseEven() {
 	// 关闭当前右侧的TAB
 	$('#mm-tabcloseright').click(function() {
 		var nextall = $('.tabs-selected').nextAll();
-		if (nextall.length == 0) {
+		if (nextall.length === 0) {
 			// msgShow('系统提示','后边没有啦~~','error');
 			alert('后边没有啦~~');
 			return false;
@@ -288,7 +279,7 @@ function tabCloseEven() {
 	// 关闭当前左侧的TAB
 	$('#mm-tabcloseleft').click(function() {
 		var prevall = $('.tabs-selected').prevAll();
-		if (prevall.length == 0) {
+		if (prevall.length === 0) {
 			alert('到头了，前边没有啦~~');
 			return false;
 		}
@@ -298,13 +289,11 @@ function tabCloseEven() {
 		});
 		return false;
 	});
-
 	// 退出
 	$("#mm-exit").click(function() {
 		$('#mm').menu('hide');
 	});
 }
-
 // 弹出信息窗口 title:标题 msgString:提示信息 msgType:信息类型 [error,info,question,warning]
 function msgShow(title, msgString, msgType) {
 	$.messager.alert(title, msgString, msgType);
@@ -325,11 +314,9 @@ function changeTheme(themeName) {
 			$(ifr).contents().find('#easyuiTheme').attr('href', '../' + href);
 		}
 	}
-
 	$.cookie('easyuiThemeName', themeName, {
 		expires : 7
 	});
-
 };
 
 $.extend($.fn.validatebox.defaults.rules, {
@@ -342,14 +329,14 @@ $.extend($.fn.validatebox.defaults.rules, {
 	passwordOk : {
 		validator : function(value, param) {
 
-			return value == $('#loginPwd').val();
+			return value === $('#loginPwd').val();
 		},
 		message : '两次输入的密码不一致！'
 	},
 	passwordOldOk : {
 		validator : function(value, param) {
-			var flag = false;
-			var loginPwdOld = $('#loginPwdOld').val();
+			let flag = false;
+			const loginPwdOld = $('#loginPwdOld').val();
 			$.ajax({
 				url : "pf/account/accountPwdOld_isOk.action?form.oldPwd=" + loginPwdOld,
 				type : "post",
