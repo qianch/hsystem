@@ -356,7 +356,7 @@ $.extend($.fn.validatebox.defaults.rules, {
 				async : false,
 				success : function(item) {
 					if (item) {
-						if ('true' == item) {
+						if ('true' === item) {
 							flag = true;
 						}
 					} else {

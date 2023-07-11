@@ -150,7 +150,8 @@
                     <option value="ar-EG"> اللغة العربية</option>
                     <option value="tr-TR">Türkçe</option>
                 </select>
-				<span class="pwd-icon"><a href="javascript:void(0)" id="modifyPassword" target="_blank">修改密码</a></span>
+				<span class="pwd-icon"><a href="javascript:void(0)" id="modifyPassword"
+                                          target="_blank">修改密码</a></span>
 				<span class="exit-icon"><a href="javascript:void(0)" id="loginOut" target="_blank">退出系统</a></span>
 			</span>
     </div>
