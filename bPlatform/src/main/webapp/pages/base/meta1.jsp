@@ -61,7 +61,6 @@
 <script type="text/javascript" src="<%=basePath%>resources/zTree_v3/js/jquery.ztree.exedit-3.5.min.js"></script>
 <script type="text/javascript" src="<%=basePath%>resources/ext/zTree.ext.js"></script>
 <script type="text/javascript" src="<%=basePath%>resources/utils/Calc.js"></script>
-
 <script>
     /**
      * 设置ajax不缓存
@@ -78,23 +77,23 @@
         shade: [0.3, '#9D9A9A']
     });
 
-    var loginPath = "<%=basePath%>login";
-    var path = "<%=basePath%>";
-    var language = "<%=language%>";
-    var country = "<%=country%>";
-    var tipLoading = "<spring:message code="Tip.Loading" />";
-    var tipSubmiting = "<spring:message code="Tip.Submiting" />";
-    var tipInfo = "<spring:message code="Tip.Info" />";
-    var tipYes = "<spring:message code="Tip.Yes" />";
-    var tipNo = "<spring:message code="Tip.No" />";
-    var tipLock = "<spring:message code="Tip.Lock" />";
-    var tipUnlock = "<spring:message code="Tip.Unlock" />";
-    var tipSuccess = "<spring:message code="Tip.Success" />";
-    var tipError = "<spring:message code="Tip.Error" />";
-    var tipConfirm = "<spring:message code="Tip.Confirm" />";
-    var tipSelectATreeNode = "<spring:message code="Tip.SelectATreeNode" />";
-    var tipSelectAtLeastOne = "<spring:message code="Tip.SelectAtLeastOne" />";
-    var tipSelectOnlyOne = "<spring:message code="Tip.SelectOnlyOne" />";
-    var buttonAddMore = "<spring:message code="Button.AddMore" />";
+    const loginPath = "<%=basePath%>login";
+    const path = "<%=basePath%>";
+    const language = "<%=language%>";
+    const country = "<%=country%>";
+    const tipLoading = "<spring:message code="Tip.Loading" />";
+    const tipSubmiting = "<spring:message code="Tip.Submiting" />";
+    const tipInfo = "<spring:message code="Tip.Info" />";
+    const tipYes = "<spring:message code="Tip.Yes" />";
+    const tipNo = "<spring:message code="Tip.No" />";
+    const tipLock = "<spring:message code="Tip.Lock" />";
+    const tipUnlock = "<spring:message code="Tip.Unlock" />";
+    const tipSuccess = "<spring:message code="Tip.Success" />";
+    const tipError = "<spring:message code="Tip.Error" />";
+    const tipConfirm = "<spring:message code="Tip.Confirm" />";
+    const tipSelectATreeNode = "<spring:message code="Tip.SelectATreeNode" />";
+    const tipSelectAtLeastOne = "<spring:message code="Tip.SelectAtLeastOne" />";
+    const tipSelectOnlyOne = "<spring:message code="Tip.SelectOnlyOne" />";
+    const buttonAddMore = "<spring:message code="Button.AddMore" />";
     console.log("当前国家代码:" + country + ";语言:" + language);
 </script>
