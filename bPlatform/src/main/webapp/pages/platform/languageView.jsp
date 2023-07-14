@@ -36,7 +36,7 @@
         <tr>
             <th field="ID" checkbox=true></th>
             <th field="LANGUAGECODE" width="10"><spring:message code="Identification"/></th>
-            <th field="CHINESE" width="10" ><spring:message code="Chinese"/></th>
+            <th field="CHINESE" width="10"><spring:message code="Chinese"/></th>
             <th field="ENGLISH" width="10"><spring:message code="English"/></th>
             <th field="ARABIC" width="10"><spring:message code="Arabic"/></th>
             <th field="TURKEY" width="10"><spring:message code="Turkey"/></th>

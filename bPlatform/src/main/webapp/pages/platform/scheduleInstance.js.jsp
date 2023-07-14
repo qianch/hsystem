@@ -41,11 +41,11 @@
     //编辑调度实例
     function edit() {
         const r = EasyUI.grid.getOnlyOneSelected("dg");
-        if (r.STATUS == "RUN") {
+        if (r.STATUS === "RUN") {
             Tip.warn("实例正在运行，请先停止后在编辑!");
             return;
         }
-        if (r.EDITABLE == 1) {
+        if (r.EDITABLE === 1) {
             Tip.warn("该实例系自动生成，不可编辑");
             return;
         }
@@ -62,14 +62,14 @@
     //删除调度实例
     function doDelete() {
         const r = EasyUI.grid.getSelections("dg");
-        if (r.length == 0) {
+        if (r.length === 0) {
             Tip.warn("<spring:message code="Tip.SelectAtLeastOne" />");
             return;
         }
 
         const ids = [];
         for (let i = 0; i < r.length; i++) {
-            if (r[i].EDITABLE == 1) {
+            if (r[i].EDITABLE === 1) {
                 let index = EasyUI.grid.getRowIndex("dg", r[i]);
                 Tip.warn("第[" + (index + 1) + "]行实例系自动生成，不可删除");
                 return;
@@ -87,7 +87,7 @@
 
     function start() {
         const r = EasyUI.grid.getSelections("dg");
-        if (r.length == 0) {
+        if (r.length === 0) {
             Tip.warn("<spring:message code="Tip.SelectAtLeastOne" />");
             return;
         }
@@ -95,11 +95,11 @@
             Tip.warn("只能同时启动一个实例");
             return;
         }
-        if (r[0].STATUS == 'RUN') {
+        if (r[0].STATUS === 'RUN') {
             Tip.warn("实例已在运行中");
             return;
         }
-        if (r[0].EDITABLE == 1) {
+        if (r[0].EDITABLE === 1) {
             Tip.warn("该实例系自动生成，不可手动启动");
             return;
         }
@@ -121,7 +121,7 @@
 
     function stop() {
         const r = EasyUI.grid.getSelections("dg");
-        if (r.length == 0) {
+        if (r.length === 0) {
             Tip.warn("<spring:message code="Tip.SelectAtLeastOne" />");
             return;
         }
@@ -129,11 +129,11 @@
             Tip.warn("只能同时启动一个实例");
             return;
         }
-        if (r[0].STATUS == 'STOP') {
+        if (r[0].STATUS === 'STOP') {
             Tip.warn("实例已经停止");
             return;
         }
-        if (r[0].EDITABLE == 1) {
+        if (r[0].EDITABLE === 1) {
             Tip.warn("该实例系自动生成，不可手动停止");
             return;
         }
@@ -154,7 +154,7 @@
     }
 
     function statusFromatter(value, row, index) {
-        if (value == "STOP") {
+        if (value === "STOP") {
             return "<font color='red'>停止</font>";
         } else {
             return "<font color='green'>运行中</font>";
@@ -162,7 +162,7 @@
     }
 
     function editableFormatter(value, row, index) {
-        if (value == 1) {
+        if (value === 1) {
             return "不可编辑";
         } else {
             return "可编辑";

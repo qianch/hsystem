@@ -6,7 +6,6 @@
     const editUrl = path + "language/edit";
     //删除客户管理
     const deleteUrl = path + "language/delete";
-
     const width = 650, height = 450;
 
     //查询
@@ -19,7 +18,6 @@
         const s = "< spring" + ":message code=\"" + value + "\" />";
         return s;
     }
-
 
     //添加客户管理
     const add = function () {
@@ -59,7 +57,7 @@
     //删除客户管理
     const doDelete = function () {
         let r = EasyUI.grid.getSelections("dg");
-        if (r.length == 0) {
+        if (r.length === 0) {
             Tip.warn("<spring:message code="Tip.SelectAtLeastOne" />");
             return;
         }
@@ -91,7 +89,6 @@
                 Dialog.close(wid)
             })]);
     };
-
     const enableFilter = false;
 
     function dgLoadSuccess(data) {

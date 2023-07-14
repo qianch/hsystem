@@ -19,15 +19,17 @@
     <div>
         <form id="exceptionFilter" style="margin: 0;">
             类名：<input type="text" name="filter[clazz]" id="clazz" like="true" value="" class="textbox"
-                      style="height:22px;"> 方法名：<input type="text" name="filter[method]" id="method" value=""
-                                                       like="true" class="textbox" style="height:22px;"> 起始时间：<input
+                        style="height:22px;"> 方法名：<input type="text" name="filter[method]" id="method" value=""
+                                                            like="true" class="textbox" style="height:22px;">
+            起始时间：<input
                 type="text"
                 name="filter[occurDate1]" like="true" id="startoccurDate" value="" class="textbox laydate-icon"
                 readonly="readonly">
             结束时间：<input type="text" name="filter[occurDate2]" like="true" id="endoccurDate" value=""
-                        class="textbox laydate-icon" readonly="readonly"> <a href="javascript:void(0)"
-                                                                             class="easyui-linkbutton l-btn l-btn-small"
-                                                                             iconcls="icon-search" onclick="filter()">
+                            class="textbox laydate-icon" readonly="readonly"> <a href="javascript:void(0)"
+                                                                                 class="easyui-linkbutton l-btn l-btn-small"
+                                                                                 iconcls="icon-search"
+                                                                                 onclick="filter()">
             搜索 </a>
         </form>
     </div>

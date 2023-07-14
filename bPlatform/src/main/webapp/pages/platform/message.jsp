@@ -5,11 +5,7 @@
 <head>
     <title>我的通知</title>
     <%@ include file="../base/meta.jsp" %>
-
-    <script type="text/javascript"
-            src="<%=basePath%>resources/platform/message.js"></script>
-    <style>
-    </style>
+    <script type="text/javascript" src="<%=basePath%>resources/platform/message.js"></script>
     <script type="text/javascript">
         function filter() {
             EasyUI.grid.search("dg", "searchbox");
@@ -26,7 +22,6 @@
         const delUrl = path + "msg/unsubMessage";
         const readUrl = path + "msg/readMessage";
         const delMesUrl = path + "msg/deleteMessage";
-
         let wid;
 
         function save() {
@@ -35,12 +30,10 @@
                 Tip.warn("<spring:message code="Tip.SelectAtLeastOne" />");
                 return;
             }
-
             const ids = [];
             for (let i = 0; i < r.length; i++) {
                 ids.push(r[i].ID);
             }
-
             //发送请求提交选中的订阅信息
             Dialog.confirm(function () {
                 JQ.ajax(addUrl, "post", {
@@ -55,11 +48,10 @@
 
         function del() {
             const r = EasyUI.grid.getSelections("dl");
-            if (r.length == 0) {
+            if (r.length === 0) {
                 Tip.warn("<spring:message code="Tip.SelectAtLeastOne" />");
                 return;
             }
-
             const ids = [];
             for (let i = 0; i < r.length; i++) {
                 ids.push(r[i].ID);
@@ -92,15 +84,14 @@
                 }), EasyUI.window.button("icon-cancel", "关闭", function () {
                     Dialog.close(wid);
                 })]);
-        };
+        }
 
         function readMessage() {
             const r = EasyUI.grid.getSelections("dg");
-            if (r.length == 0) {
+            if (r.length === 0) {
                 Tip.warn("<spring:message code="Tip.SelectAtLeastOne" />");
                 return;
             }
-
             const ids = [];
             for (let i = 0; i < r.length; i++) {
                 ids.push(r[i].ID);
@@ -114,16 +105,14 @@
 
         function deleteMyMessage() {
             const r = EasyUI.grid.getSelections("dg");
-            if (r.length == 0) {
+            if (r.length === 0) {
                 Tip.warn("<spring:message code="Tip.SelectAtLeastOne" />");
                 return;
             }
-
             const ids = [];
             for (let i = 0; i < r.length; i++) {
                 ids.push(r[i].ID);
             }
-
             Dialog.confirm(function () {
                 JQ.ajax(delMesUrl, "post", {
                     messageIds: ids.toString()
@@ -135,7 +124,6 @@
         }
     </script>
 </head>
-
 <body style="margin:0;">
 <div id="toolbar">
     <jsp:include page="../base/toolbar.jsp">
@@ -150,7 +138,7 @@
     </jsp:include>
     <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok'"
        onclick="readMessage()">标志已读</a> <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok'"
-                                           onclick="deleteMyMessage()">删除消息</a>
+                                               onclick="deleteMyMessage()">删除消息</a>
     <div>
         <form id="searchbox" style="margin: 0;">
             消息类型：
@@ -158,8 +146,8 @@
                    class="easyui-combobox"
                    data-options="{valueField:'ID',textField:'VALUE',url:'<%=basePath%>msg/getUserMessageType',onLoadError:function(){Tip.error('未找到订阅的内容，请确认')},onLoadSuccess:function(){filter()},onChange:function(newValue,oldValue){filter()}}">
             已读/未读： <select id="status"
-                           onchange="changeUrl(this.options[this.options.selectedIndex].value)"
-                           value="<%=basePath%>msg/unread">
+                               onchange="changeUrl(this.options[this.options.selectedIndex].value)"
+                               value="<%=basePath%>msg/unread">
             <option value="<%=basePath%>msg/unread">未读</option>
             <option value="<%=basePath%>msg/readed">已读</option>
             <option value="<%=basePath%>msg/list">全部</option>
@@ -167,7 +155,6 @@
         </form>
     </div>
 </div>
-
 <table id="dg" fit="true" url="<%=basePath%>msg/unread"
        class="easyui-datagrid" url="" toolbar="#toolbar" pagination="true"
        rownumbers="true" fitColumns="true" singleSelect="false">

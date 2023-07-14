@@ -56,7 +56,7 @@
     <script type="text/javascript" src="<%=basePath%>resources/utiljs/Random.js?_=<%=nocache %>"></script>
     <script type="text/javascript" src="<%=basePath%>resources/utiljs/Regex.js?_=<%=nocache %>"></script>
     <script type="text/javascript" src="<%=basePath%>resources/constant/Formatter.js?_=<%=nocache %>"></script>
-    <script>
+    <script type="text/javascript">
         /**
          * 设置ajax不缓存
          */
@@ -125,22 +125,26 @@
 </div>
 <div data-options="region:'center',border:false" style="overflow: auto;position: relative;">
     <div id="toolbar">
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="add()">添加</a> <a
-            href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="edit()">编辑</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="add()">添加</a>
+        <a
+                href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true"
+                onclick="edit()">编辑</a>
         <a href="javascript:void(0)" class="easyui-linkbutton"
            iconCls="icon-remove" plain="true" onclick="deleteMenu()">删除</a>
         <div>
             <form action="#" id="menuFilter">
                 <input type="hidden" id="pid" name="filter[m1.parentId]">
                 <label class="panel-title">菜单搜索：</label>
-                菜单名称：<input type="text" name="filter[m1.name]" id="name" like="true" value="" class="easyui-textbox">
+                菜单名称：<input type="text" name="filter[m1.name]" id="name" like="true" value=""
+                                class="easyui-textbox">
                 菜单地址：<input type="text" name="filter[m1.url]" id="url" like="true" value="" class="easyui-textbox">
                 <a href="javascript:void(0)" class="easyui-linkbutton l-btn l-btn-small" iconcls="icon-search"
                    onclick="filter()"> 搜索 </a>
             </form>
         </div>
     </div>
-    <table id="dg" title="菜单信息列表" class="easyui-datagrid" fit="true" url="<%=basePath%>menu/list" toolbar="#toolbar"
+    <table id="dg" title="菜单信息列表" class="easyui-datagrid" fit="true" url="<%=basePath%>menu/list"
+           toolbar="#toolbar"
            pagination="true" rownumbers="true" fitColumns="true" singleSelect="false">
         <thead>
         <tr>

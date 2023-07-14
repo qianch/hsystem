@@ -25,17 +25,17 @@
     <div>
         <form id="logFilter" style="margin: 0;">
             用户名称：<input type="text" name="filter[user]" id="user" like="true" value="" class="textbox"
-                        style="height:22px;">
+                            style="height:22px;">
             登录账户：<input type="text" name="filter[name]" id="name" value="" like="true" class="textbox"
-                        style="height:22px;">
+                            style="height:22px;">
             关键字：<input type="text" name="filter[operate]" id="operate" like="true" value="" class="textbox"
-                       style="height:22px;">
+                          style="height:22px;">
             参数值：<input type="text" name="filter[paramsValue]" id="paramsValue" like="true" value="" class="textbox"
-                       style="height:22px;">
+                          style="height:22px;">
             起始时间：<input type="text" name="filter[startlogDate]" id="startlogDate" value="" readonly="readonly"
-                        class="textbox laydate-icon">
+                            class="textbox laydate-icon">
             结束时间：<input type="text" name="filter[endlogDate]" id="endlogDate" value="" readonly="readonly"
-                        class="textbox laydate-icon">
+                            class="textbox laydate-icon">
             <a href="javascript:void(0)" class="easyui-linkbutton l-btn l-btn-small" iconcls="icon-search"
                onclick="filter()">
                 搜索

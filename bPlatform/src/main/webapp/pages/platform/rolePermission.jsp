@@ -9,29 +9,28 @@
 <script type="text/javascript" src="<%=basePath%>resources/zTree_v3/js/jquery.ztree.excheck-3.5.min.js"></script>
 <script type="text/javascript">
     const ids =${ids};
-	let tree = null;
-	const setting = {
-		check: {
-			enable: true,
-			chkboxType: {"Y": "ps", "N": "s"}
-		},
-		data: {
-			simpleData: {
-				enable: true,
-				idKey: "ID",
-				pIdKey: "PARENTID"
-			},
-			key: {
-				name: "NAME"
-			}
-		},
-		callback: {
-			onNodeCreated: onNodeCreated
-		}
-	};
+    let tree = null;
+    const setting = {
+        check: {
+            enable: true,
+            chkboxType: {"Y": "ps", "N": "s"}
+        },
+        data: {
+            simpleData: {
+                enable: true,
+                idKey: "ID",
+                pIdKey: "PARENTID"
+            },
+            key: {
+                name: "NAME"
+            }
+        },
+        callback: {
+            onNodeCreated: onNodeCreated
+        }
+    };
 
-
-	$(document).ready(function () {
+    $(document).ready(function () {
         Loading.show();
         $.ajax({
             url: path + "role/permission/list?all=1",
@@ -42,20 +41,18 @@
                 tree = $.fn.zTree.init($("#role_permission"), setting, data.rows);
             }
         });
-
     });
 
     function onNodeCreated() {
-		const tree = $.fn.zTree.getZTreeObj("role_permission");
-		let node = null;
-		for (let i = 0; i < ids.length; i++) {
+        const tree = $.fn.zTree.getZTreeObj("role_permission");
+        let node = null;
+        for (let i = 0; i < ids.length; i++) {
             node = tree.getNodeByParam("ID", ids[i], null);
             if (node == null) continue;
             tree.checkNode(node, true, false, false);
         }
         tree.expandAll(true);
     }
-
 </script>
 <div>
     <ul class="ztree" id="role_permission" ids="${ids}"></ul>

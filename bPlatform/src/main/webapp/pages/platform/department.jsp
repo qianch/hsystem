@@ -43,7 +43,8 @@
             </form>
         </div>
     </div>
-    <table id="dg" title="部门列表" class="easyui-datagrid" fit="true" url="<%=basePath%>department/list" toolbar="#toolbar"
+    <table id="dg" title="部门列表" class="easyui-datagrid" fit="true" url="<%=basePath%>department/list"
+           toolbar="#toolbar"
            pagination="true" rownumbers="true" fitColumns="true">
         <thead>
         <tr>
@@ -66,7 +67,7 @@
 <div id="dlg-buttons">
     <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="save()"
        style="width:90px">保存</a> <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel"
-                                    onclick="javascript:$('#dlg').dialog('close')" style="width:90px">取消</a>
+                                      onclick="javascript:$('#dlg').dialog('close')" style="width:90px">取消</a>
 </div>
 <script type="text/javascript">
     function dictFormatter(type, value) {
@@ -74,12 +75,12 @@
             return "";
         }
         $.ajax({
-            url:  "<%=basePath%>dict/queryDictText?type=" + type + "&value=" + value,
+            url: "<%=basePath%>dict/queryDictText?type=" + type + "&value=" + value,
             type: "get",
             async: false,
             dataType: "text",
             success: function (ajaxdata) {
-                return  ajaxdata;
+                return ajaxdata;
             }
         });
     }

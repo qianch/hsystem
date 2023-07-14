@@ -42,13 +42,13 @@
     <div>
         <form id="searchbox" style="margin: 0;" id="scheduleFilter">
             类名：<input type="text" name="filter[clazz]" id="clazzz" like="true" value="" class="textbox"
-                      style="height:22px;">
+                        style="height:22px;">
             方法名：<input type="text" name="filter[method]" id="method" like="true" value="" class="textbox"
-                       style="height:22px;">
+                          style="height:22px;">
             起始时间：<input type="text" name="filter[startcreateTime]" id="startcreateTime" value=""
-                        class="textbox laydate-icon" readonly="readonly">
+                            class="textbox laydate-icon" readonly="readonly">
             结束时间：<input type="text" name="filter[endcreateTime]" id="endcreateTime" value=""
-                        class="textbox laydate-icon" readonly="readonly">
+                            class="textbox laydate-icon" readonly="readonly">
             <a href="javascript:void(0)" class="easyui-linkbutton l-btn l-btn-small" iconcls="icon-search"
                onclick="filter()">
                 搜索
