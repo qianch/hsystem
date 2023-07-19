@@ -20,7 +20,6 @@
     }
 </style>
 <script type="text/javascript">
-
 </script>
 
 <div id='cutTcBomMain_form_layout' class="easyui-layout" style="width:100%;height:100%;" data-options="fit:true">
@@ -37,7 +36,6 @@
                                value="${cutTcBomMain.tcProcBomCodeVersion}" class="easyui-textbox"
                                required="true">
                     </td>
-
                     <td class="title">叶型名称:</td>
                     <!--叶型名称-->
                     <td>
@@ -45,7 +43,6 @@
                                class="easyui-textbox" required="true">
                     </td>
                 </tr>
-
                 <tr>
                     <td class="title">客户名称:</td>
                     <!--客户名称-->
@@ -54,16 +51,12 @@
                                id="customerName" name="customerName"
                                value="${cutTcBomMain.customerName}" class="easyui-searchbox"
                                required="true" data-options="searcher:selectConsumer,icons:[]">
-
                         <input type="hidden" name="customerCode" id="customerCode" value="${cutTcBomMain.customerCode}">
-
                     </td>
                 </tr>
             </table>
         </form>
     </div>
-
-
     <div data-options="region:'center',title:'裁剪图纸套材明细'">
         <div id="toolbar_cutTcBomDetail">
             <c:if test="${empty force }">
@@ -73,7 +66,6 @@
                    onclick="deleteDetail()">删除</a>
             </c:if>
         </div>
-
         <table id="cutTcBomDetail_dg" singleSelect="true" title="裁剪套材bom明细" width="100%"
                class="easyui-datagrid" toolbar="#toolbar_cutTcBomDetail"
                rownumbers="true" fitColumns="true" fit="true"
@@ -115,13 +107,8 @@
                     editor="{type:'numberbox',options:{precision:0}}">尺寸绝对值
                 </th>
             </tr>
-
             </thead>
         </table>
-
-
     </div>
-
-
 </div>
 

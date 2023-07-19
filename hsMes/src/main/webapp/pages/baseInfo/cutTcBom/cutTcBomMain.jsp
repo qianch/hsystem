@@ -21,15 +21,15 @@
             <jsp:param value="edit" name="ids"/>
             <jsp:param value="cancel" name="ids"/>
             <jsp:param value="effect" name="ids"/>
-            <jsp:param value="importDetail" name="ids" />
-            <jsp:param value="exportDetail" name="ids" />
+            <jsp:param value="importDetail" name="ids"/>
+            <jsp:param value="exportDetail" name="ids"/>
 
             <jsp:param value="icon-add" name="icons"/>
             <jsp:param value="icon-edit" name="icons"/>
             <jsp:param value="icon-remove" name="icons"/>
-            <jsp:param value="platform-icon9" name="icons" />
-            <jsp:param value="icon-excel" name="icons" />
-            <jsp:param value="platform-icon9" name="icons" />
+            <jsp:param value="platform-icon9" name="icons"/>
+            <jsp:param value="icon-excel" name="icons"/>
+            <jsp:param value="platform-icon9" name="icons"/>
 
             <jsp:param value="增加" name="names"/>
             <jsp:param value="编辑" name="names"/>
@@ -59,9 +59,6 @@
                 </a>
             </form>
         </div>
-
-
-
     </div>
     <table id="dg" singleSelect="true" title="" class="easyui-datagrid" toolbar="#toolbar" pagination="true"
            rownumbers="true" fitColumns="true" fit="true" data-options="showFooter:true">
@@ -72,7 +69,9 @@
             <th field="CUSTOMERNAME" sortable="true" width="80">客户名称</th>
             <th field="BLADETYPENAME" sortable="true" width="80">叶型名称</th>
             <th field="CREATETIME" sortable="true" width="100">创建时间</th>
-            <th field="STATE" width="15" data-options="formatter:function(value,row,index){return dictFormatter('State',value)}" >状态</th>
+            <th field="STATE" width="15"
+                data-options="formatter:function(value,row,index){return dictFormatter('State',value)}">状态
+            </th>
         </tr>
         </thead>
     </table>
