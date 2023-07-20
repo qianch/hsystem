@@ -11,7 +11,6 @@
     <%@ include file="../base/meta.jsp" %>
     <%@ include file="scheduleTemplate.js.jsp" %>
 </head>
-
 <body class="easyui-layout" data-options="fit:true,border:false">
 <div data-options="region:'center',border:false" style="overflow: auto;position: relative; height: 140px; width: 925px">
     <div id="toolbar">
@@ -33,7 +32,6 @@
             <form action="#" id="scheduleTemplateSearchForm">
                 调度名称:<input type="text" name="filter[templateName]" like="true" class="easyui-textbox">
                 调度描述:<input type="text" name="filter[templateDesc]" like="true" class="easyui-textbox">
-
                 <a href="javascript:void(0)" class="easyui-linkbutton l-btn l-btn-small" iconcls="icon-search"
                    onclick="filter()">
                     搜索

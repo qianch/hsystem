@@ -16,8 +16,7 @@
           action="<%=basePath %>scheduleTemplate/${empty scheduleTemplate.id ?'add':'edit'}" autocomplete="off">
         <input type="hidden" name="id" value="${scheduleTemplate.id}"/> <input type="hidden" name="createTime"
                                                                                value="${scheduleTemplate.createTime}"/>
-        <table width="100%">
-
+        <table style="width: 100%">
             <tr>
                 <td class="title">调度类名:</td>
                 <!--对应的执行的类名-->
@@ -37,12 +36,10 @@
             </tr>
             <tr>
                 <td class="title">描述:</td>
-                <!--描述-->
                 <td><input type="text" id="templateDesc" name="templateDesc" value="${scheduleTemplate.templateDesc}"
                            class="easyui-textbox" style="height:50px;width:420px;" validType="length[1,100]"
                            multiline="true"></td>
             </tr>
-
         </table>
     </form>
 </div>

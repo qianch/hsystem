@@ -44,7 +44,6 @@
             <jsp:param value="enable()" name="funs"/>
             <jsp:param value="setRoles()" name="funs"/>
         </jsp:include>
-
         <div style="border-top:1px solid #DDDDDD">
             <form action="#" id="userFilter">
                 <label class="panel-title">用户搜索：</label>

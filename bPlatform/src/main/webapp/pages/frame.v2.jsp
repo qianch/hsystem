@@ -9,13 +9,11 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>企业信息管理系统</title>
-
     <link rel="stylesheet" type="text/css" href="<%=site%>resources/themes/default/easyui.css">
     <link rel="stylesheet" type="text/css" href="<%=site%>resources/ui/css/style.v2.css">
     <link rel="stylesheet" type="text/css" href="<%=site%>resources/themes/platform.css">
     <link rel="stylesheet" type="text/css" href="<%=site%>resources/themes/icon.css">
     <link rel="stylesheet" type="text/css" href="<%=site%>resources/ui/themes/addition/addition-icon.css">
-
     <script type="text/javascript" src="<%=site%>resources/jquery/jquery-1.8.0.js"></script>
     <script type="text/javascript" src="<%=site%>resources/easyui/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="<%=site%>resources/ui/js/jquery.portal.js"></script>
@@ -27,7 +25,6 @@
     <script type="text/javascript" src="<%=site%>resources/uipack/ui.tip.js"></script>
     <script type="text/javascript" src="<%=site%>resources/uipack/ui.loading.js"></script>
     <script type="text/javascript" src="<%=site%>resources/easyui/locale/easyui-lang-zh_CN.js"></script>
-
     <script type="text/javascript">
         const path = "<%=site%>";
         const userId =${userId};
@@ -251,7 +248,6 @@
         </div>
     </div>
 </div>
-
 <!-- TAB右键点击菜单 -->
 <div id="mm" class="easyui-menu" style="width:150px;">
     <div id="mm-tabupdate" iconCls="icon-reload">刷新</div>

@@ -9,13 +9,11 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>企业信息管理系统</title>
-
     <link rel="stylesheet" type="text/css" href="<%=site%>/resources/ui/themes/cupertino/easyui.css">
     <link rel="stylesheet" type="text/css" href="<%=site%>/resources/ui/css/style.css">
     <link rel="stylesheet" type="text/css" href="<%=site%>/resources/themes/platform.css">
     <link rel="stylesheet" type="text/css" href="<%=site%>/resources/themes/icon.css">
     <link rel="stylesheet" type="text/css" href="<%=site%>/resources/ui/themes/addition/addition-icon.css">
-
     <script type="text/javascript" src="<%=site%>/resources/ui/js/jquery.min.js"></script>
     <script type="text/javascript" src="<%=site%>/resources/ui/js/jquery.easyui.min.js"></script>
     <script type="text/javascript" src="<%=site%>/resources/ui/js/jquery.portal.js"></script>
@@ -28,7 +26,6 @@
     <script type="text/javascript" src="<%=site%>resources/uipack/ui.loading.js"></script>
     <script type="text/javascript" src="<%=site%>resources/utiljs/Assert.js"></script>
     <script type="text/javascript" src="<%=site%>resources/easyui/locale/easyui-lang-zh_CN.js"></script>
-
     <script type="text/javascript">
         const path = "<%=site%>";
         const userId =${userId};
@@ -120,7 +117,6 @@
                 <ul class="main-infor" id="notice_info" style="width:535px;">
                 </ul>
             </div>
-
             <div class="clear"></div>
             <div class="main-bottom">
                 <div class="panel-header">系统消息提醒</div>
