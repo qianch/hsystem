@@ -45,8 +45,7 @@
                 <input type="text" id="tagType" name="filter[tagType]"
                        class="easyui-combobox"
                        required="true"
-                       data-options="valueField:'v',textField:'t',url:'<%=basePath %>dict/queryDict?rootcode=alloptions,TagType',onSelect:filter"
-                >
+                       data-options="valueField:'v',textField:'t',url:'<%=basePath %>dict/queryDict?rootcode=alloptions,TagType',onSelect:filter">
                 <a href="javascript:void(0)" class="easyui-linkbutton l-btn l-btn-small" iconcls="icon-search"
                    onclick="filter()">
                     搜索

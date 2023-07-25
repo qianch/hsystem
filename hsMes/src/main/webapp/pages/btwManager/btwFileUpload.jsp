@@ -9,24 +9,19 @@
     String path = request.getContextPath();
     String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
 %>
-<style type="text/css">
-
-
+<style>
 </style>
 <script type="text/javascript">
-    //JS代码
 </script>
 <div>
     <!--套材Bom版本表单-->
     <form id="btwFileUploadForm" method="post" ajax="true" autocomplete="off">
-
         <input type="hidden" name="btwFileId" id="btwFileId" value="${btwFile.id}"/>
-
-        <table width="100%">
+        <table style="width: 100%">
             <tr>
                 <td class="title">标签名称:</td>
                 <td>
-                    <input type="text" id="tagName" name="tagName" value="${btwFile.tagName}"  readonly="true"></td>
+                    <input type="text" id="tagName" name="tagName" value="${btwFile.tagName}" readonly="true"></td>
                 </td>
             </tr>
             <tr>
@@ -36,8 +31,6 @@
                     <input type="file" id="btwFileUploadFile">
                 </td>
             </tr>
-
-
         </table>
     </form>
 </div>

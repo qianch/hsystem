@@ -9,7 +9,7 @@
     String path = request.getContextPath();
     String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
 %>
-<style type="text/css">
+<style>
     form {
         margin: 0px;
     }
@@ -20,14 +20,12 @@
     }
 </style>
 <script type="text/javascript">
-
 </script>
 
 <div id='salesorder_form_layout' class="easyui-layout" style="width:100%;height:100%;" data-options="fit:true">
     <div data-options="region:'north',height:160,title:'打印条码信息',split:true">
         <!--销售订单表单-->
         <form id="btwFilePrintForm" method="post" ajax="true" autocomplete="off">
-
             <input type="hidden" id="id" name="id" value="${btwFile.id}"/>
             <table width="100%">
                 <tr>
@@ -36,16 +34,15 @@
                     <td>
                         <input type="hidden" name="consumerId" id="consumerId" value="${btwFile.consumerId}">
                         <input type="hidden" name="consumerCode" id="consumerCode" value="${btwFile.consumerId}">
-                        <input type="text" readonly="readonly" id="consumerName" name="consumerName" value="${btwFile.consumerName}">
+                        <input type="text" readonly="readonly" id="consumerName" name="consumerName"
+                               value="${btwFile.consumerName}">
                     </td>
-
-
                 </tr>
                 <tr>
                     <td class="title">客户条码前缀:</td>
                     <td>
                         <input type="text" id="consumerBarCodePrefix" name="consumerBarCodePrefix"
-                               value="${btwFile.consumerBarCodePrefix}"  readonly="readonly"></td>
+                               value="${btwFile.consumerBarCodePrefix}" readonly="readonly"></td>
                     </td>
                 </tr>
                 <tr>
@@ -53,7 +50,7 @@
                     <td>
                         <input type="number" id="consumerBarCodeRecord" name="consumerBarCodeRecord"
                                value="${btwFile.consumerBarCodeRecord}" value="0"
-                                readonly="readonly"></td>
+                               readonly="readonly"></td>
                     </td>
                     <td class="title">客户条码位数:</td>
                     <td>
@@ -68,7 +65,6 @@
                                value="${btwFile.agentBarCodePrefix}" readonly="readonly"></td>
                     </td>
                 </tr>
-
                 <tr>
                     <td class="title">供销商条码记录:</td>
                     <td>
@@ -85,8 +81,6 @@
             </table>
         </form>
     </div>
-
-
     <div data-options="region:'center',title:'打印明细'">
         <div id="toolbar_product">
             <c:if test="${empty force }">
@@ -96,14 +90,11 @@
                    onclick="removePrintTemplate()">删除</a>
             </c:if>
         </div>
-
-
         <table id="dg_BtwFilePrint" singleSelect="true" title="打印信息"
                class="easyui-datagrid"
                rownumbers="true" fitColumns="true" fit="true"
                url="${path}btwManager/BtwFilePrint/findBtwFilePrints?btwFileId=${btwFile.id}"
                data-options="onClickRow:onClickBtwFilePrintAddOrEditRow">
-
             <thead>
             <tr>
                 <th field="ID" checkbox=true></th>
@@ -112,10 +103,6 @@
             </tr>
             </thead>
         </table>
-
-
     </div>
-
-
 </div>
 
