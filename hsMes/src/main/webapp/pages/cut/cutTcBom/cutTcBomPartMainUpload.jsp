@@ -9,9 +9,7 @@
     String path = request.getContextPath();
     String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
 %>
-<style type="text/css">
-
-
+<style>
 </style>
 <script type="text/javascript">
     //JS代码
@@ -19,24 +17,20 @@
 <div>
     <!--套材Bom版本表单-->
     <form id="cutTcBomPartMainUploadForm" method="post" ajax="true" autocomplete="off">
-
-
         <table width="100%">
-                <tr>
-                    <td class="title">裁片图纸文件上传:</td>
-                    <!--工艺文件上传-->
-                    <td>
-                        <input type="file" id="cutTcBomPartMainUploadFile">
-                    </td>
-                </tr>
-                <tr>
-                    <td class="title"></td>
-                    <td style="color:red;">
-                        注意事项：裁片图纸上传会覆盖(删除并新增)套材BOM的裁片图纸信息。
-                    </td>
-                </tr>
-
-
+            <tr>
+                <td class="title">裁片图纸文件上传:</td>
+                <!--工艺文件上传-->
+                <td>
+                    <input type="file" id="cutTcBomPartMainUploadFile">
+                </td>
+            </tr>
+            <tr>
+                <td class="title"></td>
+                <td style="color:red;">
+                    注意事项：裁片图纸上传会覆盖(删除并新增)套材BOM的裁片图纸信息。
+                </td>
+            </tr>
         </table>
     </form>
 </div>

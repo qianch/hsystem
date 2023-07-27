@@ -22,7 +22,6 @@
 
     </style>
 </head>
-
 <body class="easyui-layout" data-options="fit:true,border:false">
 <div region="west" split="true" title="裁剪BOM列表" style="width:180px;">
     <div class="easyui-layout" fit=true>
@@ -43,9 +42,7 @@
         </div>
     </div>
 </div>
-
 <div data-options="region:'center',border:false" style="position: relative;">
-
     <div id="toolbarCutTcBomPartMain">
         <jsp:include page="../../base/toolbar.jsp">
             <jsp:param value="addPartMain" name="ids"/>
@@ -71,7 +68,6 @@
         </jsp:include>
     </div>
     <div style="height:50%" data-options="region:'center',title:'裁剪图纸套材明细'">
-
         <table singleSelect="true" fit="true" id="cutTcBomDetailDg" pagination="true" title="裁剪套材bom明细"
                class="easyui-datagrid" url="" rownumbers="true" fitColumns="false">
             <thead>
@@ -102,16 +98,10 @@
                 <th field="UNITPRICE" hidden="true" sortable="true" width="100"
                     editor="{type:'numberbox',options:{precision:0}}">单价
                 </th>
-
             </tr>
-
             </thead>
         </table>
-
-
     </div>
-
-
     <div style="height:50%">
         <div style="float: left;height:100%;width: 55%">
             <table singleSelect="true" fit="true" id="cutTcBomPartMainDg" pagination="true" title="裁片列表"
@@ -124,25 +114,19 @@
                     <th field="TCBOMMAINID" hidden='true'></th>
                     <th field="PARTNAME" sortable="true" width="100" data-options="editor:{type:'textbox'}">部件名称
                     </th>
-
                     <th field="PRODUCTMODEL" sortable="true" data-options="editor:{type:'textbox'}">胚布规格
                     </th>
-
                     <th field="CUTNAME" sortable="true" width="100" data-options="editor:{type:'textbox'}">裁片名称
                     </th>
-
                     <th field="LAYERNUM" sortable="true" width="50"
                         data-options="editor:{type:'numberbox',options:{precision:0,required:true}}">层数
                     </th>
-
                     <th field="REMARK" sortable="true" width="100" data-options="editor:{type:'textbox'}">备注
                     </th>
-
                 </tr>
                 </thead>
             </table>
         </div>
-
         <div style="float: left;height:100%;width: 45%">
             <table singleSelect="true" fit="true" id="cutTcBomPartDetailDg" pagination="true" title="裁片详情列表"
                    class="easyui-datagrid"
@@ -172,11 +156,7 @@
             </table>
         </div>
     </div>
-
-
 </div>
-
-
 <div data-options="region:'east',border:true,split:true" title="图纸bom基本信息" style="height:100px;width:200px">
     <table style="width: 99%;">
         <tr>
@@ -203,11 +183,8 @@
         <tr>
             <td id="customerCode"></td>
         </tr>
-
-
     </table>
 </div>
-
 <div id="mainMenu" class="easyui-menu" style="width:130px;">
     <div onclick="addCutTcBomMain()" data-options="iconCls:'icon-add'">添加</div>
     <div onclick="importDetail()" data-options="iconCls:'icon-add'">导入裁剪bom</div>
@@ -221,5 +198,4 @@
     <div onclick="exportDetail()" data-options="iconCls:'icon-add'">导出裁剪bom图纸</div>
     <div onclick="exportCutTcBomPart()" data-options="iconCls:'icon-add'">导出质检确认表1</div>
 </div>
-
 </body>

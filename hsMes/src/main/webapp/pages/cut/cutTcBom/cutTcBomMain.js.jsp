@@ -5,48 +5,35 @@
 -->
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8" %>
 <script>
-
-    var isFirst = true;
-    var cutTcBomMainTreeUrl = path + "bom/cutTcBom/listBomTree";
-    var findCutTcBomDetailByMainIdUrl = path + "bom/cutTcBom/findCutTcBomDetailByMainId";
-    var listUrl = path + "bom/cutTcBom/list";
-    var cutTcBomMainAddOrEditPageUrl = path + "bom/cutTcBom/cutTcBomMainAddOrEditPage";
-    var saveCutTcBomMainUrl = path + "bom/cutTcBom/saveCutTcBomMain";
-    var consumerUrl = path + "selector/consumer?singleSelect=false"
-    var cancelUrl = path + "bom/cutTcBom/cancel";
-    var effectUrl = path + "bom/cutTcBom/effect";
+    let isFirst = true;
+    const cutTcBomMainTreeUrl = path + "bom/cutTcBom/listBomTree";
+    const findCutTcBomDetailByMainIdUrl = path + "bom/cutTcBom/findCutTcBomDetailByMainId";
+    const listUrl = path + "bom/cutTcBom/list";
+    const cutTcBomMainAddOrEditPageUrl = path + "bom/cutTcBom/cutTcBomMainAddOrEditPage";
+    const saveCutTcBomMainUrl = path + "bom/cutTcBom/saveCutTcBomMain";
+    const consumerUrl = path + "selector/consumer?singleSelect=false";
+    const cancelUrl = path + "bom/cutTcBom/cancel";
+    const effectUrl = path + "bom/cutTcBom/effect";
     //导入裁剪bom图纸地址
-    var cutTcBomMainUploadUrl = path + "bom/cutTcBom/cutTcBomMainUpload";
+    const cutTcBomMainUploadUrl = path + "bom/cutTcBom/cutTcBomMainUpload";
     //提交导入裁剪bom图纸内容
-    var cutTcBomMainUploadFileUrl = path + "bom/cutTcBom/importCutTcBomMainUploadFile";
+    const cutTcBomMainUploadFileUrl = path + "bom/cutTcBom/importCutTcBomMainUploadFile";
     //导出
-    var exportCutTcBomMainUrl = path + "bom/cutTcBom/exportcutTcBomMain";
-
+    const exportCutTcBomMainUrl = path + "bom/cutTcBom/exportcutTcBomMain";
     //导入裁片地址
-    var cutTcBomPartMainUploadUrl = path + "cut/cutTcBomPartMain/cutTcBomPartMainUpload";
+    const cutTcBomPartMainUploadUrl = path + "cut/cutTcBomPartMain/cutTcBomPartMainUpload";
     //提交导入裁片内容
-    var cutTcBomPartMainUploadFileUrl = path + "cut/cutTcBomPartMain/importCutTcBomPartMainUploadFile";
-
-
-    var findCutTcBomPartMainByTcBomMainIdUrl = path + "cut/cutTcBomPartMain/findCutTcBomPartMainByTcBomMainId";
-
-    var findCutTcBomPartDetailByMainIdUrl = path + "cut/cutTcBomPartMain/findCutTcBomPartDetailByMainId";
-
-    var saveCutTcBomPartMainUrl = path + "cut/cutTcBomPartMain/saveCutTcBomPartMain";
-
-    var saveCutTcBomPartDetailUrl = path + "cut/cutTcBomPartMain/saveCutTcBomPartDetail";
-
-    var doDeletePartMainUrl = path + "cut/cutTcBomPartMain/doDeletePartMain";
-
-    var doDeletePartDetailUrl = path + "cut/cutTcBomPartMain/doDeletePartDetail";
-
+    const cutTcBomPartMainUploadFileUrl = path + "cut/cutTcBomPartMain/importCutTcBomPartMainUploadFile";
+    const findCutTcBomPartMainByTcBomMainIdUrl = path + "cut/cutTcBomPartMain/findCutTcBomPartMainByTcBomMainId";
+    const findCutTcBomPartDetailByMainIdUrl = path + "cut/cutTcBomPartMain/findCutTcBomPartDetailByMainId";
+    const saveCutTcBomPartMainUrl = path + "cut/cutTcBomPartMain/saveCutTcBomPartMain";
+    const saveCutTcBomPartDetailUrl = path + "cut/cutTcBomPartMain/saveCutTcBomPartDetail";
+    const doDeletePartMainUrl = path + "cut/cutTcBomPartMain/doDeletePartMain";
+    const doDeletePartDetailUrl = path + "cut/cutTcBomPartMain/doDeletePartDetail";
     //导出
-    var exportCutTcBomPartUrl = path + "cut/cutTcBomPartMain/exportCutTcBomPart";
-
-    var dialogWidth = 700, dialogHeight = 500;
-
-
-    var data = [{
+    const exportCutTcBomPartUrl = path + "cut/cutTcBomPartMain/exportCutTcBomPart";
+    const dialogWidth = 700, dialogHeight = 500;
+    const data = [{
         "id": 1,
         "text": "裁剪套才BOM",
         "state": "closed",
@@ -54,7 +41,6 @@
             'nodeType': 'root'
         }
     }];
-
 
     $(function () {
         searchInfo();
@@ -78,13 +64,12 @@
             onContextMenu: function (e, node) {
                 e.preventDefault();
                 $(this).tree('select', node.target);
-                if (node.attributes.nodeType == "root") {
+                if (node.attributes.nodeType === "root") {
                     $('#mainMenu').menu('show', {
                         left: e.pageX,
                         top: e.pageY
                     });
-                } else if (node.attributes.nodeType == "bom") {
-
+                } else if (node.attributes.nodeType === "bom") {
                     $('#treeMenu').menu('show', {
                         left: e.pageX,
                         top: e.pageY
@@ -95,38 +80,28 @@
                 $('#cutTcBomMainTree').tree('options').url = cutTcBomMainTreeUrl + "?nodeType=" + node.attributes.nodeType;
             },
             onClick: function (node) {
-                var detail = node.attributes;
-
-                if (detail.nodeType == "bom") {
-
+                const detail = node.attributes;
+                if (detail.nodeType === "bom") {
                     $("#cutTcBomDetailDg").datagrid({
                         url: encodeURI(findCutTcBomDetailByMainIdUrl + "?mainId=" + node.attributes.ID)
                     });
-
                     $("#cutTcBomPartMainDg").datagrid({
                         url: encodeURI(findCutTcBomPartMainByTcBomMainIdUrl + "?tcBomMainId=" + node.attributes.ID)
                     });
-
-                    $('#cutTcBomPartDetailDg').datagrid('loadData', { total: 0, rows: [] });
-
+                    $('#cutTcBomPartDetailDg').datagrid('loadData', {total: 0, rows: []});
                     $('#tcProcBomCodeVersion').html(detail.TCPROCBOMCODEVERSION);
-
                     $('#bladeTypeName').html(detail.BLADETYPENAME);
-
                     $('#customerName').html(detail.CUSTOMERNAME);
-
                     $('#customerCode').html(detail.CUSTOMERCODE);
-
                 } else {
                     $("#cutTcBomDetail_dg").datagrid('loadData', {
                         total: 0,
                         rows: []
                     });
                 }
-
                 addindex = 0;
                 //树列表展开/收缩
-                if (node.state == "open") {
+                if (node.state === "open") {
                     collapse();
                 } else {
                     expand();
@@ -134,7 +109,6 @@
             }
         });
     }
-
 
     //右击添加工艺bom
     function importDetail() {
@@ -150,23 +124,21 @@
     }
 
     function importCutTcBom() {
-        var cutTcBomUploadFile = $("#cutTcBomUploadFile");
+        const cutTcBomUploadFile = $("#cutTcBomUploadFile");
         if (cutTcBomUploadFile.val().length <= 0) {
             alert("请选择文件");
             return false;
         }
-        var filepath = cutTcBomUploadFile.val();
-        var extStart = filepath.lastIndexOf(".");
-        var ext = filepath.substring(extStart, filepath.length).toUpperCase();
-        if (ext != ".XLSX" && ext != ".XLS" && ext != ".XLSM") {
+        const filepath = cutTcBomUploadFile.val();
+        const extStart = filepath.lastIndexOf(".");
+        const ext = filepath.substring(extStart, filepath.length).toUpperCase();
+        if (ext !== ".XLSX" && ext !== ".XLS" && ext !== ".XLSM") {
             alert("请上传excel格式文档");
             return false;
         }
         //获取到上传的文件信息
-        var data = document.getElementById("cutTcBomUploadFile").files[0];
-
-        var fromData = new FormData();
-
+        const data = document.getElementById("cutTcBomUploadFile").files[0];
+        const fromData = new FormData();
         if (data != null) {
             fromData.append("file", data);
             $.ajax({
@@ -189,10 +161,9 @@
         }
     }
 
-
     function exportDetail() {
-        var t = $('#cutTcBomMainTree');
-        var node = t.tree('getSelected');
+        const t = $('#cutTcBomMainTree');
+        const node = t.tree('getSelected');
         window.open(exportCutTcBomMainUrl + "?id=" + node.id);
     }
 
@@ -209,23 +180,21 @@
     }
 
     function importCutTcBomPartMainBom() {
-        var cutTcBomPartMainUploadFile = $("#cutTcBomPartMainUploadFile");
+        const cutTcBomPartMainUploadFile = $("#cutTcBomPartMainUploadFile");
         if (cutTcBomPartMainUploadFile.val().length <= 0) {
             alert("请选择文件");
             return false;
         }
-        var filepath = cutTcBomPartMainUploadFile.val();
-        var extStart = filepath.lastIndexOf(".");
-        var ext = filepath.substring(extStart, filepath.length).toUpperCase();
-        if (ext != ".XLSX" && ext != ".XLS" && ext != ".XLSM") {
+        const filepath = cutTcBomPartMainUploadFile.val();
+        const extStart = filepath.lastIndexOf(".");
+        const ext = filepath.substring(extStart, filepath.length).toUpperCase();
+        if (ext !== ".XLSX" && ext !== ".XLS" && ext !== ".XLSM") {
             alert("请上传excel格式文档");
             return false;
         }
         //获取到上传的文件信息
-        var data = document.getElementById("cutTcBomPartMainUploadFile").files[0];
-
-        var fromData = new FormData();
-
+        const data = document.getElementById("cutTcBomPartMainUploadFile").files[0];
+        const fromData = new FormData();
         if (data != null) {
             fromData.append("file", data);
             $.ajax({
@@ -262,14 +231,12 @@
 
     //修改
     function editCutTcBomMain() {
-        var t = $('#cutTcBomMainTree');
-        var node = t.tree('getSelected');
-
-        if (node.STATE == 2) {
+        const t = $('#cutTcBomMainTree');
+        const node = t.tree('getSelected');
+        if (node.STATE === 2) {
             Tip.warn("已作废裁剪套材不能修改");
             return;
         }
-
         dialogId = Dialog.open("编辑", dialogWidth, dialogHeight, cutTcBomMainAddOrEditPageUrl
             + "?id=" + node.id, [EasyUI.window.button("icon-save", "保存", function () {
             saveForm();
@@ -281,23 +248,17 @@
         });
     }
 
-
     function saveForm() {
-
-
-        var cutTcBomMain = JQ.getFormAsJson("cutTcBomMainForm");
-
-        var listCutTcBomDetail = [];
-
-        var cutTcBomDetails = $('#cutTcBomDetail_dg').datagrid('getData').rows;
-
-        if (cutTcBomDetails.length == 0) {
+        const cutTcBomMain = JQ.getFormAsJson("cutTcBomMainForm");
+        const listCutTcBomDetail = [];
+        const cutTcBomDetails = $('#cutTcBomDetail_dg').datagrid('getData').rows;
+        if (cutTcBomDetails.length === 0) {
             Tip.warn("请添加裁剪bom明细");
             return;
         }
-        for (var i = 0; i < cutTcBomDetails.length; i++) {
+        for (let i = 0; i < cutTcBomDetails.length; i++) {
             $("#cutTcBomDetail_dg").datagrid("endEdit", i);
-            var r = {};
+            const r = {};
             r.id = cutTcBomDetails[i].ID;
             r.partName = cutTcBomDetails[i].PARTNAME;
             r.drawName = cutTcBomDetails[i].DRAWNAME;
@@ -314,7 +275,6 @@
             listCutTcBomDetail.push(r);
         }
         cutTcBomMain.listCutTcBomDetail = listCutTcBomDetail;
-
         Loading.show('保存中');
         $.ajax({
             url: saveCutTcBomMainUrl,
@@ -326,30 +286,26 @@
                 searchInfo();
                 Loading.hide();
                 Dialog.close(dialogId);
-
             },
             error: function (data) {
                 Loading.hide();
             }
-
         });
     }
 
     //选择客户信息
-    var selectConsumerWindowId;
+    let selectConsumerWindowId;
 
     function selectConsumer() {
         selectConsumerWindowId = Dialog.open("选择客户", 900, 500, consumerUrl, [EasyUI.window.button("icon-ok", "选择", function () {
-            var row = $("#_common_consumer_dg").datagrid("getChecked");
-            if (row.length == 0) {
+            const row = $("#_common_consumer_dg").datagrid("getChecked");
+            if (row.length === 0) {
                 Tip.warn("至少选择一个客户");
                 return;
             }
-
             $("#customerName").searchbox("setValue", row[0].CONSUMERNAME);
             $("#customerCode").val(row[0].CONSUMERCODE);
             Dialog.close(selectConsumerWindowId);
-
         }), EasyUI.window.button("icon-cancel", "关闭", function () {
             Dialog.close(selectConsumerWindowId);
         })], function () {
@@ -358,9 +314,8 @@
         });
     }
 
-
     function addDetail() {
-        var _row = {
+        const _row = {
             "ID": "",
             "PARTNAME": "",
             "DRAWNAME": "",
@@ -377,16 +332,12 @@
         };
         $("#cutTcBomDetail_dg").datagrid("appendRow", _row);
         $("#cutTcBomDetail_dg").datagrid("beginEdit", EasyUI.grid.getRowIndex("cutTcBomDetail_dg", _row));
-
     }
-
 
     function deleteDetail() {
         // 获取选中行的Index的值
         var rowIndex = $('#cutTcBomDetail_dg').datagrid('getRowIndex', $('#cutTcBomDetail_dg').datagrid('getSelected'));
-
         $("#cutTcBomDetail_dg").datagrid("deleteRow", rowIndex);
-
     }
 
     function cutTcBomDetail_dg_Click(index, row) {
@@ -395,14 +346,14 @@
 
     //作废
     function cancelCutTcBomMain() {
-        var r = EasyUI.grid.getSelections("dg");
-        if (r.length == 0) {
+        const r = EasyUI.grid.getSelections("dg");
+        if (r.length === 0) {
             Tip.warn("<spring:message code="Tip.SelectAtLeastOne" />");
             return;
         }
 
-        var ids = [];
-        for (var i = 0; i < r.length; i++) {
+        const ids = [];
+        for (let i = 0; i < r.length; i++) {
             ids.push(r[i].ID);
         }
         Dialog.confirm(function () {
@@ -416,14 +367,13 @@
 
     //生效
     function effectCutTcBomMain() {
-        var r = EasyUI.grid.getSelections("dg");
-        if (r.length == 0) {
+        const r = EasyUI.grid.getSelections("dg");
+        if (r.length === 0) {
             Tip.warn("<spring:message code="Tip.SelectAtLeastOne" />");
             return;
         }
-
-        var ids = [];
-        for (var i = 0; i < r.length; i++) {
+        const ids = [];
+        for (let i = 0; i < r.length; i++) {
             ids.push(r[i].ID);
         }
         Dialog.confirm(function () {
@@ -436,28 +386,26 @@
     }
 
     function reload(isSelf) {
-        var node = $('#cutTcBomMainTree').tree('getSelected');
-
+        const node = $('#cutTcBomMainTree').tree('getSelected');
         if (isSelf) {
             $('#cutTcBomMainTree').tree('reload', node.target);
         } else {
-            var pNode = $('#cutTcBomMainTree').tree('getParent', node.target);
+            const pNode = $('#cutTcBomMainTree').tree('getParent', node.target);
             $('#cutTcBomMainTree').tree('reload', pNode.target);
         }
     }
 
     //树列表收缩
     function collapse() {
-        var node = $('#cutTcBomMainTree').tree('getSelected');
+        const node = $('#cutTcBomMainTree').tree('getSelected');
         $('#cutTcBomMainTree').tree('collapse', node.target);
     }
 
     //树列表展开
     function expand() {
-        var node = $('#cutTcBomMainTree').tree('getSelected');
+        const node = $('#cutTcBomMainTree').tree('getSelected');
         $('#cutTcBomMainTree').tree('expand', node.target);
     }
-
 
     function expandAll() {
         $('#cutTcBomMainTree').tree('expandAll');
@@ -467,16 +415,16 @@
         $('#cutTcBomMainTree').tree('collapseAll');
     }
 
-    var editIndex_cutTcBomPartMainDg = undefined;
-    var addindex_cutTcBomPartMainDg = 0;
+    let editIndex_cutTcBomPartMainDg = undefined;
+    let addindex_cutTcBomPartMainDg = 0;
 
     //裁片信息修改
     function cutTcBomPartMainDg_DbClick(index, field) {
         addindex = 0;
-        if (editIndex_cutTcBomPartMainDg != index) {
+        if (editIndex_cutTcBomPartMainDg !== index) {
             if (cutTcBomPartMainDg_endEditing()) {
                 $('#cutTcBomPartMainDg').datagrid('selectRow', index).datagrid('beginEdit', index);
-                var ed = $('#cutTcBomPartMainDg').datagrid('getEditor', {
+                const ed = $('#cutTcBomPartMainDg').datagrid('getEditor', {
                     index: index,
                     field: field
                 });
@@ -493,23 +441,21 @@
     }
 
     function cutTcBomPartMainDg_Click(index, field) {
-        if (editIndex_cutTcBomPartMainDg != undefined && index != editIndex_cutTcBomPartMainDg) {
+        if (editIndex_cutTcBomPartMainDg !== undefined && index !== editIndex_cutTcBomPartMainDg) {
             $('#cutTcBomPartMainDg').datagrid('endEdit', editIndex_cutTcBomPartMainDg);
         }
-        var r = EasyUI.grid.getSelections("cutTcBomPartMainDg");
-        if (r.length == 0) {
+        const r = EasyUI.grid.getSelections("cutTcBomPartMainDg");
+        if (r.length === 0) {
             Tip.warn("<spring:message code="Tip.SelectAtLeastOne" />");
             return;
         }
-
         $("#cutTcBomPartDetailDg").datagrid({
             url: encodeURI(findCutTcBomPartDetailByMainIdUrl + "?mainId=" + r[0].ID)
         });
     }
 
-
     function cutTcBomPartMainDg_endEditing() {
-        if (editIndex_cutTcBomPartMainDg == undefined) {
+        if (editIndex_cutTcBomPartMainDg === undefined) {
             return true
         }
         if ($('#cutTcBomPartMainDg').datagrid('validateRow', editIndex_cutTcBomPartMainDg)) {
@@ -521,12 +467,10 @@
         }
     }
 
-
     function cutTcBomPartMainDg_onEndEdit(index, row, changes) {
         addindex_cutTcBomPartMainDg = 0;
-        var node = $('#cutTcBomMainTree').tree('getSelected');
-
-        var rowstr = {
+        const node = $('#cutTcBomMainTree').tree('getSelected');
+        const rowstr = {
             "id": row.ID,
             "tcBomMainId": node.id,
             "partName": row.PARTNAME,
@@ -543,26 +487,23 @@
             contentType: 'application/json',
             data: JSON.stringify(rowstr),
             success: function (data) {
-                if (data != "") {
+                if (data !== "") {
                     Tip.error(data);
                 } else {
                     Tip.success("保存裁片成功!");
                 }
-
                 $('#cutTcBomPartMainDg').datagrid('reload');
             }
         });
     }
 
     function addPartMain() {
-        var node = $('#cutTcBomMainTree').tree('getSelected');
-
+        const node = $('#cutTcBomMainTree').tree('getSelected');
         if (node == null) {
             Tip.warn("请选中裁剪图纸bom后在点击增加");
             return;
         }
-
-        var _row = {
+        const _row = {
             "ID": "",
             "TCBOMMAINID": node.id,//tcBomMainId
             "PARTNAME": "",
@@ -572,7 +513,7 @@
             "REMARK": ""
         };
 
-        if (addindex_cutTcBomPartMainDg == 0) {
+        if (addindex_cutTcBomPartMainDg === 0) {
             $("#cutTcBomPartMainDg").datagrid('insertRow', {
                 index: 0,
                 row: _row
@@ -581,20 +522,16 @@
             editIndex_cutTcBomPartMainDg = 0;
             addindex_cutTcBomPartMainDg = 1;
         }
-
-
     }
 
     function doDeletePartMain() {
-
-        var r = EasyUI.grid.getSelections("cutTcBomPartMainDg");
-        if (r.length == 0) {
+        const r = EasyUI.grid.getSelections("cutTcBomPartMainDg");
+        if (r.length === 0) {
             Tip.warn("<spring:message code="Tip.SelectAtLeastOne" />");
             return;
         }
-
-        var ids = [];
-        for (var i = 0; i < r.length; i++) {
+        const ids = [];
+        for (let i = 0; i < r.length; i++) {
             ids.push(r[i].ID);
         }
         Dialog.confirm(function () {
@@ -607,13 +544,13 @@
     }
 
     //裁片详情修改
-    var editIndex_cutTcBomPartDetailDg = undefined;
-    var addindex_cutTcBomPartDetailDg = 0;
+    let editIndex_cutTcBomPartDetailDg = undefined;
+    let addindex_cutTcBomPartDetailDg = 0;
 
     //裁片信息修改
     function cutTcBomPartDetailDg_DbClick(index, field) {
         addindex = 0;
-        if (editIndex_cutTcBomPartDetailDg != index) {
+        if (editIndex_cutTcBomPartDetailDg !== index) {
             if (cutTcBomPartDetailDg_endEditing()) {
                 $('#cutTcBomPartDetailDg').datagrid('selectRow', index).datagrid('beginEdit', index);
                 var ed = $('#cutTcBomPartDetailDg').datagrid('getEditor', {
@@ -633,14 +570,14 @@
     }
 
     function cutTcBomPartDetailDg_Click(index, field) {
-        if (editIndex_cutTcBomPartDetailDg != undefined && index != editIndex_cutTcBomPartDetailDg) {
+        if (editIndex_cutTcBomPartDetailDg !== undefined && index !== editIndex_cutTcBomPartDetailDg) {
             $('#cutTcBomPartDetailDg').datagrid('endEdit', editIndex_cutTcBomPartDetailDg);
         }
     }
 
 
     function cutTcBomPartDetailDg_endEditing() {
-        if (editIndex_cutTcBomPartDetailDg == undefined) {
+        if (editIndex_cutTcBomPartDetailDg === undefined) {
             return true
         }
         if ($('#cutTcBomPartDetailDg').datagrid('validateRow', editIndex_cutTcBomPartDetailDg)) {
@@ -652,13 +589,10 @@
         }
     }
 
-
     function cutTcBomPartDetailDg_onEndEdit(index, row, changes) {
-
         addindex_cutTcBomPartDetailDg = 0;
-        var node = $('#cutTcBomMainTree').tree('getSelected');
-
-        var rowstr = {
+        const node = $('#cutTcBomMainTree').tree('getSelected');
+        const rowstr = {
             "id": row.ID,
             "tcBomMainId": node.id,
             "mainId": row.MAINID,
@@ -675,32 +609,28 @@
             contentType: 'application/json',
             data: JSON.stringify(rowstr),
             success: function (data) {
-                if (data != "") {
+                if (data !== "") {
                     Tip.error(data);
                 } else {
                     Tip.success("保存裁片明细成功!");
                 }
-
                 $('#cutTcBomPartDetailDg').datagrid('reload');
             }
         });
     }
 
-
     function addPartDetail() {
-        var node = $('#cutTcBomMainTree').tree('getSelected');
+        const node = $('#cutTcBomMainTree').tree('getSelected');
         if (node == null) {
             Tip.warn("请选中裁剪图纸bom后在点击增加");
             return;
         }
-
-        var r = EasyUI.grid.getSelections("cutTcBomPartMainDg");
-        if (r.length == 0) {
+        const r = EasyUI.grid.getSelections("cutTcBomPartMainDg");
+        if (r.length === 0) {
             Tip.warn("<spring:message code="Tip.SelectAtLeastOne" />");
             return;
         }
-
-        var _row = {
+        const _row = {
             "ID": "",
             "MAINID": r[0].ID,
             "TCBOMMAINID": node.id,//tcBomMainId
@@ -709,7 +639,6 @@
             "AMOUNT": "",
             "PACKSEQUENCE": ""
         };
-
         if (addindex_cutTcBomPartDetailDg == 0) {
             $("#cutTcBomPartDetailDg").datagrid('insertRow', {
                 index: 0,
@@ -719,18 +648,16 @@
             editIndex_cutTcBomPartDetailDg = 0;
             addindex_cutTcBomPartDetailDg = 1;
         }
-
     }
 
     function doDeletePartDetail() {
-        var r = EasyUI.grid.getSelections("cutTcBomPartDetailDg");
-        if (r.length == 0) {
+        const r = EasyUI.grid.getSelections("cutTcBomPartDetailDg");
+        if (r.length === 0) {
             Tip.warn("<spring:message code="Tip.SelectAtLeastOne" />");
             return;
         }
-
-        var ids = [];
-        for (var i = 0; i < r.length; i++) {
+        const ids = [];
+        for (let i = 0; i < r.length; i++) {
             ids.push(r[i].ID);
         }
         Dialog.confirm(function () {
@@ -743,10 +670,8 @@
     }
 
     function exportCutTcBomPart() {
-        var t = $('#cutTcBomMainTree');
-        var node = t.tree('getSelected');
+        const t = $('#cutTcBomMainTree');
+        const node = t.tree('getSelected');
         window.open(exportCutTcBomPartUrl + "?tcBomMainId=" + node.id);
     }
-
-
 </script>

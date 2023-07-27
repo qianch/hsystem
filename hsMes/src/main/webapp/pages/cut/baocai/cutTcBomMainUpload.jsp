@@ -26,7 +26,6 @@
         text-overflow: ellipsis;
     }
 
-
     .file_remove {
         color: red;
         height: 16px;
@@ -53,41 +52,34 @@
     }
 </style>
 <script type="text/javascript">
-    //JS代码
 </script>
 <div>
     <!--套材Bom版本表单-->
     <form id="cutTcBomMainUploadForm" method="post" ajax="true" autocomplete="off">
-
-
-        <table width="100%">
-
-
-                <tr>
-                    <td class="title">工艺文件上传:</td>
-                    <!--工艺文件上传-->
-                    <td>
-                        <input type="hidden" name="fileId" id="fileId" value="">
-                        <div>
-                            <div id="files"></div>
-                            <hr style="border:none;">
-                            <input style="width:100px;" type="file" name="file_upload" id="file_upload"/>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="title"></td>
-                    <td style="color:red;">
-                        注意事项：工艺文件上传会覆盖(删除并新增)套材BOM部件
-                    </td>
-                </tr>
-
-
+        <table style="width: 100%">
+            <tr>
+                <td class="title">工艺文件上传:</td>
+                <!--工艺文件上传-->
+                <td>
+                    <input type="hidden" name="fileId" id="fileId" value="">
+                    <div>
+                        <div id="files"></div>
+                        <hr style="border:none;">
+                        <input style="width:100px;" type="file" name="file_upload" id="file_upload"/>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="title"></td>
+                <td style="color:red;">
+                    注意事项：工艺文件上传会覆盖(删除并新增)套材BOM部件
+                </td>
+            </tr>
         </table>
     </form>
 </div>
 <script type="text/javascript">
-    var icons = {
+    const icons = {
         "jpg": "icon-jpg",
         "bmp": "icon-bmp",
         "txt": "icon-txt",
@@ -102,8 +94,8 @@
         "rar": "icon-rar",
         "text": "icon-text"
     };
-    var fpath = "<%=basePath%>";
-    var fp = "${filePath}";
+    const fpath = "<%=basePath%>";
+    const fp = "${filePath}";
     $(function () {
         $("#file_upload").uploadify({
             buttonText: '选择文件',
@@ -124,7 +116,7 @@
             multi: false,		//设置是否允许一次选择多个文件，true为允许，false不允许
             onUploadSuccess: function (file, data, response) {
                 data = JSON.parse(data);
-                if (data == null || data == "") {
+                if (data == null || data === "") {
                     Tip.warn("上传Excel文件错误");
                     return;
                 }
@@ -133,7 +125,6 @@
                     return;
                 }
                 $("#fileId").val(data.ID);
-
                 $("#file_upload").uploadify('disable', true);
                 $("#files").append("<span id=\"list_" + data.ID + "\" class=\"upload_file_list\"><span class=\"icon-icon " + (icons[data.SUFFIX] == null ? 'icon-file' : icons[data.SUFFIX]) + "\"></span><a id=\"file_" + data.ID + "\" title=\"" + data.FILENAME + "\" class=\"file\" href=\"<%=basePath%>file/download?id=" + data.ID + "&md5=" + data.MD5 + "\">" + data.FILENAME + "</a><a title=\"删除\" class=\"file_remove\" href=\"javascript:void(0)\" onclick=\"deleteFile(" + data.ID + ",'" + data.MD5 + "')\">删</a></span>");
             }
@@ -151,7 +142,7 @@
                 if (Tip.hasError(data)) {
                     return;
                 }
-                for (var i = 0; i < data.length; i++) {
+                for (let i = 0; i < data.length; i++) {
                     $("#files").append("<span id=\"list_" + data[i].ID + "\" class=\"upload_file_list\"><span class=\"icon-icon " + (icons[data[i].SUFFIX] == null ? 'icon-file' : icons[data[i].SUFFIX]) + "\"></span><a id=\"file_" + data[i].ID + "\" title=\"" + data[i].FILENAME + "\" class=\"file\" href=\"<%=basePath%>file/download?id=" + data[i].ID + "&md5=" + data[i].MD5 + "\">" + data[i].FILENAME + "</a><a title=\"删除\" class=\"file_remove\" href=\"javascript:void(0)\" onclick=\"deleteFile(" + data[i].ID + ",'" + data[i].MD5 + "')\">删</a></span>");
                 }
             }
@@ -172,7 +163,6 @@
                     Tip.success("删除成功");
                     $("#fileId").val('');
                     $("#file_upload").uploadify('disable', false);
-
                     $("#list_" + id).hide(500, function () {
                         $(this).remove();
                     });

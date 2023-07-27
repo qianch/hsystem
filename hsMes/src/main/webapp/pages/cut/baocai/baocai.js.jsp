@@ -5,23 +5,15 @@
 -->
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8" %>
 <script>
-    var baoCaiKuPackingUrl = path + "cut/baocai/findPackingDetailByPackingID";
-
-    var listUrl = path + "cut/baocai/list";
-
-    var baoCaiKuAddOrEditPageUrl = path + "cut/baocai/baoCaiKuAddOrEditPage";
-
-    var saveCutTcBomMainUrl = path + "cut/baocai/saveCutTcBomMain";
-
-    var consumerUrl = path + "selector/consumer?singleSelect=false"
-
-    var cancelUrl = path + "cut/baocai/cancel";
-
-    var effectUrl = path + "cut/baocai/effect";
-
-    var cutTcBomMainUploadUrl = path + "cut/baocai/cutTcBomMainUpload";
-
-    var dialogWidth = 400, dialogHeight = 300;
+    const baoCaiKuPackingUrl = path + "cut/baocai/findPackingDetailByPackingID";
+    const listUrl = path + "cut/baocai/list";
+    const baoCaiKuAddOrEditPageUrl = path + "cut/baocai/baoCaiKuAddOrEditPage";
+    const saveCutTcBomMainUrl = path + "cut/baocai/saveCutTcBomMain";
+    const consumerUrl = path + "selector/consumer?singleSelect=false";
+    const cancelUrl = path + "cut/baocai/cancel";
+    const effectUrl = path + "cut/baocai/effect";
+    const cutTcBomMainUploadUrl = path + "cut/baocai/cutTcBomMainUpload";
+    const dialogWidth = 400, dialogHeight = 300;
 
     //查询
     function filter() {
@@ -41,8 +33,7 @@
                 return '<div style="padding:2px"><table class="ddv"></table></div>';
             },
             onExpandRow: function (index, row) {
-                var ddv = $(this).datagrid('getRowDetail', index).find('table.ddv');
-
+                const ddv = $(this).datagrid('getRowDetail', index).find('table.ddv');
                 ddv.datagrid({
                         url: baoCaiKuPackingUrl + "?packingID=" + row.ID,
                         fitColumns: true,
@@ -72,7 +63,7 @@
                                 field: 'PACKINGDATE',
                                 title: '领料日期',
                                 width: 15,
-                            },{
+                            }, {
                                 field: 'PACKINGNUMBER',
                                 title: '领料数量',
                                 width: 15,
@@ -90,28 +81,25 @@
                         }
                     }
                 );
-            }
-            , rowStyler: function (index, row) {
+            }, rowStyler: function (index, row) {
                 if (row.ONTHEWAYCOUNT > 0) {
                     return 'background-color:pink;color:blue;font-weight:bold;';
                 }
             }
-
         });
         filter();
     });
 
-
     //导入
     function importDetail() {
-        dialogId = Dialog.open("导入", dialogWidth, dialogHeight, cutTcBomMainUploadUrl, [EasyUI.window.button("icon-save", "导入", function () {
+        dialogId = Dialog.open("导入", dialogWidth, dialogHeight, cutTcBomMainUploadUrl,
+            [EasyUI.window.button("icon-save", "导入", function () {
+                filter();
+            }), EasyUI.window.button("icon-cancel", "关闭", function () {
+                Dialog.close(dialogId)
+            })], function () {
 
-            filter();
-        }), EasyUI.window.button("icon-cancel", "关闭", function () {
-            Dialog.close(dialogId)
-        })], function () {
-
-        });
+            });
     }
 
     function exportDetail() {
@@ -119,26 +107,28 @@
     }
 
     //新增
-    var add = function() {
-        var wid = Dialog.open("添加", dialogWidth, dialogHeight,baoCaiKuAddOrEditPageUrl, [
-            EasyUI.window.button("icon-save", "保存", function() {
-                EasyUI.form.submit("consumerForm",addUrl, function(data){
-                    filter();
-                    if(Dialog.isMore(wid)){
-                        Dialog.close(wid);
-                        add();
-                    }else{
-                        Dialog.close(wid);
-                    }
-                })
-            }), EasyUI.window.button("icon-cancel", "关闭", function() {
-                Dialog.close(wid)
-            }) ],function(){Dialog.more(wid);}
+    const add = function () {
+        var wid = Dialog.open("添加", dialogWidth, dialogHeight, baoCaiKuAddOrEditPageUrl, [
+                EasyUI.window.button("icon-save", "保存", function () {
+                    EasyUI.form.submit("consumerForm", addUrl, function (data) {
+                        filter();
+                        if (Dialog.isMore(wid)) {
+                            Dialog.close(wid);
+                            add();
+                        } else {
+                            Dialog.close(wid);
+                        }
+                    })
+                }), EasyUI.window.button("icon-cancel", "关闭", function () {
+                    Dialog.close(wid)
+                })], function () {
+                Dialog.more(wid);
+            }
         );
-    }
+    };
 
     //修改
-    var edit = function () {
+    const edit = function () {
         var r = EasyUI.grid.getOnlyOneSelected("dg");
         var dialogId = Dialog.open("编辑", dialogWidth, dialogHeight, baoCaiKuAddOrEditPageUrl
             + "?id=" + r.ID, [EasyUI.window.button("icon-save", "保存", function () {
@@ -149,25 +139,19 @@
         })], function () {
             $("#" + dialogId).dialog("maximize");
         });
-    }
-
+    };
 
     function saveForm() {
-
-
-        var cutTcBomMain = JQ.getFormAsJson("cutTcBomMainForm");
-
-        var listCutTcBomDetail = [];
-
-        var cutTcBomDetails = $('#cutTcBomDetail_dg').datagrid('getData').rows;
-
-        if (cutTcBomDetails.length == 0) {
+        const cutTcBomMain = JQ.getFormAsJson("cutTcBomMainForm");
+        const listCutTcBomDetail = [];
+        const cutTcBomDetails = $('#cutTcBomDetail_dg').datagrid('getData').rows;
+        if (cutTcBomDetails.length === 0) {
             Tip.warn("请添加裁剪bom明细");
             return;
         }
-        for (var i = 0; i < cutTcBomDetails.length; i++) {
+        for (let i = 0; i < cutTcBomDetails.length; i++) {
             $("#cutTcBomDetail_dg").datagrid("endEdit", i);
-            var r = {};
+            const r = {};
             r.id = cutTcBomDetails[i].ID;
             r.partName = cutTcBomDetails[i].PARTNAME;
             r.drawName = cutTcBomDetails[i].DRAWNAME;
@@ -184,9 +168,6 @@
             listCutTcBomDetail.push(r);
         }
         cutTcBomMain.listCutTcBomDetail = listCutTcBomDetail;
-
-        console.log(cutTcBomMain.listCutTcBomDetail);
-
         Loading.show('保存中');
         $.ajax({
             url: saveCutTcBomMainUrl,
@@ -198,30 +179,26 @@
                 filter();
                 Loading.hide();
                 Dialog.close(dialogId);
-
             },
             error: function (data) {
                 Loading.hide();
             }
-
         });
     }
 
     //选择客户信息
-    var selectConsumerWindowId;
+    let selectConsumerWindowId;
 
     function selectConsumer() {
         selectConsumerWindowId = Dialog.open("选择客户", 900, 500, consumerUrl, [EasyUI.window.button("icon-ok", "选择", function () {
-            var row = $("#_common_consumer_dg").datagrid("getChecked");
-            if (row.length == 0) {
+            const row = $("#_common_consumer_dg").datagrid("getChecked");
+            if (row.length === 0) {
                 Tip.warn("至少选择一个客户");
                 return;
             }
-
             $("#customerName").searchbox("setValue", row[0].CONSUMERNAME);
             $("#customerCode").val(row[0].CONSUMERCODE);
             Dialog.close(selectConsumerWindowId);
-
         }), EasyUI.window.button("icon-cancel", "关闭", function () {
             Dialog.close(selectConsumerWindowId);
         })], function () {
@@ -230,9 +207,8 @@
         });
     }
 
-
     function addDetail() {
-        var _row = {
+        const _row = {
             "ID": "",
             "PARTNAME": "",
             "DRAWNAME": "",
@@ -249,16 +225,12 @@
         };
         $("#cutTcBomDetail_dg").datagrid("appendRow", _row);
         $("#cutTcBomDetail_dg").datagrid("beginEdit", EasyUI.grid.getRowIndex("cutTcBomDetail_dg", _row));
-
     }
-
 
     function deleteDetail() {
         // 获取选中行的Index的值
-        var rowIndex = $('#cutTcBomDetail_dg').datagrid('getRowIndex', $('#cutTcBomDetail_dg').datagrid('getSelected'));
-
+        const rowIndex = $('#cutTcBomDetail_dg').datagrid('getRowIndex', $('#cutTcBomDetail_dg').datagrid('getSelected'));
         $("#cutTcBomDetail_dg").datagrid("deleteRow", rowIndex);
-
     }
 
     function onClickRow(index, row) {
@@ -266,15 +238,14 @@
     }
 
     //作废
-    var cancel = function () {
-        var r = EasyUI.grid.getSelections("dg");
-        if (r.length == 0) {
+    const cancel = function () {
+        const r = EasyUI.grid.getSelections("dg");
+        if (r.length === 0) {
             Tip.warn("<spring:message code="Tip.SelectAtLeastOne" />");
             return;
         }
-
-        var ids = [];
-        for (var i = 0; i < r.length; i++) {
+        const ids = [];
+        for (let i = 0; i < r.length; i++) {
             ids.push(r[i].ID);
         }
         Dialog.confirm(function () {
@@ -284,16 +255,15 @@
                 filter();
             });
         });
-    }
-    var packing = function () {
-        var r = EasyUI.grid.getSelections("dg");
-        if (r.length == 0) {
+    };
+    const packing = function () {
+        const r = EasyUI.grid.getSelections("dg");
+        if (r.length === 0) {
             Tip.warn("<spring:message code="Tip.SelectAtLeastOne" />");
             return;
         }
-
-        var ids = [];
-        for (var i = 0; i < r.length; i++) {
+        const ids = [];
+        for (let i = 0; i < r.length; i++) {
             ids.push(r[i].ID);
         }
         Dialog.confirm(function () {
@@ -303,18 +273,17 @@
                 filter();
             });
         });
-    }
+    };
 
     //生效
-    var effect = function () {
-        var r = EasyUI.grid.getSelections("dg");
-        if (r.length == 0) {
+    const effect = function () {
+        const r = EasyUI.grid.getSelections("dg");
+        if (r.length === 0) {
             Tip.warn("<spring:message code="Tip.SelectAtLeastOne" />");
             return;
         }
-
-        var ids = [];
-        for (var i = 0; i < r.length; i++) {
+        const ids = [];
+        for (let i = 0; i < r.length; i++) {
             ids.push(r[i].ID);
         }
         Dialog.confirm(function () {
@@ -324,6 +293,5 @@
                 filter();
             });
         });
-    }
-
+    };
 </script>

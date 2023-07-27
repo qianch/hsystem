@@ -9,7 +9,7 @@
     String path = request.getContextPath();
     String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
 %>
-<style type="text/css">
+<style>
     form {
         margin: 0px;
     }
@@ -22,22 +22,19 @@
 <script type="text/javascript">
 
 </script>
-
 <div id='cutTcBomMain_form_layout' class="easyui-layout" style="width:100%;height:100%;" data-options="fit:true">
     <div data-options="region:'north',height:120,title:'导出裁剪图纸套材bom信息',split:true">
         <!--销售订单表单-->
         <form id="cutTcBomMainForm" method="post" ajax="true" autocomplete="off">
             <input type="hidden" name="id" value="${cutTcBomMain.id}"/>
-            <table width="100%">
+            <table style="width: 100%">
                 <tr>
                     <td class="title">BOM代码版本:</td>
                     <!--BOM代码版本-->
                     <td>
                         <input type="text" id="tcProcBomCodeVersion" name="tcProcBomCodeVersion"
-                               value="${cutTcBomMain.tcProcBomCodeVersion}" class="easyui-textbox"
-                               required="true">
+                               value="${cutTcBomMain.tcProcBomCodeVersion}" class="easyui-textbox" required="true">
                     </td>
-
                     <td class="title">叶型名称:</td>
                     <!--叶型名称-->
                     <td>
@@ -45,25 +42,18 @@
                                class="easyui-textbox" required="true">
                     </td>
                 </tr>
-
                 <tr>
                     <td class="title">客户名称:</td>
                     <!--客户名称-->
                     <td>
-                        <input type="text"
-                               id="customerName" name="customerName"
-                               value="${cutTcBomMain.customerName}" class="easyui-searchbox"
-                               required="true" data-options="searcher:selectConsumer,icons:[]">
-
+                        <input type="text" id="customerName" name="customerName" value="${cutTcBomMain.customerName}"
+                               class="easyui-searchbox" required="true" data-options="searcher:selectConsumer,icons:[]">
                         <input type="hidden" name="customerCode" id="customerCode" value="${cutTcBomMain.customerCode}">
-
                     </td>
                 </tr>
             </table>
         </form>
     </div>
-
-
     <div data-options="region:'center',title:'裁剪图纸套材明细'">
         <div id="toolbar_cutTcBomDetail">
             <c:if test="${empty force }">
@@ -73,7 +63,6 @@
                    onclick="deleteDetail()">删除</a>
             </c:if>
         </div>
-
         <table id="cutTcBomDetail_dg" singleSelect="true" title="裁剪套材bom明细" width="100%"
                class="easyui-datagrid" toolbar="#toolbar_cutTcBomDetail"
                rownumbers="true" fitColumns="true" fit="true"
@@ -90,14 +79,12 @@
                 </th>
                 <th field="PRODUCTMODEL" sortable="true" width="15" editor="{type:'textbox',options:{precision:0}}">规格
                 </th>
-                <th field="LENGTH" sortable="true" width="15"
-                    editor="{type:'numberbox',options:{precision:0}}">米长
+                <th field="LENGTH" sortable="true" width="15" editor="{type:'numberbox',options:{precision:0}}">米长
                 </th>
-                <th field="GRAMWEIGHT" sortable="true" width="15"
-                    editor="{type:'numberbox',options:{precision:0}}">克重
+                <th field="GRAMWEIGHT" sortable="true" width="15" editor="{type:'numberbox',options:{precision:0}}">克重
                 </th>
-                <th field="PRODUCTIONRATE" sortable="true" width="15"
-                    editor="{type:'numberbox',options:{precision:0}}">制成率
+                <th field="PRODUCTIONRATE" sortable="true" width="15" editor="{type:'numberbox',options:{precision:0}}">
+                    制成率
                 </th>
                 <th field="UNITPRICE" hidden="true" sortable="true" width="15"
                     editor="{type:'numberbox',options:{precision:0}}">单价
@@ -115,13 +102,8 @@
                     editor="{type:'numberbox',options:{precision:0}}">尺寸绝对值
                 </th>
             </tr>
-
             </thead>
         </table>
-
-
     </div>
-
-
 </div>
 
