@@ -8,10 +8,8 @@
     String path = request.getContextPath();
     String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
 %>
-<style type="text/css">
-    /
-    /
-    CSS 代码
+<style>
+
 </style>
 <script type="text/javascript">
     //JS代码
@@ -25,10 +23,8 @@
     <!--称重载具表单-->
     <form id="weightCarrierForm" method="post" ajax="true"
           action="<%=basePath %>weightCarrier/${empty weightCarrier.id ?'add':'edit'}" autocomplete="off">
-
         <input type="hidden" name="id" value="${weightCarrier.id}"/>
-
-        <table width="95%">
+        <table style="width: 100%">
             <tr>
                 <td class="title" style="width:200px;"><span style="color:red;">*</span>载具编号:</td>
                 <!--载具编号-->
@@ -59,17 +55,12 @@
                 <td class="title"><span style="color:red;">*</span>车间:</td>
                 <!--所属车间-->
                 <td>
-
                     <input type="text" id="workShopCode" class="easyui-combobox" name="workShopCode"
                            value="${weightCarrier.workShopCode}" panelHeight="200"
-                           data-options="valueField:'v',textField:'t',url:'<%=basePath %>department/queryDepartmentByType?type=cut,weave,company' ,onSelect: function(rec){
-      	$('#workSpace').val(rec.t);
-        }">
-
+                           data-options="valueField:'v',textField:'t',url:'<%=basePath %>department/queryDepartmentByType?type=cut,weave,company' ,onSelect: function(rec) {$('#workSpace').val(rec.t);}">
                     <input type="hidden" id="workSpace" name="workSpace" value="${weightCarrier.workSpace}">
                 </td>
             </tr>
-
         </table>
     </form>
 </div>
