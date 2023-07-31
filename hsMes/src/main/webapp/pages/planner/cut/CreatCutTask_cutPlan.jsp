@@ -16,16 +16,17 @@
             border: 1px solid #e2dbdb;
             font-size: 12px;
         }
+
         button:hover {
             background: #fff900;
             color: #9f00ff;
         }
+
         #createCutTask {
             display: none;
         }
     </style>
 </head>
-
 <body class="easyui-layout" data-options="fit:true,border:false">
 <div region="west" split="true" resizable="false" title="裁剪计划" minWidth="200" width="200">
     <div class="easyui-layout" data-options="fit:true">
@@ -251,7 +252,6 @@
                            data-options="icons:[]" editable="false" required="true">
                 </td>
             </tr>
-
         </table>
     </form>
 </div>

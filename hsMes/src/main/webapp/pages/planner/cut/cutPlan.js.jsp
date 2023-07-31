@@ -5,38 +5,35 @@
 -->
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8" %>
 <script>
-    var datagridUrl = path + "planner/cutPlan/list";
+    const datagridUrl = path + "planner/cutPlan/list";
     //添加裁剪计划
-    var addUrl = path + "planner/cutPlan/add";
+    const addUrl = path + "planner/cutPlan/add";
     //编辑裁剪计划
-    var editUrl = path + "planner/cutPlan/edit";
+    const editUrl = path + "planner/cutPlan/edit";
     //更新排序字段
-    var sortEditUrl = path + "planner/cutPlan/sortEdit";
+    const sortEditUrl = path + "planner/cutPlan/sortEdit";
     //删除裁剪计划
-    var deleteUrl = path + "planner/cutPlan/delete";
+    const deleteUrl = path + "planner/cutPlan/delete";
     //裁剪计划状态改成已完成
-    var isFinish = path + "planner/cutPlan/isFinish";
-    var copyProductUrl = path + "planner/cutPlan/copyProduct";
-    var saveFabricUrl = path + "finishProduct/add";
+    const isFinish = path + "planner/cutPlan/isFinish";
+    const copyProductUrl = path + "planner/cutPlan/copyProduct";
+    const saveFabricUrl = path + "finishProduct/add";
     //选择用户url
-    var chooseUser = path + "selector/cuser?singleSelect=false";
-
-    var tcBomPartTreeUrl = path + "planner/cutPlan/findParts";
-
-    var closeUrl = path + "common/close";
-
-    var tasks = {};
-    var taskId = 0;
+    const chooseUser = path + "selector/cuser?singleSelect=false";
+    const tcBomPartTreeUrl = path + "planner/cutPlan/findParts";
+    const closeUrl = path + "common/close";
+    const tasks = {};
+    let taskId = 0;
 
     function doClose() {
-        var rows = $("#dg").datagrid("getSelections");
-        if (rows.length == 0) {
+        const rows = $("#dg").datagrid("getSelections");
+        if (rows.length === 0) {
             Tip.warn("请至少选择一条记录");
             return;
         }
-        var type = "CUT";
-        var ids = [];
-        for (var i = 0; i < rows.length; i++) {
+        const type = "CUT";
+        const ids = [];
+        for (let i = 0; i < rows.length; i++) {
             ids.push(rows[i].ID);
         }
         Dialog.confirm(function () {
@@ -57,15 +54,15 @@
         }, "确认关闭");
     }
 
-    var chooseProducePlan = path + "selector/producePlan";
-    var userWindow = null;
-    var producePlanWindow = null;
-    var flag = true;
-    var _row = null;
-    var _index = null;
-    var ddv = null;
-    var ddv1 = null;
-    var cutPlanId = null;
+    const chooseProducePlan = path + "selector/producePlan";
+    let userWindow = null;
+    let producePlanWindow = null;
+    const flag = true;
+    let _row = null;
+    let _index = null;
+    const ddv = null;
+    const ddv1 = null;
+    const cutPlanId = null;
 
     function filter() {
         //$("#dg").datagrid("reload");
@@ -165,12 +162,12 @@
      */
     function loadProducePlans() {
         Loading.show("加载中");
-        var t = $("#searchInput").searchbox("getValue");
-        var kh = $("#searchInput1").searchbox("getValue");
-        var productname = $("#searchInput2").searchbox("getValue");
-        var batchcode = $("#searchInput3").searchbox("getValue");
-        var salesOrderCode = $("#searchInput4").searchbox("getValue");
-        if (t == "" && kh == "" && productname == "" && batchcode == "" && salesOrderCode == "") {
+        const t = $("#searchInput").searchbox("getValue");
+        const kh = $("#searchInput1").searchbox("getValue");
+        const productname = $("#searchInput2").searchbox("getValue");
+        const batchcode = $("#searchInput3").searchbox("getValue");
+        const salesOrderCode = $("#searchInput4").searchbox("getValue");
+        if (t === "" && kh === "" && productname === "" && batchcode === "" && salesOrderCode === "") {
             $.ajax({
                 url: path + "planner/cutPlan/datalist",
                 type: "post",
@@ -228,7 +225,7 @@
                     		return value + " [订单号" + row.SALESORDERCODE + "]";       																																																																																																																																																																																																																																																																											} */
                 });
             //默认选中第一行的生产计划
-            if (rs.length != 0) {
+            if (rs.length !== 0) {
                 $("#dl").datalist("selectRow", 0);
             }
             Loading.hide();
@@ -263,8 +260,8 @@
 
     //拖动行更新数据
     function updateData() {
-        var data = $("#dg").datagrid('getRows');
-        for (var i = 0; i < data.length; i++) {
+        const data = $("#dg").datagrid('getRows');
+        for (let i = 0; i < data.length; i++) {
             $.ajax({
                 url: sortEditUrl,
                 type: 'post',
@@ -281,17 +278,17 @@
         }
     }
 
-    var userIds = [];
+    let userIds = [];
 
     //选择用户
     function ChooseUser() {
         userIds = [];
         userWindow = Dialog.open("选择人员信息", 850, 450, chooseUser, [
             EasyUI.window.button("icon-save", "确认", function () {
-                var r = EasyUI.grid.getSelections("_common_user_dg");
-                var userName = "";
-                var a = "";
-                for (var i = 0; i < r.length; i++) {
+                const r = EasyUI.grid.getSelections("_common_user_dg");
+                let userName = "";
+                let a = "";
+                for (let i = 0; i < r.length; i++) {
                     if (i === 0) {
                         a = "";
                     } else {
@@ -311,11 +308,11 @@
     }
 
     function _common_user_onLoadSuccess(data) {
-        var array = $("#userIds").val().split(",");
-        for (var i = 0; i < array.length; i++) {
-            var rs = $("#_common_user_dg").datagrid('getRows');
-            for (var a = 0; a < rs.length; a++) {
-                if (rs[a].ID == parseInt(array[i])) {
+        const array = $("#userIds").val().split(",");
+        for (let i = 0; i < array.length; i++) {
+            const rs = $("#_common_user_dg").datagrid('getRows');
+            for (let a = 0; a < rs.length; a++) {
+                if (rs[a].ID === parseInt(array[i])) {
                     $("#_common_user_dg").datagrid("selectRow", a);
                 }
             }
@@ -331,11 +328,11 @@
 
     //部件指定人员
     function editPart(row, cutPlanId) {
-        if (row.children != "") {
+        if (row.children !== "") {
             Tip.warn("该部件无法指定人员！");
             return;
         }
-        var wid = Dialog.open("编辑", 380, 155, editUrl + "?partsId=" + row.id
+        const wid = Dialog.open("编辑", 380, 155, editUrl + "?partsId=" + row.id
             + "&cutPlanId=" + cutPlanId + "&userIds=" + row.userId, [
             EasyUI.window.button("icon-save", "保存", function () {
                 EasyUI.form.submit("cutPlanForm", editUrl, function (data) {
@@ -362,28 +359,17 @@
                 450,
                 chooseProducePlan,
                 [
-                    EasyUI.window
-                        .button(
-                            "icon-save",
-                            "确认",
-                            function () {
-                                var r = EasyUI.grid
-                                    .getOnlyOneSelected("_common_producePlan_dg");
-                                $('#producePlan')
-                                    .searchbox(
-                                        'setValue',
-                                        r.PRODUCEPLANCODE);
-                                Dialog
-                                    .close(producePlanWindow);
-                            }),
-                    EasyUI.window
-                        .button(
-                            "icon-cancel",
-                            "<spring:message code="Button.Cancel" />",
-                            function () {
-                                Dialog
-                                    .close(producePlanWindow);
-                            })]);
+                    EasyUI.window.button("icon-save", "确认",
+                        function () {
+                            const r = EasyUI.grid.getOnlyOneSelected("_common_producePlan_dg");
+                            $('#producePlan').searchbox('setValue', r.PRODUCEPLANCODE);
+                            Dialog.close(producePlanWindow);
+                        }),
+                    EasyUI.window.button("icon-cancel", "<spring:message code="Button.Cancel" />",
+                        function () {
+                            Dialog.close(producePlanWindow);
+                        })
+                ]);
     }
 
     //选择订单信息双击事件
@@ -393,22 +379,22 @@
     }
 
     function formatterIsFinish(value, row) {
-        if (value == 1) {
+        if (value === 1) {
             return '已完成';
         }
-        if (value == -1) {
+        if (value === -1) {
             return '未完成';
         }
     }
 
     function finish() {
-        var r = EasyUI.grid.getSelections("dg");
-        if (r.length == 0) {
+        const r = EasyUI.grid.getSelections("dg");
+        if (r.length === 0) {
             Tip.warn("<spring:message code="Tip.SelectAtLeastOne" />");
             return;
         }
-        var ids = [];
-        for (var i = 0; i < r.length; i++) {
+        const ids = [];
+        for (let i = 0; i < r.length; i++) {
             ids.push(r[i].ID);
         }
         Dialog.confirm(function () {
@@ -421,9 +407,10 @@
     }
 
     function addOrder() {
-        var r = EasyUI.grid.getSelections("dg");
-        var row = EasyUI.grid.getOnlyOneSelected("dg");
-        if (r.length == 0) {
+        let wid;
+        const r = EasyUI.grid.getSelections("dg");
+        const row = EasyUI.grid.getOnlyOneSelected("dg");
+        if (r.length === 0) {
             Tip.warn("<spring:message code="Tip.SelectAtLeastOne" />");
             return;
         }
@@ -436,11 +423,10 @@
             return;
         } */
         //需要增加胚布订单的裁剪计划
-        var id = r[0].ID;
-
+        const id = r[0].ID;
         if (r[0].ISCREATWEAVE === 1) {
             //获取添加订单页面，默认客户为裁剪车间，默认订单备注为裁剪任务的批次号和生产任务单号，产品为BOM中的胚布
-            var wid = Dialog.open("胚布订单", 380, 155,
+            wid = Dialog.open("胚布订单", 380, 155,
                 addUrl + "?cutPlanId=" + id, [EasyUI.window.button(
                     "icon-cancel", "关闭", function () {
                         Dialog.close(wid);
@@ -466,7 +452,7 @@
                 });
         } else {
             //获取添加订单页面，默认客户为裁剪车间，默认订单备注为裁剪任务的批次号和生产任务单号，产品为BOM中的胚布
-            var wid = Dialog.open("胚布订单", 380, 155,
+            wid = Dialog.open("胚布订单", 380, 155,
                 addUrl + "?cutPlanId=" + id, [
                     EasyUI.window.button("icon-save", "保存", function () {
                         saveForm(wid);
@@ -497,13 +483,15 @@
         }
     }
 
-    var selectProductWindowId;
+    let selectProductWindowId;
+
+    let isContainsCondition;
 
     function selectProduct() {
-        var productModel = null;
-        var productWidth = null;
-        var prossBom = null;
-        var rows = $("#product_dg").datagrid("getSelections");
+        let productModel = null;
+        let productWidth = null;
+        let prossBom = null;
+        const rows = $("#product_dg").datagrid("getSelections");
         if (rows.length > 1) {
             Tip.warn("最多只能选择一条产品");
             return;
@@ -522,7 +510,7 @@
         if (prossBom != null) {
             isContainsCondition = true;
         }
-        var comsumerId = $("#finalConsumerId").val();
+        const comsumerId = $("#finalConsumerId").val();
         //TODO 修改选择产品页面，不适用通用页面,只显示胚布，需要原客户,页面加入复制按钮，加入筛选栏
         selectProductWindowId = Dialog
             .open(
@@ -536,13 +524,13 @@
                     EasyUI.window
                         .button("icon-ok", "选择",
                             function () {
-                                var rows = $("#_common_product_dg").datagrid("getChecked");
+                                const rows = $("#_common_product_dg").datagrid("getChecked");
                                 if (rows.length === 0) {
                                     Tip.warn("至少选择一个产品");
                                     return;
                                 }
                                 /* $('#product_dg').datagrid('loadData',[]); */
-                                for (var i = 0; i < rows.length; i++) {
+                                for (let i = 0; i < rows.length; i++) {
                                     addToProductDg(rows[i]);
                                 }
                                 Dialog.close(selectProductWindowId);
@@ -587,11 +575,11 @@
                 });
     }
 
-    var isContainsCondition = false;
+    isContainsCondition = false;
 
     function addToProductDg(r) {
-        var code = $("#code").val();
-        var _row = {
+        const code = $("#code").val();
+        const _row = {
             "productId": r.ID,
             "productBatchCode": "",
             "salesOrderSubCode": "cj-" + code,
@@ -626,8 +614,8 @@
     }
 
     function removeProduct() {
-        var rows = $("#product_dg").datagrid("getSelections");
-        for (var i = 0; i < rows.length; i++) {
+        const rows = $("#product_dg").datagrid("getSelections");
+        for (let i = 0; i < rows.length; i++) {
             $("#product_dg").datagrid("deleteRow",
                 $("#product_dg").datagrid("getRowIndex", rows[i]));
         }
@@ -664,14 +652,12 @@
         }
     }
 
-    var editingIndex = -1;
+    let editingIndex = -1;
 
     function clickRow(index, row) {
-        if (editingIndex != -1) {
+        if (editingIndex !== -1) {
             if ($("#product_dg").datagrid("validateRow", editingIndex)) {
-
                 $("#product_dg").datagrid("endEdit", editingIndex);
-
                 editingIndex = index;
                 $("#product_dg").datagrid("beginEdit", index);
             }
@@ -683,9 +669,9 @@
 
     function saveForm(wid) {
         if ($("#salesOrderForm").form("validate")) {
-            if ($("#product_dg").datagrid("getRows").length != 0) {
+            if ($("#product_dg").datagrid("getRows").length !== 0) {
                 if (endEdit()) {
-                    var order = JQ.getFormAsJson("salesOrderForm");
+                    const order = JQ.getFormAsJson("salesOrderForm");
                     order.details = $("#product_dg").datagrid("getData").rows;
                     Loading.show();
                     $.ajax({
@@ -695,21 +681,17 @@
                         contentType: 'application/json',
                         data: JSON.stringify(order),
                         success: function (data) {
-
                             Loading.hide();
                             if (Tip.hasError(data)) {
                                 return;
                             }
-                            if (data == "保存成功") {
+                            if (data === "保存成功") {
                                 Tip.warn(data);
                                 filter();
                                 Dialog.close(wid);
-                                return;
                             } else {
                                 Tip.error(data);
-                                return;
                             }
-
                             //filter();
                         }
                     });
@@ -721,8 +703,8 @@
     }
 
     function endEdit() {
-        var rows = $("#product_dg").datagrid("getRows");
-        for (var i = 0; i < rows.length; i++) {
+        const rows = $("#product_dg").datagrid("getRows");
+        for (let i = 0; i < rows.length; i++) {
             editingIndex = i;
             $("#product_dg").datagrid("beginEdit", i);
             if (!$("#product_dg").datagrid("validateRow", i)) {
@@ -746,8 +728,8 @@
     }
 
     function copyProduct() {
-        var rows = EasyUI.grid.getSelections("_common_product_dg");
-        if (rows.length == 0) {
+        const rows = EasyUI.grid.getSelections("_common_product_dg");
+        if (rows.length === 0) {
             Tip.warn("请选择一条数据进行复制");
             return;
         }
@@ -755,10 +737,10 @@
             Tip.warn("请选择单行数据");
             return;
         }
-        var id = rows[0].ID;
-        var finalConsumerId = $("#finalConsumerId").val();
+        const id = rows[0].ID;
+        const finalConsumerId = $("#finalConsumerId").val();
         //打开产品信息编辑页面
-        var wid = Dialog.open("复制产品", 380, 155, copyProductUrl + "?productId=" + id + "&finalConsumerId=" + finalConsumerId, [
+        const wid = Dialog.open("复制产品", 380, 155, copyProductUrl + "?productId=" + id + "&finalConsumerId=" + finalConsumerId, [
             EasyUI.window.button("icon-save", "保存", function () {
                 //saveForm();
                 EasyUI.form.submit("finishProductForm", saveFabricUrl,
@@ -775,7 +757,7 @@
     }
 
     function formatterIsCreateWeave(value, row, index) {
-        if (value == 1) {
+        if (value === 1) {
             return "已生成";
         } else {
             return "未生成";
@@ -783,9 +765,9 @@
     }
 
     function resetDate() {
-        var d = $("#sss").datebox("getValue");
-        var datas = $("#product_dg").datagrid('getData');
-        for (var a = 0; a < datas.rows.length; a++) {
+        const d = $("#sss").datebox("getValue");
+        const datas = $("#product_dg").datagrid('getData');
+        for (let a = 0; a < datas.rows.length; a++) {
             datas.rows[a].deliveryTime = d;
         }
         $("#product_dg").datagrid('loadData', datas);
@@ -793,23 +775,25 @@
 
     //批量修改订单号
     function resetSales() {
-        var d = $("#ssss").textbox("getValue");
-        var datas = $("#product_dg").datagrid('getData');
-        for (var a = 0; a < datas.rows.length; a++) {
+        const d = $("#ssss").textbox("getValue");
+        const datas = $("#product_dg").datagrid('getData');
+        for (let a = 0; a < datas.rows.length; a++) {
             datas.rows[a].salesOrderSubCode = d;
         }
         $("#product_dg").datagrid('loadData', datas);
     }
 
     function orderDateFormat(value, row, index) {
-        if (value == undefined)
+        if (value === undefined)
             return null;
         return new Calendar(value).format("yyyy-MM-dd");
     }
-    var buttonId = undefined;
+
+    let buttonId = undefined;
+
     //部件计划数量明细ID，订单号,批次号，部件名称，部件ID，客户简称，客户ID，客户大类，套数，发货日期，创建时间，创建人，裁剪计划ID
     function createCutTask(taskId) {
-        var task = tasks[taskId];
+        const task = tasks[taskId];
         buttonId = task.id;
         //log(pcId,order,batch,partName,partId,consumerSimpleName,consumerId,consumerCategory,suitCount,deliveryDate,createTime,createUserName,cpId);
         Loading.show("正在获取单号");
@@ -832,10 +816,10 @@
                 $("#consumerId").val(task.consumerId);
                 $("#cutPlanId").val(task.cpId);
                 $("#pcId").val(task.pcId);
-                if (task.consumerCategory == "1") {
+                if (task.consumerCategory === "1") {
                     $("#taskConsumerCategoryX").textbox("setValue", "国内");
                 }
-                if (task.consumerCategory == "2") {
+                if (task.consumerCategory === "2") {
                     $("#taskConsumerCategoryX").textbox("setValue", "国外");
                 }
             }
