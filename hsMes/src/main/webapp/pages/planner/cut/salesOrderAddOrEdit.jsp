@@ -11,11 +11,11 @@
             + request.getServerName() + ":" + request.getServerPort()
             + path + "/";
 %>
-<style type="text/css">
+<style>
 </style>
 <script type="text/javascript">
     /* JS代码 */
-    var details =${details};
+    const details =${details};
 </script>
 <div class="easyui-layout" style="height:100%;width:100%;">
     <div data-options="region:'north',height:112">
@@ -29,8 +29,7 @@
             <input type="hidden" id="finalConsumerId" name="finalConsumerId" value="${finalConsumerId}"/>
             <input type="hidden" id="fromProducePlancode" name="fromProducePlancode"
                    value="${empty fromProducePlancode?salesOrder.fromProducePlancode:fromProducePlancode}">
-
-            <table width="100%">
+            <table style="width: 100%">
                 <tr>
                     <td class="title">客户名称:</td>
                     <!--客户名称-->
@@ -40,14 +39,12 @@
                         <input type="hidden" id="consumerCode" value="${consumerCode }">
                         <input type="text" id="salesOrderConsumerName" value="${consumerName}" class="easyui-searchbox"
                                required="true"></td>
-
                     <td class="title">内销/外销:</td>
                     <!--内销/外销-->
                     <td><input type="text" id="salesOrderIsExport" name="salesOrderIsExport"
                                value="${salesOrder.salesOrderIsExport}" class="easyui-combobox"
                                data-options="valueField:'v',textField:'t',data:[{'v':'-1','t':'胚布'}],onSelect:changeSerial">
                     </td>
-
                 </tr>
                 <tr>
                     <td class="title">订单编号:</td>
@@ -59,7 +56,6 @@
                     <td><input type="text" id="salesOrderDate" name="salesOrderDate"
                                value="${salesOrder.salesOrderDate}" class="easyui-datebox" required="true"
                                readonly="true"></td>
-
                 </tr>
                 <tr>
                     <td class="title">业务员:</td>
@@ -90,7 +86,6 @@
     </div>
     <div data-options="region:'center'">
         <div id="toolbar_product">
-
             <%--<a href="javascript:void(0)" class="easyui-linkbutton" plain="true" iconcls="icon- add" onclick="selectProduct()">增加</a>--%>
             <a href="javascript:void(0)" class="easyui-linkbutton" plain="true" iconcls="icon-remove"
                onclick="removeProduct()">删除</a>
@@ -127,7 +122,6 @@
             <tr>
                 <%-- <th width="65" field="productWidth" editor="{type:'numberbox',options:{'icons':[]}}">门幅(mm)</th> --%>
                 <th width="65" field="productWidth">门幅(mm)</th>
-
                 <%-- <th width="65" field="productRollLength" editor="{type:'numberbox',options:{'icons':[]}}" >卷长(m)</th> --%>
                 <th width="65" field="productRollLength">卷长(m)</th>
                 <th width="65" field="productRollWeight">卷重(Kg)</th>

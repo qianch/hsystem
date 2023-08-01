@@ -60,7 +60,7 @@
     const flag = true;
     let _row = null;
     let _index = null;
-    const ddv = null;
+    let ddv = null;
     const ddv1 = null;
     const cutPlanId = null;
 

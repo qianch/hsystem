@@ -10,11 +10,7 @@
             + request.getServerName() + ":" + request.getServerPort()
             + path + "/";
 %>
-<style type="text/css">
-    /
-    /
-    CSS
-    代码
+<style>
 </style>
 <script type="text/javascript">
     //var userList=${userList};

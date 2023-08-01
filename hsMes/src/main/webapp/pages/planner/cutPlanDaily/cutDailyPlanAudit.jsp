@@ -1,27 +1,26 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8" %>
 <%@ include file="../../base/meta.jsp" %>
-<style type="text/css">
+<style>
     .title {
-        width: 130
+        width: 130px;
     }
 </style>
 <script type="text/javascript">
-    var tcBomPartTreeUrl = path + "planner/cutPlan/findParts";
+    const tcBomPartTreeUrl = path + "planner/cutPlan/findParts";
 
     function orderDateFormat(value, row, index) {
-        if (value == undefined)
+        if (value === undefined)
             return null;
         return new Calendar(value).format("yyyy-MM-dd");
     }
 
     $(function () {
-        var id = $("#id").val();
+        const id = $("#id").val();
         JQ.ajaxPost(path + "cutDailyPlan/findC", {
             id: id
         }, function (data) {
             $('#dgg').datagrid("loadData", data);
         })
-
         $('#dgg').datagrid({
             view: detailview,
             detailFormatter: function (index, row) {

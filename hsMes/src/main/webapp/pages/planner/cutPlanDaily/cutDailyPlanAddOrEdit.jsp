@@ -8,18 +8,18 @@
     String path = request.getContextPath();
     String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
 %>
-<style type="text/css">
+<style>
 </style>
 <script type="text/javascript">
-    var selectedPlans = ${empty selectedPlans?"[]":selectedPlans};
-    var indexData = {};
+    let selectedPlans = ${empty selectedPlans?"[]":selectedPlans};
+    let indexData = {};
     $(function () {
         $("#dgg").datagrid({
             onDblClickRow: dbClickEditC,
             data: selectedPlans,
             view: detailview,
             onLoadSuccess: function (data) {
-                var rows = data.rows;
+                const rows = data.rows;
                 for (var i = 0; i < rows.length; i++) {
                     $(this).datagrid("expandRow", i);
                 }
@@ -40,14 +40,13 @@
                 } */
             },
             onExpandRow: function (index, row) {
-                var ddv = $(this).datagrid('getRowDetail', index).find('table.ddv');
-                if (indexData[index] == undefined) {
+                const ddv = $(this).datagrid('getRowDetail', index).find('table.ddv');
+                if (indexData[index] === undefined) {
                     Loading.show();
-                    var planId = row.PRODUCEPLANDETAILID;
+                    let planId = row.PRODUCEPLANDETAILID;
                     if (!row.PRODUCEPLANDETAILID) {
                         planId = -1;
                     }
-
                     JQ.ajaxPost(path + "bom/plan/tc/ver/parts/" + row.FROMSALESORDERDETAILID + "/" + planId, {}, function (data) {
                         Loading.hide();
                         indexData[index] = data;
@@ -55,7 +54,6 @@
                     }, function (data) {
                         Loading.hide();
                     });
-
                 } else {
                     initSubGrid(ddv, index, row);
                 }
@@ -129,10 +127,8 @@
     <!--日计划表单-->
     <form id="cutPlanForm" method="post" ajax="true"
           action="<%=basePath %>cutDailyPlan/${empty cutDailyPlan.id ?'add':'edit'}" autocomplete="off">
-
         <input type="hidden" id="id" name="id" value="${cutDailyPlan.id}"/>
-
-        <table width="100%">
+        <table style="width: 100%">
             <tr>
                 <td class="title">时间:</td>
                 <td><input type="text" id="planDate" name="planDate" value="${cutDailyPlan.planDate}"
@@ -148,7 +144,7 @@
     <div id="dgg_add_toolbar">
         <a href="javascript:void(0)" class="easyui-linkbutton" plain="true" iconcls="icon-add"
            onclick="selectCutPlan()">添加</a> <a href="javascript:void(0)" class="easyui-linkbutton" plain="true"
-                                               iconcls="icon-edit" onclick="editCutPlan()">编辑</a> <a
+                                                 iconcls="icon-edit" onclick="editCutPlan()">编辑</a> <a
             href="javascript:void(0)" class="easyui-linkbutton"
             plain="true" iconcls="icon-remove" onclick="removeCutPlan()">删除</a>
     </div>

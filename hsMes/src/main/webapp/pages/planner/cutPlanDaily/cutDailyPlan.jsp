@@ -120,16 +120,18 @@
     <div id="toolbar">
         <form id="cutDailyPlanSearchForm" autoSearchFunction="false">
             日期:<input type="text" class="easyui-datebox" name="filter[produceDate]" style="width:120px;"
-                      data-options="onSelect:filter">
+                        data-options="onSelect:filter">
             批号：<input type="text" class="easyui-textbox" name="filter[batchCode]" like="true" style="width:120px;"
-                      data-options="onSelect:filter">
-            产品名称：<input type="text" class="easyui-textbox" name="filter[productName]" like="true" style="width:120px;"
                         data-options="onSelect:filter">
+            产品名称：<input type="text" class="easyui-textbox" name="filter[productName]" like="true"
+                            style="width:120px;"
+                            data-options="onSelect:filter">
             部件名称：<input type="text" class="easyui-textbox" name="filter[partNames]" like="true" style="width:120px;"
-                        data-options="onSelect:filter">
-            车间:<input type="text" id="workshop" class="easyui-combobox" style="width:130px;" name="filter[workShopCode]"
-                      value="裁剪一车间"
-                      data-options="valueField:'v',textField:'t',url:'<%=basePath %>department/queryDepartmentByType?type=cut'">
+                            data-options="onSelect:filter">
+            车间:<input type="text" id="workshop" class="easyui-combobox" style="width:130px;"
+                        name="filter[workShopCode]"
+                        value="裁剪一车间"
+                        data-options="valueField:'v',textField:'t',url:'<%=basePath %>department/queryDepartmentByType?type=cut'">
             <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-search" readOnly="true"
                onclick="filter()"> 搜索 </a>
         </form>
@@ -169,7 +171,8 @@
         </jsp:include>
     </div>
 
-    <table id="dg" singleSelect="true" title="裁剪排产列表" class="easyui-datagrid" url="<%=basePath %>cutDailyPlan/list"
+    <table id="dg" singleSelect="true" title="裁剪排产列表" class="easyui-datagrid"
+           url="<%=basePath %>cutDailyPlan/list"
            toolbar="#toolbar" pagination="true" rownumbers="true" fitColumns="true" fit="true"
            data-options="onClickRow:dgRowClick,onLoadSuccess:dgLoadSuccess,rowStyler:formatterIsClosed">
         <thead>

@@ -27,7 +27,6 @@
         }
     </style>
 </head>
-
 <body class="easyui-layout" data-options="fit:true,border:false">
 <div region="west" split="true" resizable="false" title="裁剪计划" minWidth="200" width="200">
     <div class="easyui-layout" data-options="fit:true">
