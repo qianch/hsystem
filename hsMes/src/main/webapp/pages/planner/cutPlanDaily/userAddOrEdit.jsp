@@ -23,7 +23,7 @@
         <input type="hidden" name="tcBomPartId" value="${tcVersionParts.id}" />
         <input type="hidden" name="producePlanDetailId" value="${cutPlan.producePlanDetailId}" />
         <input type="hidden" id="userIds" name="userIds" value="${userIds}"/> --%>
-        <table width="100%">
+        <table style="width: 100%">
             <tr>
                 <td class="title">人员姓名:</td>
                 <!--人员姓名-->

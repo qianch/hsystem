@@ -75,27 +75,27 @@
         <div style="border-top:1px solid #DDDDDD">
             <form action="#" id="deliveryPlanSearchForm" 　 autoSearchFunction="false">
                 发货单号:<input type="text" name="filter[deliveryCode]" like="true"
-                            class="easyui-textbox">
+                                class="easyui-textbox">
                 要货单位:<input type="text" name="filter[deliveryTargetCompany]"
-                            like="true" class="easyui-textbox">
+                                like="true" class="easyui-textbox">
                 　　　订单号:<input type="text"
-                              name="filter[salesOrderSubCode]" like="true"
-                              class="easyui-textbox">
+                                 name="filter[salesOrderSubCode]" like="true"
+                                 class="easyui-textbox">
                 　　　批次号:<input type="text"
-                              name="filter[batchCode]" like="true" class="easyui-textbox"></br>
+                                 name="filter[batchCode]" like="true" class="easyui-textbox"></br>
                 　提单号:<input type="text" name="filter[ladingCode]" like="true"
-                            class="easyui-textbox">
+                               class="easyui-textbox">
                 　　箱号:<input type="text"
-                            name="filter[boxNumber]" like="true" class="easyui-textbox">
+                              name="filter[boxNumber]" like="true" class="easyui-textbox">
                 客户产品名称:<input type="text" name="filter[consumerProductName]"
-                              like="true" class="easyui-textbox">
+                                    like="true" class="easyui-textbox">
                 厂内产品名称:<input
                     type="text" name="filter[consumerProductName]" like="true"
                     class="easyui-textbox"></br>
                 发货日期:<input type="text" id="start"
-                            name="filter[start]" class="easyui-datebox">
+                                name="filter[start]" class="easyui-datebox">
                 　　至:　<input type="text" id="end" name="filter[end]"
-                            class="easyui-datebox">
+                             class="easyui-datebox">
                 　　客户基地:<input
                     type="text" name="filter[basePlace]" like="true"
                     class="easyui-textbox">
@@ -126,12 +126,12 @@
             <th field="PACKAGINGTYPE" sortable="true" width="15">包装方式</th>
             <th field="BARCODE" sortable="true" width="15">条码</th>
             <th field="ISCOMPLETES" sortable="true" width="15">是否完成</th>
-            <th field="AUDITSTATE" sortable="true" width="15" formatter="formatterState" styler="auditStyler2">审核状态</th>
+            <th field="AUDITSTATE" sortable="true" width="15" formatter="formatterState" styler="auditStyler2">
+                审核状态
+            </th>
             <th field="caozuo" width="15" formatter="formatterDetail">操作</th>
         </tr>
         </thead>
     </table>
 </div>
-
-
 </body>
