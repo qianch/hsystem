@@ -4,19 +4,17 @@
 页面:出货计划增加或修改页面
 -->
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8" %>
-
 <%@ include file="../../base/meta.jsp" %>
-
-<style type="text/css">
+<style>
 </style>
 <script type="text/javascript">
     //JS代码
-    var orderDatas = ${orderDatas};
-    var productDatas = ${productDatas};
+    const orderDatas = ${orderDatas};
+    const productDatas = ${productDatas};
 
     function appendOrderUrl(row) {
         if (row) {
-            var _row = {
+            const _row = {
                 "salesOrderCode": row.SALESORDERCODE,
                 "ladingCode": row.LADINGCODE,
                 "boxNumber": row.BOXNUMBER,
@@ -32,12 +30,11 @@
 
     function appendProductUrl(row) {
         if (row) {
-            var _row = {
+            const _row = {
                 "productId": row.PRODUCTID,
                 "deliveryCount": row.DELIVERYCOUNT,
                 "memo": row.MEMO
             };
-
             $("#dg_product").datagrid("appendRow", _row);
         }
     }
@@ -65,9 +62,7 @@
             <!--出货人-->
             <td><input type="text" id="packagingType" name="packagingType" value="${deliveryPlan.packagingType}"
                        class="easyui-textbox" readonly="readonly"></td>
-
         </tr>
-
         <tr>
             <td class="title">要货公司:</td>
             <!--物流公司-->
@@ -109,7 +104,8 @@
     </table>
     <div style="height:300px;">
         <div style="height:50%;">
-            <table id="dg_order" singleSelect="false" title="出货订单关联列表" class="easyui-datagrid" url="" rownumbers="true"
+            <table id="dg_order" singleSelect="false" title="出货订单关联列表" class="easyui-datagrid" url=""
+                   rownumbers="true"
                    fitColumns="true" fit="true">
                 <thead>
                 <tr>
@@ -158,5 +154,4 @@
             </table>
         </div>
     </div>
-
 </div>

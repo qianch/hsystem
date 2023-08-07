@@ -7,17 +7,14 @@
 
 <%
     String path = request.getContextPath();
-    String basePath = request.getScheme() + "://"
-            + request.getServerName() + ":" + request.getServerPort()
-            + path + "/";
+    String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
 %>
-<style type="text/css">
+<style>
 </style>
 <script type="text/javascript">
-    //JS代码
-    var orderDatas = ${orderDatas};
-    var productDatas = ${productDatas};
-    var pnNumber = 1;
+    const orderDatas = ${orderDatas};
+    const productDatas = ${productDatas};
+    let pnNumber = 1;
 </script>
 <div>
     <!--出货计划表单-->
@@ -35,15 +32,14 @@
                         <option value="WX">外销</option>
                 </select>-->
                 <td class="title"></td>
-                <input type="hidden" id="deliveryCode" name="deliveryCode"
-                       value="${deliveryPlan.deliveryCode}" class="easyui-textbox">
+                <input type="hidden" id="deliveryCode" name="deliveryCode" value="${deliveryPlan.deliveryCode}"
+                       class="easyui-textbox">
                 </td>
                 <td class="title">出货时间:</td>
                 <!--出货时间-->
                 <td><input type="text" id="deliveryDate" name="deliveryDate"
-                           style="width: 95%;//宽度 height=20px;//高度"
-                           value="${deliveryPlan.deliveryDate}" class="easyui-datebox"
-                           required="true"></td>
+                           style="width: 95%;//宽度 height=20px;//高度" value="${deliveryPlan.deliveryDate}"
+                           class="easyui-datebox" required="true"></td>
                 <td class="title">包装方式:</td>
                 <!--出货人-->
                 <td><input type="text" id="packagingType" name="packagingType"
