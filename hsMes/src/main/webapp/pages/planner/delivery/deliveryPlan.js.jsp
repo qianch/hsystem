@@ -765,9 +765,6 @@
         Dialog.close(selectUserWindowId);
     }
 
-    //查看审核
-    var dialogId;
-
     function view() {
         const r = EasyUI.grid.getOnlyOneSelected("dg");
         if (r == null)

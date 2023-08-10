@@ -10,10 +10,7 @@
     <script type="text/javascript" src="<%=basePath%>/resources/fullcalendar/locale/zh-cn.js"></script>
     <%@ include file="../produce/producePlanDetailPrint/producePlanDetailPrint.js.jsp" %>
     <%@ include file="deviceScheduling.js.jsp" %>
-
-
     <style type="text/css">
-
         .producing {
             background: rgb(3, 183, 35);
             color: white;
@@ -39,7 +36,6 @@
         }
     </style>
 </head>
-
 <body class="easyui-layout">
 <div data-options="region:'west',width:350,minWidth:200,maxWidth:600,split:true,border:true,collapsible:true"
      title="机台排产">
@@ -54,13 +50,14 @@
         </div>
         <form id="dgForm" autoSearchFunction="false">
             车　　间：<input type="text" id="did" name="filter[did]" class="easyui-combobox" style="width:120px;"
-                        url="${path}device/scheduling/department"
-                        data-options="valueField:'ID',textField:'NAME',onChange:filter"><br>
+                          url="${path}device/scheduling/department"
+                          data-options="valueField:'ID',textField:'NAME',onChange:filter"><br>
             机 台 号:　<input type="text" id="dcodes" name="filter[dcodes]" in="true" class="easyui-textbox"
-                          prompt="A1,A2逗号分割" style="width:122px;"><br>
+                             prompt="A1,A2逗号分割" style="width:122px;"><br>
             订单交期：<input type="text" style="width:120px;" class="easyui-datebox" id="start" name="filter[start]"
-                        data-options="icons:[]">~<input type="text" style="width:120px;" class="easyui-datebox" id="end"
-                                                        name="filter[end]" data-options="icons:[]"><br>
+                            data-options="icons:[]">~<input type="text" style="width:120px;" class="easyui-datebox"
+                                                            id="end"
+                                                            name="filter[end]" data-options="icons:[]"><br>
             <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" onclick="filter()">搜索</a>
         </form>
     </div>
@@ -127,7 +124,6 @@
         <a href="javascript:void(0)" class="easyui-linkbutton l-btn l-btn-small" iconcls="icon-search"
            onclick="checkbjinfo()"> 查看 </a>
     </div>
-
     <table id="weaveDg" singleSelect="false"
            title="生产任务<font class='producing'>正在生产</font><font class='prior'>优先生产</font>"
            class="easyui-datagrid" toolbar="#weaveDgToolbar" rownumbers="true" fitColumns="false" pagination="false"
@@ -183,7 +179,6 @@
         </thead>
     </table>
 </div>
-
 <div id="packTaskInfoWin" class="easyui-window" title="包装BOM信息" data-options="modal:true,closed:true"
      style="width:500px;height:200px;">
     <div class="easyui-layout" style="width:100%;height:100%;" fit="true">
@@ -305,8 +300,7 @@
 		                groupFormatter:function(value,rows){
 		                    return '代码[<font color=red>'+value+'</font>] 版本[<font color=red>'+rows[0].VERSION + '</font>] - ' + rows.length + ' 种包材 <a onclick=showMore('+rows[0].VID+',\''+rows[0].CODE+'\')><font color=red>查看包装信息</font></a>';
 		                }
-		            "
-            >
+		            ">
                 <thead>
                 <tr>
                     <th field="PACKMATERIALCODE" width="15%">物料代码</th>

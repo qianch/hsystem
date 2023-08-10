@@ -6,31 +6,20 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8" %>
 <script>
     //添加卷条码
-    var addUrl = path + "rollBarcode/add";
+    const addUrl = path + "rollBarcode/add";
     //编辑卷条码
-    var editUrl = path + "rollBarcode/edit";
+    const editUrl = path + "rollBarcode/edit";
     //删除卷条码
-    var deleteUrl = path + "rollBarcode/delete";
-
-    var clearBarCodeUrl = path + "rollBarcode/clearRoll";
-
-    var showReplayBarcodePrinterPage = path + "individualprinter/showReplayBarcodePrinterPage";
-
-    var doPrinter = path + "individualprinter/doReplayPrintBarcode";
-
-    var printUrl = path + "printer/rePrint";
-
-    var reIndividualPrint = path + "individualprinter/reIndividualPrint";
-
-    var FindPrintsUrl = path + "rollBarcode/FindPrints";
-
-
-    var editBacodeUrl = path + "rollBarcode/editBacode";
-
-    var editProducePlanDetailPrintsUrl = path + "planner/producePlanDetail/editProducePlanDetailPrints";
-
-    var dialogWidth = 700, dialogHeight = 350;
-
+    const deleteUrl = path + "rollBarcode/delete";
+    const clearBarCodeUrl = path + "rollBarcode/clearRoll";
+    const showReplayBarcodePrinterPage = path + "individualprinter/showReplayBarcodePrinterPage";
+    const doPrinter = path + "individualprinter/doReplayPrintBarcode";
+    const printUrl = path + "printer/rePrint";
+    const reIndividualPrint = path + "individualprinter/reIndividualPrint";
+    const FindPrintsUrl = path + "rollBarcode/FindPrints";
+    const editBacodeUrl = path + "rollBarcode/editBacode";
+    //const editProducePlanDetailPrintsUrl = path + "planner/producePlanDetail/editProducePlanDetailPrints";
+    // const dialogWidth = 700, dialogHeight = 350;
 
     $(function () {
         $('#dg').datagrid({
@@ -41,7 +30,7 @@
                 return '<div style="padding:2px"><table class="ddv"></table></div>';
             },
             onExpandRow: function (index, row) {
-                var ddv = $(this).datagrid('getRowDetail', index).find('table.ddv');
+                const ddv = $(this).datagrid('getRowDetail', index).find('table.ddv');
                 ddv.datagrid({
                         url: FindPrintsUrl + "?id=" + row.ID,
                         fitColumns: true,
@@ -82,10 +71,8 @@
                     return 'background-color:pink;color:blue;font-weight:bold;';
                 }
             }
-
         });
     });
-
 
     //查询
     function filter() {
@@ -102,19 +89,17 @@
     }
 
     function print() {
-
-        if ($('#pName').combobox("getValue") == '') {
+        if ($('#pName').combobox("getValue") === '') {
             Tip.warn("请选择打印机");
             return;
         }
-
-        var r = EasyUI.grid.getSelections("dg");
-        if (r.length == 0) {
+        const r = EasyUI.grid.getSelections("dg");
+        if (r.length === 0) {
             Tip.warn("<spring:message code="Tip.SelectAtLeastOne" />");
             return;
         }
-        var ids = [];
-        for (var i = 0; i < r.length; i++) {
+        const ids = [];
+        for (let i = 0; i < r.length; i++) {
             ids.push(r[i].ID);
         }
         Dialog.confirm(function () {
@@ -129,9 +114,8 @@
         });
     }
 
-
     //添加卷条码
-    var add = function () {
+    const add = function () {
         var wid = Dialog.open("添加", dialogWidth, dialogHeight, addUrl, [
                 EasyUI.window.button("icon-save", "保存", function () {
                     EasyUI.form.submit("rollBarcodeForm", addUrl, function (data) {
@@ -149,12 +133,12 @@
                 Dialog.more(wid);
             }
         );
-    }
+    };
 
     //编辑卷条码
-    var edit = function () {
-        var r = EasyUI.grid.getOnlyOneSelected("dg");
-        var wid = Dialog.open("编辑", dialogWidth, dialogHeight, editUrl + "?id=" + r.ID, [
+    const edit = function () {
+        const r = EasyUI.grid.getOnlyOneSelected("dg");
+        const wid = Dialog.open("编辑", dialogWidth, dialogHeight, editUrl + "?id=" + r.ID, [
             EasyUI.window.button("icon-save", "保存", function () {
                 EasyUI.form.submit("rollBarcodeForm", editUrl, function (data) {
                     filter();
@@ -163,14 +147,13 @@
             }), EasyUI.window.button("icon-cancel", "关闭", function () {
                 Dialog.close(wid)
             })]);
-    }
-
+    };
 
     /**
      * 双击行，弹出编辑
      */
-    var dbClickEdit = function (index, row) {
-        var wid = Dialog.open("编辑", dialogWidth, dialogHeight, editUrl + "?id=" + row.ID, [
+    const dbClickEdit = function (index, row) {
+        const wid = Dialog.open("编辑", dialogWidth, dialogHeight, editUrl + "?id=" + row.ID, [
             EasyUI.window.button("icon-save", "保存", function () {
                 EasyUI.form.submit("rollBarcodeForm", editUrl, function (data) {
                     filter();
@@ -179,18 +162,17 @@
             }), EasyUI.window.button("icon-cancel", "关闭", function () {
                 Dialog.close(wid)
             })]);
-    }
+    };
 
     //删除卷条码
-    var doDelete = function () {
-        var r = EasyUI.grid.getSelections("dg");
-        if (r.length == 0) {
+    const doDelete = function () {
+        const r = EasyUI.grid.getSelections("dg");
+        if (r.length === 0) {
             Tip.warn("<spring:message code="Tip.SelectAtLeastOne" />");
             return;
         }
-
-        var ids = [];
-        for (var i = 0; i < r.length; i++) {
+        const ids = [];
+        for (let i = 0; i < r.length; i++) {
             ids.push(r[i].ID);
         }
         Dialog.confirm(function () {
@@ -200,21 +182,19 @@
                 filter();
             });
         });
-    }
+    };
 
-    var selectConsumerWindowId;
+    let selectConsumerWindowId;
 
     function selectConsumer() {
         selectConsumerWindowId = Dialog.open("选择客户", 900, 500, path + "selector/consumer?singleSelect=false", [EasyUI.window.button("icon-ok", "选择", function () {
-            var row = $("#_common_consumer_dg").datagrid("getChecked");
-            if (row.length == 0) {
+            const row = $("#_common_consumer_dg").datagrid("getChecked");
+            if (row.length === 0) {
                 Tip.warn("至少选择一个客户");
                 return;
             }
-
             $("#consumerName").searchbox("setValue", row[0].CONSUMERNAME);
             $("#consumerId").val(row[0].ID);
-
             $.ajax({
                 type: "post",
                 url: path + "btwFile/queryBtwFilebyCustomerId?customerId=" + row[0].ID + "&type=roll",//请求后台数据
@@ -245,14 +225,13 @@
     }
 
     function clearRoll() {
-        var r = EasyUI.grid.getSelections("dg");
-        if (r.length == 0) {
+        const r = EasyUI.grid.getSelections("dg");
+        if (r.length === 0) {
             Tip.warn("<spring:message code="Tip.SelectAtLeastOne" />");
             return;
         }
-
-        var ids = [];
-        for (var i = 0; i < r.length; i++) {
+        const ids = [];
+        for (let i = 0; i < r.length; i++) {
             ids.push(r[i].ID);
         }
         Dialog.confirm(function () {
@@ -264,18 +243,17 @@
         });
     }
 
-
     function doPrintRoll() {
-        if ($('#pName').combobox("getValue") == '') {
+        if ($('#pName').combobox("getValue") === '') {
             Tip.warn("请选择打印机");
             return;
         }
-        if ($('#btwfileSelect').combobox("getText") == '') {
+        if ($('#btwfileSelect').combobox("getText") === '') {
             Tip.warn("请选择标签模版");
             return;
         }
-        var r = EasyUI.grid.getSelections("dg");
-        if (r.length == 0) {
+        const r = EasyUI.grid.getSelections("dg");
+        if (r.length === 0) {
             Tip.warn("<spring:message code="Tip.SelectAtLeastOne" />");
             return;
         }
@@ -300,11 +278,11 @@
     }
 
     function editBacode() {
-        if ($('#btwfileSelect').combobox("getText") == '') {
+        if ($('#btwfileSelect').combobox("getText") === '') {
             Tip.warn("请选择标签模版");
             return;
         }
-        var r = EasyUI.grid.getOnlyOneSelected("dg");
+        const r = EasyUI.grid.getOnlyOneSelected("dg");
         Dialog.confirm(function () {
             createbacode(r.ID);
         });
@@ -322,26 +300,23 @@
         });
     }
 
-    var editPlanDetailPrints = function () {
-        isPost=false;
+    const editPlanDetailPrints = function () {
+        isPost = false;
         if ($('#btwfileSelect').combobox("getText") == '') {
             Tip.warn("请选择标签模版");
             return;
         }
-
-        var r = EasyUI.grid.getSelections("dg");
-        if (r.length != 1) {
+        const r = EasyUI.grid.getSelections("dg");
+        if (r.length !== 1) {
             Tip.warn("<spring:message code="Tip.SelectAtLeastOne" />");
             return;
         }
-
         dialogId = Dialog.open("编辑", dialogWidth, dialogHeight, editProducePlanDetailPrintsUrl + "?ProducePlanDetailId=" + r[0].PRODUCEPLANDETAILID + "&btwFileId=" + $('#btwfileSelect').combobox("getValue") + "&tagType=roll", [EasyUI.window.button("icon-save", "保存", function () {
             saveForm();
         }), EasyUI.window.button("icon-cancel", "关闭", function () {
             Dialog.close(dialogId)
         })], function () {
-
             $("#" + dialogId).dialog("maximize");
         });
-    }
+    };
 </script>

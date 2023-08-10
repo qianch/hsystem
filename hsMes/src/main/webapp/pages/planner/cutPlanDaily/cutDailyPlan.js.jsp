@@ -33,7 +33,7 @@
     //excelURl
     const exportUrl = path + "cutDailyPlan/export";
     const reloadAuditUrl = path + "planner/produce/reloadAudit";
-    const dialogWidth = 700, dialogHeight = 600;
+    // const dialogWidth = 700, dialogHeight = 600;
     const weaveId = [];
     let cutPlanId;
     const flag = false;
@@ -42,7 +42,7 @@
     const userIds = [];
     let editingIndex;
     const _userWindow = null;
-    const editProducePlanDetailPrintsUrl = path + "planner/producePlanDetail/editProducePlanDetailPrints";
+    // const editProducePlanDetailPrintsUrl = path + "planner/producePlanDetail/editProducePlanDetailPrints";
 
     function formatterIsClosed(index, row) {
         let style = "";

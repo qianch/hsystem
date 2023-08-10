@@ -6,27 +6,19 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8" %>
 <script>
     //添加托条码
-    var addUrl = path + "barcode/add";
+    const addUrl = path + "barcode/add";
     //编辑托条码
-    var editUrl = path + "barcode/edit";
+    const editUrl = path + "barcode/edit";
     //删除托条码
-    var deleteUrl = path + "barcode/delete";
-
-    var showReplayBarcodePrinterPage = path + "individualprinter/showReplayBarcodePrinterPage";
-
-    var doPrinter = path + "individualprinter/doReplayPrintBarcode";
-
-    var clearBarCodeUrl = path + "barcode/clearTray";
-
-    var reIndividualPrint = path + "individualprinter/reIndividualPrint";
-
-    var dialogWidth = 700, dialogHeight = 350;
-
-    var FindPrintsUrl = path + "barcode/FindPrints";
-
-    var editBacodeUrl = path + "barcode/editBacode";
-	
-	var editProducePlanDetailPrintsUrl = path + "planner/producePlanDetail/editProducePlanDetailPrints";
+    const deleteUrl = path + "barcode/delete";
+    const showReplayBarcodePrinterPage = path + "individualprinter/showReplayBarcodePrinterPage";
+    const doPrinter = path + "individualprinter/doReplayPrintBarcode";
+    const clearBarCodeUrl = path + "barcode/clearTray";
+    const reIndividualPrint = path + "individualprinter/reIndividualPrint";
+    // const dialogWidth = 700, dialogHeight = 350;
+    const FindPrintsUrl = path + "barcode/FindPrints";
+    const editBacodeUrl = path + "barcode/editBacode";
+    // const editProducePlanDetailPrintsUrl = path + "planner/producePlanDetail/editProducePlanDetailPrints";
 
     //查询
     function filter() {
@@ -80,36 +72,34 @@
                             }, 0);
                         }
                         , rowStyler: function (index, row) {
-                            if (row.length == 0) {
+                            if (row.length === 0) {
                                 return 'background-color:yellow;color:blue;font-weight:bold;';
                             }
                         }
                     }
                 );
-            }
-            , rowStyler: function (index, row) {
+            }, rowStyler: function (index, row) {
                 if (row.ONTHEWAYCOUNT > 0) {
                     return 'background-color:pink;color:blue;font-weight:bold;';
                 }
             }
-
         });
     });
 
-    var printUrl = path + "printer/rePrint";
+    const printUrl = path + "printer/rePrint";
 
     function print() {
-        if ($('#pName').combobox("getValue") == '') {
+        if ($('#pName').combobox("getValue") === '') {
             Tip.warn("请选择打印机");
             return;
         }
-        var r = EasyUI.grid.getSelections("dg");
-        if (r.length == 0) {
+        const r = EasyUI.grid.getSelections("dg");
+        if (r.length === 0) {
             Tip.warn("<spring:message code="Tip.SelectAtLeastOne" />");
             return;
         }
-        var ids = [];
-        for (var i = 0; i < r.length; i++) {
+        const ids = [];
+        for (let i = 0; i < r.length; i++) {
             ids.push(r[i].ID);
         }
         Dialog.confirm(function () {
@@ -124,10 +114,9 @@
         });
     }
 
-
     //添加托条码
-    var add = function () {
-        var wid = Dialog.open("添加", dialogWidth, dialogHeight, addUrl, [
+    const add = function () {
+        const wid = Dialog.open("添加", dialogWidth, dialogHeight, addUrl, [
                 EasyUI.window.button("icon-save", "保存", function () {
                     EasyUI.form.submit("trayBarCodeForm", addUrl, function (data) {
                         filter();
@@ -144,12 +133,12 @@
                 Dialog.more(wid);
             }
         );
-    }
+    };
 
     //编辑托条码
-    var edit = function () {
-        var r = EasyUI.grid.getOnlyOneSelected("dg");
-        var wid = Dialog.open("编辑", dialogWidth, dialogHeight, editUrl + "?id=" + r.ID, [
+    const edit = function () {
+        const r = EasyUI.grid.getOnlyOneSelected("dg");
+        const wid = Dialog.open("编辑", dialogWidth, dialogHeight, editUrl + "?id=" + r.ID, [
             EasyUI.window.button("icon-save", "保存", function () {
                 EasyUI.form.submit("trayBarCodeForm", editUrl, function (data) {
                     filter();
@@ -158,13 +147,12 @@
             }), EasyUI.window.button("icon-cancel", "关闭", function () {
                 Dialog.close(wid)
             })]);
-    }
-
+    };
 
     /**
      * 双击行，弹出编辑
      */
-    var dbClickEdit = function (index, row) {
+    const dbClickEdit = function (index, row) {
         var wid = Dialog.open("编辑", dialogWidth, dialogHeight, editUrl + "?id=" + row.ID, [
             EasyUI.window.button("icon-save", "保存", function () {
                 EasyUI.form.submit("trayBarCodeForm", editUrl, function (data) {
@@ -174,19 +162,19 @@
             }), EasyUI.window.button("icon-cancel", "关闭", function () {
                 Dialog.close(wid)
             })]);
-    }
+    };
 
 
     //删除托条码
-    var doDelete = function () {
+    const doDelete = function () {
         var r = EasyUI.grid.getSelections("dg");
-        if (r.length == 0) {
+        if (r.length === 0) {
             Tip.warn("<spring:message code="Tip.SelectAtLeastOne" />");
             return;
         }
 
-        var ids = [];
-        for (var i = 0; i < r.length; i++) {
+        const ids = [];
+        for (let i = 0; i < r.length; i++) {
             ids.push(r[i].ID);
         }
         Dialog.confirm(function () {
@@ -196,27 +184,24 @@
                 filter();
             });
         });
-    }
+    };
 
-    var selectConsumerWindowId;
+    let selectConsumerWindowId;
 
     function selectConsumer() {
         selectConsumerWindowId = Dialog.open("选择客户", 900, 500, path + "selector/consumer?singleSelect=false", [EasyUI.window.button("icon-ok", "选择", function () {
-            var row = $("#_common_consumer_dg").datagrid("getChecked");
-            if (row.length == 0) {
+            const row = $("#_common_consumer_dg").datagrid("getChecked");
+            if (row.length === 0) {
                 Tip.warn("至少选择一个客户");
                 return;
             }
-
             $("#consumerName").searchbox("setValue", row[0].CONSUMERNAME);
             $("#consumerId").val(row[0].ID);
-
             $.ajax({
                 type: "post",
                 url: path + "btwFile/queryBtwFilebyCustomerId?customerId=" + row[0].ID + "&type=tray",//请求后台数据
                 dataType: "json",
                 success: function (json) {
-
                     $("#btwfileSelect").combobox({//往下拉框塞值
                         data: json,
                         valueField: "v",//value值
@@ -241,31 +226,26 @@
         });
     }
 
-
     function doPrintTray() {
-
-        if ($('#pName').combobox("getValue") == '') {
+        if ($('#pName').combobox("getValue") === '') {
             Tip.warn("请选择打印机");
             return;
         }
-
-        if ($('#btwfileSelect').combobox("getText") == '') {
+        if ($('#btwfileSelect').combobox("getText") === '') {
             Tip.warn("请选择标签模版");
             return;
         }
-
-        var r = EasyUI.grid.getSelections("dg");
-        if (r.length == 0) {
+        const r = EasyUI.grid.getSelections("dg");
+        if (r.length === 0) {
             Tip.warn("<spring:message code="Tip.SelectAtLeastOne" />");
             return;
         }
         Dialog.confirm(function () {
-            for (var i = 0; i < r.length; i++) {
+            for (let i = 0; i < r.length; i++) {
                 PrintBarCode(r[i].ID);
             }
             filter();
         }, "确认打印标签模版:" + $('#btwfileSelect').combobox("getText"));
-
     }
 
     function PrintBarCode(id) {
@@ -281,14 +261,13 @@
     }
 
     function clearTray() {
-        var r = EasyUI.grid.getSelections("dg");
-        if (r.length == 0) {
+        const r = EasyUI.grid.getSelections("dg");
+        if (r.length === 0) {
             Tip.warn("<spring:message code="Tip.SelectAtLeastOne" />");
             return;
         }
-
-        var ids = [];
-        for (var i = 0; i < r.length; i++) {
+        const ids = [];
+        for (let i = 0; i < r.length; i++) {
             ids.push(r[i].ID);
         }
         Dialog.confirm(function () {
@@ -301,12 +280,11 @@
     }
 
     function editBacode() {
-
-        if ($('#btwfileSelect').combobox("getText") == '') {
+        if ($('#btwfileSelect').combobox("getText") === '') {
             Tip.warn("请选择标签模版");
             return;
         }
-        var r = EasyUI.grid.getOnlyOneSelected("dg");
+        const r = EasyUI.grid.getOnlyOneSelected("dg");
         Dialog.confirm(function () {
             createbacode(r.ID);
         });
@@ -324,26 +302,23 @@
         });
     }
 
-    var editPlanDetailPrints = function () {
-        isPost=false;
-        if ($('#btwfileSelect').combobox("getText") == '') {
+    const editPlanDetailPrints = function () {
+        isPost = false;
+        if ($('#btwfileSelect').combobox("getText") === '') {
             Tip.warn("请选择标签模版");
             return;
         }
-
-        var r = EasyUI.grid.getSelections("dg");
-        if (r.length != 1) {
+        const r = EasyUI.grid.getSelections("dg");
+        if (r.length !== 1) {
             Tip.warn("<spring:message code="Tip.SelectAtLeastOne" />");
             return;
         }
-
         dialogId = Dialog.open("编辑", dialogWidth, dialogHeight, editProducePlanDetailPrintsUrl + "?ProducePlanDetailId=" + r[0].PRODUCEPLANDETAILID + "&btwFileId=" + $('#btwfileSelect').combobox("getValue") + "&tagType=tray", [EasyUI.window.button("icon-save", "保存", function () {
             saveForm();
         }), EasyUI.window.button("icon-cancel", "关闭", function () {
             Dialog.close(dialogId)
         })], function () {
-
             $("#" + dialogId).dialog("maximize");
         });
-    }
+    };
 </script>
