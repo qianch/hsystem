@@ -8,7 +8,7 @@
     String path = request.getContextPath();
     String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
 %>
-<style type="text/css">
+<style>
     font {
         font-family: 微软雅黑;
         color: #c31111;
@@ -48,7 +48,7 @@
     }
 
     function detailRowStyler(index, row) {
-        var style = "";
+        let style = "";
         if (isEmpty(row.CLOSED) || row.CLOSED === 0) {
         } else {
             style += "text-decoration:line-through;";
@@ -101,8 +101,7 @@
 					return onBerforeLoad();
 					}
 				},
-				onDblClickRow:onOrderProductSelectDblClickRow
-			">
+				onDblClickRow:onOrderProductSelectDblClickRow">
     <thead frozen="true">
     <tr>
         <!-- 这是生产计划明细ID -->

@@ -20,7 +20,7 @@
             view: detailview,
             onLoadSuccess: function (data) {
                 const rows = data.rows;
-                for (var i = 0; i < rows.length; i++) {
+                for (let i = 0; i < rows.length; i++) {
                     $(this).datagrid("expandRow", i);
                 }
             },

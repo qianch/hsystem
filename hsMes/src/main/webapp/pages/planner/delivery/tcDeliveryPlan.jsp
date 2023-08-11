@@ -12,8 +12,7 @@
     <%@ include file="deliveryPlan.js.jsp" %>
 </head>
 <body class="easyui-layout" data-options="fit:true,border:false">
-<div data-options="region:'center',border:false"
-     style="position: relative; height: 140px; width: 925px">
+<div data-options="region:'center',border:false" style="position: relative; height: 140px; width: 925px">
     <div id="toolbar">
         <jsp:include page="../../base/toolbar.jsp">
             <jsp:param value="addTc" name="ids"/>
@@ -74,6 +73,4 @@
         </thead>
     </table>
 </div>
-
-
 </body>

@@ -41,7 +41,7 @@
         },500);
     }); */
 
-    var new_window = null;
+    let new_window = null;
 
     function export1() {
         const start = $("#start").datebox("getValue");

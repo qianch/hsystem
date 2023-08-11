@@ -6,9 +6,7 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8" %>
 <%
     String path = request.getContextPath();
-    String basePath = request.getScheme() + "://"
-            + request.getServerName() + ":" + request.getServerPort()
-            + path + "/";
+    String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
 %>
 <style>
     textarea {
@@ -22,6 +20,7 @@
     function formatterA(value, row) {
         return '<div><a href="#"  onclick="detailed(' + row.ID + ')" >删除</a></div>'
     }
+
     //结束datagrid行编辑
     function endEditing() {
         if (editIndex === undefined) {

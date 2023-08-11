@@ -42,6 +42,7 @@
     const userIds = [];
     let editingIndex;
     const _userWindow = null;
+
     // const editProducePlanDetailPrintsUrl = path + "planner/producePlanDetail/editProducePlanDetailPrints";
 
     function formatterIsClosed(index, row) {

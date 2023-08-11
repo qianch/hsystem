@@ -6,9 +6,7 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8" %>
 <%
     String path = request.getContextPath();
-    String basePath = request.getScheme() + "://"
-            + request.getServerName() + ":" + request.getServerPort()
-            + path + "/";
+    String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
 %>
 <style>
     textarea {
@@ -18,9 +16,6 @@
         padding: 2px;
     }
 </style>
-<script type="text/javascript">
-
-</script>
 <div style="height:100%;">
     <!--裁剪计划指定人员表单-->
     <!-- onDblClickRow:userRowClick -->

@@ -58,6 +58,5 @@
     </table>
 </div>
 <div id="salesOrderMemo" data-options="region:'east',border:true" title="销售订单备注"
-     style="width:200px;padding:5px;">
-</div>
+     style="width:200px;padding:5px;"></div>
 </body>

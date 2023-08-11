@@ -98,7 +98,6 @@
             <div class="easyui-layout" data-options="region:'layout',border:false,fit:true">
                 <div id="commentPanel" title="备注" data-options="region:'south',border:true"
                      style="height:100px;padding:10px;">
-
                 </div>
                 <div id="userCountPanel" title="人员分配信息" data-options="region:'center',border:true"
                      style="padding:10px;">

@@ -6,9 +6,7 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8" %>
 <%
     String path = request.getContextPath();
-    String basePath = request.getScheme() + "://"
-            + request.getServerName() + ":" + request.getServerPort()
-            + path + "/";
+    String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
 %>
 <style>
 </style>
@@ -27,7 +25,8 @@
             <tr>
                 <td class="title">人员姓名:</td>
                 <!--人员姓名-->
-                <td><input type="text" id="userName" class="easyui-searchbox"
+                <td>
+                    <input type="text" id="userName" class="easyui-searchbox"
                            data-options="'icons':[],searcher:ChooseUser,width:'90%'" value="${userName}"></td>
             </tr>
             <tr>
