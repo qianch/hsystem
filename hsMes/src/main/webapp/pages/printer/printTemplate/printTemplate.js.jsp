@@ -6,11 +6,11 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8" %>
 <script>
     //添加仓库管理
-    var addUrl = path + "printTemplate/add";
+    const addUrl = path + "printTemplate/add";
     //编辑仓库管理
-    var editUrl = path + "printTemplate/edit";
+    const editUrl = path + "printTemplate/edit";
     //删除仓库管理
-    var deleteUrl = path + "printTemplate/delete";
+    const deleteUrl = path + "printTemplate/delete";
 
     //查询
     function filter() {
@@ -18,13 +18,12 @@
     }
 
     //添加仓库管理
-    var add = function () {
-        var wid = Dialog.open("添加", 380, 300, addUrl, [
+    const add = function () {
+        const wid = Dialog.open("添加", 380, 300, addUrl, [
                 EasyUI.window.button("icon-save", "保存", function () {
                     EasyUI.form.submit("printTemplateForm", addUrl, function (data) {
                         Tip.success(data);
                         filter();
-
                         if (Dialog.isMore(wid)) {
                             Dialog.close(wid);
                             add();
@@ -38,34 +37,32 @@
                 Dialog.more(wid);
             }
         );
-    }
+    };
 
     //编辑仓库管理
-    var edit = function () {
-        var r = EasyUI.grid.getOnlyOneSelected("dg");
-        var wid = Dialog.open("编辑", 380, 300, editUrl + "?id=" + r.ID, [
+    const edit = function () {
+        const r = EasyUI.grid.getOnlyOneSelected("dg");
+        const wid = Dialog.open("编辑", 380, 300, editUrl + "?id=" + r.ID, [
             EasyUI.window.button("icon-save", "保存", function () {
                 EasyUI.form.submit("printTemplateForm", editUrl, function (data) {
                     Tip.success(data);
                     filter();
-
                     Dialog.close(wid);
                 })
             }), EasyUI.window.button("icon-cancel", "关闭", function () {
                 Dialog.close(wid)
             })]);
-    }
+    };
 
     //删除仓库管理
-    var doDelete = function () {
-        var r = EasyUI.grid.getSelections("dg");
-        if (r.length == 0) {
+    const doDelete = function () {
+        const r = EasyUI.grid.getSelections("dg");
+        if (r.length === 0) {
             Tip.warn("<spring:message code="Tip.SelectAtLeastOne" />");
             return;
         }
-
-        var ids = [];
-        for (var i = 0; i < r.length; i++) {
+        const ids = [];
+        for (let i = 0; i < r.length; i++) {
             ids.push(r[i].ID);
         }
         Dialog.confirm(function () {
@@ -75,13 +72,13 @@
                 filter();
             });
         });
-    }
+    };
 
     /**
      * 双击行，弹出编辑
      */
-    var dbClickEdit = function (index, row) {
-        var wid = Dialog.open("编辑", 380, 160, editUrl + "?id=" + row.ID, [
+    const dbClickEdit = function (index, row) {
+        const wid = Dialog.open("编辑", 380, 160, editUrl + "?id=" + row.ID, [
             EasyUI.window.button("icon-save", "保存", function () {
                 EasyUI.form.submit("printTemplateForm", editUrl, function (data) {
                     filter();
@@ -90,5 +87,5 @@
             }), EasyUI.window.button("icon-cancel", "关闭", function () {
                 Dialog.close(wid)
             })]);
-    }
+    };
 </script>
