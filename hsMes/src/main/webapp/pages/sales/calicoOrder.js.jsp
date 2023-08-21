@@ -7,24 +7,23 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8" %>
 <script>
     //添加销售订单
-    var addUrl = path + "salesOrder/add";
+    const addUrl = path + "salesOrder/add";
     //编辑销售订单
-    var editUrl = path + "salesOrder/edit";
+    const editUrl = path + "salesOrder/edit";
     //删除销售订单
-    var deleteUrl = path + "salesOrder/delete";
+    const deleteUrl = path + "salesOrder/delete";
     //打开提交审核页面
-    var _auditCommitUrl = path + "selector/commitAudit";
+    const _auditCommitUrl = path + "selector/commitAudit";
     //发送提交审核数据
-    var auditCommitUrl = path + "salesOrder/commitAudit";
+    const auditCommitUrl = path + "salesOrder/commitAudit";
     //关闭订单
-    var closeUrl = path + "common/close";
-
-    var dialogWidth = 700, dialogHeight = 500;
-    var exportUrl = path + "salesOrder/export";
-    var action = "add";
+    const closeUrl = path + "common/close";
+    const dialogWidth = 700, dialogHeight = 500;
+    const exportUrl = path + "salesOrder/export";
+    let action = "add";
     //复制销售订单
-    var copy1 = path + "salesOrder/copy";
-    var currentConsumerCode = "";
+    const copy1 = path + "salesOrder/copy";
+    const currentConsumerCode = "";
 
     //查询
     function filter() {
@@ -39,7 +38,7 @@
         return (isEmpty(value) ? 0 : value) + "次";
     }
 
-    var timeout = null;
+    let timeout = null;
     $(function () {
         $(".textbox-text").keyup(function () {
             $("input[name='" + $(this).parent().prev().attr("textboxname") + "']").val($(this).val());
@@ -232,7 +231,6 @@
                             },
                             onLoadSuccess: function () {
                                 setTimeout(function () {
-
                                     $("#ddv-p-" + index).datagrid('fixDetailRowHeight', index2);
                                     $("#ddv-p-" + index).datagrid('fixRowHeight', index2);
                                     $("#dg").datagrid('fixDetailRowHeight', index);
@@ -259,21 +257,20 @@
         });
     });
 
-    var onDgLoadSuccess = function (data) {
+    const onDgLoadSuccess = function (data) {
         setTimeout(function () {
             Loading.hide();
         }, 100);
-    }
+    };
     //复制已关闭的销售订单
-    var copy = function () {
-        var r = EasyUI.grid.getOnlyOneSelected("dg");
-        var userName = "${userName}";
-        if (r.USERNAME != userName) {
+    const copy = function () {
+        const r = EasyUI.grid.getOnlyOneSelected("dg");
+        const userName = "${userName}";
+        if (r.USERNAME !== userName) {
             Tip.warn("不能复制他人下达的订单");
             return;
         }
-
-        if (r.AUDITSTATE != 2) {
+        if (r.AUDITSTATE !== 2) {
             Tip.warn("审核通过的订单才可以复制");
             return;
         }
@@ -284,12 +281,12 @@
                 filter();
             });
         });
-    }
+    };
 
-    var dialogId;
+    let dialogId;
 
     //添加销售订单
-    var add = function () {
+    const add = function () {
         action = "add";
         dialogId = Dialog.open("添加", dialogWidth, dialogHeight, addUrl, [EasyUI.window.button("icon-save", "保存", function () {
             saveForm();
@@ -300,15 +297,14 @@
             $("#" + dialogId).dialog("maximize");
             $("#salesOrderDate").datebox("setValue", new Calendar().format("yyyy-MM-dd"));
         });
-    }
+    };
 
     //编辑销售订单
-    var edit = function () {
-
+    const edit = function () {
         action = "edit";
-        var r = EasyUI.grid.getOnlyOneSelected("dg");
-        var userName = "${userName}";
-        if (r.USERNAME != userName) {
+        const r = EasyUI.grid.getOnlyOneSelected("dg");
+        const userName = "${userName}";
+        if (r.USERNAME !== userName) {
             Tip.warn("不能编辑他人下达的订单");
             return;
         }
@@ -323,35 +319,32 @@
         })], function () {
             $("#" + dialogId).dialog("maximize");
         });
-    }
+    };
 
-    var forceEdit = function () {
+    const forceEdit = function () {
         action = "edit";
-        var r = EasyUI.grid.getOnlyOneSelected("dg");
-        var userName = "${userName}";
-        if (r.USERNAME != userName) {
+        const r = EasyUI.grid.getOnlyOneSelected("dg");
+        const userName = "${userName}";
+        if (r.USERNAME !== userName) {
             Tip.warn("不能变更他人下达的订单");
             return;
         }
-        if (r.AUDITSTATE != 2) {
+        if (r.AUDITSTATE !== 2) {
             Tip.warn("审核通过才能强制变更");
             return;
         }
         dialogId = Dialog.open("编辑", dialogWidth, dialogHeight, editUrl + "?id=" + r.ID + "&force=true", [EasyUI.window.button("icon-save", "保存", function () {
-
-            var details = [];
-
-            var rows = $("#product_dg").datagrid("getRows");
-
-            for (var i = 0; i < rows.length; i++) {
+            const details = [];
+            const rows = $("#product_dg").datagrid("getRows");
+            for (let i = 0; i < rows.length; i++) {
                 $("#product_dg").datagrid("endEdit", i);
-                var d = {
+                const d = {
                     "id": rows[i].id,
                     "deliveryTime": rows[i].deliveryTime.substring(0, 10),
                     "productCount": rows[i].productCount,
                     "productMemo": rows[i].productMemo
                 };
-                if (rows[i].productIsTc == 1) {
+                if (rows[i].productIsTc === 1) {
                     subgrid = $("#product_dg").datagrid('getRowDetail', i).find('table.ddv');
                     subgridRows = subgrid.datagrid("getRows");
                     tempCount = 0;
@@ -364,7 +357,7 @@
                         }
                         tempCount += subgrid.datagrid("getRows")[j].partCount;
                     }
-                    if (tempCount == 0) {
+                    if (tempCount === 0) {
                         Tip.warn("无效的单个部件数量");
                         return;
                     }
@@ -372,7 +365,6 @@
                 }
                 details.push(d);
             }
-
             Loading.show();
             $.ajax({
                 url: path + "salesOrder/forceEdit",
@@ -396,7 +388,7 @@
             $("#" + dialogId).dialog("maximize");
             $("#product_dg").datagrid("loadData", details);
         });
-    }
+    };
 
     /**
      * 保存表单信息
@@ -407,31 +399,29 @@
      * 这时候combobox的值再返回回来，找不到对应的combobox了，
      * 所以会报错，可以不管
      */
-    var t = 0;
+    let t = 0;
 
     function saveForm() {
-
         if ($("#salesOrderForm").form("validate")) {
-            if ($("#product_dg").datagrid("getRows").length != 0) {
-
+            if ($("#product_dg").datagrid("getRows").length !== 0) {
                 if (endEdit()) {
-                    var order = JQ.getFormAsJson("salesOrderForm");
+                    const order = JQ.getFormAsJson("salesOrderForm");
                     order.details = $("#product_dg").datagrid("getData").rows;
-                    var subgrid;
-                    var subgridRows;
-                    var tempCount = 0;
-                    for (var i = 0; i < order.details.length; i++) {
-                        if (order.details[i].productIsTc != 1) {
+                    let subgrid;
+                    let subgridRows;
+                    let tempCount = 0;
+                    for (let i = 0; i < order.details.length; i++) {
+                        if (order.details[i].productIsTc !== 1) {
                             if ((order.details[i].productRollWeight == null && (order.details[i].productWidth == null || order.details[i].productRollLength == null))) {
                                 Tip.warn("工艺信息不完整，请维护");
                                 return;
                             }
                         }
-                        if (order.details[i].productIsTc == 2) continue;
+                        if (order.details[i].productIsTc === 2) continue;
                         subgrid = $("#product_dg").datagrid('getRowDetail', i).find('table.ddv');
                         subgridRows = subgrid.datagrid("getRows");
                         tempCount = 0;
-                        for (var j = 0; j < subgridRows.length; j++) {
+                        for (let j = 0; j < subgridRows.length; j++) {
                             subgrid.datagrid("beginEdit", j);
                             subgrid.datagrid("endEdit", j);
                             if (isEmpty(subgrid.datagrid("getRows")[j].partCount)) {
@@ -440,15 +430,13 @@
                             }
                             tempCount += subgrid.datagrid("getRows")[j].partCount;
                         }
-
-
-                        if (tempCount == 0) {
+                        if (tempCount === 0) {
                             Tip.warn("无效的单个部件数量");
                             return;
                         }
                         order.details[i].partsCountList = subgrid.datagrid("getRows");
                     }
-                    if (t == 0) {
+                    if (t === 0) {
                         /* $.messager.show({
                             title:'订单信息确认',
                             msg:'<font style="font-weight:bold;color:red;">请仔细核对订单信息,无误后请再次点击保存</font>',
@@ -464,7 +452,6 @@
                         return;
                     }
                     t = 0;
-
                     Dialog.confirm(function () {
                         Loading.show();
                         $.ajax({
@@ -478,7 +465,7 @@
                                 if (Tip.hasError(data)) {
                                     return;
                                 }
-                                if (data == "保存成功") {
+                                if (data === "保存成功") {
                                     Tip.success(data, 3000);
                                     Dialog.close(dialogId);
                                 } else {
@@ -499,16 +486,15 @@
     /**
      * 双击行，弹出编辑
      */
-    var dbClickEdit = function (rowIndex, field, value) {
-
-        if (field == "ID" || field == "_expander") {
+    const dbClickEdit = function (rowIndex, field, value) {
+        if (field === "ID" || field === "_expander") {
             return;
         }
         action = "edit";
-        var userName = "${userName}";
-        var rows = $('#dg').datagrid('getRows');
-        var row = rows[rowIndex];
-        if (row.USERNAME != userName) {
+        const userName = "${userName}";
+        const rows = $('#dg').datagrid('getRows');
+        const row = rows[rowIndex];
+        if (row.USERNAME !== userName) {
             Tip.warn("不能编辑他人下达的订单");
             return;
         }
@@ -525,31 +511,28 @@
             $("#" + dialogId).dialog("maximize");
             $("#product_dg").datagrid("loadData", details);
         });
-    }
+    };
 
     //删除销售订单
-    var doDelete = function () {
-
-        var r = EasyUI.grid.getSelections("dg");
-        var userName = "${userName}";
-
-        if (r.length == 0) {
+    const doDelete = function () {
+        const r = EasyUI.grid.getSelections("dg");
+        const userName = "${userName}";
+        if (r.length === 0) {
             Tip.warn("<spring:message code="Tip.SelectAtLeastOne" />");
             return;
         }
-        var index = null;
-
-        var ids = [];
-        for (var i = 0; i < r.length; i++) {
-            if (r[i].USERNAME != userName) {
+        let index = null;
+        const ids = [];
+        for (let i = 0; i < r.length; i++) {
+            if (r[i].USERNAME !== userName) {
                 Tip.warn("不能删除他人下达的订单");
                 return;
             }
             ids.push(r[i].ID);
             if (r[i].AUDITSTATE > 0) {
-                var rs = $("#dg").datagrid('getRows');
-                for (var a = 0; a < rs.length; a++) {
-                    if (rs[a].ID == r[i].ID) {
+                const rs = $("#dg").datagrid('getRows');
+                for (let a = 0; a < rs.length; a++) {
+                    if (rs[a].ID === r[i].ID) {
                         index = a + 1;
                         Tip.warn("第" + index + "行为审核中或审核通过的记录，不能删除！");
                         return;
@@ -564,28 +547,28 @@
                 filter();
             });
         });
-    }
+    };
 
     function orderDateFormat(value, row, index) {
-        if (value == undefined)
+        if (value === undefined)
             return null;
         return new Calendar(value).format("yyyy-MM-dd");
     }
 
     function orderPlaceFormat(value, row, index) {
-        if (value == undefined)
+        if (value === undefined)
             return null;
         return new Calendar(value).format("yyyy-MM-dd");
     }
 
     function exportFormat(value, row, index) {
-        if (value == 0) {
+        if (value === 0) {
             return "外销";
         }
-        if (value == 1) {
+        if (value === 1) {
             return "内销";
         }
-        if (value == -1) {
+        if (value === -1) {
             return "胚布";
         }
         return value;
@@ -593,38 +576,37 @@
 
     function orderTypeFormat(value, row, index) {
         //（3新品，2试样，1常规产品，-1未知）
-        if (value == 3) {
+        if (value === 3) {
             return "新品";
-        } else if (value == 2 || value == 0) {
+        } else if (value === 2 || value === 0) {
             return "试样";
-        } else if (value == 1) {
+        } else if (value === 1) {
             return "常规产品";
-        } else if (value == -1) {
+        } else if (value === -1) {
             return "未知";
         }
     }
 
     function rowStyler(index, row) {
-        return row.SALESORDERISEXPORT == 0 ? "background:rgba(255, 0, 0, 0.23);" : "";
+        return row.SALESORDERISEXPORT === 0 ? "background:rgba(255, 0, 0, 0.23);" : "";
     }
 
-    var selectProductWindowId;
+    let selectProductWindowId;
 
     function selectProduct() {
-        if ($("#salesOrderConsumerId").val() == "") {
+        if ($("#salesOrderConsumerId").val() === "") {
             Tip.warn("请先选择客户信息");
             selectConsumer();
             return;
         }
         selectProductWindowId = Dialog.open("选择产品", 900, 400, path + "selector/product?singleSelect=false&showCode=false&isShow=1", [EasyUI.window.button("icon-ok", "选择", function () {
-            var rows = $("#_common_product_dg").datagrid("getChecked");
-            if (rows.length == 0) {
+            const rows = $("#_common_product_dg").datagrid("getChecked");
+            if (rows.length === 0) {
                 Tip.warn("至少选择一个产品");
                 return;
             }
             /* $('#product_dg').datagrid('loadData',[]); */
-
-            for (var i = 0; i < rows.length; i++) {
+            for (let i = 0; i < rows.length; i++) {
                 addToProductDg(rows[i]);
             }
             Dialog.close(selectProductWindowId);
@@ -633,11 +615,11 @@
         })], function () {
             Dialog.max(selectProductWindowId);
             //选试样产品,只列出试样产品
-            var salesOrderType = $('#salesOrderType').combobox('getValue');
-            if (salesOrderType == 2) {
+            const salesOrderType = $('#salesOrderType').combobox('getValue');
+            if (salesOrderType === 2) {
                 $("#isCommon").val(0);
             }
-            var consumerId = $("#salesOrderConsumerId").val();
+            const consumerId = $("#salesOrderConsumerId").val();
             $("#consumerId").val(consumerId);
             $("#auditState").val(2);//只能添加已通过审核的产品
             $("#" + selectProductWindowId + " .datagrid .datagrid-pager").hide();
@@ -649,10 +631,7 @@
     }
 
     function _commons_product_dg_onBeforeLoad_callback() {
-        if (Assert.isEmpty($("#consumerId").val())) {
-            return false;
-        }
-        return true;
+        return !Assert.isEmpty($("#consumerId").val());
     }
 
     function _common_product_dbClickRow(index, row) {
@@ -661,7 +640,7 @@
     }
 
     function addToProductDg(r) {
-        var _row = {
+        const _row = {
             "productId": r.ID,
             "productBatchCode": "",
             "salesOrderSubCode": "",
@@ -691,17 +670,17 @@
         };
         $("#product_dg").datagrid("appendRow", _row);
         //$("td[field='_expander'] span").hide();
-        if (r.PRODUCTISTC == 1)
+        if (r.PRODUCTISTC === 1)
             $("#product_dg").datagrid("expandRow", $("#product_dg").datagrid("getRows").length - 1);
     }
 
     function contains(row) {
-        var data = $("#product_dg").datagrid("getData");
-        if (data.total == 0) {
+        const data = $("#product_dg").datagrid("getData");
+        if (data.total === 0) {
             return false;
         } else {
-            for (var i = 0; i < data.rows.length; i++) {
-                if (data.rows[i]["productId"] == row["productId"]) {
+            for (let i = 0; i < data.rows.length; i++) {
+                if (data.rows[i]["productId"] === row["productId"]) {
                     return true
                 }
             }
@@ -717,8 +696,7 @@
      }
      } */
 
-
-    var bomVersion, bcVersion;
+    let bomVersion, bcVersion;
 
     /* ////1:是套材  2:非套材
      function beforeEdit(index,row){
@@ -748,9 +726,9 @@
      */
 
     function onBeforeLoad(param) {
-        var row = EasyUI.grid.getRowByIndex("product_dg", editingIndex);
+        const row = EasyUI.grid.getRowByIndex("product_dg", editingIndex);
         param.code = row.productProcessCode;
-        param.bomType = (row.productIsTc == 1 ? "tc" : "ftc");
+        param.bomType = (row.productIsTc === 1 ? "tc" : "ftc");
     }
 
     function onBeforeLoad_bc(param) {
@@ -759,10 +737,10 @@
         param.bomType = 'bc';
     }
 
-    var valid = false;
+    let valid = false;
 
     function endEdit() {
-        var rows = $("#product_dg").datagrid("getRows");
+        const rows = $("#product_dg").datagrid("getRows");
         for (var i = 0; i < rows.length; i++) {
             editingIndex = i;
             valid = true;
@@ -786,12 +764,12 @@
     }
 
     //选择业务员信息
-    var selectUserWindowId;
+    let selectUserWindowId;
 
     function selectUser() {
         selectUserWindowId = Dialog.open("选择用户", 900, 500, path + "selector/user?singleSelect=true", [EasyUI.window.button("icon-ok", "选择", function () {
-            var row = $("#_common_user_dg").datagrid("getChecked");
-            if (row.length == 0) {
+            const row = $("#_common_user_dg").datagrid("getChecked");
+            if (row.length === 0) {
                 Tip.warn("至少选择一个用户");
                 return;
             }
@@ -813,68 +791,63 @@
     }
 
     function _common_user_onLoadSuccess(data) {
-        var rows = $("#_common_user_dg").datagrid("getRows");
-        for (var i = 0; i < rows.length; i++) {
-            if (rows[i].ID == $("#salesOrderBizUserId").val()) {
+        const rows = $("#_common_user_dg").datagrid("getRows");
+        for (let i = 0; i < rows.length; i++) {
+            if (rows[i].ID === $("#salesOrderBizUserId").val()) {
                 $("#_common_user_dg").datagrid("checkRow", i);
             }
         }
     }
 
-    var consumerProducts = {};
+    const consumerProducts = {};
 
     //选择客户信息
-    var selectConsumerWindowId;
+    let selectConsumerWindowId;
 
     function selectConsumer() {
         selectConsumerWindowId = Dialog.open("选择客户", 900, 500, path + "selector/consumer?singleSelect=true", [EasyUI.window.button("icon-ok", "选择", function () {
-            var row = $("#_common_consumer_dg").datagrid("getChecked");
-            if (row.length == 0) {
+            let r;
+            const row = $("#_common_consumer_dg").datagrid("getChecked");
+            if (row.length === 0) {
                 Tip.warn("至少选择一个客户");
                 return;
             }
 
-            if (row[0].ID != $("#salesOrderConsumerId").val() && $("#salesOrderConsumerId").val() != "") {
+            if (row[0].ID != $("#salesOrderConsumerId").val() && $("#salesOrderConsumerId").val() !== "") {
                 Dialog.confirm(function () {
-
                     //备份数据
                     consumerProducts[$("#salesOrderConsumerId").val()] = $("#product_dg").datagrid("getData").rows;
                     //切换数据
                     $("#product_dg").datagrid("loadData", consumerProducts[row[0].ID] ? consumerProducts[row[0].ID] : []);
-
                     $("#salesOrderConsumerName").searchbox("setValue", row[0].CONSUMERNAME);
                     $("#salesOrderConsumerId").val(row[0].ID);
                     $("#consumerCode").val(row[0].CONSUMERCODE);
                     Dialog.close(selectConsumerWindowId);
                     //国外客户
-                    if (row[0].CONSUMERCATEGORY == 2) {
+                    if (row[0].CONSUMERCATEGORY === 2) {
                         $("#salesOrderIsExport").combobox("select", 0);
                     } else {
                         $("#salesOrderIsExport").combobox("select", 1);
                     }
-
                 }, "选择了不同的客户信息，会变更产品列表信息，是否继续？");
             } else {
                 $("#salesOrderConsumerName").searchbox("setValue", row[0].CONSUMERNAME);
                 $("#salesOrderConsumerId").val(row[0].ID);
                 $("#consumerCode").val(row[0].CONSUMERCODE);
                 Dialog.close(selectConsumerWindowId);
-
                 //国外客户
-                if (row[0].CONSUMERCATEGORY == 2) {
-
+                if (row[0].CONSUMERCATEGORY === 2) {
                     $("#salesOrderIsExport").combobox("select", 0);
-                    var r = {};
+                    r = {};
                     r.v = 0;
                     changeSerial(r);
                 } else {
                     $("#salesOrderIsExport").combobox("select", 1);
-                    var r = {};
+                    r = {};
                     r.v = 1;
                     changeSerial(r);
                 }
             }
-
         }), EasyUI.window.button("icon-cancel", "关闭", function () {
             Dialog.close(selectConsumerWindowId);
         })], function () {
@@ -884,20 +857,17 @@
     }
 
     function _common_consumer_dbClickRow(index, row) {
-
-        if (row.ID != $("#salesOrderConsumerId").val() && $("#salesOrderConsumerId").val() != "") {
+        if (row.ID !== $("#salesOrderConsumerId").val() && $("#salesOrderConsumerId").val() !== "") {
             Dialog.confirm(function () {
-
                 //备份数据
                 consumerProducts[$("#salesOrderConsumerId").val()] = $("#product_dg").datagrid("getData").rows;
                 //切换数据
                 $("#product_dg").datagrid("loadData", consumerProducts[row.ID] ? consumerProducts[row.ID] : []);
-
                 $("#salesOrderConsumerName").searchbox("setValue", row.CONSUMERNAME);
                 $("#salesOrderConsumerId").val(row.ID);
                 $("#consumerCode").val(row.CONSUMERCODE);
                 Dialog.close(selectConsumerWindowId);
-                if (row.CONSUMERCATEGORY == 2) {
+                if (row.CONSUMERCATEGORY === 2) {
                     $("#salesOrderIsExport").combobox("select", 0);
                     row.v = 0;
                     changeSerial(row);
@@ -912,7 +882,7 @@
             $("#salesOrderConsumerId").val(row.ID);
             $("#consumerCode").val(row.CONSUMERCODE);
             Dialog.close(selectConsumerWindowId);
-            if (row.CONSUMERCATEGORY == 2) {
+            if (row.CONSUMERCATEGORY === 2) {
                 $("#salesOrderIsExport").combobox("select", 0);
                 row.v = 0;
                 changeSerial(row);
@@ -925,8 +895,8 @@
     }
 
     function _common_consumer_onLoadSuccess(data) {
-        var rows = $("#_common_consumer_dg").datagrid("getRows");
-        for (var i = 0; i < rows.length; i++) {
+        const rows = $("#_common_consumer_dg").datagrid("getRows");
+        for (let i = 0; i < rows.length; i++) {
             if (rows[i].ID == $("#salesOrderConsumerId").val()) {
                 $("#_common_consumer_dg").datagrid("checkRow", i);
             }
@@ -934,19 +904,19 @@
     }
 
     function removeProduct() {
-        var rows = $("#product_dg").datagrid("getSelections");
-        for (var i = 0; i < rows.length; i++) {
+        const rows = $("#product_dg").datagrid("getSelections");
+        for (let i = 0; i < rows.length; i++) {
             $("#product_dg").datagrid("deleteRow", $("#product_dg").datagrid("getRowIndex", rows[i]));
             delete indexData[$("#product_dg").datagrid("getRowIndex", rows[i])];
         }
     }
 
     //审核销售订单
-    var flag = null;
-    var doAudit = function () {
-        var r = EasyUI.grid.getOnlyOneSelected("dg");
-        var userName = "${userName}";
-        if (r.USERNAME != userName) {
+    let flag = null;
+    const doAudit = function () {
+        const r = EasyUI.grid.getOnlyOneSelected("dg");
+        const userName = "${userName}";
+        if (r.USERNAME !== userName) {
             Tip.warn("不能提审他人下达的订单");
             return;
         }
@@ -954,8 +924,8 @@
             Tip.warn("审核中或审核通过的记录，不能在提交审核！");
             return;
         }
-        var wid = Dialog.open("审核", 600, 120, _auditCommitUrl + "?id=" + r.ID, [EasyUI.window.button("icon-ok", "提交审核", function () {
-            if (flag != r.ID) {
+        const wid = Dialog.open("审核", 600, 120, _auditCommitUrl + "?id=" + r.ID, [EasyUI.window.button("icon-ok", "提交审核", function () {
+            if (flag !== r.ID) {
                 flag = r.ID;
                 EasyUI.form.submit("editAuditProduce", auditCommitUrl + "?userId=" + r.SALESORDERBIZUSERID, function (data) {
                     filter();
@@ -967,8 +937,8 @@
         }), EasyUI.window.button("icon-cancel", "关闭", function () {
             Dialog.close(wid);
         })], function () {
-            var yx;
-            var index;
+            let yx;
+            let index;
             if (r.SALESORDERMEMO != null) {
                 index = r.SALESORDERMEMO.lastIndexOf("叶型为：");
                 if (index > 0) {
@@ -977,72 +947,61 @@
             }
             $("#editAuditProduce #name").textbox("setValue", "销售订单审核，单号：" + r.SALESORDERCODE + (isEmpty(yx) ? "" : " ；叶型：" + yx));
         });
-    }
+    };
 
     function formatterReviewState(val, row, index) {
         return auditStateFormatter(row.AUDITSTATE);
     }
 
     function closeOrder() {
-        var r = EasyUI.grid.getSelections("dg");
-        var userName = "${userName}";
-
-        if (r.length == 0) {
+        const r = EasyUI.grid.getSelections("dg");
+        const userName = "${userName}";
+        if (r.length === 0) {
             Tip.warn("<spring:message code="Tip.SelectAtLeastOne" />");
             return;
         }
-
-        var index = null;
-
-        var ids = [];
-        for (var i = 0; i < r.length; i++) {
-            if (r[i].USERNAME != userName) {
+        const index = null;
+        const ids = [];
+        for (let i = 0; i < r.length; i++) {
+            if (r[i].USERNAME !== userName) {
                 Tip.warn("不能关闭他人下达的订单");
                 return;
             }
             ids.push(r[i].ID);
-
-            if (r[i].AUDITSTATE != 2) {
+            if (r[i].AUDITSTATE !== 2) {
                 Tip.warn("审核通过的订单才可以关闭");
                 return;
             }
         }
-
         $("#dd").dialog("open");
     }
 
     function cancelcloseOrder() {
-        var r = EasyUI.grid.getSelections("dg");
-        var userName = "${userName}";
-
-        if (r.length == 0) {
+        const r = EasyUI.grid.getSelections("dg");
+        const userName = "${userName}";
+        if (r.length === 0) {
             Tip.warn("<spring:message code="Tip.SelectAtLeastOne" />");
             return;
         }
-
-        var index = null;
-
-        var ids = [];
-        for (var i = 0; i < r.length; i++) {
-            if (r[i].USERNAME != userName) {
+        const index = null;
+        const ids = [];
+        for (let i = 0; i < r.length; i++) {
+            if (r[i].USERNAME !== userName) {
                 Tip.warn("不能取消关闭他人下达的订单");
                 return;
             }
             ids.push(r[i].ID);
-
-            if (r[i].AUDITSTATE != 2) {
+            if (r[i].AUDITSTATE !== 2) {
                 Tip.warn("审核通过的订单才可以关闭");
                 return;
             }
         }
-
         $("#ddd").dialog("open");
     }
 
-
     function onOpen() {
         Loading.show();
-        var r = EasyUI.grid.getOnlyOneSelected("dg");
+        const r = EasyUI.grid.getOnlyOneSelected("dg");
         $('#dgg').datagrid({
             url: path + 'salesOrder/product?orderId=' + r.ID,
             width: '100%',
@@ -1177,7 +1136,7 @@
 
     function onOpen1() {
         Loading.show();
-        var r = EasyUI.grid.getOnlyOneSelected("dg");
+        const r = EasyUI.grid.getOnlyOneSelected("dg");
         $('#dggg').datagrid({
             url: path + 'salesOrder/product?orderId=' + r.ID,
             width: '100%',
@@ -1310,18 +1269,18 @@
         });
     }
 
-    var closeUrl = path + "common/close";
-    var wclose = path + "salesOrder/wclose";
+    const closeUrl = path + "common/close";
+    const wclose = path + "salesOrder/wclose";
 
     function doCloseOrder() {
-        var rows = EasyUI.grid.getSelections("dgg");
-        if (rows.length == 0) {
+        const rows = EasyUI.grid.getSelections("dgg");
+        if (rows.length === 0) {
             Tip.warn("请至少选择一条记录");
             return;
         }
-        var type = "ORDER";
-        var ids = [];
-        for (var i = 0; i < rows.length; i++) {
+        const type = "ORDER";
+        const ids = [];
+        for (let i = 0; i < rows.length; i++) {
             ids.push(rows[i].ID);
         }
         Dialog.confirm(function () {
@@ -1330,7 +1289,7 @@
                 type: "get",
                 dataType: "json",
                 success: function (data) {
-                    if (data == 1) {
+                    if (data === 1) {
                         $.ajax({
                             url: closeUrl + "?type=" + type + "&ids=" + ids.join(","),
                             type: "get",
@@ -1349,21 +1308,20 @@
                 }
             });
         }, "确认关闭?");
-
     }
 
     //反关闭
-    var cancelcloseUrl = path + "salesOrder/cancelclose";
+    const cancelcloseUrl = path + "salesOrder/cancelclose";
 
     function doCancelCloseOrder() {
-        var rows = EasyUI.grid.getSelections("dggg");
-        if (rows.length == 0) {
+        const rows = EasyUI.grid.getSelections("dggg");
+        if (rows.length === 0) {
             Tip.warn("请至少选择一条记录");
             return;
         }
-        var type = "ORDER";
-        var ids = [];
-        for (var i = 0; i < rows.length; i++) {
+        const type = "ORDER";
+        const ids = [];
+        for (let i = 0; i < rows.length; i++) {
             ids.push(rows[i].ID);
         }
         Dialog.confirm(function () {
@@ -1386,8 +1344,8 @@
     }
 
     function detailRowStyler(index, row) {
-        var style = "";
-        if (isEmpty(row.CLOSED) || row.CLOSED == 0) {
+        let style = "";
+        if (isEmpty(row.CLOSED) || row.CLOSED === 0) {
         } else {
             style += "text-decoration:line-through;";
         }
@@ -1395,27 +1353,27 @@
     }
 
     function stateFormatter(value, row, index) {
-        if (value == null || value == 0) {
+        if (value == null || value === 0) {
             return "<label style='background:green;width:100%;display: inline-block;color:white;text-align:center;'>正常</label>";
         }
         return "<label style='background:red;width:100%;display: inline-block;color:white;text-align:center;'>关闭</label>";
     }
 
-    var checkTypeUrl = path + "salesOrder/checkDp";
+    const checkTypeUrl = path + "salesOrder/checkDp";
 
     function view() {
-        var salesType = "";
-        var r = EasyUI.grid.getOnlyOneSelected("dg");
+        let salesType = "";
+        const r = EasyUI.grid.getOnlyOneSelected("dg");
         if (r == null)
             return;
-        if (r.SALESORDERISEXPORT == 0) {
+        if (r.SALESORDERISEXPORT === 0) {
             salesType = "XS2"; //国外
-        } else if (r.SALESORDERISEXPORT == 1) {
+        } else if (r.SALESORDERISEXPORT === 1) {
             salesType = "XS1"; //国内
         } else {
             salesType = "PBOrder"; //胚布
         }
-        var viewUrl = path + "audit/" + salesType + "/{id}/state";
+        const viewUrl = path + "audit/" + salesType + "/{id}/state";
         dialogId = Dialog.open("查看审核状态", dialogWidth, dialogHeight, viewUrl.replace("{id}", r.ID), [EasyUI.window.button("icon-cancel", "关闭", function () {
             Dialog.close(dialogId);
         })], function () {
@@ -1430,7 +1388,7 @@
     }
 
     function exportExcel() {
-        var r = EasyUI.grid.getOnlyOneSelected("dg");
+        const r = EasyUI.grid.getOnlyOneSelected("dg");
         window.open(exportUrl + "?id=" + r.ID);
     }
 
@@ -1457,22 +1415,20 @@
     function bomVersionView(value, row, index) {
         if (value == null) {
             return "";
-        } else if (row.PRODUCTPROCESSBOMVERSION == null || row.PRODUCTPROCESSBOMVERSION == "") {
+        } else if (row.PRODUCTPROCESSBOMVERSION == null || row.PRODUCTPROCESSBOMVERSION === "") {
             return "";
         } else {
             return "<a href='#' title='" + value + "' class='easyui-tooltip' onclick='_bomVersionView(" + row.PROCBOMID + "," + row.PRODUCTISTC + ")'>" + value + "</a>"
         }
     }
 
-    var dialogId;
-
     function _bomVersionView(procBomId, isTc) {
         if (procBomId == null) {
             Tip.error("工艺版本错误，请重新编辑产品");
             return;
         }
-        var viewUrl = "";
-        if (isTc == 1) {
+        let viewUrl = "";
+        if (isTc === 1) {
             viewUrl = path + "selector/view/tc?procBomId=" + procBomId;
         } else {
             viewUrl = path + "selector/view/ftc?procBomId=" + procBomId;
@@ -1481,35 +1437,33 @@
             Dialog.close(dialogId);
         })], function () {
             $("#" + dialogId).dialog("maximize");
-            if (isTc != 1) {
+            if (isTc !== 1) {
                 for (var a = 0; a < details.length; a++) {
                     _common_bomDetail_data(details[a]);
                 }
             }
         });
-    };
+    }
 
     //查看包装bom明细
     function packBomView(value, row, index) {
         if (value == null) {
             return "";
-        } else if (value == "无包装") {
+        } else if (value === "无包装") {
             return "";
-        } else if (row.PRODUCTPACKAGEVERSION == null || row.PRODUCTPACKAGEVERSION == "") {
+        } else if (row.PRODUCTPACKAGEVERSION == null || row.PRODUCTPACKAGEVERSION === "") {
             return "";
         } else {
             return "<a href='#' title='" + value + "' class='easyui-tooltip' onclick='_packBomView(" + row.PACKBOMID + ")'>" + value + "</a>"
         }
     }
 
-    var dialogId;
-
     function _packBomView(packBomId) {
-        if (packBomId == null || packBomId == "") {
+        if (packBomId == null || packBomId === "") {
             Tip.error("包装工艺错误，请重新编辑产品");
             return;
         }
-        var viewUrl = path + "selector/view/bc?packBomId=" + packBomId;
+        const viewUrl = path + "selector/view/bc?packBomId=" + packBomId;
         dialogId = Dialog.open("查看包装bom明细", 700, 400, viewUrl, [EasyUI.window.button("icon-cancel", "关闭", function () {
             Dialog.close(dialogId);
         })], function () {
@@ -1518,5 +1472,5 @@
                 _common_bcBomDetail_data(details[a]);
             }
         });
-    };
+    }
 </script>
