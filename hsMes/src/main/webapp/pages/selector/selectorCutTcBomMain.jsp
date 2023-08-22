@@ -29,24 +29,18 @@
                     }
                 }
             }
-
         });
-
     });
 </script>
-
 <div id="_common_cutTcBomMain_toolbar">
     <div style="border-top:1px solid #DDDDDD">
         <form action="#" id="_common_cutTcBomMain_dg_form" autoSearchFunction="false">
             BOM代码版本:<input type="text" name="filter[tcProcBomCodeVersion]" like="true" class="easyui-textbox">
             叶型名称：<input type="text" name="filter[bladeTypeName]" like="true" class="easyui-textbox">
-
             创建时间:<input type="text" name="filter[start]" class="easyui-datetimebox">
             至:<input type="text" name="filter[end]" class="easyui-datetimebox">
-
             <a href="javascript:void(0)" class="easyui-linkbutton l-btn l-btn-small" iconcls="icon-search"
-               onclick="filter()">
-                搜索
+               onclick="filter()">搜索
             </a>
         </form>
     </div>

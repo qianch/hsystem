@@ -1268,8 +1268,6 @@
             }
         });
     }
-
-    const closeUrl = path + "common/close";
     const wclose = path + "salesOrder/wclose";
 
     function doCloseOrder() {

@@ -1,6 +1,5 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-
 <script>
     function filter2() {
         EasyUI.grid.search("selectorBtwFilePrint_dg", "selectorBtwFilePrint_searchForm");
@@ -12,15 +11,11 @@
             <div style="border-top:1px solid #DDDDDD">
                 <form action="#" id="selectorBtwFilePrint_searchForm" autoSearchFunction="false">
                     <a href="javascript:void(0)" class="easyui-linkbutton l-btn l-btn-small" iconcls="icon-search"
-                       onclick="filter2()">
-                        搜索
+                       onclick="filter2()">搜索
                     </a>
-
                 </form>
             </div>
         </div>
-
-
         <table id="selectorBtwFilePrint_dg" singleSelect="false" title="" class="easyui-datagrid"
                url="${path}btwManager/BtwFilePrint/findBtwFilePrints?btwFileId=${btwFileId}" toolbar="#toolbar1"
                pagination="false" rownumbers="true" fitColumns="true" fit="true">

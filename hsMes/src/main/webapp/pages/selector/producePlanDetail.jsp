@@ -29,39 +29,34 @@
                     }
                 }
             }
-
         });
-
     });
 
     function formatterIsTc(value, row) {
-        if (value == '1') {
+        if (value === '1') {
             return "套材";
         } else {
             return "非套材";
         }
     }
-
 </script>
-
 <div id="_common_producePlanDetail_toolbar">
     <div style="border-top:1px solid #DDDDDD">
         <form action="#" id="_common_producePlanDetail_dg_form" autoSearch="true" autoSearchFunction="false">
             任务单号：<input type="text" name="filter[producePlanCode]" like="true" class="easyui-textbox"
-                        style="width:200px;">
+                            style="width:200px;">
             订单号：<input type="text" name="filter[salesOrderCode]" like="true" class="easyui-textbox"
-                       style="width:150px;">
+                          style="width:150px;">
             批次号：<input type="text" name="filter[batchCode]" like="true" class="easyui-textbox" style="width:150px;">
             厂内名称：<input type="text" name="filter[factoryProductName]" like="true" class="easyui-textbox"
-                        style="width:200px;">
+                            style="width:200px;">
             <br/>
-            客户名称：<input type="text" name="filter[consumerName]" like="true" class="easyui-textbox" style="width:200px;">
+            客户名称：<input type="text" name="filter[consumerName]" like="true" class="easyui-textbox"
+                            style="width:200px;">
             <a href="javascript:void(0)" class="easyui-linkbutton l-btn l-btn-small" iconcls="icon-search"
-               onclick="_common_common_producePlanDetail_filter()">
-                搜索
+               onclick="_common_common_producePlanDetail_filter()">搜索
             </a>
         </form>
-
     </div>
 </div>
 <table id="_common_producePlanDetail_dg" singleSelect="${empty singleSelect?'true':singleSelect }"
@@ -71,7 +66,7 @@
     <tr>
         <th field="ID" checkbox=true></th>
         <th field="SALESORDERCODE" sortable="true" width="15">订单号</th>
-        <th field="FROMSALESORDERDETAILID" sortable="true"  width="15">订单明细id</th>
+        <th field="FROMSALESORDERDETAILID" sortable="true" width="15">订单明细id</th>
         <th field="BATCHCODE" sortable="true" width="15">批次号</th>
         <th field="PRODUCEPLANCODE" sortable="true" width="30">任务单号</th>
         <th field="SUBCODE" sortable="true" width="15" hidden="true">子订单号</th>
