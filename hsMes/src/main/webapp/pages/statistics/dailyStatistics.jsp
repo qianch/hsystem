@@ -16,45 +16,44 @@
 <div data-options="region:'center',border:false"
      style="overflow: false;position: relative; height: 140px; width: 925px">
     <div id="toolbar">
-
         <div style="border:0px solid #DDDDDD">
             <form action="#" id="totalStatisticsSearchForm">
                 　条码号:<input type="text" name="filter[rollBarcode]" like="true" class="easyui-textbox">
-                　条码类型:<input type="text" name="searchType" class="easyui-combobox" value="" text="全部" data-options=" valueField: 'id',
+                　条码类型:<input type="text" name="searchType" class="easyui-combobox" value="" text="全部"
+                                 data-options=" valueField: 'id',
        				 textField: 'text',data:[{'id':'','text':'全部'},{'id':'roll','text':'卷条码'},{'id':'part','text':'部件条码'},{'id':'box','text':'箱条码'},{'id':'tray','text':'托条码'}],onSelect:filter">
                 客户名称:<input type="text" name="filter[CONSUMERNAME]" like="true" class="easyui-textbox">
                 　　　车间:<input type="text" name="filter[workshopcode]" class="easyui-combobox"
-                             data-options="valueField:'v',textField:'t',url:'<%=basePath %>department/queryDepartmentByType?type=weave,cut'">
+                               data-options="valueField:'v',textField:'t',url:'<%=basePath %>department/queryDepartmentByType?type=weave,cut'">
                 　批次号:<input type="text" name="filter[batchCode]"
-                            class="easyui-textbox">
+                               class="easyui-textbox">
                 <a href="javascript:void(0)" class="easyui-linkbutton l-btn l-btn-small" iconcls="icon-print"
-                   onclick="exportDailyStatistics()">
-                    导出
+                   onclick="exportDailyStatistics()">导出
                 </a></br>
                 产品规格:<input type="text" name="filter[productModel]" like="true"
-                            class="easyui-textbox">
+                                class="easyui-textbox">
                 　质量等级:<input type="text" class="easyui-combobox" name="filter[rollqualitygradecode]"
-                             data-options="valueField:'gradename',textField:'gradedesc',url:'<%=basePath%>qualityGrade/getQualityGrade'">
+                                 data-options="valueField:'gradename',textField:'gradedesc',url:'<%=basePath%>qualityGrade/getQualityGrade'">
                 　机台号:<input type="text" name="filter[deviceCode]" class="easyui-textbox">
                 内部订单号:<input type="text" name="filter[salesOrderCode]" like="true" class="easyui-textbox">
                 在库状态:<input type="easyui-combobox" name="filter[state]" value="" class="easyui-combobox"
-                            data-options=" valueField: 'id',
+                                data-options=" valueField: 'id',
                      textField: 'text' ,data:[{'id':'','text':'全部'},{'id':'1','text':'在库'},{'id':'2','text':'待入库'},{'id':'3','text':'在途'},{'id':'-1','text':'出库'},{'id':'0','text':'未入库'}],onSelect:filter"></br>
                 产出时间:<input type="text" id="start" name="filter[start]" class="easyui-datetimebox">
                 　　&nbsp;&nbsp;　至: <input type="text" id="end" name="filter[end]" class="easyui-datetimebox">
                 　操作人:<input type="text" name="filter[loginName]" like="true" class="easyui-textbox">
                 　计划单号:<input type="text" name="filter[producePlanCode]" like="true" class="easyui-textbox">
                 是否作废:<input type="text" name="filter[isAbandon]" class="easyui-combobox"
-                            data-options=" valueField: 'id',textField: 'text',data:[{'id':'','text':'全部'},{'id':'1','text':'已作废'},{'id':'0','text':'正常'}],onSelect:filter">
+                                data-options=" valueField: 'id',textField: 'text',data:[{'id':'','text':'全部'},{'id':'1','text':'已作废'},{'id':'0','text':'正常'}],onSelect:filter">
                 <a href="javascript:void(0)" class="easyui-linkbutton l-btn l-btn-small" iconcls="icon-search"
                    onclick="filter()"> 搜索 </a> </br>
                 是否拆包:<input type="text" name="filter[isOpened]" class="easyui-combobox"
-                            data-options=" valueField: 'id',textField: 'text',data:[{'id':'','text':'全部'},{'id':'1','text':'已拆包'},{'id':'0','text':'正常'}],onSelect:filter">
+                                data-options=" valueField: 'id',textField: 'text',data:[{'id':'','text':'全部'},{'id':'1','text':'已拆包'},{'id':'0','text':'正常'}],onSelect:filter">
                 　是否打包:<input type="text" name="filter[isPacked]" class="easyui-combobox"
-                            data-options=" valueField: 'id',textField: 'text',data:[{'id':'','text':'全部'},{'id':'1','text':'已打包'},{'id':'0','text':'未打包'}],onSelect:filter">
+                                 data-options=" valueField: 'id',textField: 'text',data:[{'id':'','text':'全部'},{'id':'1','text':'已打包'},{'id':'0','text':'未打包'}],onSelect:filter">
                 客户订单号:<input type="text" name="filter[salesOrderSubCodePrint]" like="true" class="easyui-textbox">
-                  客户代码:<input type="text" name="filter[CONSUMERCODE]" like="true" class="easyui-textbox">
-                  客户简称:<input type="text" name="filter[CONSUMERSIMPLENAME]" like="true" class="easyui-textbox">
+                客户代码:<input type="text" name="filter[CONSUMERCODE]" like="true" class="easyui-textbox">
+                客户简称:<input type="text" name="filter[CONSUMERSIMPLENAME]" like="true" class="easyui-textbox">
             </form>
         </div>
         <jsp:include page="../base/toolbar.jsp">
