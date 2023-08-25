@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE sqls SYSTEM "../../sql-1.0.dtd">
 <sqls class="StockDaoImpl">
-	<sql comment="库存统计" id="stock-sum">
-		<![CDATA[
+    <sql comment="库存统计" id="stock-sum">
+        <![CDATA[
 			<#if key["wtype"]=="cp">
 					<#if key["ptype"]=="tray">
 							SELECT
@@ -28,18 +28,18 @@
 					</#if>
 				<#else>
 					SELECT
-						sum(r.inWeight) WEIGTH,
+						sum(s.Weight) WEIGTH,
 						s.warehousePosCode
 					FROM
 						hs_material_stock_state s
 					LEFT JOIN 
 						hs_material_in_record r 
-					ON s.materialCode = r.materialCode
+					ON s.warehousePosCode = r.warehousePosCode
 					WHERE
 						s.warehousePosCode in (:pos)
 					GROUP BY
 						s.warehousePosCode
 			</#if>
 		]]>
-	</sql>
+    </sql>
 </sqls>
