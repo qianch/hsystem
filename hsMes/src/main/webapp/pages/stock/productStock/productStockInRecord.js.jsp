@@ -17,15 +17,12 @@
         })
     })
 
-
     //获取上月最后一天或第一天
-    var nowdays = new Date();
-    var year = nowdays.getFullYear();
-    var month = nowdays.getMonth();
+    const nowdays = new Date();
+    let year = nowdays.getFullYear();
+    let month = nowdays.getMonth();
     nowdays.setTime(nowdays.getTime() - 24 * 60 * 60 * 1000);
-
-
-    if (month == 0) {
+    if (month === 0) {
         month = 12;
         year = year - 1;
     }
@@ -33,12 +30,12 @@
         month = "0" + month;
     }
     // 获取某年某月有多少天
-    var myDate = new Date(year, month, 0);
+    const myDate = new Date(year, month, 0);
     $(document).ready(function () {
-        var s1 = nowdays.getFullYear() + "-" + (nowdays.getMonth() + 1) + "-" + nowdays.getDate();
-        var firstDay = year + "-" + month + "-" + "01";//上个月的第一天
-        var lastDay = year + "-" + month + "-" + myDate.getDate();//上个月的最后一天
-        var time2 = s1 + " " + "08:00:00";
+        const s1 = nowdays.getFullYear() + "-" + (nowdays.getMonth() + 1) + "-" + nowdays.getDate();
+        const firstDay = year + "-" + month + "-" + "01";//上个月的第一天
+        const lastDay = year + "-" + month + "-" + myDate.getDate();//上个月的最后一天
+        const time2 = s1 + " " + "08:00:00";
         $("#start").datetimebox("setValue", time2);
         $("#stockType").combobox("setValue", 0);
     });
@@ -46,7 +43,7 @@
     /**
      * 行统计
      */
-    var flg = true;
+    let flg = true;
 
     function onLoadSuccess(data) {
         if (flg) {
@@ -55,29 +52,16 @@
         flg = true;
     }
 
-    /**
-     * 表格末尾追加统计行
-     */
-    var flg = true;
+    flg = true;
 
     function appendRow(data) {
-        if (flg) {
-            appendRow();
-        }
-        flg = true;
-    }
-
-    function appendRow(data) {
-
         // 更新页脚行并载入新数据
-
         $('#dg').datagrid('reloadFooter', [
             {
                 CATEGORYCODE: '<span class="subtotal" style=" font-weight: bold;">合计</span>',
                 WEIGHT: '<span class="subtotal" style=" font-weight: bold;">' + data.weights + '</span>'	//月末累计数量统计
             }
         ]);
-
         flg = false;
     }
 
@@ -85,9 +69,9 @@
      * 指定列求和
      */
     function computes(colName) {
-        var rows = $("#dg").datagrid("getRows");
-        var totals = 0;
-        for (var i = 0; i < rows.length; i++) {
+        const rows = $("#dg").datagrid("getRows");
+        let totals = 0;
+        for (let i = 0; i < rows.length; i++) {
             totals += parseFloat(rows[i][colName]);
         }
         return totals.toFixed(2);

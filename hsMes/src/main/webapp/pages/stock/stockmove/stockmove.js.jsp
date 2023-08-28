@@ -5,11 +5,9 @@
 -->
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8" %>
 <script>
-    var findproducePlanDetailUrl = path + "planner/producePlanDetail/getProducePlanDetailPageInfo";
-    var moveList2Url = path + "stock/productStock/moveList2";
-
-    var dialogWidth = 700, dialogHeight = 500;
-
+    const findproducePlanDetailUrl = path + "planner/producePlanDetail/getProducePlanDetailPageInfo";
+    const moveList2Url = path + "stock/productStock/moveList2";
+    const dialogWidth = 700, dialogHeight = 500;
 
     $(function () {
         $('#dg').datagrid({
@@ -20,12 +18,10 @@
                 return '<div style="padding:2px"><table class="ddv"></table></div>';
             },
             onExpandRow: function (index, row) {
-                var ddv = $(this).datagrid('getRowDetail', index).find('table.ddv');
-                var url11=moveList2Url + "?producePlanDetailId=" +row.ID+"&"+ JQ.getFormAsString("stockmoveSearchForm");
-
-
+                const ddv = $(this).datagrid('getRowDetail', index).find('table.ddv');
+                const url11 = moveList2Url + "?producePlanDetailId=" + row.ID + "&" + JQ.getFormAsString("stockmoveSearchForm");
                 ddv.datagrid({
-                        url: moveList2Url + "?producePlanDetailId=" +row.ID+"&start="+ $("input[name='filter[start]']").val()+"&end="+ $("input[name='filter[end]']").val() ,
+                        url: moveList2Url + "?producePlanDetailId=" + row.ID + "&start=" + $("input[name='filter[start]']").val() + "&end=" + $("input[name='filter[end]']").val(),
                         fitColumns: true,
                         singleSelect: true,
                         rownumbers: true,
@@ -97,15 +93,11 @@
                     return 'background-color:pink;color:blue;font-weight:bold;';
                 }
             }
-
         });
     });
-
-
+    
     //查询
     function filter() {
         EasyUI.grid.search("dg", "stockmoveSearchForm");
     }
-
-
 </script>

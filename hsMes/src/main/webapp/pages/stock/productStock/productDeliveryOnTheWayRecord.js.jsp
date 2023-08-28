@@ -5,17 +5,13 @@
 -->
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8" %>
 <script>
-    var findOutRecordUrl = path + "planner/deliveryOnTheWayPlan/findDeliveryOnTheWayPlanDetails";
-
-    var selectorOnTheWayBarCodeUrl = path + "planner/deliveryOnTheWayPlan/selectorOnTheWay";
-
-    var moveUrl = path + "mobile/stock2/product/pMove";
-
-    var action = "pmove";
+    const findOutRecordUrl = path + "planner/deliveryOnTheWayPlan/findDeliveryOnTheWayPlanDetails";
+    const selectorOnTheWayBarCodeUrl = path + "planner/deliveryOnTheWayPlan/selectorOnTheWay";
+    const moveUrl = path + "mobile/stock2/product/pMove";
+    let action = "pmove";
     //移库
-    var pMoveUrl = path + "planner/deliveryOnTheWayPlan/pMove";
-
-    var dialogWidth = 700, dialogHeight = 500;
+    const pMoveUrl = path + "planner/deliveryOnTheWayPlan/pMove";
+    const dialogWidth = 700, dialogHeight = 500;
 
     //查询
     function filter() {
@@ -35,8 +31,7 @@
                 return '<div style="padding:2px"><table class="ddv"></table></div>';
             },
             onExpandRow: function (index, row) {
-                var ddv = $(this).datagrid('getRowDetail', index).find('table.ddv');
-
+                const ddv = $(this).datagrid('getRowDetail', index).find('table.ddv');
                 ddv.datagrid({
                         url: findOutRecordUrl + "?deliveryId=" + row.ID,
                         fitColumns: true,
@@ -79,7 +74,6 @@
                                 title: '状态',
                                 width: 15,
                             }
-
                         ]],
                         onResize: function () {
                             $('#dg').datagrid('fixDetailRowHeight', index);
@@ -89,36 +83,34 @@
                             setTimeout(function () {
                                 $('#dg').datagrid('fixDetailRowHeight', index);
                             }, 0);
-                        }
-                        , rowStyler: function (index, row) {
+                        },
+                        rowStyler: function (index, row) {
                             if (row.STOCKSTATE == 3) {
                                 return 'background-color:yellow;color:blue;font-weight:bold;';
                             }
                         }
                     }
                 );
-            }
-            , rowStyler: function (index, row) {
+            },
+            rowStyler: function (index, row) {
                 if (row.ONTHEWAYCOUNT > 0) {
                     return 'background-color:pink;color:blue;font-weight:bold;';
                 }
             }
-
         });
     });
 
-
-    var exportUrl3 = path + "/planner/deliveryOnTheWayPlan/export3";
+    const exportUrl3 = path + "/planner/deliveryOnTheWayPlan/export3";
 
     function export3() {
-        var r = EasyUI.grid.getSelections("dg");
-        if (r.length == 0) {
+        const r = EasyUI.grid.getSelections("dg");
+        if (r.length === 0) {
             Tip.warn("<spring:message code="Tip.SelectAtLeastOne" />");
             return;
         }
 
-        var ids;
-        for (var i = 0; i < r.length; i++) {
+        let ids;
+        for (let i = 0; i < r.length; i++) {
             ids = r[i].ID;
         }
         window.open(exportUrl3 + "?deliveryId=" + ids);
@@ -129,10 +121,9 @@
     }
 
     //编辑销售订单
-    var PMove = function () {
+    const PMove = function () {
         action = "edit";
-        var r = EasyUI.grid.getOnlyOneSelected("dg");
-
+        const r = EasyUI.grid.getOnlyOneSelected("dg");
         dialogId = Dialog.open("编辑", dialogWidth, dialogHeight, pMoveUrl + "?id=" + r.ID, [EasyUI.window.button("icon-save", "保存", function () {
             saveForm();
         }), EasyUI.window.button("icon-cancel", "关闭", function () {
@@ -140,17 +131,17 @@
         })], function () {
             $("#" + dialogId).dialog("maximize");
         });
-    }
+    };
 
     function saveForm() {
-        var barcodes = "";
-        var rows = $("#pmoveOnTheWayDetail_dg").datagrid('getRows');//获得所有行
-
-        for (var i = 0; i < rows.length; i++) {
+        let barcodes = "";
+        //获得所有行
+        const rows = $("#pmoveOnTheWayDetail_dg").datagrid('getRows');
+        for (let i = 0; i < rows.length; i++) {
             barcodes += rows[i].BARCODE + ',';
         }
 
-        var rStr = {
+        const rStr = {
             newWarehouseCode: $("#warehouseCode").val(),
             newWarehousePosCode: $("#warehousePosCode").val(),
             moveUserId:  ${userId },
@@ -159,14 +150,13 @@
 
         Dialog.confirm(function () {
             Loading.show();
-
             $.post(moveUrl, rStr, function (data, status) {
                 Loading.hide();
                 if (Tip.hasError(data)) {
                     Tip.error("error1:" + data);
                     return;
                 }
-                if (data.length == 2) {
+                if (data.length === 2) {
                     Tip.success("移库成功", 3000);
                     Dialog.close(dialogId);
                 } else {
@@ -184,12 +174,12 @@
     }
 
     //选择客户信息
-    var selectWareHousePosWindowId;
+    let selectWareHousePosWindowId;
 
     function selectWareHousePos() {
         selectWareHousePosWindowId = Dialog.open("选择库位", 900, 500, path + "selector/warehousePos?singleSelect=true", [EasyUI.window.button("icon-ok", "选择", function () {
-            var row = $("#_common_warehousePos_dg").datagrid("getChecked");
-            if (row.length == 0) {
+            const row = $("#_common_warehousePos_dg").datagrid("getChecked");
+            if (row.length === 0) {
                 Tip.warn("至少选择一个库位");
                 return;
             }
@@ -204,26 +194,26 @@
         });
     }
 
-    var selectselectOnTheWayDetailId;
+    let selectselectOnTheWayDetailId;
 
     function selectOnTheWayDetail() {
-        var r = EasyUI.grid.getSelections("dg");
-        if (r.length == 0) {
+        const r = EasyUI.grid.getSelections("dg");
+        if (r.length === 0) {
             Tip.warn("<spring:message code="Tip.SelectAtLeastOne" />");
             return;
         }
-        var ids = r[0].ID;
+        const ids = r[0].ID;
         selectselectOnTheWayDetailId = Dialog.open("选择条码", 900, 500, selectorOnTheWayBarCodeUrl + "?deliveryId=" + ids, [EasyUI.window.button("icon-ok", "选择", function () {
-            var rows = $("#SelectorOnTheWayBarCode_dg").datagrid("getChecked");
-            var message = "";
-            for (var i = 0; i < rows.length; i++) {
-                if (rows[i].STOCKSTATE != 3) {
+            const rows = $("#SelectorOnTheWayBarCode_dg").datagrid("getChecked");
+            let message = "";
+            for (let i = 0; i < rows.length; i++) {
+                if (rows[i].STOCKSTATE !== 3) {
                     message += rows[i].BARCODE + "非在途无法挑选；";
                     continue;
                 }
                 addToPmoveOnTheWayDetail_dg(rows[i]);
             }
-            if (message != "") {
+            if (message !== "") {
                 Tip.warn(message);
             }
             Dialog.close(selectselectOnTheWayDetailId);
@@ -236,15 +226,13 @@
     }
 
     function addToPmoveOnTheWayDetail_dg(r) {
-        var rows = $("#pmoveOnTheWayDetail_dg").datagrid('getRows');//获得所有行
-
-        for (var i = 0; i < rows.length; i++) {
-            if (rows[i].BARCODE == r.BARCODE) {
+        const rows = $("#pmoveOnTheWayDetail_dg").datagrid('getRows');//获得所有行
+        for (let i = 0; i < rows.length; i++) {
+            if (rows[i].BARCODE === r.BARCODE) {
                 return;
             }
         }
-
-        var _row = {
+        const _row = {
             "ID": r.ID,
             "BARCODE": r.BARCODE,
             "SALESORDERSUBCODE": r.SALESORDERSUBCODE,
@@ -260,11 +248,10 @@
     }
 
     function removeOnTheWayDetail() {
-        var rows = $("#pmoveOnTheWayDetail_dg").datagrid("getSelections");
-        for (var i = 0; i < rows.length; i++) {
+        const rows = $("#pmoveOnTheWayDetail_dg").datagrid("getSelections");
+        for (let i = 0; i < rows.length; i++) {
             $("#pmoveOnTheWayDetail_dg").datagrid("deleteRow", $("#pmoveOnTheWayDetail_dg").datagrid("getRowIndex", rows[i]));
             delete indexData[$("#pmoveOnTheWayDetail_dg").datagrid("getRowIndex", rows[i])];
         }
     }
-
 </script>
