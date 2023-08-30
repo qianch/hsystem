@@ -11,14 +11,11 @@
     const editUrl = path + "partBarcode/edit";
     //删除部件条码
     const deleteUrl = path + "partBarcode/delete";
-    //const dialogWidth = 700, dialogHeight = 350;
-    //var printUrl=path+"printer/rePrint";
     const clearBarCodeUrl = path + "partBarcode/clearPart";
     const printUrl = path + "printer/rePrint";
     const reIndividualPrint = path + "individualprinter/reIndividualPrint";
     const FindPrintsUrl = path + "partBarcode/FindPrints";
     const editBacodeUrl = path + "partBarcode/editBacode";
-    // const editProducePlanDetailPrintsUrl = path + "planner/producePlanDetail/editProducePlanDetailPrints";
 
     function print() {
         if ($('#pName').combobox("getValue") === '') {
@@ -166,13 +163,12 @@
     //删除部件条码
     const doDelete = function () {
         const r = EasyUI.grid.getSelections("dg");
-        if (r.length == 0) {
+        if (r.length === 0) {
             Tip.warn("<spring:message code="Tip.SelectAtLeastOne" />");
             return;
         }
-
-        var ids = [];
-        for (var i = 0; i < r.length; i++) {
+        const ids = [];
+        for (let i = 0; i < r.length; i++) {
             ids.push(r[i].ID);
         }
         Dialog.confirm(function () {

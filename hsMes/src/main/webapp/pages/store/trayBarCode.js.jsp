@@ -15,10 +15,8 @@
     const doPrinter = path + "individualprinter/doReplayPrintBarcode";
     const clearBarCodeUrl = path + "barcode/clearTray";
     const reIndividualPrint = path + "individualprinter/reIndividualPrint";
-    // const dialogWidth = 700, dialogHeight = 350;
     const FindPrintsUrl = path + "barcode/FindPrints";
     const editBacodeUrl = path + "barcode/editBacode";
-    // const editProducePlanDetailPrintsUrl = path + "planner/producePlanDetail/editProducePlanDetailPrints";
 
     //查询
     function filter() {
@@ -70,15 +68,16 @@
                             setTimeout(function () {
                                 $('#dg').datagrid('fixDetailRowHeight', index);
                             }, 0);
-                        }
-                        , rowStyler: function (index, row) {
+                        },
+                        rowStyler: function (index, row) {
                             if (row.length === 0) {
                                 return 'background-color:yellow;color:blue;font-weight:bold;';
                             }
                         }
                     }
                 );
-            }, rowStyler: function (index, row) {
+            },
+            rowStyler: function (index, row) {
                 if (row.ONTHEWAYCOUNT > 0) {
                     return 'background-color:pink;color:blue;font-weight:bold;';
                 }
@@ -164,15 +163,13 @@
             })]);
     };
 
-
     //删除托条码
     const doDelete = function () {
-        var r = EasyUI.grid.getSelections("dg");
+        const r = EasyUI.grid.getSelections("dg");
         if (r.length === 0) {
             Tip.warn("<spring:message code="Tip.SelectAtLeastOne" />");
             return;
         }
-
         const ids = [];
         for (let i = 0; i < r.length; i++) {
             ids.push(r[i].ID);
@@ -217,7 +214,6 @@
             });
             filter();
             Dialog.close(selectConsumerWindowId);
-
         }), EasyUI.window.button("icon-cancel", "关闭", function () {
             Dialog.close(selectConsumerWindowId);
         })], function () {

@@ -8,21 +8,11 @@
     String path = request.getContextPath();
     String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + path + "/";
 %>
-<style type="text/css">
-    /
-    /
-    CSS 代码
-</style>
-<script type="text/javascript">
-    //JS代码
-</script>
 <div>
     <!--仓库管理表单-->
     <form id="warehouseForm" method="post" ajax="true"
           action="<%=basePath %>warehouse/${empty warehouse.id ?'add':'edit'}" autocomplete="off">
-
         <input type="hidden" name="id" value="${warehouse.id}"/>
-
         <table width="100%">
             <tr>
                 <td class="title">仓库名称:</td>
@@ -34,7 +24,6 @@
             </tr>
             <tr>
                 <td class="title">仓库代码:</td>
-                <!--仓库代码-->
                 <td>
                     <input type="text" id="warehouseCode" name="warehouseCode" value="${warehouse.warehouseCode}"
                            class="easyui-textbox">
@@ -42,13 +31,10 @@
             </tr>
             <tr>
                 <td class="title">仓库类型:</td>
-                <!--仓库类型-->
                 <td>
-                    <input type="text" id="wareType" name="wareType"
-                           value="${warehouse.wareType}" class="easyui-combobox"
-                           required="true"
-                           data-options="valueField:'v',textField:'t',url:'<%=basePath %>dict/queryDict?rootcode=WareType'"
-                    >
+                    <input type="text" id="wareType" name="wareType" value="${warehouse.wareType}"
+                           class="easyui-combobox" required="true"
+                           data-options="valueField:'v',textField:'t',url:'<%=basePath %>dict/queryDict?rootcode=WareType'">
                 </td>
             </tr>
             <tr>

@@ -18,8 +18,6 @@
     const reIndividualPrint = path + "individualprinter/reIndividualPrint";
     const FindPrintsUrl = path + "rollBarcode/FindPrints";
     const editBacodeUrl = path + "rollBarcode/editBacode";
-    //const editProducePlanDetailPrintsUrl = path + "planner/producePlanDetail/editProducePlanDetailPrints";
-    // const dialogWidth = 700, dialogHeight = 350;
 
     $(function () {
         $('#dg').datagrid({

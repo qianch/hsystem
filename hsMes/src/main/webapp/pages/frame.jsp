@@ -1,6 +1,5 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
@@ -103,7 +102,6 @@
         </div>
     </div>
 </div>
-
 <!-- TAB右键点击菜单 -->
 <div id="mm" class="easyui-menu" style="width:150px;">
     <div id="mm-tabupdate" iconCls="icon-reload">刷新</div>
