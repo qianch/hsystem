@@ -11,5 +11,5 @@ import java.util.List;
  * @date 2020/06/30
  */
 public interface ILanguageService extends IBaseService {
-    public List<Language> queryLanguageList(String languageCode) throws SQLTemplateException;
+    List<Language> queryLanguageList(String languageCode) throws SQLTemplateException;
 }

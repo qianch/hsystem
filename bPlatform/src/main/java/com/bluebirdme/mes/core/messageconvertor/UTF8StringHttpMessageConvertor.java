@@ -1,26 +1,26 @@
 package com.bluebirdme.mes.core.messageconvertor;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.AbstractHttpMessageConverter;
 import org.springframework.util.FileCopyUtils;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author qianchen
  * @date 2020/05/21
  */
 public class UTF8StringHttpMessageConvertor extends AbstractHttpMessageConverter<String> {
-    public static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
-    private final List<Charset> availableCharsets = new ArrayList(Charset.availableCharsets().values());
+    public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
+    private final List<Charset> availableCharsets = new ArrayList<>(Charset.availableCharsets().values());
     private boolean writeAcceptCharset = true;
 
     public UTF8StringHttpMessageConvertor() {
@@ -42,11 +42,7 @@ public class UTF8StringHttpMessageConvertor extends AbstractHttpMessageConverter
 
     protected Long getContentLength(String s, MediaType contentType) {
         Charset charset = this.getContentTypeCharset(contentType);
-        try {
-            return (long) s.getBytes(charset.name()).length;
-        } catch (UnsupportedEncodingException ex) {
-            throw new InternalError(ex.getMessage());
-        }
+        return (long) s.getBytes(charset).length;
     }
 
     protected void writeInternal(String s, HttpOutputMessage outputMessage) throws IOException {
