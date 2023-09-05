@@ -95,12 +95,12 @@ public class RoleController extends BaseController {
     @RequestMapping(value = {"edit"}, method = {RequestMethod.POST})
     public String edit(Role role) throws Exception {
         Role _role = roleService.findById(Role.class, role.getId());
-        Map<String, Object> map = new HashMap();
+        Map<String, Object> map = new HashMap<>();
         map.put("name", role.getName());
         if (!_role.getName().equals(role.getName()) && this.roleService.isExist(Role.class, map)) {
             throw new Exception("角色名称重复:" + role.getName());
         } else {
-            this.roleService.update2(new Object[]{role});
+            this.roleService.update2(role);
             return "{}";
         }
     }

@@ -12,16 +12,11 @@ import java.security.NoSuchAlgorithmException;
 public interface Login {
     /**
      * 登录
-     * @throws NoSuchAlgorithmException
-     * @throws BusinessException
-     * @throws IOException
      */
     void doLogin() throws NoSuchAlgorithmException, BusinessException, IOException;
 
     /**
      * 错误
-     * @param s
-     * @throws BusinessException
      */
     void error(String s) throws BusinessException;
 

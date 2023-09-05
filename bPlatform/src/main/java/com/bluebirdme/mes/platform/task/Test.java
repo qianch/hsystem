@@ -18,20 +18,20 @@ import java.util.List;
 
 @Task("测试任务调度")
 public class Test extends BaseSchedule {
-    private static Logger log = LoggerFactory.getLogger(Test.class);
+    private static final Logger logger = LoggerFactory.getLogger(Test.class);
 
     @Override
     public boolean doJob(final JobExecutionContext ctx) {
         try {
-            log.debug("KEY:" + ctx.getJobDetail().getKey());
+            logger.debug("KEY:" + ctx.getJobDetail().getKey());
             final IUserService service = (IUserService) SpringCtx.getBean("userServiceImpl");
             final List<User> list = service.findAll(User.class);
             for (final User user : list) {
-                log.debug(user.getLoginName());
+                logger.debug(user.getLoginName());
             }
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getLocalizedMessage(), e);
             return false;
         }
     }

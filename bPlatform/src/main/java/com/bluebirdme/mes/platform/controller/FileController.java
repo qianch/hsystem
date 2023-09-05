@@ -47,10 +47,10 @@ public class FileController {
     @ResponseBody
     @RequestMapping(value = {"list"}, method = {RequestMethod.POST})
     public String list(String path) {
-        Map<String, Object> map = new HashMap();
+        Map<String, Object> map = new HashMap<>();
         map.put("shortFilePath", path);
         List<Attachment> list = this.attachmentService.findListByMap(Attachment.class, map);
-        return (new GsonBuilder()).serializeNulls().setExclusionStrategies(new ExclusionStrategy[]{new GsonExclusion(new String[]{"filePath"})}).create().toJson(list);
+        return (new GsonBuilder()).serializeNulls().setExclusionStrategies(new GsonExclusion(new String[]{"filePath"})).create().toJson(list);
     }
 
     @NoLogin
@@ -67,7 +67,6 @@ public class FileController {
         if (!file.exists()) {
             throw new BusinessException("文件已被删除(ID:" + attach.getId() + ")");
         }
-
         response.setHeader("content-disposition", "attachment;filename=" + URLEncoder.encode(attach.getFileName(), StandardCharsets.UTF_8));
         FileInputStream in = new FileInputStream(attach.getFilePath());
         OutputStream out = response.getOutputStream();
@@ -87,7 +86,6 @@ public class FileController {
         if (StringUtils.isBlank(path)) {
             throw new BusinessException("必须指定上传路径");
         }
-
         if (RuntimeVariable.UPLOAD_PATH == null) {
             RuntimeVariable.UPLOAD_PATH = request.getSession().getServletContext().getRealPath("/") + File.separator;
             File _file = new File(RuntimeVariable.UPLOAD_PATH);
@@ -95,7 +93,6 @@ public class FileController {
                 _file.mkdirs();
             }
         }
-
         String fileName = file.getOriginalFilename();
         String id = UUID.randomUUID().toString();
         Long size = file.getSize();
@@ -104,7 +101,6 @@ public class FileController {
         if (!(new File(filePath)).exists()) {
             (new File(filePath)).mkdirs();
         }
-
         filePath = filePath + id + "." + suffix;
         File target = new File(filePath);
         FileCopyUtils.copy(file.getInputStream(), new FileOutputStream(target));
@@ -119,7 +115,7 @@ public class FileController {
         attachment.setMd5(md5);
         attachment.setUploadTime(new Date());
         this.attachmentService.save(attachment);
-        return (new GsonBuilder()).serializeNulls().setExclusionStrategies(new ExclusionStrategy[]{new GsonExclusion(new String[]{"filePath"})}).create().toJson(attachment);
+        return (new GsonBuilder()).serializeNulls().setExclusionStrategies(new GsonExclusion(new String[]{"filePath"})).create().toJson(attachment);
     }
 
     @Journal(name = "删除文件")

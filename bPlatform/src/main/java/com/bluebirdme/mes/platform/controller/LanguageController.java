@@ -69,8 +69,7 @@ public class LanguageController extends BaseController {
     public String findAll(String filterRules, Page page) throws Exception {
         Filter filter = new Filter();
         if (!StringUtils.isEmpty(filterRules)) {
-            JsonParser parser = new JsonParser();
-            JsonArray array = parser.parse(filterRules).getAsJsonArray();
+            JsonArray array = JsonParser.parseString(filterRules).getAsJsonArray();
             FilterRules rule;
             Gson gson = new Gson();
             for (JsonElement obj : array) {

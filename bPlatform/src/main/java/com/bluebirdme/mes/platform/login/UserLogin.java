@@ -31,7 +31,7 @@ public abstract class UserLogin extends AbstractLogin {
     public void doLogin() throws BusinessException, NoSuchAlgorithmException {
         Locale loc = new Locale(this.language);
         this.session.setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, loc);
-        Map<String, Object> params = new HashMap();
+        Map<String, Object> params = new HashMap<>();
         params.put("loginName", this.loginName);
         String md5_password = MD5Utils.getStringMD5(this.password, "6d02d09506f651a26bdc3fef63494e5b");
         this.user = this.userService.findUniqueByMap(User.class, params);
@@ -58,27 +58,21 @@ public abstract class UserLogin extends AbstractLogin {
     }
 
     public void setPerssion() {
-        Map<String, List<String>> menuToButtons = new HashMap();
-        Iterator iterator = this.menus.iterator();
-
-        while (iterator.hasNext()) {
-            Map<String, Object> next = (Map) iterator.next();
-            String menuUrl = next.get("url") + "";
-            String menuId = next.get("id") + "";
-            List<String> buttonIds = new ArrayList();
-
+        Map<String, List<String>> menuToButtons = new HashMap<>();
+        for (Map<String, Object> menu : this.menus) {
+            String menuUrl = menu.get("url") + "";
+            String menuId = menu.get("id") + "";
+            List<String> buttonIds = new ArrayList<>();
             for (int i = this.buttons.size() - 1; i >= 0; --i) {
-                Map buttonMap = this.buttons.get(i);
+                Map<String, Object> buttonMap = this.buttons.get(i);
                 String buttonMid = buttonMap.get("parentId") + "";
                 String buttonCode = buttonMap.get("buttonCode") + "";
                 if (buttonMid.equals(menuId)) {
                     buttonIds.add(buttonCode);
                 }
             }
-
             menuToButtons.put(menuUrl, buttonIds);
         }
-
         this.session.setAttribute("currentRuntimeVersion", RuntimeVariable.RUNTIME_VERSION);
         this.session.setAttribute("url", this.urls);
         this.session.setAttribute("button", menuToButtons);

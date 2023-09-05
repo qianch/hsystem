@@ -15,7 +15,7 @@ import java.util.Map.Entry;
  * @date 2020/05/21
  */
 public class Filter {
-    private Map<String, String> filter = new HashMap();
+    private Map<String, String> filter = new HashMap<>();
     private String sort;
     private String order;
 
@@ -41,12 +41,11 @@ public class Filter {
 
     public void clear() {
         Iterator<Entry<String, String>> it = filter.entrySet().iterator();
-        Entry entry;
-        ArrayList keyList = new ArrayList();
-
+        Entry<String, String> entry;
+        ArrayList<Object> keyList = new ArrayList<>();
         while (it.hasNext()) {
             entry = it.next();
-            if (StringUtils.isBlank((String) entry.getValue())) {
+            if (StringUtils.isBlank(entry.getValue())) {
                 keyList.add(entry.getKey());
             }
         }

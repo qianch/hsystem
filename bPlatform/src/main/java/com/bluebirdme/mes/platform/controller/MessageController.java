@@ -192,14 +192,12 @@ public class MessageController extends BaseController {
         HashMap<String, Object> map = new HashMap();
         map.put("userId", userId);
         List<Subscription> subList = msgService.findListByMap(Subscription.class, map);
-        if (subList.size() == 0) {
+        if (subList.isEmpty()) {
             return ajaxError("没有订阅的内容，请先订阅");
         } else {
-            List<HashMap<String, String>> li = new ArrayList();
-            Iterator iterator = subList.iterator();
-            while (iterator.hasNext()) {
-                Subscription sub = (Subscription) iterator.next();
-                HashMap<String, String> returnMap = new HashMap();
+            List<HashMap<String, String>> li = new ArrayList<>();
+            for (Subscription sub : subList) {
+                HashMap<String, String> returnMap = new HashMap<>();
                 returnMap.put("ID", sub.getMessageType());
                 returnMap.put("VALUE", sub.getMessageType());
                 li.add(returnMap);
@@ -209,19 +207,17 @@ public class MessageController extends BaseController {
     }
 
     private String getUserMTypes(Long userId) {
-        HashMap<String, Object> map = new HashMap();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("userId", userId);
         List<Subscription> subList = msgService.findListByMap(Subscription.class, map);
-        String message = "";
-        Iterator iterator = subList.iterator();
-        while (iterator.hasNext()) {
-            Subscription sub = (Subscription) iterator.next();
-            if (message.length() == 0) {
-                message = message + sub.getMessageType();
+        StringBuilder message = new StringBuilder();
+        for (Subscription sub : subList) {
+            if (message.isEmpty()) {
+                message.append(sub.getMessageType());
             } else {
-                message = message + "," + sub.getMessageType();
+                message.append(",").append(sub.getMessageType());
             }
         }
-        return message;
+        return message.toString();
     }
 }

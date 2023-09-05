@@ -81,7 +81,7 @@ public class ScheduleInstanceController extends BaseController {
     @RequestMapping(value = {"edit"}, method = {RequestMethod.POST})
     @Valid
     public String edit(ScheduleInstance scheduleInstance) throws Exception {
-        scheduleInstanceService.update(new Object[]{scheduleInstance});
+        scheduleInstanceService.update(scheduleInstance);
         return GsonTools.toJson(scheduleInstance);
     }
 

@@ -85,7 +85,7 @@ public class UserController extends BaseController {
     public String add(User user) throws Exception {
         user.setPassword(MD5Utils.getStringMD5("123456", "6d02d09506f651a26bdc3fef63494e5b"));
         user.setCreateTime(new Date());
-        Map<String, Object> map = new HashMap();
+        Map<String, Object> map = new HashMap<>();
         map.put("loginName", user.getLoginName());
         if (this.userService.isExist(User.class, map)) {
             throw new Exception("登录帐号重复:" + user.getLoginName());
@@ -112,7 +112,7 @@ public class UserController extends BaseController {
     @RequestMapping(value = {"edit"}, method = {RequestMethod.POST})
     public String edit(User user) throws Exception {
         User _user = userService.findById(User.class, user.getId());
-        Map<String, Object> map = new HashMap();
+        Map<String, Object> map = new HashMap<>();
         map.put("loginName", user.getLoginName());
         if (!_user.getLoginName().equals(user.getLoginName()) && userService.isExist(User.class, map)) {
             throw new Exception("登录账户重复:" + user.getLoginName());
@@ -133,17 +133,16 @@ public class UserController extends BaseController {
     @Journal(name = "编辑用户角色页面")
     @RequestMapping(value = {"role"}, method = {RequestMethod.GET})
     public ModelAndView _role(User user) {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         if (user != null && user.getId() != null) {
-            Map<String, Object> map = new HashMap();
+            Map<String, Object> map = new HashMap<>();
             map.put("userId", user.getId());
             List<UserRole> list = this.roleService.findListByMap(UserRole.class, map);
 
             for (int i = 0; i < list.size(); ++i) {
-                buffer.append((i == 0 ? "" : ",") + list.get(i).getRoleId());
+                buffer.append(i == 0 ? "" : ",").append(list.get(i).getRoleId());
             }
         }
-
         return new ModelAndView("platform/userRole", this.model.addAttribute("roles", buffer.toString()));
     }
 
@@ -161,7 +160,7 @@ public class UserController extends BaseController {
     public String reset(User user) throws NoSuchAlgorithmException {
         user = userService.findById(User.class, user.getId());
         user.setPassword(MD5Utils.getStringMD5("123456", "6d02d09506f651a26bdc3fef63494e5b"));
-        this.userService.update(new Object[]{user});
+        this.userService.update(user);
         return "{}";
     }
 
@@ -169,7 +168,7 @@ public class UserController extends BaseController {
     @Journal(name = "启用/禁用用户", logType = LogType.DB)
     @RequestMapping(value = {"enable"}, method = {RequestMethod.POST})
     public String enable(User user) throws Exception {
-        this.userService.update2(new Object[]{user});
+        this.userService.update2(user);
         return "{}";
     }
 
@@ -192,7 +191,7 @@ public class UserController extends BaseController {
             User user = userService.findById(User.class, uid);
             if (MD5Utils.getStringMD5(p1, "6d02d09506f651a26bdc3fef63494e5b").equals(user.getPassword())) {
                 user.setPassword(MD5Utils.getStringMD5(p2, "6d02d09506f651a26bdc3fef63494e5b"));
-                this.userService.update(new Object[]{user});
+                this.userService.update(user);
                 return "{}";
             } else {
                 return this.ajaxError("原密码不正确");

@@ -70,10 +70,10 @@ public class ExceptionController extends BaseController {
     @RequestMapping("ajaxError")
     public String ajaxError() {
         try {
-            Map<String, Object> error = new HashMap(1);
+            Map<String, Object> error = new HashMap<>(1);
             error.put("error", request.getAttribute("error"));
             try {
-                int code = request.getAttribute("_HTTP_STATUS_CODE_") == null ? 500 : Integer.valueOf(request.getAttribute("_HTTP_STATUS_CODE_") + "");
+                int code = request.getAttribute("_HTTP_STATUS_CODE_") == null ? 500 : Integer.parseInt(request.getAttribute("_HTTP_STATUS_CODE_") + "");
                 response.setStatus(code);
             } catch (Exception ex) {
                 logger.error(ex.getLocalizedMessage(), ex);

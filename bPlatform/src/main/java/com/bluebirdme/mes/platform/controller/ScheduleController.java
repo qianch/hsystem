@@ -54,9 +54,9 @@ public class ScheduleController extends BaseController {
     @ResponseBody
     @RequestMapping({"check"})
     public String check(Schedule schedule) throws ClassNotFoundException, BusinessException {
-        Class clazz = Class.forName(schedule.getClazz());
+        Class<?> clazz = Class.forName(schedule.getClazz());
         if (clazz.getSuperclass() != null && clazz.getSuperclass().getSimpleName().equals(BaseSchedule.class.getSimpleName())) {
-            Task t = (Task) clazz.getAnnotation(Task.class);
+            Task t = clazz.getAnnotation(Task.class);
             if (t == null) {
                 throw new BusinessException("没有在" + clazz.getSimpleName() + "上找到@Task注解");
             } else {
@@ -78,7 +78,7 @@ public class ScheduleController extends BaseController {
     @RequestMapping(value = {"add"}, method = {RequestMethod.POST})
     public String add(Schedule schedule) throws ClassNotFoundException, SchedulerException, ParseException, InstantiationException, IllegalAccessException, BusinessException {
         schedule.setCreateTime(new Date());
-        Map<String, Object> map = new HashMap();
+        Map<String, Object> map = new HashMap<>();
         map.put("clazz", schedule.getClazz());
         if (scheduleService.isExist(Schedule.class, map)) {
             throw new BusinessException("重复的调度任务");
@@ -108,13 +108,13 @@ public class ScheduleController extends BaseController {
     public String edit(Schedule schedule) throws Exception {
         schedule.setCreateTime(new Date());
         Schedule s = scheduleService.findById(Schedule.class, schedule.getId());
-        Map<String, Object> map = new HashMap();
+        Map<String, Object> map = new HashMap<>();
         map.put("clazz", schedule.getClazz());
         if (!schedule.getClazz().equalsIgnoreCase(s.getClazz()) && scheduleService.isExist(Schedule.class, map)) {
             throw new BusinessException("重复的调度任务");
         } else {
             schedule.setStatus(s.getStatus());
-            this.scheduleService.update2(new Object[]{schedule});
+            this.scheduleService.update2(schedule);
             return "{}";
         }
     }

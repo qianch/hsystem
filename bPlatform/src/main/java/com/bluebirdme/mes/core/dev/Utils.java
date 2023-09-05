@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 /**
@@ -30,18 +31,13 @@ public class Utils {
 
     public static void generateToFile(String ftlName, String outputFile, Object data) throws IOException {
         FileOutputStream fos = new FileOutputStream(outputFile);
-        OutputStreamWriter out = new OutputStreamWriter(fos, "UTF-8");
-
-        try {
+        try (fos; OutputStreamWriter out = new OutputStreamWriter(fos, StandardCharsets.UTF_8)) {
             Template tpl = getFreemarkerConfig().getTemplate(ftlName);
             tpl.setEncoding("UTF-8");
             tpl.process(data, out);
             out.flush();
         } catch (Exception ex) {
             logger.error(ex.getLocalizedMessage(), ex);
-        } finally {
-            fos.close();
-            out.close();
         }
     }
 

@@ -1,5 +1,7 @@
 package com.bluebirdme.mes.core.base.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.expression.ParseException;
 import org.springframework.util.StringUtils;
 
@@ -13,6 +15,7 @@ import java.util.Date;
  * @date 2020/05/21
  */
 public class DateEditor extends PropertyEditorSupport {
+    private static final Logger logger = LoggerFactory.getLogger(DateEditor.class);
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
     private static final DateFormat TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private DateFormat dateFormat;
@@ -45,7 +48,7 @@ public class DateEditor extends PropertyEditorSupport {
             } catch (ParseException parseException) {
                 throw new IllegalArgumentException("不能格式化日期: " + parseException.getMessage(), parseException);
             } catch (java.text.ParseException parseException) {
-                parseException.printStackTrace();
+                logger.error(parseException.getLocalizedMessage(), parseException);
             }
         }
     }

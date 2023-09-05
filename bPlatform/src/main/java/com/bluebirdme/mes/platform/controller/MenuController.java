@@ -21,7 +21,10 @@ import org.xdemo.superutil.thirdparty.gson.GsonKeyRename;
 import org.xdemo.superutil.thirdparty.gson.GsonTools;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author qianchen
@@ -48,7 +51,7 @@ public class MenuController extends BaseController {
     @ResponseBody
     @RequestMapping({"list"})
     public String list(Filter filter, Page page) throws Exception {
-        return (new GsonBuilder()).setFieldNamingStrategy(new GsonKeyRename(new HashMap() {
+        return (new GsonBuilder()).setFieldNamingStrategy(new GsonKeyRename(new HashMap<>() {
             {
                 this.put("url", "_url");
                 this.put("icon", "_icon");
@@ -64,7 +67,6 @@ public class MenuController extends BaseController {
         } else {
             menu.setCode(this.menuService.getMenuCode(menu.getParentId()));
         }
-
         return new ModelAndView(
                 "platform/menuAddOrEdit",
                 model.addAttribute("menu", menu)
@@ -76,8 +78,8 @@ public class MenuController extends BaseController {
     @RequestMapping(value = {"add"}, method = {RequestMethod.POST})
     @Valid
     public String add(Menu menu) {
-        menuService.save(new Object[]{menu});
-        return (new GsonBuilder()).setFieldNamingStrategy(new GsonKeyRename(new HashMap() {
+        menuService.save(menu);
+        return (new GsonBuilder()).setFieldNamingStrategy(new GsonKeyRename(new HashMap<>() {
             {
                 this.put("url", "_url");
                 this.put("icon", "_icon");
@@ -113,7 +115,7 @@ public class MenuController extends BaseController {
     @ResponseBody
     @RequestMapping(value = {"sort"}, method = {RequestMethod.POST})
     public String sort(@RequestBody List<Menu> list) throws Exception {
-        menuService.update2(list.toArray(new Menu[0]));
+        menuService.update2((Object) list.toArray(new Menu[0]));
         return "{}";
     }
 
@@ -139,12 +141,9 @@ public class MenuController extends BaseController {
     }
 
     public Map<String, Object> getMenuTree(List<Menu> list) {
-        Map<String, Object> map = new HashMap();
-        Map<String, String> attributes = new HashMap();
-        Iterator iterator = list.iterator();
-
-        while (iterator.hasNext()) {
-            Menu menu = (Menu) iterator.next();
+        Map<String, Object> map = new HashMap<>();
+        Map<String, String> attributes = new HashMap<>();
+        for (Menu menu : list) {
             if (menu.getParentId() == null) {
                 map.put("iconCls", menu.getIcon());
                 map.put("id", menu.getId());
@@ -159,14 +158,11 @@ public class MenuController extends BaseController {
     }
 
     public List<Map<String, Object>> children(Menu parent, List<Menu> list) {
-        List<Map<String, Object>> mtl = new ArrayList();
-        Iterator iterator = list.iterator();
-
-        while (iterator.hasNext()) {
-            Menu menu = (Menu) iterator.next();
+        List<Map<String, Object>> mtl = new ArrayList<>();
+        for (Menu menu : list) {
             if (menu.getParentId() != null && menu.getParentId().equals(parent.getId()) && menu.getIsButton() != 1) {
-                Map<String, Object> map = new HashMap();
-                Map<String, String> attributes = new HashMap();
+                Map<String, Object> map = new HashMap<>();
+                Map<String, String> attributes = new HashMap<>();
                 map.put("iconCls", menu.getIcon());
                 map.put("id", menu.getId());
                 map.put("text", menu.getName());

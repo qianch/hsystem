@@ -54,7 +54,6 @@ public class DictController extends BaseController {
         return GsonTools.toJson(this.dictService.combotree(code, defaultId));
     }
 
-
     @NoAuth
     @ResponseBody
     @Journal(name = "获取代码列表信息")
@@ -63,22 +62,21 @@ public class DictController extends BaseController {
         return (new GsonBuilder()).serializeNulls().create().toJson(this.dictService.findPageInfo(filter, page));
     }
 
-
     @NoLogin
     @ResponseBody
     @Journal(name = "获取代码列表信息")
     @RequestMapping({"queryDict"})
     public String queryDict(String rootcode) throws Exception {
         List<Map<String, Object>> list = dictService.queryDict(rootcode);
-        List<Map<String, Object>> combobox = new ArrayList();
+        List<Map<String, Object>> combobox = new ArrayList<>();
         if (rootcode.contains("alloptions")) {
-            Map<String, Object> map = new HashMap();
+            Map<String, Object> map = new HashMap<>();
             map.put("t", "全部");
             map.put("v", "");
             combobox.add(map);
         }
         for (Map<String, Object> m : list) {
-            Map<String, Object> map = new HashMap();
+            Map<String, Object> map = new HashMap<>();
             map.put("t", m.get("name_zh_CN".toUpperCase()));
             map.put("v", m.get("CODE"));
             combobox.add(map);
@@ -92,10 +90,10 @@ public class DictController extends BaseController {
     @RequestMapping({"queryDictAll"})
     public String queryDictAll() throws Exception {
         List<Map<String, String>> list = dictService.queryDictAll();
-        List<Map<String, Object>> combobox = new ArrayList<Map<String, Object>>();
+        List<Map<String, Object>> combobox = new ArrayList<>();
         Map<String, Object> map;
         for (Map<String, String> m : list) {
-            map = new HashMap();
+            map = new HashMap<>();
             map.put("t", m.get("name_zh_CN".toUpperCase()));
             map.put("v", m.get("CODE"));
             combobox.add(map);
@@ -127,7 +125,7 @@ public class DictController extends BaseController {
     @Journal(name = "保存字典数据")
     @RequestMapping(value = {"add"}, method = {RequestMethod.POST})
     public String add(Dict dict) {
-        Map<String, Object> param = new HashMap();
+        Map<String, Object> param = new HashMap<>();
         param.put("code", dict.getCode());
         if (this.dictService.isExist(Dict.class, param, false)) {
             return this.ajaxError("字典编码重复");
@@ -168,7 +166,7 @@ public class DictController extends BaseController {
     @Journal(name = "保存编辑后的字典数据")
     @RequestMapping(value = {"edit"}, method = {RequestMethod.POST})
     public String edit(Dict dict) throws Exception {
-        Map<String, Object> param = new HashMap();
+        Map<String, Object> param = new HashMap<>();
         param.put("code", dict.getCode());
         if (dictService.isExist(Dict.class, param, dict.getId(), false)) {
             return this.ajaxError("字典编码重复");

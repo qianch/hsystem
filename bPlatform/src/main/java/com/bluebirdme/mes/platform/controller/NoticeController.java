@@ -90,7 +90,7 @@ public class NoticeController extends BaseController {
     @RequestMapping(value = {"edit"}, method = {RequestMethod.POST})
     public String edit(Notice notice) {
         notice.setInputTime(new Date());
-        noticeService.update(new Object[]{notice});
+        noticeService.update(notice);
         return GsonTools.toJson(notice);
     }
 

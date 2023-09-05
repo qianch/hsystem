@@ -40,15 +40,15 @@ public class PlatformToolsController extends BaseController {
         Map<RequestMappingInfo, HandlerMethod> map = this.handlerMapping.getHandlerMethods();
         Iterator<Entry<RequestMappingInfo, HandlerMethod>> it = map.entrySet().iterator();
         HandlerMethod method;
-        Class<? extends Object> clazz = null;
-        HashMap urlMap = new HashMap();
+        Class<?> clazz = null;
+        HashMap<String, Object> urlMap = new HashMap<>();
         while (true) {
             do {
                 if (!it.hasNext()) {
                     return (new GsonBuilder()).create().toJson(urlMap);
                 }
-                Entry entry = it.next();
-                method = (HandlerMethod) entry.getValue();
+                Entry<RequestMappingInfo, HandlerMethod> entry = it.next();
+                method = entry.getValue();
             } while (null != clazz && clazz.getName().equals(method.getBeanType().getName()));
 
             clazz = method.getBeanType();
@@ -56,9 +56,7 @@ public class PlatformToolsController extends BaseController {
             Journal journal = clazz.getAnnotation(Journal.class);
             String base = clazz.getAnnotation(RequestMapping.class).value()[0].substring(1);
             urlMap.put(base, journal == null ? "" : journal.name());
-            int length = methods.length;
-            for (int i = 0; i < length; ++i) {
-                Method m = methods[i];
+            for (Method m : methods) {
                 RequestMapping rm = m.getAnnotation(RequestMapping.class);
                 journal = m.getAnnotation(Journal.class);
                 if (rm != null && rm.value().length != 0) {

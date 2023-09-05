@@ -69,12 +69,12 @@ public class DepartmentController extends BaseController {
         if (StringUtils.isBlank(department.getCode())) {
             department.setCode(PinYinUtils.getPinYinHeadChar(department.getName()).toUpperCase());
         }
-        Map<String, Object> map = new HashMap();
+        Map<String, Object> map = new HashMap<>();
         map.put("name", department.getName());
         if (this.departmentService.isExist(Department.class, map)) {
             throw new BusinessException("部门名称重复:" + department.getName());
         }
-        this.departmentService.save(new Object[]{department});
+        this.departmentService.save(department);
         return (new GsonBuilder()).serializeNulls().create().toJson(department);
     }
 
@@ -90,7 +90,7 @@ public class DepartmentController extends BaseController {
     @RequestMapping(value = {"edit"}, method = {RequestMethod.POST})
     public String edit(Department department) throws Exception {
         Department _department = this.departmentService.findById(Department.class, department.getId());
-        Map<String, Object> map = new HashMap();
+        Map<String, Object> map = new HashMap<>();
         map.put("name", department.getName());
         if (!_department.getName().equals(department.getName()) && this.departmentService.isExist(Department.class, map)) {
             throw new BusinessException("部门名称重复:" + department.getName());
@@ -137,17 +137,16 @@ public class DepartmentController extends BaseController {
     @RequestMapping({"queryDepartment"})
     public String queryDepartment(String type) throws Exception {
         List<Map<String, Object>> list = departmentService.queryDepartment(type);
-        List<Map<String, Object>> combobox = new ArrayList();
+        List<Map<String, Object>> combobox = new ArrayList<>();
         Map<String, Object> map;
         if (type.contains("alloptions")) {
-            map = new HashMap();
+            map = new HashMap<>();
             map.put("t", "全部");
             map.put("v", "");
             combobox.add(map);
         }
-
         for (Map<String, Object> m : list) {
-            map = new HashMap();
+            map = new HashMap<>();
             map.put("t", m.get("NAME"));
             map.put("v", m.get("CODE"));
             combobox.add(map);
@@ -159,10 +158,10 @@ public class DepartmentController extends BaseController {
     @RequestMapping({"queryAllDepartment"})
     public String queryAllDepartment() throws Exception {
         List<Map<String, Object>> list = departmentService.queryAllDepartment();
-        List<Map<String, Object>> combobox = new ArrayList();
+        List<Map<String, Object>> combobox = new ArrayList<>();
         Map<String, Object> map;
         for (Map<String, Object> m : list) {
-            map = new HashMap();
+            map = new HashMap<>();
             map.put("t", m.get("NAME"));
             map.put("v", m.get("CODE"));
             combobox.add(map);
@@ -176,10 +175,10 @@ public class DepartmentController extends BaseController {
     @RequestMapping({"queryAllDepartmentID"})
     public String queryAllDepartmentID() throws Exception {
         List<Map<String, Object>> list = departmentService.queryAllDepartment();
-        List<Map<String, Object>> combobox = new ArrayList();
+        List<Map<String, Object>> combobox = new ArrayList<>();
         Map<String, Object> map;
         for (Map<String, Object> m : list) {
-            map = new HashMap();
+            map = new HashMap<>();
             map.put("t", m.get("NAME"));
             map.put("v", m.get("ID"));
             combobox.add(map);
@@ -197,7 +196,7 @@ public class DepartmentController extends BaseController {
         List<Map<String, Object>> combobox = new ArrayList<>();
         Map<String, Object> map;
         for (Map<String, Object> m : list) {
-            map = new HashMap();
+            map = new HashMap<>();
             map.put("t", m.get("NAME"));
             map.put("v", m.get("CODE"));
             combobox.add(map);

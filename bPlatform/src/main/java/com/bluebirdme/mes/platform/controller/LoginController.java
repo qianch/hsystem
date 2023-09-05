@@ -70,17 +70,14 @@ public class LoginController extends BaseController {
                 return new ModelAndView("redirect:/");
             }
         }
-
-        User user;
-        Map<String, Object> params = new HashMap();
+        Map<String, Object> params = new HashMap<>();
         params.put("loginName", loginName);
         String md5Password = MD5Utils.getStringMD5(password, "6d02d09506f651a26bdc3fef63494e5b");
-        user = userService.findUniqueByMap(User.class, params);
+        User user = userService.findUniqueByMap(User.class, params);
         if (user != null && user.getPassword().equals(md5Password)) {
             if (user.getStatus() == -1) {
                 return (new ModelAndView("login")).addObject("error", "该账户已被禁用");
             }
-
             if (SessionListenerImpl.hasLogin(loginName)) {
                 SessionListenerImpl.forceInvalidate(loginName);
                 session = request.getSession(true);
@@ -106,25 +103,20 @@ public class LoginController extends BaseController {
     }
 
     public void setPerssion() {
-        Map<String, List<String>> menuToButtons = new HashMap();
+        Map<String, List<String>> menuToButtons = new HashMap<>();
         List<String> buttonIds;
         String menuUrl;
         String menuId;
         String buttonCode;
         String buttonMid;
-        Iterator iterator = this.menus.iterator();
-
-        while (iterator.hasNext()) {
-            Map<String, Object> m = (Map) iterator.next();
-            new ArrayList();
-            menuUrl = MapUtils.getAsStringIgnoreCase(m, "URL") + "";
-            menuId = MapUtils.getAsStringIgnoreCase(m, "ID") + "";
-            buttonIds = new ArrayList();
-
+        for (Map<String, Object> m : this.menus) {
+            menuUrl = MapUtils.getAsStringIgnoreCase(m, "URL");
+            menuId = MapUtils.getAsStringIgnoreCase(m, "ID");
+            buttonIds = new ArrayList<>();
             for (int i = this.buttons.size() - 1; i >= 0; --i) {
-                Map<String, Object> buttonMap = (Map) this.buttons.get(i);
-                buttonMid = MapUtils.getAsStringIgnoreCase(buttonMap, "parentId") + "";
-                buttonCode = MapUtils.getAsStringIgnoreCase(buttonMap, "buttonCode") + "";
+                Map<String, Object> buttonMap = this.buttons.get(i);
+                buttonMid = MapUtils.getAsStringIgnoreCase(buttonMap, "parentId");
+                buttonCode = MapUtils.getAsStringIgnoreCase(buttonMap, "buttonCode");
                 if (buttonMid.equals(menuId)) {
                     buttonIds.add(buttonCode);
                 }

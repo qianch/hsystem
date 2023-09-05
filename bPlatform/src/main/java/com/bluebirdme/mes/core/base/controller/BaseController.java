@@ -56,15 +56,12 @@ public abstract class BaseController {
         this.remoteIp = request.getRemoteAddr();
         this.requestPath = request.getRequestURL().toString();
         this.model = model;
-
         if (session.getAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME) == null) {
             session.setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, request.getLocale());
         }
+        language = "zh_CN";
         locale = (Locale) session.getAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME);
-
-        if (locale == null) {
-            language = "zh_CN";
-        } else {
+        if (locale != null) {
             language = locale.getLanguage();
         }
         // 判断是否是80端口，80端口默认不加端口号
@@ -106,7 +103,7 @@ public abstract class BaseController {
                 }
                 exceptionService.save(msg);
             }
-            Map<String, Object> error = new HashMap();
+            Map<String, Object> error = new HashMap<>();
             if (RuntimeVariable.DEBUG) {
                 error.put("error", exceptionMsg);
             } else {
