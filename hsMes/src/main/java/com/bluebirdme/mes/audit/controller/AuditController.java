@@ -147,7 +147,7 @@ public class AuditController extends BaseController {
             }
         }
 
-        Map<String, Object> param = new HashMap();
+        Map<String, Object> param = new HashMap<>();
         param.put("auditCode", ai.getAuditCode());
         AuditProcessSetting aps = auditService.findUniqueByMap(AuditProcessSetting.class, param);
 
@@ -227,11 +227,11 @@ public class AuditController extends BaseController {
                 Map<String, Object> map2 = new HashMap<>();
                 map2.put("processBomCode", tcBom.getTcProcBomCode());
                 List<BomFile> bomFileList = auditService.findListByMap(BomFile.class, map2);
-                if (tcBomVersionPartsList.size() == 0 || bomFileList.size() == 0) {
+                if (tcBomVersionPartsList.isEmpty() || bomFileList.isEmpty()) {
                     return ajaxError("套材BOM未成功导入工艺文件，请执行拒绝操作");
                 }
             } else {//手动创建信息没有填全
-                if (tcBomVersionPartsList.size() == 0) {
+                if (tcBomVersionPartsList.isEmpty()) {
                     return ajaxError("手动导入套材BOM信息未填全，请执行拒绝操作");
                 }
             }
@@ -249,14 +249,14 @@ public class AuditController extends BaseController {
                 Map<String, Object> map2 = new HashMap<>();
                 map2.put("processBomCode", ftcBom.getFtcProcBomCode());
                 List<BomFile> bomFileList = auditService.findListByMap(BomFile.class, map2);
-                if (bomFileList.size() == 0) {
+                if (bomFileList.isEmpty()) {
                     return ajaxError("非套材BOM未成功导入工艺文件，请执行拒绝操作");
                 }
-                if (ftcBomDetailList.size() == 0) {
+                if (ftcBomDetailList.isEmpty()) {
                     return ajaxError("非套材BOM明细列表信息未填全，请执行拒绝操作");
                 }
             } else {//手动创建信息没有填全
-                if (ftcBomDetailList.size() == 0) {
+                if (ftcBomDetailList.isEmpty()) {
                     return ajaxError("手动导入非套材BOM信息未填全，请执行拒绝操作");
                 }
             }
@@ -274,11 +274,11 @@ public class AuditController extends BaseController {
                 Map<String, Object> map2 = new HashMap<>();
                 map2.put("bcBomCode", ftcBcBom1.getCode());
                 List<BomFile> bomFileList = auditService.findListByMap(BomFile.class, map2);
-                if (ftcBcBomVersionDetails.size() == 0 || bomFileList.size() == 0) {
+                if (ftcBcBomVersionDetails.isEmpty() || bomFileList.isEmpty()) {
                     return ajaxError("非套材包材BOM未成功导入工艺文件，请执行拒绝操作");
                 }
             } else {
-                if (ftcBcBomVersionDetails.size() == 0) {
+                if (ftcBcBomVersionDetails.isEmpty()) {
                     return ajaxError("手动导入非套材包材BOM信息未填全，请执行拒绝操作");
                 }
             }
@@ -295,14 +295,14 @@ public class AuditController extends BaseController {
                 Map<String, Object> map2 = new HashMap<>();
                 map2.put("bcBomCode", bcBom.getPackBomCode());
                 List<BomFile> bomFileList = auditService.findListByMap(BomFile.class, map2);
-                if (bomFileList.size() == 0) {
+                if (bomFileList.isEmpty()) {
                     return ajaxError("包材BOM未成功导入工艺文件，请执行拒绝操作");
                 }
-                if (bcBomVersionDetails.size() == 0) {
+                if (bcBomVersionDetails.isEmpty()) {
                     return ajaxError("包材BOM明细列表信息未填全，请执行拒绝操作");
                 }
             } else {
-                if (bcBomVersionDetails.size() == 0) {
+                if (bcBomVersionDetails.isEmpty()) {
                     return ajaxError("手动导入包材BOM明细列表信息未填全，请执行拒绝操作");
                 }
             }
@@ -342,7 +342,7 @@ public class AuditController extends BaseController {
                     map.put("closed", null);
                     map.put("productId", Long.parseLong(s.get("PRODUCTID").toString()));
                     List<SalesOrderDetailTemp> sodList = tcBomVersionService.findListByMap(SalesOrderDetailTemp.class, map);
-                    if (sodList.size() == 0) {
+                    if (sodList.isEmpty()) {
                         FtcBomVersion ftcBomVersion = ftcBcBomVersionService.findById(FtcBomVersion.class, Long.parseLong(s.get("PROCBOMID").toString()));
                         if (null == ftcBomVersion) {
                             return ajaxError("订单号为:" + s.get("SALESORDERSUBCODE") + "工艺代码为：" + s.get("PRODUCTPROCESSCODE") + "的BOM已被删除，审核不通过，请执行拒绝操作");
@@ -353,10 +353,8 @@ public class AuditController extends BaseController {
                     }
                 }
             }
-
-            if (list.size() > 0) {
-                String.join(",", list);
-                return ajaxError(list + "订单的工艺版本与BOM工艺版本不匹配，审核不通过，请执行拒绝操作");
+            if (!list.isEmpty()) {
+                return ajaxError(String.join(",", list) + "订单的工艺版本与BOM工艺版本不匹配，审核不通过，请执行拒绝操作");
             }
         }
         auditService.audit(ai, aps, (Long) session.getAttribute(Constant.CURRENT_USER_ID), level, msg, result);
@@ -391,7 +389,7 @@ public class AuditController extends BaseController {
         }
         //查询流程设置
         //带返回集合
-        List<Map<String, Object>> retList = new ArrayList();
+        List<Map<String, Object>> retList = new ArrayList<>();
         Map<String, Object> ret;
         User u;
 
@@ -399,7 +397,7 @@ public class AuditController extends BaseController {
             map.clear();
             map.put("auditCode", ai.getAuditCode());
             AuditProcessSetting aps = auditService.findUniqueByMap(AuditProcessSetting.class, map);
-            ret = new HashMap();
+            ret = new HashMap<>();
             u = userService.findById(User.class, ai.getCreateUserId());
             //提审时间
             ret.put("submitTime", ai.getCreateTime());

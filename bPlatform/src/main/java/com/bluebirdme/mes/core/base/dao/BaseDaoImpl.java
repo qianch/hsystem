@@ -171,7 +171,6 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
             builder.append(clazz.getField("isDeleted") == null ? "" : " and isDeleted<>1");
         } catch (Exception ignored) {
         }
-
         Set<Entry<String, Object>> set = condition.entrySet();
         Iterator<Entry<String, Object>> iterator = set.iterator();
         int i = 0;
@@ -180,7 +179,6 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
             builder.append(i++ == 0 ? " and " : " or ").append(entry.getKey()).append("=:").append(entry.getKey());
         }
         Query query = this.getSession().createQuery(builder.toString());
-
         iterator = set.iterator();
         while (iterator.hasNext()) {
             Entry<String, Object> entry = iterator.next();
@@ -197,21 +195,19 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
             builder.append(clazz.getField("isDeleted") == null ? "" : " and isDeleted<>1");
         } catch (Exception ignored) {
         }
-
         Set<Entry<String, Object>> set = condition.entrySet();
         Iterator<Entry<String, Object>> iterator = set.iterator();
         while (iterator.hasNext()) {
             Entry<String, Object> entry = iterator.next();
             if (entry.getValue() == null) {
-                builder.append(" and " + entry.getKey() + " is null");
+                builder.append(" and ").append(entry.getKey()).append(" is null");
             } else if (entry.getValue().getClass().isArray()) {
-                builder.append(" and " + entry.getKey() + " in :" + entry.getKey());
+                builder.append(" and ").append(entry.getKey()).append(" in :").append(entry.getKey());
             } else {
-                builder.append(" and " + entry.getKey() + "=:" + entry.getKey());
+                builder.append(" and ").append(entry.getKey()).append("=:").append(entry.getKey());
             }
         }
         Query query = this.getSession().createQuery(builder.toString());
-
         iterator = set.iterator();
         while (iterator.hasNext()) {
             Entry<String, Object> entry = iterator.next();
@@ -223,9 +219,8 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
                 }
             }
         }
-
         List<Object[]> list = query.list();
-        return list != null && list.size() != 0;
+        return list != null && !list.isEmpty();
     }
 
     @Override
@@ -235,7 +230,6 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
             builder.append(" and isDeleted<>1");
         } catch (Exception ignored) {
         }
-
         Set<Entry<String, Object>> set = condition.entrySet();
         Iterator<Entry<String, Object>> iterator = set.iterator();
         while (iterator.hasNext()) {
@@ -250,7 +244,6 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
         }
         builder.append(" and id<>:id");
         Query query = getSession().createQuery(builder.toString());
-
         iterator = set.iterator();
         while (iterator.hasNext()) {
             Entry<String, Object> entry = iterator.next();
@@ -262,10 +255,9 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
                 }
             }
         }
-
         query.setParameter("id", id);
         List<Object[]> list = query.list();
-        return list != null && list.size() != 0;
+        return list != null && !list.isEmpty();
     }
 
     @Override
@@ -276,7 +268,6 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
         } catch (Exception ignored) {
 
         }
-
         Set<Entry<String, Object>> set = map.entrySet();
         Iterator<Entry<String, Object>> iterator = set.iterator();
         int i = 0;
@@ -286,15 +277,13 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
             builder.append(" ").append(entry.getKey()).append("=:").append(entry.getKey());
         }
         Query query = getSession().createQuery(builder.toString());
-
         iterator = set.iterator();
         while (iterator.hasNext()) {
             Entry<String, Object> entry = iterator.next();
             query.setParameter(entry.getKey(), entry.getValue());
         }
-
         List<Object[]> list = query.list();
-        return list != null && list.size() != 0;
+        return list != null && !list.isEmpty();
     }
 
     @Override
@@ -307,7 +296,6 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
             builder.append(clazz.getField("isDeleted") == null ? "" : " and isDeleted<>1");
         } catch (Exception ignored) {
         }
-
         Set<Entry<String, Object>> set = map.entrySet();
         Iterator<Entry<String, Object>> iterator = set.iterator();
         int i = 0;
@@ -315,10 +303,8 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
             Entry<String, Object> entry = iterator.next();
             builder.append(i++ == 0 ? " and " : " or ").append(entry.getKey()).append("=:").append(entry.getKey());
         }
-
         builder.append(" and id<>:id");
         Query query = this.getSession().createQuery(builder.toString());
-
         iterator = set.iterator();
         while (iterator.hasNext()) {
             Entry<String, Object> entry = iterator.next();
@@ -326,7 +312,7 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
         }
         query.setParameter("id", id);
         List<Object[]> list = query.list();
-        return list != null && list.size() != 0;
+        return list != null && !list.isEmpty();
     }
 
     @Override
@@ -334,13 +320,11 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
         if (id == null) {
             throw new Exception("id不可为空");
         }
-
         StringBuilder builder = new StringBuilder("From " + clazz.getSimpleName() + " where 1=1 ");
         try {
             builder.append(clazz.getField("isDeleted") == null ? "" : " and isDeleted<>1");
         } catch (Exception ignored) {
         }
-
         Set<Entry<String, Object>> set = map.entrySet();
         Iterator<Entry<String, Object>> iterator = set.iterator();
         int i = 0;
@@ -351,7 +335,6 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
         }
         builder.append(" and id<>:id");
         Query query = this.getSession().createQuery(builder.toString());
-
         iterator = set.iterator();
         while (iterator.hasNext()) {
             Entry<String, Object> entry = iterator.next();
@@ -359,7 +342,7 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
         }
         query.setParameter("id", id);
         List<Object[]> list = query.list();
-        return list != null && list.size() != 0;
+        return list != null && !list.isEmpty();
     }
 
     public Map<String, Object> findPageInfo(Filter filter, Page page, String sqlId) {
@@ -377,41 +360,35 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
 
     public List<Map<String, Object>> findPageData(Filter filter, Page page, String sqlId) throws SQLTemplateException {
         SQLQuery query = this.getSession().createSQLQuery(SQL.get(filter.getFilter(), sqlId));
-        Iterator<Entry<String, String>> iterator = filter.getFilter().entrySet().iterator();
-        while (iterator.hasNext()) {
-            Entry entry = iterator.next();
+        for (Entry<String, String> entry : filter.getFilter().entrySet()) {
             if (!ArrayUtils.contains(SQL.IGNORE_KEYS, entry.getKey())) {
-                if (((String) entry.getValue()).startsWith("in:")) {
-                    query.setParameterList((String) entry.getKey(), ((String) entry.getValue()).substring(3).split(","));
-                } else if (((String) entry.getValue()).startsWith("like:")) {
-                    query.setParameter((String) entry.getKey(), "%" + ((String) entry.getValue()).substring(5) + "%");
+                if (entry.getValue().startsWith("in:")) {
+                    query.setParameterList(entry.getKey(), entry.getValue().substring(3).split(","));
+                } else if (entry.getValue().startsWith("like:")) {
+                    query.setParameter(entry.getKey(), "%" + entry.getValue().substring(5) + "%");
                 } else {
-                    query.setParameter((String) entry.getKey(), entry.getValue());
+                    query.setParameter(entry.getKey(), entry.getValue());
                 }
             }
         }
-
         if (page.getAll() == 0) {
             query.setFirstResult((page.getPage() - 1) * page.getRows());
             query.setMaxResults(page.getRows());
         }
-
         query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
         return query.list();
     }
 
     public Long findPageDataTotal(Filter filter, String sqlId) throws SQLTemplateException {
         SQLQuery query = this.getSession().createSQLQuery("select count(*) from (" + SQL.get(filter.getFilter(), sqlId) + " )" + SQLCompatible.getSubQueryAsStatement(RuntimeVariable.DBTYPE));
-        Iterator<Entry<String, String>> iterator = filter.getFilter().entrySet().iterator();
-        while (iterator.hasNext()) {
-            Entry entry = iterator.next();
+        for (Entry<String, String> entry : filter.getFilter().entrySet()) {
             if (!ArrayUtils.contains(SQL.IGNORE_KEYS, entry.getKey())) {
-                if (((String) entry.getValue()).startsWith("in:")) {
-                    query.setParameterList((String) entry.getKey(), ((String) entry.getValue()).substring(3).split(","));
-                } else if (((String) entry.getValue()).startsWith("like:")) {
-                    query.setParameter((String) entry.getKey(), "%" + ((String) entry.getValue()).substring(5) + "%");
+                if (entry.getValue().startsWith("in:")) {
+                    query.setParameterList(entry.getKey(), entry.getValue().substring(3).split(","));
+                } else if (entry.getValue().startsWith("like:")) {
+                    query.setParameter(entry.getKey(), "%" + entry.getValue().substring(5) + "%");
                 } else {
-                    query.setParameter((String) entry.getKey(), entry.getValue());
+                    query.setParameter(entry.getKey(), entry.getValue());
                 }
             }
         }
@@ -425,12 +402,11 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
     public <T> List<T> findPageData(String sql, Filter filter, Page page) {
         SQLQuery query = getSession().createSQLQuery(sql);
         Map<String, String> map = filter.getFilter();
-        for (Entry entry : map.entrySet()) {
-            if (!StringUtils.isBlank((String) entry.getValue())) {
-                query.setParameter((String) entry.getKey(), entry.getValue());
+        for (Entry<String, String> entry : map.entrySet()) {
+            if (!StringUtils.isBlank(entry.getValue())) {
+                query.setParameter(entry.getKey(), entry.getValue());
             }
         }
-
         if (page.getAll() == 0) {
             query.setFirstResult((page.getPage() - 1) * page.getRows());
             query.setMaxResults(page.getRows());
@@ -442,17 +418,15 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
     public <T> List<T> find(Class clazz, String sql, Filter filter, Page page) {
         SQLQuery query = getSession().createSQLQuery(sql);
         Map<String, String> map = filter.getFilter();
-        for (Entry entry : map.entrySet()) {
-            if (!StringUtils.isBlank((String) entry.getValue())) {
-                query.setParameter((String) entry.getKey(), entry.getValue());
+        for (Entry<String, String> entry : map.entrySet()) {
+            if (!StringUtils.isBlank(entry.getValue())) {
+                query.setParameter(entry.getKey(), entry.getValue());
             }
         }
-
         if (page.getAll() == 0) {
             query.setFirstResult((page.getPage() - 1) * page.getRows());
             query.setMaxResults(page.getRows());
         }
-
         query.setResultTransformer(Transformers.aliasToBean(clazz));
         return query.list();
     }
@@ -461,9 +435,9 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
         sql = "select count(*) from (" + sql + ")  x";
         SQLQuery query = this.getSession().createSQLQuery(sql);
         Map<String, String> map = filter.getFilter();
-        for (Entry entry : map.entrySet()) {
-            if (!StringUtils.isBlank((String) entry.getValue())) {
-                query.setParameter((String) entry.getKey(), entry.getValue());
+        for (Entry<String, String> entry : map.entrySet()) {
+            if (!StringUtils.isBlank(entry.getValue())) {
+                query.setParameter(entry.getKey(), entry.getValue());
             }
         }
         return Long.parseLong(query.uniqueResult().toString());
@@ -513,7 +487,6 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
             }
         }
         Query query = this.getSession().createQuery(builder.toString());
-
         iterator = condition.entrySet().iterator();
         while (iterator.hasNext()) {
             Entry<String, Object> entry = iterator.next();
@@ -531,8 +504,8 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
     @Override
     public List<Map<String, Object>> findListMapByMap(String sql, Map<String, Object> condition) {
         SQLQuery query = this.getSession().createSQLQuery(sql);
-        for (Entry entry : condition.entrySet()) {
-            query.setParameter(entry.getKey().toString(), entry.getValue());
+        for (Entry<String, Object> entry : condition.entrySet()) {
+            query.setParameter(entry.getKey(), entry.getValue());
         }
         query.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
         return query.list();
@@ -543,7 +516,7 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
 
     @Override
     public <T> void delete(Class clazz, boolean isAndCondition, List<T> list) throws Exception {
-        if (list != null && list.size() != 0) {
+        if (list != null && !list.isEmpty()) {
             Long[] ids = new Long[list.size()];
             List<Field> fields = ReflectUtils.getFields(clazz, true);
             boolean idExist = false;
@@ -557,7 +530,6 @@ public abstract class BaseDaoImpl extends LanguageProvider implements IBaseDao {
                     }
                 }
             }
-
             if (!idExist) {
                 throw new Exception(clazz.getName() + "未找到id属性");
             } else {
