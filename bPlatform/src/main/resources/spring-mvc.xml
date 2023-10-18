@@ -26,8 +26,8 @@
     <!-- 启用MVC注解 -->
     <mvc:annotation-driven>
         <mvc:message-converters>
-            <bean class="com.bluebirdme.mes.core.messageconvertor.UTF8StringHttpMessageConvertor"></bean>
-            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"></bean>
+            <bean class="com.bluebirdme.mes.core.messageconvertor.UTF8StringHttpMessageConvertor"/>
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
         </mvc:message-converters>
     </mvc:annotation-driven>
 
@@ -44,7 +44,7 @@
     <bean class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
         <property name="favorParameter" value="false"/>
         <!-- 设置为true以忽略对Accept Header的支持 -->
-        <property name="ignoreAcceptHeader" value="true"></property>
+        <property name="ignoreAcceptHeader" value="true"/>
         <property name="defaultContentType" value="text/html"/>
         <!-- 扩展名至mimeType的映射,即 /user.json => application/json -->
         <property name="mediaTypes">
@@ -85,7 +85,7 @@
         </property>
     </bean>
     <!-- Freemarker必须定义的一个config bean,由Spring管理的，不定义会出错 -->
-    <bean id="FreeMarkerConfigurer"
+    <bean id="freeMarkerConfigurer"
           class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
         <property name="templateLoaderPath" value="/WEB-INF/views/freemarker" />
         <property name="defaultEncoding" value="UTF-8" />

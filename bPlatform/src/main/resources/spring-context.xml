@@ -39,12 +39,12 @@
     </bean>
     <!-- 防止SQL注入 -->
     <bean id="wall-filter" class="com.alibaba.druid.wall.WallFilter">
-        <property name="logViolation" value="${druid.logViolation}"></property>
-        <property name="throwException" value="${druid.throwException}"></property>
+        <property name="logViolation" value="${druid.logViolation}"/>
+        <property name="throwException" value="${druid.throwException}"/>
     </bean>
     <bean id="log-filter" class="com.alibaba.druid.filter.logging.Log4j2Filter">
         <property name="resultSetLogEnabled" value="${druid.resultSetLogEnabled}"/>
-        <property name="statementExecutableSqlLogEnable" value="${druid.statementExecutableSqlLogEnable}"></property>
+        <property name="statementExecutableSqlLogEnable" value="${druid.statementExecutableSqlLogEnable}"/>
     </bean>
     <!-- 池数据源 -->
     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
@@ -70,7 +70,7 @@
         <property name="initialSize" value="${druid.initialSize}"/>
         <property name="maxWait" value="${druid.maxWait}"/>
         <property name="minIdle" value="${druid.minIdle}"/>
-        <property name="logAbandoned" value="${druid.logAbandoned}"></property>
+        <property name="logAbandoned" value="${druid.logAbandoned}"/>
         <property name="timeBetweenEvictionRunsMillis" value="${druid.timeBetweenEvictionRunsMillis}"/>
         <property name="minEvictableIdleTimeMillis" value="${druid.minEvictableIdleTimeMillis}"/>
         <property name="testWhileIdle" value="${druid.testWhileIdle}"/>
@@ -79,15 +79,11 @@
         <property name="poolPreparedStatements" value="${druid.poolPreparedStatements}"/>
         <property name="maxPoolPreparedStatementPerConnectionSize" value="${druid.maxPoolPreparedStatementPerConnectionSize}"/>
     </bean>
-
     <bean id="druid-stat-interceptor" class="com.alibaba.druid.support.spring.stat.DruidStatInterceptor"/>
-
     <!-- sessionfactory 配置 -->
     <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
         <!-- connection -->
-        <property name="dataSource">
-            <ref bean="dataSource"/>
-        </property>
+        <property name="dataSource" ref="dataSource"/>
         <!-- hibernate属性配置 -->
         <property name="hibernateProperties">
             <props>
@@ -116,16 +112,14 @@
     <!-- Hibernate事务管理器 -->
     <bean id="transactionManager"
           class="org.springframework.orm.hibernate5.HibernateTransactionManager">
-        <property name="sessionFactory">
-            <ref bean="sessionFactory"/>
-        </property>
+        <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
     <tx:annotation-driven transaction-manager="transactionManager"/>
 
-    <bean class="com.bluebirdme.mes.core.spring.SpringCtx" lazy-init="false" scope="singleton">
-        <property name="sessionFactory" ref="sessionFactory"></property>
-        <property name="dataSource" ref="dataSource"></property>
+    <bean class="com.bluebirdme.mes.core.spring.SpringCtx" lazy-init="false">
+        <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="dataSource" ref="dataSource"/>
     </bean>
     <!-- 校验注解配置 -->
     <!-- <import resource="spring-valid.xml"/> -->

@@ -16,40 +16,25 @@
     <!-- 系统配置Quartz任务执行 -->
     <bean id="schedulerFactory"
           class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-        <property name="transactionManager" ref="transactionManager"></property>
+        <property name="transactionManager" ref="transactionManager"/>
         <property name="quartzProperties">
             <map>
-                <entry key="org.quartz.scheduler.instanceName">
-                    <value>QuartzScheduler</value>
-                </entry>
-                <entry key="org.quartz.scheduler.instanceId">
-                    <value>AUTO</value>
-                </entry>
-                <entry key="org.quartz.threadPool.threadCount">
-                    <value>5</value>
-                </entry>
-                <entry key="org.quartz.threadPool.threadPriority">
-                    <value>5</value>
-                </entry>
-                <entry key="org.quartz.threadPool.class">
-                    <value>org.quartz.simpl.SimpleThreadPool</value>
-                </entry>
-                <entry key="org.quartz.jobStore.class">
-                    <value>org.quartz.simpl.RAMJobStore</value>
-                </entry>
+                <entry key="org.quartz.scheduler.instanceName" value="QuartzScheduler"/>
+                <entry key="org.quartz.scheduler.instanceId" value="AUTO"/>
+                <entry key="org.quartz.threadPool.threadCount" value="5"/>
+                <entry key="org.quartz.threadPool.threadPriority" value="5"/>
+                <entry key="org.quartz.threadPool.class" value="org.quartz.simpl.SimpleThreadPool"/>
+                <entry key="org.quartz.jobStore.class" value="org.quartz.simpl.RAMJobStore"/>
             </map>
         </property>
     </bean>
     <bean id="scheduler" class="com.bluebirdme.mes.core.schedule.QuartzSchedule">
-        <property name="scheduler" ref="schedulerFactory"></property>
+        <property name="scheduler" ref="schedulerFactory"/>
     </bean>
     <!-- 系统配置Quartz任务执行 -->
-
-
     <!-- 定时器调度任务注解执行 -->
     <task:annotation-driven executor="annotationExecutor" scheduler="annotationScheduler"/>
     <task:executor id="annotationExecutor" pool-size="10"/>
     <task:scheduler id="annotationScheduler" pool-size="20"/>
     <!-- 定时器调度任务注解执行 -->
-
 </beans>  
