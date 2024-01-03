@@ -84,9 +84,6 @@ public class AuditController extends BaseController {
     /**
      * 我的任务
      *
-     * @param filter
-     * @param page
-     * @return
      */
     @ResponseBody
     @RequestMapping(value = "task", method = RequestMethod.POST)
@@ -98,9 +95,6 @@ public class AuditController extends BaseController {
     /**
      * 我提交的审核
      *
-     * @param filter
-     * @param page
-     * @return
      */
     @ResponseBody
     @RequestMapping(value = "myTask", method = RequestMethod.POST)
@@ -364,7 +358,7 @@ public class AuditController extends BaseController {
     @Journal(name = "查询状态")
     @RequestMapping("{code}/{formId}/state")
     public ModelAndView auditState(@PathVariable("code") String code, @PathVariable("formId") Long formId) throws Exception {
-        Map<String, Object> map = new HashMap();
+        Map<String, Object> map = new HashMap<>();
         map.put("auditCode", code);
         map.put("formId", formId);
         //所有的审核实例

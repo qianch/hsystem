@@ -6,42 +6,26 @@
  */
 package com.bluebirdme.mes.baseInfo.controller;
 
-import com.bluebirdme.mes.core.base.controller.BaseController;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import com.bluebirdme.mes.core.annotation.Journal;
-
-
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
-import org.xdemo.superutil.j2se.StringUtils;
-
+import com.bluebirdme.mes.baseInfo.entity.TcBomVersion;
+import com.bluebirdme.mes.baseInfo.entity.TcBomVersionParts;
+import com.bluebirdme.mes.baseInfo.entity.TcBomVersionPartsDetail;
+import com.bluebirdme.mes.baseInfo.service.ITcBomVersionPartsDetailService;
 import com.bluebirdme.mes.core.annotation.Journal;
 import com.bluebirdme.mes.core.annotation.NoAuth;
 import com.bluebirdme.mes.core.annotation.support.LogType;
 import com.bluebirdme.mes.core.base.controller.BaseController;
 import com.bluebirdme.mes.core.base.entity.Filter;
 import com.bluebirdme.mes.core.base.entity.Page;
-import com.bluebirdme.mes.core.exception.BusinessException;
-import com.bluebirdme.mes.core.valid.annotations.Valid;
 import com.bluebirdme.mes.core.constant.Constant;
-import com.bluebirdme.mes.baseInfo.entity.TcBomVersion;
-import com.bluebirdme.mes.baseInfo.entity.TcBomVersionParts;
-import com.bluebirdme.mes.baseInfo.entity.TcBomVersionPartsDetail;
-import com.bluebirdme.mes.baseInfo.service.ITcBomVersionPartsDetailService;
-import com.google.gson.GsonBuilder;
-
+import com.bluebirdme.mes.core.valid.annotations.Valid;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 import org.xdemo.superutil.thirdparty.gson.GsonTools;
+
+import javax.annotation.Resource;
 
 /**
  * 部件明细Controller
@@ -111,8 +95,8 @@ public class TcBomVersionPartsDetailController extends BaseController {
     @Journal(name = "删除部件明细", logType = LogType.DB)
     @RequestMapping(value = "delete", method = RequestMethod.POST)
     public String edit(String ids) throws Exception {
-        if (ids.length() > 0) {
-            String id[] = ids.split(",");
+        if (!ids.isEmpty()) {
+            String[] id = ids.split(",");
             TcBomVersionPartsDetail tcBomVersionPartsDetail = tcBomVersionPartsDetailService.findById(TcBomVersionPartsDetail.class, Long.parseLong(id[0]));
             TcBomVersionParts tcBomVersionParts = tcBomVersionPartsDetailService
                     .findById(TcBomVersionParts.class, tcBomVersionPartsDetail.getTcProcBomPartsId());

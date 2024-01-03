@@ -71,7 +71,7 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
 
     @Override
     public <T> void submitAudit(String auditTitle, String auditCode, Long submitUserId, String formUrl, Long formId, Class<T> clazz) throws Exception {
-        Map<String, Object> condition = new HashMap();
+        Map<String, Object> condition = new HashMap<>();
         condition.put("entityJavaClass", clazz.getName());
         condition.put("formId", formId);
 
@@ -98,7 +98,7 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
         this.save(ai);
 
         condition.put("id", ai.getFormId());
-        Map<String, Object> values = new HashMap();
+        Map<String, Object> values = new HashMap<>();
         values.put("auditState", AuditConstant.RS.AUDITING);
         updateByCondition(clazz, condition, values);
     }
@@ -191,7 +191,7 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
                 for (Map<String, Object> map : list) {
                     //查询检测状态不为空的计划明细集合
                     List<ProducePlanDetail> pList = producePlanDao.findListGroupByMap(map.get("BATCHCODE").toString(), map.get("PRODUCTMODEL").toString());
-                    if (pList.size() > 0) {
+                    if (!pList.isEmpty()) {
                         List<ProducePlanDetail> pdpList = findListByMap(ProducePlanDetail.class, map);
                         for (ProducePlanDetail p : pdpList) {
                             p.setProductStatus(pList.get(0).getProductStatus());//送样检测状态
@@ -590,7 +590,6 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
     /**
      * 更新编织日计划关联的生产计划的已分配标志
      *
-     * @param weaveDailyPlanId
      */
     public void setWeaveProducePlanIsSettled(Long weaveDailyPlanId) {
         producePlanService.setIsSettled(weaveDailyPlanId, null);
@@ -599,7 +598,6 @@ public class AuditInstanceServiceImpl extends BaseServiceImpl implements IAuditI
     /**
      * 更新裁剪日计划关联的生产计划的已分配标志
      *
-     * @param cutDailyPlanId
      */
     public void setCutProducePlanIsSettled(Long cutDailyPlanId) {
         producePlanService.setIsSettled(null, cutDailyPlanId);

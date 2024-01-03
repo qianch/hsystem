@@ -34,27 +34,18 @@ public interface IAuditInstanceService extends IBaseService {
     /**
      * 我的待审核任务
      *
-     * @param filter
-     * @param page
-     * @return
      */
     Map<String, Object> auditTask(Filter filter, Page page);
 
     /**
      * 我提交的审核任务
      *
-     * @param filter
-     * @param page
-     * @return
      */
     Map<String, Object> myAuditTask(Filter filter, Page page);
 
     /**
      * 已审核任务
      *
-     * @param filter
-     * @param page
-     * @return
      */
     Map<String, Object> finishedAuditTask(Filter filter, Page page);
 
@@ -65,9 +56,6 @@ public interface IAuditInstanceService extends IBaseService {
     /**
      * type:1=销售订单，2=producePlan，3=weaveDailyPlan，4=cutDailyPlan
      *
-     * @param id
-     * @param type
-     * @throws Exception
      */
     void reloadAudit(Long id, Integer type) throws Exception;
 }

@@ -119,7 +119,7 @@ public class TcBomVersionController extends BaseController {
     @RequestMapping(value = "edit", method = RequestMethod.GET)
     public ModelAndView _edit(Long id) {
         TcBomVersion tcBomVersion = tcBomVersionService.findById(TcBomVersion.class, id);
-        TcBom tcBom = tcBomVersionService.findById(TcBom.class, Long.valueOf(tcBomVersion.getTcProcBomId()));
+        TcBom tcBom = tcBomVersionService.findById(TcBom.class, tcBomVersion.getTcProcBomId());
         String filePath = UUID.randomUUID().toString();
         return new ModelAndView(addOrEdit, model.addAttribute("tcBomVersion", tcBomVersion).addAttribute("tcBom", tcBom).addAttribute("filePath", filePath));
     }
@@ -129,7 +129,7 @@ public class TcBomVersionController extends BaseController {
     @RequestMapping(value = "edit", method = RequestMethod.POST)
     @Valid
     public String edit(TcBomVersion tcBomVersion, Long fileId) throws Exception {
-        HashMap<String, Object> map = new HashMap();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("tcProcBomId", tcBomVersion.getTcProcBomId());
         List<TcBomVersion> li = tcBomVersionService.findListByMap(TcBomVersion.class, map);
         for (TcBomVersion bv : li) {

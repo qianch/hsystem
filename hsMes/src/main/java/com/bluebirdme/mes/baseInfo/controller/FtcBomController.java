@@ -6,37 +6,12 @@
  */
 package com.bluebirdme.mes.baseInfo.controller;
 
-import java.io.File;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import javax.annotation.Resource;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.springframework.stereotype.Controller;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
-import org.xdemo.superutil.thirdparty.gson.GsonTools;
-
 import com.bluebirdme.mes.audit.entity.AuditConstant;
 import com.bluebirdme.mes.audit.service.IAuditInstanceService;
 import com.bluebirdme.mes.baseInfo.entity.FtcBom;
 import com.bluebirdme.mes.baseInfo.entity.FtcBomDetail;
 import com.bluebirdme.mes.baseInfo.entity.FtcBomVersion;
-import com.bluebirdme.mes.baseInfo.entity.Material;
 import com.bluebirdme.mes.baseInfo.service.IFtcBomService;
-import com.bluebirdme.mes.baseInfo.service.IMaterialService;
 import com.bluebirdme.mes.core.annotation.Journal;
 import com.bluebirdme.mes.core.annotation.NoAuth;
 import com.bluebirdme.mes.core.annotation.NoLogin;
@@ -51,6 +26,19 @@ import com.bluebirdme.mes.core.valid.annotations.Valid;
 import com.bluebirdme.mes.produce.entity.FinishedProduct;
 import com.bluebirdme.mes.sales.entity.Consumer;
 import com.bluebirdme.mes.sales.service.IConsumerService;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.springframework.stereotype.Controller;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
+import org.xdemo.superutil.thirdparty.gson.GsonTools;
+
+import javax.annotation.Resource;
+import java.io.File;
+import java.text.DecimalFormat;
+import java.util.*;
 
 /**
  * 非套材工艺BOMController
@@ -106,7 +94,7 @@ public class FtcBomController extends BaseController {
             result = array.toString();
         } else if (nodeType.equals("root") && !data.equals("")) {
             List<Map<String, Object>> list = ftcBomService.getFtcBomJson(data);
-            if (list.size() > 0) {
+            if (!list.isEmpty()) {
                 JSONObject json = new JSONObject();
                 json.put("id", "root");
                 json.put("text", "非套材bom");
@@ -152,7 +140,7 @@ public class FtcBomController extends BaseController {
             result = jarray.toString();
         } else if (nodeType.equals("root") && !data.equals("")) {
             List<Map<String, Object>> list = ftcBomService.getFtcBomJsonTest(data);
-            if (list.size() > 0) {
+            if (!list.isEmpty()) {
                 JSONObject json = new JSONObject();
                 json.put("id", "root");
                 json.put("text", "非套材bom");
@@ -198,7 +186,7 @@ public class FtcBomController extends BaseController {
             result = array.toString();
         } else if (nodeType.equals("root") && !data.equals("")) {
             List<Map<String, Object>> list = ftcBomService.getFtcBomJsonTest1(data);
-            if (list.size() > 0) {
+            if (!list.isEmpty()) {
                 JSONObject json = new JSONObject();
                 json.put("id", "root");
                 json.put("text", "非套材bom");
@@ -235,7 +223,7 @@ public class FtcBomController extends BaseController {
         Map<String, Object> map = new HashMap();
         List<Map<String, Object>> rows = (List<Map<String, Object>>) findPageInfo.get("rows");
         DecimalFormat df = new DecimalFormat("#.00");
-        if (rows.size() != 0) {
+        if (!rows.isEmpty()) {
             Double d = 0.0;
             for (Map<String, Object> row : rows) {
                 if (row.get("FTCBOMDETAILWEIGHTPERSQUAREMETRE") != null && row.get("FTCBOMDETAILWEIGHTPERSQUAREMETRE") != "") {
@@ -325,7 +313,7 @@ public class FtcBomController extends BaseController {
             HashMap<String, Object> map = new HashMap();
             map.put("ftcProcBomId", id);
             List<FtcBomVersion> fbv = ftcBomService.findListByMap(FtcBomVersion.class, map);
-            if (fbv != null && fbv.size() > 0) {
+            if (fbv != null && !fbv.isEmpty()) {
                 return ajaxError("请删除版本后删除工艺");
             }
         }
@@ -344,8 +332,8 @@ public class FtcBomController extends BaseController {
     @RequestMapping(value = "addBomVersion", method = RequestMethod.POST)
     @Valid
     public String addBomVersion(FtcBomVersion ftcBomVersion) {
-        List<FtcBomVersion> saveList = new ArrayList();
-        HashMap<String, Object> map = new HashMap();
+        List<FtcBomVersion> saveList = new ArrayList<>();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("ftcProcBomId", ftcBomVersion.getFtcProcBomId());
         List<FtcBomVersion> li = ftcBomService.findListByMap(FtcBomVersion.class, map);
         if (ftcBomVersion.getFtcProcBomVersionDefault() == null) {
@@ -358,7 +346,7 @@ public class FtcBomController extends BaseController {
             if (fv.getFtcProcBomVersionCode().equals(ftcBomVersion.getFtcProcBomVersionCode())) {
                 return ajaxError("版本号重复！");
             }
-            HashMap<String, Object> map1 = new HashMap();
+            HashMap<String, Object> map1 = new HashMap<>();
             map1.put("ftcProcBomId", fv.getFtcProcBomId());
 
             if (fv.getFtcProcBomVersionDefault() == 1) {
@@ -392,7 +380,7 @@ public class FtcBomController extends BaseController {
     @RequestMapping(value = "editBomVersion", method = RequestMethod.POST)
     @Valid
     public String editBomVersion(FtcBomVersion ftcBomVersion, Long fileId) throws Exception {
-        HashMap<String, Object> map = new HashMap();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("ftcProcBomId", ftcBomVersion.getFtcProcBomId());
         List<FtcBomVersion> li = ftcBomService.findListByMap(FtcBomVersion.class, map);
         for (FtcBomVersion fbv : li) {
@@ -449,7 +437,7 @@ public class FtcBomController extends BaseController {
     @RequestMapping(value = "auditVersion", method = RequestMethod.GET)
     public ModelAndView audit(String id) {
         FtcBomVersion ftcBomVersion = ftcBomService.findById(FtcBomVersion.class, Long.valueOf(id));
-        HashMap<String, Object> map = new HashMap();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("ftcBomVersionId", ftcBomVersion.getId());
         List<FtcBomDetail> li = ftcBomService.findListByMap(FtcBomDetail.class, map);
         return new ModelAndView(audit, model
@@ -467,10 +455,10 @@ public class FtcBomController extends BaseController {
             if (ftcBomVersion.getAuditState() > 0) {
                 return ajaxError("审核中和审核通过的记录不能删除！");
             }
-            HashMap<String, Object> map = new HashMap();
+            HashMap<String, Object> map = new HashMap<>();
             map.put("procBomId", ftcBomVersion.getId());
             List<FinishedProduct> fp = auditInstanceService.findListByMap(FinishedProduct.class, map);
-            if (fp != null && fp.size() > 0) {
+            if (fp != null && !fp.isEmpty()) {
                 return ajaxError("该版本被产品使用，请修改相关产品工艺后删除版本");
             }
         }
@@ -503,7 +491,7 @@ public class FtcBomController extends BaseController {
     @RequestMapping("copyftcBomVersion")
     public String toComplite(String ids, String name) throws Exception {
         FtcBomVersion fbv = ftcBomService.findById(FtcBomVersion.class, Long.parseLong(ids));
-        HashMap<String, Object> map = new HashMap();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("ftcProcBomVersionCode", name);
         map.put("ftcProcBomId", fbv.getFtcProcBomId());
         if (!ftcBomService.isExist(FtcBomVersion.class, map, true)) {
@@ -519,7 +507,7 @@ public class FtcBomController extends BaseController {
     @RequestMapping("updateVersionByCode")
     public String updateVersionByCode(String ids, String name) throws Exception {
         FtcBomVersion fbv = ftcBomService.findById(FtcBomVersion.class, Long.parseLong(ids));
-        HashMap<String, Object> map = new HashMap();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("ftcProcBomVersionCode", name);
         map.put("ftcProcBomId", fbv.getFtcProcBomId());
         if (!ftcBomService.isExist(FtcBomVersion.class, map, true)) {
@@ -534,10 +522,10 @@ public class FtcBomController extends BaseController {
     @Journal(name = "查看BOM下的版本")
     @RequestMapping(value = "findV", method = RequestMethod.POST)
     public String findV(String id) {
-        HashMap<String, Object> map = new HashMap();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("ftcProcBomId", Long.valueOf(id));
         List<FtcBomVersion> list = ftcBomService.findListByMap(FtcBomVersion.class, map);
-        if (list.size() == 0) {
+        if (list.isEmpty()) {
             return GsonTools.toJson(0);
         } else {
             return GsonTools.toJson(1);
@@ -591,14 +579,14 @@ public class FtcBomController extends BaseController {
     public String getFTc_BomMirror(Filter filter, Page page) {
         Map<String, Object> findPageInfo = ftcBomService.findPageInfo1(filter, page);
         List<Map<String, Object>> list = new ArrayList();
-        Map<String, Object> map = new HashMap();
+        Map<String, Object> map = new HashMap<>();
         List<Map<String, Object>> rows = (List<Map<String, Object>>) findPageInfo.get("rows");
         DecimalFormat df = new DecimalFormat("#.00");
-        if (rows.size() != 0) {
+        if (!rows.isEmpty()) {
             Double d = 0.0;
-            for (int i = 0; i < rows.size(); i++) {
-                if (rows.get(i).get("FTCBOMDETAILWEIGHTPERSQUAREMETRE") != null && rows.get(i).get("FTCBOMDETAILWEIGHTPERSQUAREMETRE") != "") {
-                    d += (Double) rows.get(i).get("FTCBOMDETAILWEIGHTPERSQUAREMETRE");
+            for (Map<String, Object> row : rows) {
+                if (row.get("FTCBOMDETAILWEIGHTPERSQUAREMETRE") != null && row.get("FTCBOMDETAILWEIGHTPERSQUAREMETRE") != "") {
+                    d += (Double) row.get("FTCBOMDETAILWEIGHTPERSQUAREMETRE");
                 }
             }
             Object o = df.format(d);

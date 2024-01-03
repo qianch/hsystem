@@ -4,7 +4,6 @@ import com.bluebirdme.mes.audit.entity.AuditConstant;
 import com.bluebirdme.mes.baseInfo.entity.*;
 import com.bluebirdme.mes.baseInfo.service.IBcBomService;
 import com.bluebirdme.mes.baseInfo.service.IBomService;
-import com.bluebirdme.mes.baseInfo.service.IFtcBomService;
 import com.bluebirdme.mes.baseInfo.service.ITcBomService;
 import com.bluebirdme.mes.core.annotation.Journal;
 import com.bluebirdme.mes.core.annotation.support.LogType;
@@ -212,7 +211,6 @@ public class BomController extends BaseController {
      *
      * @param id   工艺版本ID
      * @param type 工艺类型，TC，FTC，BC
-     * @return
      */
     @Journal(name = "工艺变更", logType = LogType.DB)
     @ResponseBody
@@ -237,9 +235,8 @@ public class BomController extends BaseController {
                         s.add(salesOrder.getSalesOrderCode());
                     }
                 }
-                if (s.size() > 0) {
-                    String.join(",", s);
-                    return ajaxError("当前有销售订单编号为：" + s + "没有审核通过，不能变更BOM工艺");
+                if (!s.isEmpty()) {
+                    return ajaxError("当前有销售订单编号为：" + String.join(",", s) + "没有审核通过，不能变更BOM工艺");
                 }
                 v.setAuditState(AuditConstant.RS.SUBMIT);
                 bomService.update(v);
@@ -257,7 +254,7 @@ public class BomController extends BaseController {
                         s.add(salesOrder.getSalesOrderCode());
                     }
                 }
-                if (s.size() > 0) {
+                if (!s.isEmpty()) {
                     return ajaxError("当前有销售订单编号为：" + String.join(",", s) + "没有审核通过，不能变更BOM工艺");
                 }
                 v.setAuditState(AuditConstant.RS.SUBMIT);
@@ -273,7 +270,7 @@ public class BomController extends BaseController {
                         s.add(salesOrder.getSalesOrderCode());
                     }
                 }
-                if (s.size() > 0) {
+                if (!s.isEmpty()) {
                     return ajaxError("当前有销售订单编号为：" + String.join(",", s) + "没有审核通过，不能变更BOM工艺");
                 }
                 v.setAuditState(AuditConstant.RS.SUBMIT);
@@ -318,7 +315,7 @@ public class BomController extends BaseController {
             }
         }
 
-        if (ret.size() == 0) {
+        if (ret.isEmpty()) {
             map.clear();
             map.put("tcProcBomVersoinId", vid);
             map.put("isDeleted", 0);
@@ -400,7 +397,7 @@ public class BomController extends BaseController {
             }
         }
 
-        if (ret.size() == 0) {
+        if (ret.isEmpty()) {
             map.clear();
             map.put("salesOrderDetailId", orderId);
             if (danxiangbu) {
@@ -461,7 +458,7 @@ public class BomController extends BaseController {
             }
         }
 
-        if (ret.size() == 0) {
+        if (ret.isEmpty()) {
             map.clear();
             map.put("salesOrderDetailId", orderId);
             List<SalesOrderDetailPartsCount> list = tcBomService.findListByMap(SalesOrderDetailPartsCount.class, map);

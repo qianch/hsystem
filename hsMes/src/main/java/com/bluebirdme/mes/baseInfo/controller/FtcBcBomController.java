@@ -6,25 +6,8 @@
  */
 package com.bluebirdme.mes.baseInfo.controller;
 
-import java.util.*;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.lang3.StringUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
-import org.xdemo.superutil.thirdparty.gson.GsonTools;
-
 import com.bluebirdme.mes.audit.entity.AuditConstant;
 import com.bluebirdme.mes.audit.service.IAuditInstanceService;
-import com.bluebirdme.mes.baseInfo.entity.BCBomVersion;
-import com.bluebirdme.mes.baseInfo.entity.BcBom;
 import com.bluebirdme.mes.baseInfo.entity.FtcBcBom;
 import com.bluebirdme.mes.baseInfo.entity.FtcBcBomVersion;
 import com.bluebirdme.mes.baseInfo.entity.FtcBcBomVersionDetail;
@@ -39,8 +22,20 @@ import com.bluebirdme.mes.core.base.entity.Page;
 import com.bluebirdme.mes.core.constant.Constant;
 import com.bluebirdme.mes.core.excel.ExcelImportMessage;
 import com.bluebirdme.mes.core.valid.annotations.Valid;
-import com.bluebirdme.mes.produce.entity.FinishedProduct;
 import com.bluebirdme.mes.sales.entity.Consumer;
+import org.apache.commons.lang3.StringUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+import org.xdemo.superutil.thirdparty.gson.GsonTools;
+
+import javax.annotation.Resource;
+import java.util.*;
 
 /**
  * 包装版本信息Controller
@@ -148,7 +143,7 @@ public class FtcBcBomController extends BaseController {
             result = array.toString();
         } else if (nodeType.equals("root") && StringUtils.isNotBlank(data)) {    //带参数查询
             List<Map<String, Object>> list = ftcBcBomService.getFtcBcBomJson(id, data, null);
-            if (list.size() > 0) {
+            if (!list.isEmpty()) {
                 JSONObject json = new JSONObject();
                 json.put("id", "root");
                 json.put("text", "非套材包材bom");
@@ -201,7 +196,7 @@ public class FtcBcBomController extends BaseController {
             result = jarray.toString();
         } else if (nodeType.equals("root") && StringUtils.isNotBlank(data)) {    //带参数查询
             List<Map<String, Object>> list = ftcBcBomService.getFtcBcBomJson(id, data, null);
-            if (list.size() > 0) {
+            if (!list.isEmpty()) {
                 JSONObject json = new JSONObject();
                 json.put("id", "root");
                 json.put("text", "非套材包材bom");
@@ -254,7 +249,7 @@ public class FtcBcBomController extends BaseController {
             result = jarray.toString();
         } else if (nodeType.equals("root") && StringUtils.isNotBlank(data)) {    //带参数查询
             List<Map<String, Object>> list = ftcBcBomService.getFtcBcBomJson(id, data, null);
-            if (list.size() > 0) {
+            if (!list.isEmpty()) {
                 JSONObject json = new JSONObject();
                 json.put("id", "root");
                 json.put("text", "非套材包材bom");
@@ -419,20 +414,20 @@ public class FtcBcBomController extends BaseController {
             if (fbb.getLevel() == 1) {
                 map.put("pid", Long.parseLong(s));
                 List<FtcBcBom> li = ftcBcBomVersionService.findListByMap(FtcBcBom.class, map);
-                if (li != null && li.size() > 0) {
+                if (li != null && !li.isEmpty()) {
                     return ajaxError("请删除一级包装工艺前删除二级包装工艺");
                 }
             } else if (fbb.getLevel() == 2) {
                 map.put("pid", Long.parseLong(s));
                 List<FtcBcBom> li = ftcBcBomVersionService.findListByMap(FtcBcBom.class, map);
-                if (li != null && li.size() > 0) {
+                if (li != null && !li.isEmpty()) {
                     return ajaxError("请删除二级包装工艺前删除三级包装工艺");
                 }
             } else if (fbb.getLevel() == 3) {
                 map.put("bid", Long.parseLong(s));
 
                 List<FtcBcBomVersion> li = ftcBcBomVersionService.findListByMap(FtcBcBomVersion.class, map);
-                if (li != null && li.size() > 0) {
+                if (li != null && !li.isEmpty()) {
                     return ajaxError("请删除三级包装工艺前删除版本");
                 }
             }

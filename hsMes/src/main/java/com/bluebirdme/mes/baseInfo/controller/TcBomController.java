@@ -142,7 +142,7 @@ public class TcBomController extends BaseController {
             HashMap<String, Object> map = new HashMap<String, Object>();
             map.put("tcProcBomId", id);
             List<TcBomVersion> fbv = tcBomService.findListByMap(TcBomVersion.class, map);
-            if (fbv != null && fbv.size() > 0) {
+            if (fbv != null && !fbv.isEmpty()) {
                 return ajaxError("请删除版本后删除工艺");
             }
         }
@@ -178,7 +178,7 @@ public class TcBomController extends BaseController {
             result = array.toString();
         } else if (status.equals("0") && !data.equals("")) {
             List<Map<String, Object>> list = tcBomService.findBom(data, state);
-            if (list.size() > 0) {
+            if (!list.isEmpty()) {
                 JSONObject json = new JSONObject();
                 json.put("text", "套材bom");
                 json.put("state", "closed");
@@ -233,7 +233,7 @@ public class TcBomController extends BaseController {
             result = array.toString();
         } else if (status.equals("0") && !data.equals("")) {
             List<Map<String, Object>> list = tcBomService.getTcBomJsonTest(data, state);
-            if (list.size() > 0) {
+            if (!list.isEmpty()) {
                 JSONObject json = new JSONObject();
                 json.put("text", "套材bom");
                 json.put("state", "closed");
@@ -288,7 +288,7 @@ public class TcBomController extends BaseController {
             result = jarray.toString();
         } else if (status.equals("0") && !data.equals("")) {
             List<Map<String, Object>> list = tcBomService.getTcBomJsonTest1(data, state);
-            if (list.size() > 0) {
+            if (!list.isEmpty()) {
                 JSONObject json = new JSONObject();
                 json.put("text", "套材bom");
                 json.put("state", "closed");
@@ -385,7 +385,7 @@ public class TcBomController extends BaseController {
             map.put("procBomId", tv.getId());
             map.put("productIsTc", 1);
             List<FinishedProduct> fp = tcBomService.findListByMap(FinishedProduct.class, map);
-            if (fp != null && fp.size() > 0) {
+            if (fp != null && !fp.isEmpty()) {
                 return ajaxError("该版本被产品使用，请修改相关产品工艺后删除版本");
             }
         }
@@ -397,7 +397,7 @@ public class TcBomController extends BaseController {
     @Journal(name = "删除套材BOM部件", logType = LogType.DB)
     @RequestMapping(value = "deleteDetail", method = RequestMethod.POST)
     public String editDetail(String ids) {
-        if (ids.length() > 0) {
+        if (!ids.isEmpty()) {
             String id[] = ids.split(",");
             TcBomVersionParts tcBomVersionDetail = tcBomService.findById(TcBomVersionParts.class, Long.parseLong(id[0]));
             TcBomVersion tcBomVersion = tcBomService.findById(TcBomVersion.class, tcBomVersionDetail.getTcProcBomVersoinId());
@@ -413,9 +413,9 @@ public class TcBomController extends BaseController {
     @Journal(name = "检查部件是否可删除", logType = LogType.DB)
     @RequestMapping(value = "delValid", method = RequestMethod.POST)
     public String delValid(String ids) {
-        String _ids[] = ids.split(",");
-        Map<String, Object> map = new HashMap();
-        Long idArray[] = new Long[_ids.length];
+        String[] _ids = ids.split(",");
+        Map<String, Object> map = new HashMap<>();
+        Long[] idArray = new Long[_ids.length];
         int i = 0;
         for (String id : _ids) {
             idArray[i++] = Long.parseLong(id);
@@ -426,7 +426,7 @@ public class TcBomController extends BaseController {
             return ajaxSuccess();
         }
 
-        Set<String> orderCodes = new HashSet();
+        Set<String> orderCodes = new HashSet<>();
         for (SalesOrderDetailPartsCount part : list) {
             if (part.getPartCount() == 0) continue;
             SalesOrderDetail sod = tcBomService.findById(SalesOrderDetail.class, part.getSalesOrderDetailId());
@@ -441,7 +441,7 @@ public class TcBomController extends BaseController {
     @RequestMapping("copytcBomVersion")
     public String toComplite(String ids, String name) throws Exception {
         TcBomVersion tcBomVersion = tcBomService.findById(TcBomVersion.class, Long.valueOf(ids));
-        HashMap<String, Object> map = new HashMap();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("tcProcBomId", tcBomVersion.getTcProcBomId());
         List<TcBomVersion> li = tcBomService.findListByMap(TcBomVersion.class, map);
         for (TcBomVersion bv : li) {
@@ -458,7 +458,7 @@ public class TcBomController extends BaseController {
     @RequestMapping("copytcBom")
     public String toCompliteBom(String id) throws Exception {
         TcBom tb = tcBomService.findById(TcBom.class, Long.parseLong(id));
-        HashMap<String, Object> map = new HashMap<String, Object>();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("tcProcBomName", tb.getTcProcBomName() + "(复制)");
         if (tcBomService.isExist(TcBom.class, map, true)) {
             return ajaxError("已有同名bom");
@@ -508,7 +508,7 @@ public class TcBomController extends BaseController {
             list = tcBomService.findConsumer(id);
         }
 
-        if (list.size() > 0) {
+        if (!list.isEmpty()) {
             filter.set("id", list.get(0).get("ID").toString());
             return GsonTools.toJson(tcBomService.findFtc(filter, page));
         }
@@ -550,15 +550,15 @@ public class TcBomController extends BaseController {
         if (status == 2) {
             return "";
         }
-        HashMap<String, Object> map = new HashMap();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("tcProcBomPartsId", Long.valueOf(id));
         List<TcBomVersionPartsDetail> tc = tcBomService.findListByMap(TcBomVersionPartsDetail.class, map);
-        if (tc.size() == 0) {
+        if (tc.isEmpty()) {
             return "";
         }
         TcBomVersionParts tcBomVersionParts = tcBomService.findById(TcBomVersionParts.class, Long.valueOf(id));
         TcBomVersion tcBomVersion = tcBomService.findById(TcBomVersion.class, tcBomVersionParts.getTcProcBomVersoinId());
-        if (tc.size() != 0) {
+        if (!tc.isEmpty()) {
             return GsonTools.toJson(0);
         } else if (tcBomVersion.getAuditState() > 0) {
             return GsonTools.toJson(1);
@@ -584,10 +584,10 @@ public class TcBomController extends BaseController {
     @Journal(name = "查看BOM下的版本")
     @RequestMapping(value = "findV", method = RequestMethod.POST)
     public String findV(String id) {
-        HashMap<String, Object> map = new HashMap();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("tcProcBomId", Long.valueOf(id));
         List<TcBomVersion> list = tcBomService.findListByMap(TcBomVersion.class, map);
-        if (list.size() == 0) {
+        if (list.isEmpty()) {
             return GsonTools.toJson(0);
         } else {
             return GsonTools.toJson(1);

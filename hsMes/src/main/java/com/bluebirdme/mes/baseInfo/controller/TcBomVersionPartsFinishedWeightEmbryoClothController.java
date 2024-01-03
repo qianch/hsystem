@@ -95,8 +95,8 @@ public class TcBomVersionPartsFinishedWeightEmbryoClothController extends BaseCo
     @Journal(name = "删除部件成品重量胚布信息", logType = LogType.DB)
     @RequestMapping(value = "delete", method = RequestMethod.POST)
     public String edit(String ids) throws Exception {
-        if (ids.length() > 0) {
-            String id[] = ids.split(",");
+        if (!ids.isEmpty()) {
+            String[] id = ids.split(",");
             TcBomVersionPartsFinishedWeightEmbryoCloth tcBomVersionPartsFinishedWeightEmbryoCloth = tcBomVersionPartsFinishedWeightEmbryoClothService.findById(TcBomVersionPartsFinishedWeightEmbryoCloth.class, Long.parseLong(id[0]));
             TcBomVersionParts tcBomVersionParts = tcBomVersionPartsFinishedWeightEmbryoClothService
                     .findById(TcBomVersionParts.class, tcBomVersionPartsFinishedWeightEmbryoCloth.getTcProcBomPartsId());

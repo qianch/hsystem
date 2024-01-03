@@ -21,27 +21,18 @@ public interface IAuditInstanceDao extends IBaseDao {
     /**
      * 我的待审核任务
      *
-     * @param filter
-     * @param page
-     * @return
      */
     Map<String, Object> auditTask(Filter filter, Page page);
 
     /**
      * 已审核任务
      *
-     * @param filter
-     * @param page
-     * @return
      */
     Map<String, Object> finishedAuditTask(Filter filter, Page page);
 
     /**
      * 我提交的审核任务
      *
-     * @param filter
-     * @param page
-     * @return
      */
     Map<String, Object> myAuditTask(Filter filter, Page page);
 

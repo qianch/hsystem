@@ -305,7 +305,7 @@ public class BcBomVersionDetailController extends BaseController {
             result = jarray.toString();
         } else if ("root".equals(nodeType) && !"".equals(data)) {
             List<Map<String, Object>> list = bcBomService.getBcBomJson(data);
-            if (list.size() > 0) {
+            if (!list.isEmpty()) {
                 if ("-1".equals(((Map<String, Object>) list.get(0).get("attributes")).get("PACKCANCELED") + "")) {
                     list.get(0).put("text", list.get(0).get("text") + "[<font color='red'>作废</font>]");
                 }
@@ -359,7 +359,7 @@ public class BcBomVersionDetailController extends BaseController {
             result = jarray.toString();
         } else if (nodeType.equals("root") && data != "") {
             List<Map<String, Object>> list = bcBomService.getBcBomJsonTest(data);
-            if (list.size() > 0) {
+            if (!list.isEmpty()) {
                 JSONObject json = new JSONObject();
                 json.put("id", "root");
                 json.put("text", "包材bom");
@@ -405,7 +405,7 @@ public class BcBomVersionDetailController extends BaseController {
             result = jarray.toString();
         } else if (nodeType.equals("root") && data != "") {
             List<Map<String, Object>> list = bcBomService.getBcBomJsonTest1(data);
-            if (list.size() > 0) {
+            if (!list.isEmpty()) {
                 JSONObject json = new JSONObject();
                 json.put("id", "root");
                 json.put("text", "包材bom");
@@ -489,10 +489,10 @@ public class BcBomVersionDetailController extends BaseController {
     public String deleteBom(String ids) throws Exception {
         String[] id = ids.split(",");
         for (String s : id) {
-            HashMap<String, Object> map = new HashMap();
+            HashMap<String, Object> map = new HashMap<>();
             map.put("packBomId", Long.parseLong(s));
             List<BCBomVersion> li = bCBomVersionService.findListByMap(BCBomVersion.class, map);
-            if (li != null && li.size() > 0) {
+            if (li != null && !li.isEmpty()) {
                 return ajaxError("请删除版本后删除工艺");
             }
         }
@@ -534,7 +534,7 @@ public class BcBomVersionDetailController extends BaseController {
     @RequestMapping(value = "addBomVersion", method = RequestMethod.POST)
     @Valid
     public String addBomVersion(BCBomVersion bCBomVersion, Long fileId) throws Exception {
-        HashMap<String, Object> map = new HashMap();
+        HashMap<String, Object> map = new HashMap<>();
         map.put("packBomId", bCBomVersion.getPackBomId());
         List<BCBomVersion> li = bCBomVersionService.findListByMap(BCBomVersion.class, map);
         for (BCBomVersion bv : li) {
@@ -599,7 +599,7 @@ public class BcBomVersionDetailController extends BaseController {
             HashMap<String, Object> map = new HashMap<String, Object>();
             map.put("packBomId", bCBomVersion.getId());
             List<FinishedProduct> fp = bCBomVersionService.findListByMap(FinishedProduct.class, map);
-            if (fp != null && fp.size() > 0) {
+            if (fp != null && !fp.isEmpty()) {
                 return ajaxError("该版本被产品使用，请修改相关产品工艺后删除版本");
             }
         }
@@ -614,7 +614,7 @@ public class BcBomVersionDetailController extends BaseController {
         HashMap<String, Object> map = new HashMap<>();
         map.put("packBomId", Long.valueOf(id));
         List<BCBomVersion> list = bCBomVersionService.findListByMap(BCBomVersion.class, map);
-        if (list.size() == 0) {
+        if (list.isEmpty()) {
             return GsonTools.toJson(0);
         } else {
             return GsonTools.toJson(1);
